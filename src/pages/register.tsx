@@ -7,6 +7,8 @@ import LastNameInput from '@/components/LastNameInput'
 import RepeatPasswordInput from '@/components/RepeatPasswordInput'
 import { useState } from 'react'
 import Link from 'next/link'
+import { useMutation, gql } from '@apollo/client';
+import apolloClient from '@/lib/apolloClient';
 
 export default function Register() {
     return (
@@ -18,7 +20,20 @@ export default function Register() {
     )
 }
 
+
+const REGISTER_MUTATION = gql`
+  mutation Register($username: String!, $password: String!) {
+    register(username: $username, password: $password) {
+      id
+      username
+    }
+  }
+`;
+
+
 function RegistrationForm() {
+    const [register, { data }] = useMutation(REGISTER_MUTATION, { client: apolloClient });
+
     const [username, setUsername] = useState<string>('')
     const [firstname, setFirstName] = useState<string>('')
     const [lastname, setLastName] = useState<string>('')
@@ -28,7 +43,8 @@ function RegistrationForm() {
 
     function handleRegistration(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
-        console.log('register')
+
+        register({ variables: { username, password } })
     }
 
     return (
