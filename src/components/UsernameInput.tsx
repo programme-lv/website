@@ -8,7 +8,7 @@ function UsernameInput(props: UsernameInputProps) {
 		<>
 			<label htmlFor="username">Lietotājvārds</label>
 			<input type="text" name="username" id="username" required
-				value={props.username} onChange={props.setUsername} />
+				value={props.username} onChange={(e)=>props.setUsername(e.target.value)} />
 		</>
 	)
 }

@@ -8,7 +8,7 @@ function PasswordInput(props:PasswordInputProps) {
 		<>
 			<label htmlFor="password">Parole</label>
 			<input type="password" name="password" id="password" required
-				value={props.password} onChange={props.setPassword}/>
+				value={props.password} onChange={(e)=>props.setPassword(e.target.value)}/>
 		</>
 	)
 }
