@@ -3,6 +3,9 @@ import Link from 'next/link'
 export default function NavBar() {
     return (
         <nav className='flex justify-between'>
+            <Link href="/" className='hover:underline'>
+                sākums
+            </Link>
             <Link href="/login" className='hover:underline'>
                 pieslēgties
             </Link>
