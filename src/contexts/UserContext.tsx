@@ -3,28 +3,27 @@ import { createContext, useContext } from 'react';
 import useSWR from 'swr';
 
 interface UserContextValue {
-    data: any;
-    error: any;
+  data: any;
+  error: any;
 }
 
 // Create a new context
-const UserContext = createContext<UserContextValue|null>(null);
+const UserContext = createContext<UserContextValue>({data: null, error: null});
 
 // Create an Apollo Client instance
 const client = new ApolloClient({
-  uri: 'http://localhost:3001/query', // replace with your GraphQL server endpoint
+  uri: '/api/query', // replace with your GraphQL server endpoint
   cache: new InMemoryCache(),
 });
 
 // Define your GraphQL query
 const WHO_AM_I_QUERY = gql`
-  {
-    whoami {
+query Whoami {
+  whoami {
       id
-      name
-      email
-    }
+      username
   }
+}
 `;
 
 // Create a fetcher function that uses Apollo Client to fetch data
@@ -36,7 +35,7 @@ const fetcher = async () => {
 };
 
 // This component uses SWR to fetch the data and provides it via context
-export function UserProvider({ children }:any) {
+export function UserProvider({ children }: any) {
   const { data, error } = useSWR('whoami', fetcher);
 
   return (
