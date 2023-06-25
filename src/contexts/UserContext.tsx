@@ -11,6 +11,7 @@ interface UserData {
 interface UserContextValue {
   userData: UserData;
   loginError: any;
+  refreshUser: () => void;
 }
 
 // Create a new context
@@ -36,7 +37,7 @@ const fetcher = async () => {
 
 // This component uses SWR to fetch the data and provides it via context
 export function UserProvider({ children }: any) {
-  const { data, error } = useSWR('whoami', fetcher);
+  const { data, error, mutate } = useSWR('whoami', fetcher);
 
   /*
   const { data, error } = useSWR()
@@ -45,7 +46,7 @@ export function UserProvider({ children }: any) {
   */
 
   return (
-    <UserContext.Provider value={{ userData: data?.whoami, loginError: error }}>
+    <UserContext.Provider value={{ userData: data?.whoami, loginError: error, refreshUser: mutate}}>
       {children}
     </UserContext.Provider>
   );
