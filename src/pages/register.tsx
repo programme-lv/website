@@ -42,7 +42,7 @@ function RegistrationForm() {
     const [repeatPassword, setRepeatPassword] = useState<string>('')
 
     const [error, setError] = useState<string>('')
-    const [success, setSuccess] = useState<boolean>(true);
+    const [success, setSuccess] = useState<boolean>(false);
 
     async function handleRegistration(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
