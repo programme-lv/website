@@ -31,7 +31,9 @@ query Whoami {
 const fetcher = async () => {
   const { data } = await apolloClient.query({
     query: WHO_AM_I_QUERY,
+    fetchPolicy: 'no-cache'
   });
+  console.log(data);
   return data;
 };
 
