@@ -3,7 +3,7 @@ import UsernameInput from '@/components/UsernameInput'
 import PasswordInput from '@/components/PasswordInput'
 import { useState } from 'react'
 import Link from 'next/link'
-import { useMutation, gql } from '@apollo/client';
+import { useMutation, gql, ApolloError } from '@apollo/client';
 import apolloClient from '@/lib/apolloClient';
 import { useUser } from '@/contexts/UserContext'
 import { useRouter } from 'next/router'
@@ -28,28 +28,37 @@ mutation Login($username: String!, $password: String!) {
 `;
 
 function LoginForm() {
-	const {userData, loginError, refreshUser} = useUser();
+	const { userData, loginError, refreshUser } = useUser();
 	const [login, { data }] = useMutation(LOGIN_MUTATION, { client: apolloClient });
 	const router = useRouter();
 
 	const [username, setUsername] = useState('')
 	const [password, setPassword] = useState('')
 
+	const [error, setError] = useState('')
+
 	async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
-		console.log("login.tsx handleLogin username:", username);
-		let response = await login({variables: {username, password}});
-		await refreshUser();
-		router.push('/');
+		try {
+			await login({ variables: { username, password } });
+			await refreshUser();
+			router.push('/');
+		} catch (error: ApolloError | any) {
+			setError(error.message)
+			return;
+		}
 	}
 
 	return (
 		<form className='flex flex-col' onSubmit={handleLogin}>
 			<UsernameInput username={username} setUsername={setUsername} />
-			<PasswordInput password={password} setPassword={setPassword}/>
+			<PasswordInput password={password} setPassword={setPassword} />
 			<button type="submit">Pieslēgties</button>
 			<div>
 				Neesi piereģistrējies? <Link href="/register">Reģistrēties</Link>
+			</div>
+			<div>
+				{error}
 			</div>
 		</form>
 	)
