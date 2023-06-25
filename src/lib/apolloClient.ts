@@ -11,6 +11,9 @@ const apolloClient = new ApolloClient({
     query: {
       fetchPolicy: 'no-cache',
     },
+    mutate: {
+      fetchPolicy: 'no-cache',
+    },
   }
 });
 

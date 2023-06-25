@@ -19,11 +19,11 @@ export default function Login() {
 }
 
 const LOGIN_MUTATION = gql`
-mutation Login {
-    login(username: "labdien", password: "labdien1") {
-        id
-        username
-    }
+mutation Login($username: String!, $password: String!) {
+	login(username: $username, password: $password) {
+		id
+		username
+	}
 }
 `;
 
@@ -37,6 +37,7 @@ function LoginForm() {
 
 	async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
+		console.log("login.tsx handleLogin username:", username);
 		let response = await login({variables: {username, password}});
 		await refreshUser();
 		router.push('/');
