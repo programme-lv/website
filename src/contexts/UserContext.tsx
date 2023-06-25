@@ -3,13 +3,18 @@ import { gql } from '@apollo/client';
 import { createContext, useContext } from 'react';
 import useSWR from 'swr';
 
+interface UserData {
+  id: string;
+  username: string;
+}
+
 interface UserContextValue {
-  data: any;
-  error: any;
+  userData: UserData;
+  loginError: any;
 }
 
 // Create a new context
-const UserContext = createContext<UserContextValue>({data: null, error: null});
+const UserContext = createContext<UserContextValue>({} as UserContextValue);
 
 // Define your GraphQL query
 const WHO_AM_I_QUERY = gql`
@@ -33,8 +38,14 @@ const fetcher = async () => {
 export function UserProvider({ children }: any) {
   const { data, error } = useSWR('whoami', fetcher);
 
+  /*
+  const { data, error } = useSWR()
+  if(error) return <div>failed to load</div>
+  if(!data) return <div>loading...</div>
+  */
+
   return (
-    <UserContext.Provider value={{ data, error }}>
+    <UserContext.Provider value={{ userData: data?.whoami, loginError: error }}>
       {children}
     </UserContext.Provider>
   );
