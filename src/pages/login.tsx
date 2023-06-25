@@ -7,6 +7,7 @@ import { useMutation, gql, ApolloError } from '@apollo/client';
 import apolloClient from '@/lib/apolloClient';
 import { useUser } from '@/contexts/UserContext'
 import { useRouter } from 'next/router'
+import useTranslation from 'next-translate/useTranslation'
 
 export default function Login() {
 	return (
@@ -28,6 +29,7 @@ mutation Login($username: String!, $password: String!) {
 `;
 
 function LoginForm() {
+	const {t} = useTranslation('errors')
 	const { userData, loginError, refreshUser } = useUser();
 	const [login, { data }] = useMutation(LOGIN_MUTATION, { client: apolloClient });
 	const router = useRouter();
@@ -62,7 +64,7 @@ function LoginForm() {
 				Neesi piereģistrējies? <Link href="/register">Reģistrēties</Link>
 			</div>
 			<div>
-				{error}
+				{t(error)}
 			</div>
 		</form>
 	)
