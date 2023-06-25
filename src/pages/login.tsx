@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { useMutation, gql } from '@apollo/client';
 import apolloClient from '@/lib/apolloClient';
 import { useUser } from '@/contexts/UserContext'
+import { useRouter } from 'next/router'
 
 export default function Login() {
 	return (
@@ -29,6 +30,7 @@ mutation Login {
 function LoginForm() {
 	const {userData, loginError, refreshUser} = useUser();
 	const [login, { data }] = useMutation(LOGIN_MUTATION, { client: apolloClient });
+	const router = useRouter();
 
 	const [username, setUsername] = useState('')
 	const [password, setPassword] = useState('')
@@ -36,8 +38,8 @@ function LoginForm() {
 	async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 		let response = await login({variables: {username, password}});
-		console.log(response);
-		refreshUser();
+		await refreshUser();
+		router.push('/');
 	}
 
 	return (

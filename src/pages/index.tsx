@@ -1,5 +1,7 @@
 import NavBar from '@/components/NavBar'
 import { useUser } from '@/contexts/UserContext'
+import apolloClient from '@/lib/apolloClient';
+import { useMutation, gql } from '@apollo/client';
 
 export default function Home() {
 
@@ -8,6 +10,7 @@ export default function Home() {
 			<NavBar />
 			<h1>index.tsx</h1>
 			<UserData/>
+			<LogOutButton/>
 		</main>
 	)
 }
@@ -30,7 +33,25 @@ function UserData() {
 		</div>
 		<div>{JSON.stringify(userData)}</div>
 		</>
-	)
+	)	
+}
 
-	
+const LOGOUT_MUTATION = gql`
+mutation Logout {
+	logout
+}
+`;
+
+function LogOutButton() {
+	const { refreshUser } = useUser();
+	const [logout, { data }] = useMutation(LOGOUT_MUTATION, { client: apolloClient });
+
+	async function handleLogout() {
+		await logout();
+		await refreshUser();
+	}
+
+	return (
+		<button onClick={handleLogout}>Log Out</button>
+	)
 }
