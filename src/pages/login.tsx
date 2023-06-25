@@ -44,7 +44,11 @@ function LoginForm() {
 			await refreshUser();
 			router.push('/');
 		} catch (error: ApolloError | any) {
-			setError(error.message)
+			if (error.message) {
+				setError(error.message)
+			} else {
+				setError('Nezināma kļūda')
+			}
 			return;
 		}
 	}
