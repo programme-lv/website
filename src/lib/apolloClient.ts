@@ -1,7 +1,8 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client';
 
+// Create an Apollo Client instance
 const apolloClient = new ApolloClient({
-  uri: 'https://countries.trevorblades.com',
+  uri: '/api/query', // replace with your GraphQL server endpoint
   cache: new InMemoryCache(),
 });
 

@@ -1,4 +1,5 @@
-import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
+import apolloClient from '@/lib/apolloClient';
+import { gql } from '@apollo/client';
 import { createContext, useContext } from 'react';
 import useSWR from 'swr';
 
@@ -9,12 +10,6 @@ interface UserContextValue {
 
 // Create a new context
 const UserContext = createContext<UserContextValue>({data: null, error: null});
-
-// Create an Apollo Client instance
-const client = new ApolloClient({
-  uri: '/api/query', // replace with your GraphQL server endpoint
-  cache: new InMemoryCache(),
-});
 
 // Define your GraphQL query
 const WHO_AM_I_QUERY = gql`
@@ -28,7 +23,7 @@ query Whoami {
 
 // Create a fetcher function that uses Apollo Client to fetch data
 const fetcher = async () => {
-  const { data } = await client.query({
+  const { data } = await apolloClient.query({
     query: WHO_AM_I_QUERY,
   });
   return data;
