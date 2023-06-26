@@ -5,24 +5,29 @@ import { useMutation, gql } from '@apollo/client';
 import useTranslation from 'next-translate/useTranslation'
 
 export default function Home() {
-	const { t, lang } = useTranslation('common')
 	return (
 		<main className='p-5'>
 			<NavBar />
 			<h1>index.tsx</h1>
 			<UserData />
 			<LogOutButton />
-			<div>
-				<span>lang:</span>
-				<span>{lang}</span>
-				<span>
-					{t('hello')}
-				</span>
-			</div>
+			<TranslateTest/>
 		</main>
 	)
 }
 
+function TranslateTest() {
+	const { t, lang } = useTranslation('common')
+	return (
+		<div>
+			<span>lang:</span>
+			<span>{lang}</span>
+			<span>
+				{t('hello')}
+			</span>
+		</div>
+	)
+}
 function UserData() {
 	const { userData, loginError } = useUser();
 
