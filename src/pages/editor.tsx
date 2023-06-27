@@ -20,6 +20,7 @@ query ListLanguages {
     listLanguages {
         id
         fullName
+        monacoID
     }
 }
 `;
@@ -27,6 +28,7 @@ query ListLanguages {
 type Language = {
     id: string;
     fullName: string;
+    monacoID: string;
 }
 
 export default function Editor() {
@@ -35,7 +37,18 @@ export default function Editor() {
 
     const [languages, setLanguages] = useState<Language[]>([]);
     const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
+    const [monacoLangId, setMonacoLangId] = useState<string>("");
 
+    useEffect(() => {
+        if (selectedLanguage) {
+            const selectedLanguageObj = languages.find(language => language.id === selectedLanguage);
+            if (selectedLanguageObj) {
+                setMonacoLangId(selectedLanguageObj.monacoID);
+            }
+        }
+    }, [selectedLanguage, languages])
+
+    console.log(monacoLangId)
     useEffect(() => {
         if (listLangData) {
             setLanguages(listLangData.listLanguages);
@@ -104,12 +117,13 @@ export default function Editor() {
                     <div className="w-[600px] h-[200px] my-2">
                         <MonacoEditor
                             value={code}
+                            theme="vs-dark"
+                            language={monacoLangId}
+                            
                             onChange={(value, event) => setCode(value as string)}
                             className="w-full h-full"
                         />
                     </div>
-
-                    <textarea className='w-full h-[200px]' onKeyDown={handleEditorKeyDown} style={{ resize: 'vertical' }} value={code} onChange={e => setCode(e.target.value)}></textarea>
                 </div>
 
                 <div className="w-full flex flex-col">
@@ -141,3 +155,36 @@ export default function Editor() {
         </main>
     )
 }
+
+/*
+languages that have rich IntelliSense and validation
+TypeScript
+JavaScript
+CSS
+LESS
+SCSS
+JSON
+HTML
+languages with only basic syntax colorization
+XML
+PHP
+C#
+C++
+Razor
+Markdown
+Diff
+Java
+VB
+CoffeeScript
+Handlebars
+Batch
+Pug
+F#
+Lua
+Powershell
+Python
+Ruby
+SASS
+R
+Objective-C
+*/
