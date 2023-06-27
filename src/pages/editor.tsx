@@ -1,8 +1,8 @@
 import NavBar from "@/components/NavBar";
 import { stderr } from "process";
-import { useState } from "react";
+import { use, useEffect, useState } from "react";
 import { gql } from "@apollo/client";
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import apolloClient from "@/lib/apolloClient";
 
 const EXECUTE_CODE_MUTATION = gql`
@@ -14,8 +14,33 @@ mutation ExecuteCode($languageID: ID!, $code: String!) {
 }
 `;
 
+const LIST_LANGUAGES_QUERY = gql`
+query ListLanguages {
+    listLanguages {
+        id
+        fullName
+    }
+}
+`;
+
+type Language = {
+    id: string;
+    fullName: string;
+}
+
 export default function Editor() {
-    const [executeCode, { data }] = useMutation(EXECUTE_CODE_MUTATION, { client: apolloClient });
+    const [executeCode] = useMutation(EXECUTE_CODE_MUTATION, { client: apolloClient });
+    const { loading: listLangLoading, error: listLangError, data: listLangData } = useQuery(LIST_LANGUAGES_QUERY, { client: apolloClient });
+
+    const [languages, setLanguages] = useState<Language[]>([]);
+    const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (listLangData) {
+            setLanguages(listLangData.listLanguages);
+            setSelectedLanguage(listLangData.listLanguages[0].id);
+        }
+    }, [listLangData])
 
     const [code, setCode] = useState('')
 
@@ -25,13 +50,13 @@ export default function Editor() {
 
     const [running, setRunning] = useState<boolean>(false);
     const [error, setError] = useState<string>('')
-    
+
     async function handleExecuteCode() {
         setError('');
         setRunning(true);
         let response;
         try {
-            response = await executeCode({ variables: { languageID:'cpp17', code } })
+            response = await executeCode({ variables: { languageID: selectedLanguage, code } })
         } catch (error: any) {
             if (error.message) {
                 setError(error.message)
@@ -63,31 +88,40 @@ export default function Editor() {
             <div className="flex flex-col w-[600px] m-auto gap-3 mt-12">
 
                 <div className="w-full flex flex-col">
-                    tavs kods:
-                    <textarea className='w-full h-[200px]' onKeyDown={handleEditorKeyDown} style={{resize:'vertical'}} value={code} onChange={e => setCode(e.target.value)}></textarea>
+                    <div className="flex justify-between">
+                        <span>
+                            tavs kods:
+                        </span>
+                        <div> programmēšanas valoda
+                            {selectedLanguage &&
+                                <select className="ml-2" value={selectedLanguage} onChange={(e)=>{setSelectedLanguage(e.target.value)}}>
+                                    {languages.map(language => <option key={language.id} value={language.id}>{language.fullName}</option>)}
+                                </select>}
+                        </div>
+                    </div>
+                    <textarea className='w-full h-[200px]' onKeyDown={handleEditorKeyDown} style={{ resize: 'vertical' }} value={code} onChange={e => setCode(e.target.value)}></textarea>
                 </div>
 
                 <div className="w-full flex flex-col">
                     ievaddati:
-                    <textarea className='w-full h-[100px]' style={{resize:'vertical'}} value={stdin} onChange={e => setStdin(e.target.value)}></textarea>
+                    <textarea className='w-full h-[100px]' style={{ resize: 'vertical' }} value={stdin} onChange={e => setStdin(e.target.value)}></textarea>
                 </div>
 
-                {running && <div>izpildās...</div>}
-                {!running && <button onClick={handleExecuteCode} className="my-2">izpildīt</button>}
+                <button onClick={handleExecuteCode} className="my-2" disabled={running}>izpildīt</button>
 
                 <div className="w-full flex flex-col">
                     kompilācijas paziņojumi:
-                    <textarea className='w-full h-[60px]' style={{resize:'vertical'}} value={stdin} onChange={e => setStdin(e.target.value)}></textarea>
+                    <textarea className='w-full h-[60px]' style={{ resize: 'vertical' }} value={stdin} onChange={e => setStdin(e.target.value)}></textarea>
                 </div>
 
                 <div className="flex w-full gap-x-10 content-between">
                     <div className="flex-grow-[1] flex flex-col">
                         izpildes stdout:
-                        <textarea className='w-full h-[100px]' style={{resize:'vertical'}} value={stdout} readOnly onChange={e => setStdout(e.target.value)}></textarea>
+                        <textarea className='w-full h-[100px]' style={{ resize: 'vertical' }} value={stdout} readOnly onChange={e => setStdout(e.target.value)}></textarea>
                     </div>
                     <div className="flex-grow-[0.5] flex flex-col">
                         izpildes stderr:
-                        <textarea className='w-full h-[100px]' style={{resize:'vertical'}} value={stderr} readOnly onChange={e => setStderr(e.target.value)}></textarea>
+                        <textarea className='w-full h-[100px]' style={{ resize: 'vertical' }} value={stderr} readOnly onChange={e => setStderr(e.target.value)}></textarea>
                     </div>
                 </div>
 
