@@ -4,6 +4,7 @@ import { use, useEffect, useState } from "react";
 import { gql } from "@apollo/client";
 import { useMutation, useQuery } from "@apollo/client";
 import apolloClient from "@/lib/apolloClient";
+import MonacoEditor from "@monaco-editor/react";
 
 const EXECUTE_CODE_MUTATION = gql`
 mutation ExecuteCode($languageID: ID!, $code: String!) {
@@ -77,7 +78,7 @@ export default function Editor() {
             const { selectionStart, selectionEnd, value } = e.currentTarget;
             const newValue = value.substring(0, selectionStart) + '\t' + value.substring(selectionEnd);
             setCode(newValue);
-            e.currentTarget.selectionStart = e.currentTarget.selectionEnd = selectionStart + 1;
+            e.currentTarget.selectionStart = newValue.length;
         }
     }
 
@@ -94,11 +95,20 @@ export default function Editor() {
                         </span>
                         <div> programmēšanas valoda
                             {selectedLanguage &&
-                                <select className="ml-2" value={selectedLanguage} onChange={(e)=>{setSelectedLanguage(e.target.value)}}>
+                                <select className="ml-2" value={selectedLanguage} onChange={(e) => { setSelectedLanguage(e.target.value) }}>
                                     {languages.map(language => <option key={language.id} value={language.id}>{language.fullName}</option>)}
                                 </select>}
                         </div>
                     </div>
+                    
+                    <div className="w-[600px] h-[200px] my-2">
+                        <MonacoEditor
+                            value={code}
+                            onChange={(value, event) => setCode(value as string)}
+                            className="w-full h-full"
+                        />
+                    </div>
+
                     <textarea className='w-full h-[200px]' onKeyDown={handleEditorKeyDown} style={{ resize: 'vertical' }} value={code} onChange={e => setCode(e.target.value)}></textarea>
                 </div>
 

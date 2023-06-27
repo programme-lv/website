@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.7.16",
+    "@monaco-editor/react": "^4.5.1",
     "@types/node": "18.16.0",
     "@types/react": "18.0.38",
     "@types/react-dom": "18.0.11",
@@ -19,6 +20,7 @@
     "graphql": "^16.7.1",
     "i18n": "^0.15.1",
     "i18next": "^23.2.3",
+    "monaco-editor": "^0.39.0",
     "next": "13.3.1",
     "next-i18next": "^14.0.0",
     "next-translate": "^2.4.2",
