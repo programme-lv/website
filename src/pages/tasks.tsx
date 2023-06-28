@@ -1,6 +1,7 @@
 import NavBar from '@/components/NavBar'
 import { gql, useQuery } from '@apollo/client'
 import apolloClient from '@/lib/apolloClient'
+import Link from 'next/link'
 
 export const GET_TASKS = gql`
 query ListTasks {
@@ -59,7 +60,7 @@ function TaskTable() {
 						<TaskTableTd>{task.fullName}</TaskTableTd>
 						<TaskTableTd>{task.origin}</TaskTableTd>
 						<TaskTableTd>{(task.authors as string[]).join(" ")}</TaskTableTd>
-						<TaskTableTd><TaskActions taskID={task.id}/></TaskTableTd>
+						<TaskTableTd><TaskActions taskID={task.id} /></TaskTableTd>
 					</tr>
 				))}
 			</tbody>
@@ -73,12 +74,18 @@ type TaskActionsProps = {
 
 // view as user, edit as admin, delete as admin
 function TaskActions(props: TaskActionsProps) {
-
+	function handleDeleteTask() {
+		alert("nu, nedzēs manu vienīgo uzdevumu! >:(")
+	}
 	return (
 		<div className="flex gap-3 text-lg">
-			<button>skatīt kā lietotājs</button>
-			<button>rediģēt</button>
-			<button>dzēst</button>
+			<Link href={`/tasks/${props.taskID}`}>
+				<button>skatīt kā lietotājs</button>
+			</Link>
+			<Link href={`/tasks/edit/${props.taskID}`}>
+				<button>rediģēt</button>
+			</Link>
+			<button onClick={handleDeleteTask}>dzēst</button>
 		</div>
 	)
 }
@@ -89,7 +96,7 @@ const TaskTableTh = (props: { children: any }) => (
 	</th>
 )
 
-const TaskTableTd = (props: { children: any}) => (
+const TaskTableTd = (props: { children: any }) => (
 	<td className="px-6 py-4  border border-solid">
 		<div className="text-sm text-gray-900">{props.children}</div>
 	</td>
