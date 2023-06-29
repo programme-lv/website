@@ -32,7 +32,7 @@ type Task = {
         id: string
         versionName: string
         timeLimitMs: number
-        memoryLimitMb: number
+        memoryLimitKb: number
         createdAt: string
         updatedAt: string
     }[]
@@ -65,12 +65,13 @@ export default function EditTask() {
             <NavBar />
             <h1>edit/[id].tsx</h1>
 
-            <fieldset className="p-5">
                 <legend>uzdevuma dati</legend>
                 <p>id: {task.id}</p>
                 <TextInputField label="pilnais nosaukums" value={fullName} onChange={setFullName} />
+                <input type="text" placeholder="Type here1" className="input input-sm input-bordered focus:outline-1 focus:outline-primary" />
+                
+                <input type="text" placeholder="Type here" className="input input-bordered w-full max-w-xs" />
                 <button className="mt-5">saglabāt</button>
-            </fieldset>
 
             <p>origin: {task.origin}</p>
             <p>authors: {task.authors.join(', ')}</p>
@@ -108,52 +109,56 @@ type VersionTableProps = {
         id: string
         versionName: string
         timeLimitMs: number
-        memoryLimitMb: number
+        memoryLimitKb: number
         createdAt: string
         updatedAt: string
     }[]
 }
 
 function VersionTable(props: VersionTableProps) {
+    const tableHeaders = [
+        'versija',
+        'laika ierobežojums [ms]',
+        'atmiņas ierobežojums [kb]',
+        'izveidots',
+        'labots',
+        'darbības',
+    ]
+
+    const headerClasses = ['border', 'text-black', 'text-center'].join(' ')
+
     return (
-        <table className="min-w-full border-collapse text-sm">
-            <thead>
+        <table className="min-w-full table">
+            <thead className='text-cente'>
                 <tr>
-                    <VersionTableTh>versija</VersionTableTh>
-                    <VersionTableTh>laika ierobežojums [ms]</VersionTableTh>
-                    <VersionTableTh>atmiņas ierobežojums [kb]</VersionTableTh>
-                    <VersionTableTh>izveidots</VersionTableTh>
-                    <VersionTableTh>labots</VersionTableTh>
-                    <VersionTableTh>darbības</VersionTableTh>
+                    {tableHeaders.map(header => (
+                        <th key={header} className={headerClasses}>{header}</th>
+                    ))}
                 </tr>
             </thead>
             <tbody>
-                {props.versions.map(version => (
-                    <tr key={version.id}>
-                        <VersionTableTd>{version.versionName}</VersionTableTd>
-                        <VersionTableTd>{version.timeLimitMs}</VersionTableTd>
-                        <VersionTableTd>{version.memoryLimitMb}</VersionTableTd>
-                        <VersionTableTd>{version.createdAt}</VersionTableTd>
-                        <VersionTableTd>{version.updatedAt}</VersionTableTd>
-                        <VersionTableTd>
-                            <button className="btn btn-info">rediģēt</button>
-                            <button className="btn btn-error">dzēst</button>
-                        </VersionTableTd>
-                    </tr>
-                ))}
+                {props.versions.map(version => {
+                    let rowElements = [
+                        version.versionName,
+                        version.timeLimitMs,
+                        version.memoryLimitKb,
+                        version.createdAt,
+                        version.updatedAt,
+                    ]
+                    let elementClasses = ['border', 'text-black', 'text-center'].join(' ')
+                    return (
+                        <tr key={version.id}>
+                            {rowElements.map(element => (
+                                <td key={element} className={elementClasses}>{element}</td>
+                            ))}
+                            <td className="flex justify-center gap-3">
+                                <button className="btn btn-sm lowercase btn-primary">rediģēt</button>
+                                <button className="btn btn-sm lowercase btn-error">dzēst</button>
+                            </td>
+                        </tr>
+                    )
+                })}
             </tbody>
         </table>
     )
 }
-
-const VersionTableTh = ({ children }: { children: React.ReactNode }) => (
-    <th scope="col" className="px-6 py-3 text-left uppercase border border-solid">
-        {children}
-    </th>
-)
-
-const VersionTableTd = ({ children }: { children: React.ReactNode }) => (
-    <td className="px-6 py-4  border border-solid">
-        <div className="text-sm text-gray-900">{children}</div>
-    </td>
-)

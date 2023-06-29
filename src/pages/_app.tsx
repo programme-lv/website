@@ -5,7 +5,7 @@ import { UserProvider } from '@/contexts/UserContext'
 import { useEffect } from 'react'
 
 const inter = Inter({ subsets: ['latin'] })
-const theme = 'corporate'
+const theme = 'mytheme'
 
 export default function App({ Component, pageProps }: AppProps) {
 
