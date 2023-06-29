@@ -5,6 +5,8 @@ import { gql } from "@apollo/client";
 import { useMutation, useQuery } from "@apollo/client";
 import apolloClient from "@/lib/apolloClient";
 import MonacoEditor from "@monaco-editor/react";
+import { ApolloClient, InMemoryCache } from "@apollo/client";
+import { redirect } from "next/dist/server/api-utils";
 
 const EXECUTE_CODE_MUTATION = gql`
 mutation ExecuteCode($languageID: ID!, $code: String!) {
@@ -113,13 +115,13 @@ export default function Editor() {
                                 </select>}
                         </div>
                     </div>
-                    
+
                     <div className="w-[600px] h-[200px] my-2">
                         <MonacoEditor
                             value={code}
                             theme="vs-dark"
                             language={monacoLangId}
-                            
+
                             onChange={(value, event) => setCode(value as string)}
                             className="w-full h-full"
                         />
@@ -154,4 +156,53 @@ export default function Editor() {
             </div>
         </main>
     )
+}
+
+const AUTHENTICATE_QUERY = gql`
+query Authenticate {
+    whoami {
+        id
+        username
+    }
+}
+`;
+
+
+export async function getServerSideProps(context: any) {
+    const serverSideClient = new ApolloClient({
+        uri: process.env.BACKEND_URI,
+        cache: new InMemoryCache()
+    });
+
+    try {
+        console.log(process.env.BACKEND_URI)
+        const data = await serverSideClient.query({
+            query: AUTHENTICATE_QUERY,
+            fetchPolicy: 'no-cache',
+            context: {
+                headers: {
+                    cookie: context.req.headers.cookie
+                }
+            }
+            
+        });
+        console.log(data);
+    } catch (error) {
+        return {
+            redirect: {
+                destination: '/login',
+                permanent: false,
+            },
+        }
+    }
+
+    console.log(context.req.headers.cookie)
+    // make request to backend to check if user is logged in
+    // if not logged in, redirect to login page
+    // if logged in, redirect to editor page
+
+
+    return {
+        props: {}, // Will be passed to the page component as props
+    }
 }
