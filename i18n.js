@@ -3,7 +3,7 @@ module.exports = {
   defaultLocale: 'lv',
   pages: {
     '*': ['common'],
-    "/": ["common"],
+    "/": ["common", "errors"],
     "/login": ["common","errors"],
   },
 }

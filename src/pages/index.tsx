@@ -1,49 +1,61 @@
 import NavBar from '@/components/NavBar'
+import PrimaryButton from '@/components/PrimaryButton';
 import { useUser } from '@/contexts/UserContext'
 import apolloClient from '@/lib/apolloClient';
 import { useMutation, gql } from '@apollo/client';
 import useTranslation from 'next-translate/useTranslation'
+import Link from 'next/link';
 
 export default function Home() {
+	const { userData, loginError } = useUser();
 	return (
 		<main className='p-5'>
-			<NavBar active='index'/>
-			<h1>index.tsx</h1>
+			<NavBar active='index' />
 			<UserData />
-			<LogOutButton />
-			<TranslateTest/>
+			{loginError &&
+			<Link href='/login'>
+				<PrimaryButton text="Pierakstīties" />
+			</Link>
+			}
 		</main>
 	)
 }
 
-function TranslateTest() {
-	const { t, lang } = useTranslation('common')
-	return (
-		<div>
-			<span>lang:</span>
-			<span>{lang}</span>
-			<span>
-				{t('hello')}
-			</span>
-		</div>
-	)
-}
 function UserData() {
 	const { userData, loginError } = useUser();
+	const { t } = useTranslation('errors')
 
-	if (loginError) return <div>failed to login</div>
+	if (loginError) {
+		return (
+			<div className='flex flex-col border border-gray-400 rounded p-5 my-5 max-w-md'>
+				<h1 className='text-2xl font-bold'>Lietotāja dati</h1>
+				<div className="my-2">
+					<strong>Kļūda!</strong> {t(loginError.message)}
+				</div>
+			</div>
+		)
+	}
 	if (!userData) return <div>authenticating...</div>
+
 	return (
-		<div>
-			<div>
-				<span>username:</span>
-				<span>{userData.username}</span>
+		<div className='flex flex-col border border-gray-400 rounded p-5 my-5 max-w-md'>
+			<h1 className='text-2xl font-bold'>Lietotāja dati</h1>
+			<div className="my-2">
+				lietotāja id: <strong>{userData.id}</strong>
 			</div>
-			<div>
-				<span>id:</span>
-				<span>{userData.id}</span>
+			<div className="my-2">
+				lietotājvārds: <strong>{userData.username}</strong>
 			</div>
-			<div>{JSON.stringify(userData)}</div>
+			<div className="my-2">
+				vārds: <strong>{userData.firstName}</strong>
+			</div>
+			<div className="my-2">
+				uzvārds: <strong>{userData.lastName}</strong>
+			</div>
+			<div className="my-2">
+				e-pasts: <strong>{userData.email}</strong>
+			</div>
+			<LogOutButton />
 		</div>
 	)
 }
@@ -64,6 +76,6 @@ function LogOutButton() {
 	}
 
 	return (
-		<button onClick={handleLogout}>Log Out</button>
+		<PrimaryButton text='Iziet' onClick={handleLogout} />
 	)
 }

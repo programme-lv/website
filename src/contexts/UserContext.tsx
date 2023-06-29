@@ -6,6 +6,9 @@ import useSWR from 'swr';
 interface UserData {
   id: string;
   username: string;
+  firstName: string;
+  lastName: string;
+  email: string;
 }
 
 interface UserContextValue {
@@ -21,8 +24,11 @@ const UserContext = createContext<UserContextValue>({} as UserContextValue);
 const WHO_AM_I_QUERY = gql`
 query Whoami {
   whoami {
-      id
-      username
+    id
+    username
+    email
+    firstName
+    lastName
   }
 }
 `;
@@ -48,7 +54,7 @@ export function UserProvider({ children }: any) {
   */
 
   return (
-    <UserContext.Provider value={{ userData: data?.whoami, loginError: error, refreshUser: mutate}}>
+    <UserContext.Provider value={{ userData: data?.whoami, loginError: error, refreshUser: mutate }}>
       {children}
     </UserContext.Provider>
   );
