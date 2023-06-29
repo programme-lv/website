@@ -5,6 +5,8 @@ import Link from 'next/link'
 import PrimaryButton from '@/components/PrimaryButton'
 import SecondaryButton from '@/components/SecondaryButton'
 import DangerButton from '@/components/DangerButton'
+import Modal from '@/components/Modal'
+import { useEffect, useState } from 'react'
 
 export const GET_TASKS = gql`
 query ListTasks {
@@ -38,11 +40,56 @@ export default function Tasks() {
 	)
 }
 
+type Task = {
+	id: string
+	fullName: string
+	origin: string
+	authors: string[]
+	versions: {
+		id: string
+		versionName: string
+		timeLimitMs: number
+		memoryLimitKb: number
+		createdAt: string
+		updatedAt: string
+		evalType: {
+			id: string
+			descriptionEn: string
+		}
+	}[]
+}
+
 function TaskTable() {
 	const { loading, error, data } = useQuery(GET_TASKS, { client: apolloClient })
 
+	const [tasks, setTasks] = useState<Task[]>([])
+	
+	const [newTaskId, setNewTaskId] = useState<string>("")
+	const [newTaskFullName, setNewTaskFullName] = useState<string>("")
+
+	useEffect(() => {
+		if (data) {
+			setTasks(data.listTasks)
+		}
+	}, [data])
+
+	const [isCreateTaskModalOpen, setIsCreateTaskModalOpen] = useState(false)
+
 	if (loading) return <p>Loading...</p>
 	if (error) return <p>Error: {error.message}</p>
+
+
+	function handleOpenCreateTaskModal() {
+		setIsCreateTaskModalOpen(true);
+	}
+
+	function handleCloseCreateTaskModal() {
+		setIsCreateTaskModalOpen(false);
+	}
+
+	function handleCreateTask() {
+		alert(newTaskId + " " + newTaskFullName)
+	}
 
 	return (
 		<div className="flex flex-col border border-gray-400 rounded p-5 my-5">
@@ -58,7 +105,7 @@ function TaskTable() {
 					</tr>
 				</thead>
 				<tbody>
-					{data.listTasks.map((task: any) => (
+					{tasks.map((task: any) => (
 						<tr key={task.id}>
 							<TaskTableTd>{task.id}</TaskTableTd>
 							<TaskTableTd>{task.fullName}</TaskTableTd>
@@ -69,6 +116,21 @@ function TaskTable() {
 					))}
 				</tbody>
 			</table>
+			<div className="self-start mt-4">
+				<SecondaryButton text="pievienot jaunu uzdevumu" onClick={handleOpenCreateTaskModal}/>
+			</div>
+			<Modal isOpen={isCreateTaskModalOpen} closeModal={handleCloseCreateTaskModal} continueText="Izveidot uzdevumu!" continueCallback={handleCreateTask} title='Jauna uzdevuma izveide!'>
+				<div className="flex flex-col gap-3">
+					<label>uzdevuma kods (id):</label>
+					<input type="text" className="border border-gray-400 rounded p-2" 
+					onChange={(e)=>setNewTaskId(e.target.value)}/>
+				</div>
+				<div className='flex flex-col gap-3 mt-4'>
+					<label>pilnais nosaukums:</label>
+					<input type="text" className="border border-gray-400 rounded p-2"
+					onChange={(e)=>setNewTaskFullName(e.target.value)} />
+				</div>
+			</Modal>
 		</div>
 	)
 }
@@ -91,7 +153,7 @@ function TaskActions(props: TaskActionsProps) {
 				<SecondaryButton text="rediģēt" />
 			</Link>
 			<div>
-			<DangerButton text='dzēst' onClick={handleDeleteTask}/>
+				<DangerButton text='dzēst' onClick={handleDeleteTask} />
 			</div>
 		</div>
 	)
