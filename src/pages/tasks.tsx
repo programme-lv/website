@@ -1,5 +1,5 @@
 import NavBar from '@/components/NavBar'
-import { gql, useQuery } from '@apollo/client'
+import { gql, useQuery, useMutation } from '@apollo/client'
 import apolloClient from '@/lib/apolloClient'
 import Link from 'next/link'
 import PrimaryButton from '@/components/PrimaryButton'
@@ -59,8 +59,20 @@ type Task = {
 	}[]
 }
 
+const CREATE_TASK = gql`
+mutation CreateTask($id: String!, $fullName: String!){
+    createTask(id: $id, fullName: $fullName) {
+        id
+        fullName
+        origin
+        authors
+    }
+}
+`
+
 function TaskTable() {
 	const { loading, error, data } = useQuery(GET_TASKS, { client: apolloClient })
+	const [createTask] = useMutation(CREATE_TASK, { client: apolloClient })
 
 	const [tasks, setTasks] = useState<Task[]>([])
 	
@@ -87,8 +99,20 @@ function TaskTable() {
 		setIsCreateTaskModalOpen(false);
 	}
 
-	function handleCreateTask() {
-		alert(newTaskId + " " + newTaskFullName)
+	async function handleCreateTask() {
+		try {
+			let response = await createTask({ variables: { id: newTaskId, fullName: newTaskFullName } })
+			if (response.data.createTask) {
+				setTasks([...tasks, response.data.createTask])
+				setIsCreateTaskModalOpen(false)
+			}
+		} catch (e:any) {
+			if(e.message)
+				alert(e.message)
+			else
+				alert("nezināma kļūda")
+		}
+
 	}
 
 	return (
@@ -141,8 +165,10 @@ type TaskActionsProps = {
 
 // view as user, edit as admin, delete as admin
 function TaskActions(props: TaskActionsProps) {
-	function handleDeleteTask() {
-		alert("nu, nedzēs manu vienīgo uzdevumu! >:(")
+	function handleDeleteTask(taskID: string) {
+		if (confirm("Vai tiešām vēlaties dzēst šo uzdevumu?")) {
+			alert("TODO: delete task")
+		}
 	}
 	return (
 		<div className="flex gap-3 justify-center items-center ">
@@ -153,7 +179,7 @@ function TaskActions(props: TaskActionsProps) {
 				<SecondaryButton text="rediģēt" />
 			</Link>
 			<div>
-				<DangerButton text='dzēst' onClick={handleDeleteTask} />
+				<DangerButton text='dzēst' onClick={()=>handleDeleteTask(props.taskID)} />
 			</div>
 		</div>
 	)
