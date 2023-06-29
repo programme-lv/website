@@ -9,12 +9,12 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useMutation, gql } from '@apollo/client';
 import apolloClient from '@/lib/apolloClient';
+import useTranslation from 'next-translate/useTranslation'
 
 export default function Register() {
     return (
         <main className='p-5'>
             <NavBar />
-            <h1>register.tsx</h1>
             <RegistrationForm />
         </main>
     )
@@ -32,6 +32,8 @@ const REGISTER_MUTATION = gql`
 
 
 function RegistrationForm() {
+    const { t } = useTranslation('errors')
+
     const [register, { data }] = useMutation(REGISTER_MUTATION, { client: apolloClient });
 
     const [username, setUsername] = useState<string>('')
@@ -74,19 +76,19 @@ function RegistrationForm() {
     }
 
     return (
-        <form className='flex flex-col' onSubmit={handleRegistration}>
+        <form className='flex flex-col border border-gray-400 rounded p-5 my-5 max-w-md' onSubmit={handleRegistration}>
             <UsernameInput username={username} setUsername={setUsername} />
             <EmailInput email={email} setEmail={setEmail} />
             <FirstNameInput firstname={firstName} setFirstName={setFirstName} />
             <LastNameInput lastname={lastName} setLastName={setLastName} />
             <PasswordInput password={password} setPassword={setPassword} />
             <RepeatPasswordInput password={repeatPassword} setPassword={setRepeatPassword} />
-            <button type="submit">Reģistrēties</button>
-            <div>
-                Jau esi piereģistrējies? <Link href="/login">Pieslēgties</Link>
+            <button type="submit" className="rounded self-end p-2 px-12 mt-4 text-sm border max-w-xs bg-blue-600 text-white font-semibold hover:bg-blue-500">Reģistrēties</button>
+            <div className="mt-4">
+                Jau esi piereģistrējies? <Link href="/login" className="underline text-blue-500 hover:no-underline">Pieslēgties</Link>
             </div>
             <div>
-                {error}
+                {t(error)}
             </div>
         </form>
     )

@@ -36,10 +36,13 @@ function LoginForm() {
 	const [username, setUsername] = useState('')
 	const [password, setPassword] = useState('')
 
+	const [loggingIn, setLoggingIn] = useState(false)
 	const [error, setError] = useState('')
 
 	async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
+		setError('');
+		setLoggingIn(true);
 		try {
 			await login({ variables: { username, password } });
 			await refreshUser();
@@ -50,21 +53,23 @@ function LoginForm() {
 			} else {
 				setError('Nezināma kļūda')
 			}
-			return;
 		}
+		setLoggingIn(false);
 	}
 
 	return (
 		<form className='flex flex-col border border-gray-400 rounded p-5 my-5 max-w-md' onSubmit={handleLogin}>
 				<UsernameInput username={username} setUsername={setUsername} />
 				<PasswordInput password={password} setPassword={setPassword} />
-				<button type="submit" className="rounded self-end p-2 px-12 mt-4 text-sm border max-w-xs bg-blue-600 text-white font-semibold hover:bg-blue-500">Pieslēgties</button>
+				<button disabled={loggingIn} type="submit" className="disabled:opacity-70 rounded self-end p-2 px-12 mt-4 text-sm border max-w-xs bg-blue-600 text-white font-semibold hover:bg-blue-500">
+					Pieslēgties
+				</button>
 				<div className="mt-4">
-					Neesi piereģistrējies? <Link href="/register" className="underline text-blue-500">Reģistrēties</Link>
+					Neesi piereģistrējies? <Link href="/register" className="underline text-blue-500 hover:no-underline">Reģistrēties</Link>
 				</div>
-				<div>
+				{error && <div className="p-2 px-4 bg-red-400 mt-4">
 					{t(error)}
-				</div>
+				</div>}
 		</form>
 	)
 }
