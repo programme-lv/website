@@ -10,7 +10,11 @@
   },
   "dependencies": {
     "@apollo/client": "^3.7.16",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
     "@monaco-editor/react": "^4.5.1",
+    "@mui/icons-material": "^5.11.16",
+    "@mui/material": "^5.13.6",
     "@types/node": "18.16.0",
     "@types/react": "18.0.38",
     "@types/react-dom": "18.0.11",
@@ -33,7 +37,6 @@
     "typescript": "5.0.4"
   },
   "devDependencies": {
-    "daisyui": "^3.1.7",
     "next-translate-plugin": "^2.4.2"
   }
 }

@@ -7,7 +7,7 @@ import useTranslation from 'next-translate/useTranslation'
 export default function Home() {
 	return (
 		<main className='p-5'>
-			<NavBar />
+			<NavBar active='index'/>
 			<h1>index.tsx</h1>
 			<UserData />
 			<LogOutButton />

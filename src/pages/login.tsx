@@ -13,7 +13,6 @@ export default function Login() {
 	return (
 		<main className='p-5'>
 			<NavBar />
-			<h1>login.tsx</h1>
 			<LoginForm />
 		</main>
 	)
@@ -29,7 +28,7 @@ mutation Login($username: String!, $password: String!) {
 `;
 
 function LoginForm() {
-	const {t} = useTranslation('errors')
+	const { t } = useTranslation('errors')
 	const { userData, loginError, refreshUser } = useUser();
 	const [login, { data }] = useMutation(LOGIN_MUTATION, { client: apolloClient });
 	const router = useRouter();
@@ -56,16 +55,16 @@ function LoginForm() {
 	}
 
 	return (
-		<form className='flex flex-col' onSubmit={handleLogin}>
-			<UsernameInput username={username} setUsername={setUsername} />
-			<PasswordInput password={password} setPassword={setPassword} />
-			<button type="submit">Pieslēgties</button>
-			<div>
-				Neesi piereģistrējies? <Link href="/register">Reģistrēties</Link>
-			</div>
-			<div>
-				{t(error)}
-			</div>
+		<form className='flex flex-col border border-gray-400 rounded p-5 my-5 max-w-md' onSubmit={handleLogin}>
+				<UsernameInput username={username} setUsername={setUsername} />
+				<PasswordInput password={password} setPassword={setPassword} />
+				<button type="submit" className="rounded self-end p-2 px-12 mt-4 text-sm border max-w-xs bg-blue-600 text-white font-semibold hover:bg-blue-500">Pieslēgties</button>
+				<div className="mt-4">
+					Neesi piereģistrējies? <Link href="/register" className="underline text-blue-500">Reģistrēties</Link>
+				</div>
+				<div>
+					{t(error)}
+				</div>
 		</form>
 	)
 }

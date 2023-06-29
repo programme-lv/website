@@ -43,10 +43,12 @@ export default function EditTask() {
     const { loading, error, data } = useQuery(GET_TASK, { client: apolloClient, variables: { id: router.query["edit-task-id"] } })
 
     const [fullName, setFullName] = useState('')
+    const [origin, setOrigin] = useState('')
 
     useEffect(() => {
         if (data) {
             setFullName(data.getTask.fullName)
+            setOrigin(data.getTask.origin)
         }
     }, [data])
 
@@ -65,15 +67,24 @@ export default function EditTask() {
             <NavBar />
             <h1>edit/[id].tsx</h1>
 
-                <legend>uzdevuma dati</legend>
-                <p>id: {task.id}</p>
-                <TextInputField label="pilnais nosaukums" value={fullName} onChange={setFullName} />
-                <input type="text" placeholder="Type here1" className="input input-sm input-bordered focus:outline-1 focus:outline-primary" />
-                
-                <input type="text" placeholder="Type here" className="input input-bordered w-full max-w-xs" />
-                <button className="mt-5">saglabāt</button>
+            <div className="max-w-sm border p-5 flex flex-col">
+                <div className="my-2">
+                    uzdevuma kods: <strong>{task.id}</strong>
+                </div>
+                <div className="flex flex-col gap-1 my-2">
+                    <label htmlFor="full-task-name">pilnais nosaukums</label>
+                    <input id="full-task-name" type="text" placeholder="pilnais nosaukums" value={fullName} onChange={(e) => { setFullName(e.target.value) }} className="input input-sm input-bordered input-primary focus:outline-none" />
+                </div>
+                <div className="flex flex-col gap-1 my-2">
+                    <label htmlFor="task-origin">avots</label>
+                    <select id="task-origin" value={origin} onChange={(e)=>setOrigin(e.target.value)}  className="select select-sm select-bordered select-primary focus:outline-none">
+                        <option value="lio">Latvijas Informātikas olimpiāde</option>
+                        <option value="ProblemCon">ProblemCon++</option>
+                    </select>
+                </div>
+                <button className="mt-5 btn btn-success btn-sm lowercase">saglabāt izmaiņas</button>
+            </div>
 
-            <p>origin: {task.origin}</p>
             <p>authors: {task.authors.join(', ')}</p>
             <p>versions: {task.versions.map(version => version.versionName).join(', ')}</p>
 
@@ -81,26 +92,6 @@ export default function EditTask() {
 
             <VersionTable versions={task.versions} />
         </main>
-    )
-}
-
-type TextInputFieldProps = {
-    label: string
-    value: string
-    onChange: (value: string) => void
-}
-
-function TextInputField(props: TextInputFieldProps) {
-    return (
-        <div className="flex flex-col gap-1">
-            <label>{props.label}:</label>
-            <input
-                type="text"
-                className="px-4 py-2"
-                value={props.value}
-                onChange={e => props.onChange(e.target.value)}
-            />
-        </div>
     )
 }
 
