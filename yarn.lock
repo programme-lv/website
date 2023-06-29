@@ -2228,10 +2228,10 @@ next-translate-plugin@^2.4.2:
   dependencies:
     typescript "4.5.2"
 
-next-translate@^2.4.2:
-  version "2.4.2"
-  resolved "https://registry.yarnpkg.com/next-translate/-/next-translate-2.4.2.tgz#eb03dda2a59068d2e3ad5feb4ed09d0c72327470"
-  integrity sha512-n4yddJo5C4Wowp8S/Q2ua9ewZtOAfwfaTmeHfVlDwS64/e/XuHcT3S+1u2k9I4bXlO2/zbCTwX+ww3Lq8byoLg==
+next-translate@^2.4.4:
+  version "2.4.4"
+  resolved "https://registry.yarnpkg.com/next-translate/-/next-translate-2.4.4.tgz#dc8233338883f5dbb6a160114884a6db582afaca"
+  integrity sha512-WuHT8gSgkIDMyxuvIjRFZMfXjbGz8xjpuEBerChVy+ORkfo9xoUagS2FXyrXORyQmE5ifsWmKVUgiyy9NN5Ygg==
 
 next@13.3.1:
   version "13.3.1"

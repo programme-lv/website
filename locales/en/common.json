@@ -1,0 +1,10 @@
+{
+    "navbar_home": "Home",
+    "navbar_login": "Login",
+    "navbar_tasks": "Tasks",
+    "navbar_editor": "Editor",
+    "home_login": "Login",
+    "home_register": "Register",
+    "home_user_data": "User data",
+    "home_user_data_error_exclamation": "Error!"
+}

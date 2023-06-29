@@ -1,8 +1,8 @@
 module.exports = {
-  locales: ['lv'],
+  locales: ['lv', 'en'],
   defaultLocale: 'lv',
   pages: {
-    '*': ['common'],
+    '*': ['common', 'errors'],
     "/": ["common", "errors"],
     "/login": ["common","errors"],
   },
