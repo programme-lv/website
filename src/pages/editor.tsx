@@ -99,7 +99,7 @@ export default function Editor() {
 
     return (
         <main className='p-5'>
-            <NavBar />
+            <NavBar active="editor" />
 
             <div className="flex flex-col w-[600px] m-auto gap-3 mt-12">
 
@@ -184,7 +184,7 @@ export async function getServerSideProps(context: any) {
                     cookie: context.req.headers.cookie
                 }
             }
-            
+
         });
         console.log(data);
     } catch (error) {

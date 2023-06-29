@@ -12,7 +12,7 @@ import useTranslation from 'next-translate/useTranslation'
 export default function Login() {
 	return (
 		<main className='p-5'>
-			<NavBar />
+			<NavBar active='login'/>
 			<LoginForm />
 		</main>
 	)

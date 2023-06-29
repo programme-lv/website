@@ -29,7 +29,7 @@ query ListTasks {
 export default function Tasks() {
 	return (
 		<main className='p-5'>
-			<NavBar />
+			<NavBar active='tasks'/>
 			<h1>tasks.tsx</h1>
 			<TaskTable />
 		</main>
