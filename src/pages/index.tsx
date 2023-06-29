@@ -1,5 +1,6 @@
 import NavBar from '@/components/NavBar'
 import PrimaryButton from '@/components/PrimaryButton';
+import SecondaryButton from '@/components/SecondaryButton';
 import { useUser } from '@/contexts/UserContext'
 import apolloClient from '@/lib/apolloClient';
 import { useMutation, gql } from '@apollo/client';
@@ -13,9 +14,14 @@ export default function Home() {
 			<NavBar active='index' />
 			<UserData />
 			{loginError &&
+			<div className="flex gap-6">
 			<Link href='/login'>
 				<PrimaryButton text="Pierakstīties" />
 			</Link>
+			<Link href='/register'>
+				<SecondaryButton text="Reģistrēties" />
+			</Link>
+			</div>
 			}
 		</main>
 	)
