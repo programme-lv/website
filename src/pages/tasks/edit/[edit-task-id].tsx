@@ -1,5 +1,5 @@
 import NavBar from '@/components/NavBar'
-import { useQuery, gql } from '@apollo/client'
+import { useQuery, gql, useMutation } from '@apollo/client'
 import apolloClient from '@/lib/apolloClient'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
@@ -84,8 +84,30 @@ type TaskMetadataProps = {
     authors: string[]
 }
 
+/*
+mutation UpdateTask {
+    updateTask(id: "baobabi", fullName: "Baobabi2", authors: ["123","1231"]) {
+        origin
+        authors
+        fullName
+        id
+    }
+}
+*/
+const UPDATE_TASK_METADATA = gql`
+mutation UpdateTask($id: ID!, $fullName: String, $origin: String, $authors: [String!]) {
+    updateTask(id: $id, fullName: $fullName, origin: $origin, authors: $authors) {
+        id
+        fullName
+        origin
+        authors
+    }
+}
+`
+
 function TaskMetadata(props: TaskMetadataProps) {
     const { loading, error, data:taskSourceData } = useQuery(GET_TASK_SOURCES, { client: apolloClient })
+    const [updateTaskMetadata] = useMutation(UPDATE_TASK_METADATA, { client: apolloClient })
 
     const [fullName, setFullName] = useState('')
     const [origin, setOrigin] = useState('')
@@ -103,6 +125,28 @@ function TaskMetadata(props: TaskMetadataProps) {
             setTaskSources(taskSourceData.listTaskSources)
         }
     }, [taskSourceData])
+
+    async function handleUpdateTaskMetadata() {
+        try{
+            type UpdateTaskMetadataVariables = {
+                id: string
+                fullName: string
+                origin?: string
+                authors?: string[]
+            }
+
+            let data:UpdateTaskMetadataVariables = {
+                id: props.id,
+                fullName: fullName,
+                origin: origin,
+            }
+
+            const response = await updateTaskMetadata({ variables: data })
+            alert(JSON.stringify(response));
+        } catch (e) {
+            alert(JSON.stringify(e))
+        }
+    }
 
     if (loading) return <p>Loading...</p>
     if (error) return <p>Error: {error.message}</p>
@@ -123,6 +167,7 @@ function TaskMetadata(props: TaskMetadataProps) {
             <div className="flex flex-col gap-1 my-2">
                 <label htmlFor="task-origin">uzdevuma avots:</label>
                 <select id="task-origin" value={origin} onChange={(e) => setOrigin(e.target.value)} className="p-2">
+                    <option value="">pašdarināts</option>
                     {taskSources.map(taskSource => (
                         <option key={taskSource.abbreviation} value={taskSource.abbreviation}>{taskSource.fullName}</option>
                     ))}
@@ -132,7 +177,7 @@ function TaskMetadata(props: TaskMetadataProps) {
             {/* <div className='my-2'>
                 autori: <span className="text-blue-600 font-bold">{props.authors.join(', ')}</span>
             </div> */}
-            <SecondaryButton text="saglabāt izmaiņas" />
+            <SecondaryButton text="saglabāt izmaiņas" onClick={handleUpdateTaskMetadata}/>
         </div>
     )
 }

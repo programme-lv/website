@@ -75,7 +75,7 @@ function TaskTable() {
 	const [createTask] = useMutation(CREATE_TASK, { client: apolloClient })
 
 	const [tasks, setTasks] = useState<Task[]>([])
-	
+
 	const [newTaskId, setNewTaskId] = useState<string>("")
 	const [newTaskFullName, setNewTaskFullName] = useState<string>("")
 
@@ -106,8 +106,8 @@ function TaskTable() {
 				setTasks([...tasks, response.data.createTask])
 				setIsCreateTaskModalOpen(false)
 			}
-		} catch (e:any) {
-			if(e.message)
+		} catch (e: any) {
+			if (e.message)
 				alert(e.message)
 			else
 				alert("nezināma kļūda")
@@ -141,18 +141,18 @@ function TaskTable() {
 				</tbody>
 			</table>
 			<div className="self-start mt-4">
-				<SecondaryButton text="pievienot jaunu uzdevumu" onClick={handleOpenCreateTaskModal}/>
+				<SecondaryButton text="pievienot jaunu uzdevumu" onClick={handleOpenCreateTaskModal} />
 			</div>
 			<Modal isOpen={isCreateTaskModalOpen} closeModal={handleCloseCreateTaskModal} continueText="Izveidot uzdevumu!" continueCallback={handleCreateTask} title='Jauna uzdevuma izveide!'>
 				<div className="flex flex-col gap-3">
 					<label>uzdevuma kods (id):</label>
-					<input type="text" className="border border-gray-400 rounded p-2" 
-					onChange={(e)=>setNewTaskId(e.target.value)}/>
+					<input type="text" className="border border-gray-400 rounded p-2"
+						onChange={(e) => setNewTaskId(e.target.value)} />
 				</div>
 				<div className='flex flex-col gap-3 mt-4'>
 					<label>pilnais nosaukums:</label>
 					<input type="text" className="border border-gray-400 rounded p-2"
-					onChange={(e)=>setNewTaskFullName(e.target.value)} />
+						onChange={(e) => setNewTaskFullName(e.target.value)} />
 				</div>
 			</Modal>
 		</div>
@@ -163,11 +163,27 @@ type TaskActionsProps = {
 	taskID: string
 }
 
+const DELETE_TASK = gql`
+mutation DeleteTask ($id: ID!) {
+	deleteTask(id: $id)
+}
+`
+
 // view as user, edit as admin, delete as admin
 function TaskActions(props: TaskActionsProps) {
-	function handleDeleteTask(taskID: string) {
+	const [deleteTask] = useMutation(DELETE_TASK, { client: apolloClient })
+
+	async function handleDeleteTask(taskID: string) {
 		if (confirm("Vai tiešām vēlaties dzēst šo uzdevumu?")) {
-			alert("TODO: delete task")
+			try {
+				await deleteTask({ variables: { id: taskID } })
+				window.location.reload()
+			} catch (e: any) {
+				if (e.message)
+					alert(e.message)
+				else
+					alert("nezināma kļūda")
+			}
 		}
 	}
 	return (
@@ -179,7 +195,7 @@ function TaskActions(props: TaskActionsProps) {
 				<SecondaryButton text="rediģēt" />
 			</Link>
 			<div>
-				<DangerButton text='dzēst' onClick={()=>handleDeleteTask(props.taskID)} />
+				<DangerButton text='dzēst' onClick={() => handleDeleteTask(props.taskID)} />
 			</div>
 		</div>
 	)
