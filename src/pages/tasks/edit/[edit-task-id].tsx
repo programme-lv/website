@@ -63,6 +63,20 @@ export default function EditTask() {
     )
 }
 
+const GET_TASK_SOURCES = gql`
+query ListTaskSources {
+    listTaskSources {
+        abbreviation
+        fullName
+    }
+}
+`
+
+type TaskSource = {
+    abbreviation: string
+    fullName: string
+}
+
 type TaskMetadataProps = {
     id: string
     fullName: string
@@ -71,15 +85,27 @@ type TaskMetadataProps = {
 }
 
 function TaskMetadata(props: TaskMetadataProps) {
+    const { loading, error, data:taskSourceData } = useQuery(GET_TASK_SOURCES, { client: apolloClient })
+
     const [fullName, setFullName] = useState('')
     const [origin, setOrigin] = useState('')
     const [authors, setAuthors] = useState<string[]>([])
+    const [taskSources, setTaskSources] = useState<TaskSource[]>([])
 
     useEffect(() => {
         setFullName(props.fullName)
         setOrigin(props.origin)
         setAuthors(props.authors)
     }, [props])
+
+    useEffect(() => {
+        if (taskSourceData) {
+            setTaskSources(taskSourceData.listTaskSources)
+        }
+    }, [taskSourceData])
+
+    if (loading) return <p>Loading...</p>
+    if (error) return <p>Error: {error.message}</p>
 
     return (
 
@@ -97,8 +123,9 @@ function TaskMetadata(props: TaskMetadataProps) {
             <div className="flex flex-col gap-1 my-2">
                 <label htmlFor="task-origin">uzdevuma avots:</label>
                 <select id="task-origin" value={origin} onChange={(e) => setOrigin(e.target.value)} className="p-2">
-                    <option value="lio">Latvijas Informātikas olimpiāde</option>
-                    <option value="ProblemCon">ProblemCon++</option>
+                    {taskSources.map(taskSource => (
+                        <option key={taskSource.abbreviation} value={taskSource.abbreviation}>{taskSource.fullName}</option>
+                    ))}
                 </select>
             </div>
 
