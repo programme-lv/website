@@ -14,7 +14,7 @@ query ListTasks {
             id
             versionName
             timeLimitMs
-            memoryLimitMb
+            memoryLimitKb
             createdAt
             updatedAt
             evalType {

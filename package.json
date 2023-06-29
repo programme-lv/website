@@ -33,6 +33,7 @@
     "typescript": "5.0.4"
   },
   "devDependencies": {
+    "daisyui": "^3.1.7",
     "next-translate-plugin": "^2.4.2"
   }
 }
