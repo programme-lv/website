@@ -1,15 +1,12 @@
-import NavBar from '@/components/NavBar'
-import { useUser } from '@/contexts/UserContext'
-import useTranslation from 'next-translate/useTranslation'
+import NavigationBar from '@/components/NavigationBar'
 
 export default function Home() {
-	const { userData, loginError } = useUser();
-	const { t } = useTranslation('common')
-
 	return (
-		<main className='p-5'>
-			<NavBar active='index' />
-
-		</main>
+		<>
+			<NavigationBar />
+			<main>
+				<h1>Programme.lv</h1>
+			</main>
+		</>
 	)
 }

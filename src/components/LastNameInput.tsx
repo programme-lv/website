@@ -2,7 +2,7 @@ import PersonIcon from '@mui/icons-material/Person';
 
 interface LastNameInputProps {
     lastname: string
-    setLastName: (lastname: string) => void
+    setLastName: (_: string) => void
 }
 
 function LastNameInput(props: LastNameInputProps) {

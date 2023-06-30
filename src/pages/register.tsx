@@ -1,4 +1,3 @@
-import NavBar from '@/components/NavBar'
 import UsernameInput from '@/components/UsernameInput'
 import PasswordInput from '@/components/PasswordInput'
 import EmailInput from '@/components/EmailInput'
@@ -10,11 +9,12 @@ import Link from 'next/link'
 import { useMutation, gql } from '@apollo/client';
 import apolloClient from '@/lib/apolloClient';
 import useTranslation from 'next-translate/useTranslation'
+import NavigationBar from '@/components/NavigationBar'
 
 export default function Register() {
     return (
         <main className='p-5'>
-            <NavBar active='login'/>
+            <NavigationBar active='register'/>
             <RegistrationForm />
         </main>
     )

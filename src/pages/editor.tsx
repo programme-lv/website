@@ -1,12 +1,9 @@
-import NavBar from "@/components/NavBar";
-import { stderr } from "process";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { gql } from "@apollo/client";
 import { useMutation, useQuery } from "@apollo/client";
 import apolloClient from "@/lib/apolloClient";
 import MonacoEditor from "@monaco-editor/react";
 import { ApolloClient, InMemoryCache } from "@apollo/client";
-import { redirect } from "next/dist/server/api-utils";
 
 const EXECUTE_CODE_MUTATION = gql`
 mutation ExecuteCode($languageID: ID!, $code: String!) {

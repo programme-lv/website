@@ -2,7 +2,7 @@ import PersonIcon from '@mui/icons-material/Person';
 
 interface FirstNameInputProps {
     firstname: string
-    setFirstName: (firstname: any) => void
+    setFirstName: (_: any) => void
 }
 
 function FirstNameInput(props: FirstNameInputProps) {

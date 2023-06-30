@@ -1,4 +1,3 @@
-import NavBar from '@/components/NavBar'
 import { gql, useQuery, useMutation } from '@apollo/client'
 import apolloClient from '@/lib/apolloClient'
 import Link from 'next/link'
@@ -7,6 +6,7 @@ import SecondaryButton from '@/components/SecondaryButton'
 import DangerButton from '@/components/DangerButton'
 import Modal from '@/components/Modal'
 import { useEffect, useState } from 'react'
+import NavigationBar from '@/components/NavigationBar'
 
 export const GET_TASKS = gql`
 query ListTasks {
@@ -34,7 +34,7 @@ query ListTasks {
 export default function Tasks() {
 	return (
 		<main className='p-5'>
-			<NavBar active='tasks' />
+			<NavigationBar active='tasks' />
 			<TaskTable />
 		</main>
 	)

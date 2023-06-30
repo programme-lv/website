@@ -2,7 +2,7 @@ import EmailIcon from '@mui/icons-material/Email';
 
 interface EmailInputProps {
     email: string
-    setEmail: (email: any) => void
+    setEmail: (_: any) => void
 }
 
 function EmailInput(props: EmailInputProps) {
