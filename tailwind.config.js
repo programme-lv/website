@@ -14,4 +14,8 @@ module.exports = {
       },
     },
   },
+  important: '#__next',
+  corePlugins: {
+    preflight: false,
+  },
 }

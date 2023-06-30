@@ -1,22 +1,28 @@
 import '@/styles/globals.css'
-import { Inter } from 'next/font/google'
 import type { AppProps } from 'next/app'
+import { Inter } from 'next/font/google'
+import { StyledEngineProvider } from '@mui/material/styles';
+import { CacheProvider } from '@emotion/react';
+import createCache from '@emotion/cache';
 import { UserProvider } from '@/contexts/UserContext'
-import { useEffect } from 'react'
 
 const inter = Inter({ subsets: ['latin'] })
-const theme = 'mytheme'
+const cache = createCache({
+	key: 'css',
+	prepend: true,
+});
 
 export default function App({ Component, pageProps }: AppProps) {
 
-	useEffect(() => {
-	  const body = document.body;
-	  body.setAttribute("data-theme", theme);
-	}, []);
-
-	return <div className={inter.className}>
-		<UserProvider>
-			<Component {...pageProps} />
-		</UserProvider>
-	</div>
+	return (
+		<CacheProvider value={cache}>
+			<StyledEngineProvider injectFirst>
+				<div className={inter.className}>
+					<UserProvider>
+						<Component {...pageProps} />
+					</UserProvider>
+				</div>
+			</StyledEngineProvider>
+		</CacheProvider>
+	)
 }
