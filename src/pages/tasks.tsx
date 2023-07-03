@@ -10,8 +10,10 @@ export default function Tasks() {
     return (
         <>
             <NavigationBar active='tasks' />
-            <main>
+            <main className="container m-auto">
+                <div className="w-full">
                 <TaskTable />
+                </div>
             </main>
         </>
     )
@@ -63,7 +65,7 @@ type Task = {
 function TaskTable() {
     const { loading, error, data } = useQuery(GET_TASKS, { client: apolloClient })
     const [tasks, setTasks] = useState<Task[]>([])
-    useEffect(() => { if (data) setTasks(data.listTasks)}, [data])
+    useEffect(() => { if (data) setTasks(data.listTasks) }, [data])
 
 
     if (loading) return <p>ielādē uzdevumus</p>
@@ -71,56 +73,32 @@ function TaskTable() {
 
 
     return (
-        <div className="flex flex-col border border-gray-400 rounded p-5 my-5">
-            <table className="min-w-full border-collapse text-sm table-fixed w-full">
-                <thead>
-                    <tr>
-                        <TaskTableTh>kods</TaskTableTh>
-                        <TaskTableTh>pilnais nosaukums</TaskTableTh>
-                        <TaskTableTh>avots</TaskTableTh>
-                        <TaskTableTh>autori</TaskTableTh>
-                        <th className="px-6 py-3 text-center border border-solid w-[600px]">darbības</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {tasks.map((task: any) => (
-                        <tr key={task.id}>
-                            <TaskTableTd>{task.id}</TaskTableTd>
-                            <TaskTableTd>{task.fullName}</TaskTableTd>
-                            <TaskTableTd>{task.origin}</TaskTableTd>
-                            <TaskTableTd>{(task.authors as string[]).join(" ")}</TaskTableTd>
-                            <TaskTableTd><TaskActions taskID={task.id} /></TaskTableTd>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-            <Card variant='outlined' className='my-5'>
-                <TableContainer>
-                    <Table>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell> uzdevuma kods </TableCell>
-                                <TableCell>pilnais nosaukums</TableCell>
-                                <TableCell>avots</TableCell>
-                                <TableCell>autori</TableCell>
-                                <TableCell>darbības</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {tasks.map((task:Task) => (
+        <Card variant='outlined' className='my-5'>
+            <TableContainer>
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell> uzdevuma kods </TableCell>
+                            <TableCell>pilnais nosaukums</TableCell>
+                            <TableCell>avots</TableCell>
+                            <TableCell>autori</TableCell>
+                            <TableCell align='center'>darbības</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {tasks.map((task: Task) => (
                             <TableRow key={task.id}>
                                 <TableCell>{task.id}</TableCell>
                                 <TableCell>{task.fullName}</TableCell>
                                 <TableCell>{task.origin}</TableCell>
                                 <TableCell>{(task.authors).join(" ")}</TableCell>
-                                <TableCell><TaskActions taskID={task.id}/></TableCell>
+                                <TableCell className="w-0"><TaskActions taskID={task.id} /></TableCell>
                             </TableRow>))
-                            }
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-            </Card>
-        </div>
+                        }
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </Card>
     )
 }
 
@@ -152,15 +130,16 @@ function TaskActions(props: TaskActionsProps) {
         }
     }
     return (
-        <div className="flex gap-3 justify-center items-center ">
+        <div className="flex gap-3 justify-start items-center ">
             <Link href={`/tasks/${props.taskID}`}>
-                <Button variant='contained' color='primary'>skatīt</Button>
+                <Button variant='contained' color='primary' size='small'>skatīt</Button>
             </Link>
             <Link href={`/tasks/edit/${props.taskID}`}>
-                <Button variant='contained' color='secondary'>rediģēt</Button>
+                <Button variant='contained' color='secondary' size='small'>rediģēt</Button>
             </Link>
             <div>
-                <Button onClick={()=>handleDeleteTask(props.taskID)} variant='contained' color='error'>dzēst</Button>
+                <Button onClick={() => handleDeleteTask(props.taskID)} variant='contained' color='error' size='small'>
+                    dzēst</Button>
             </div>
         </div>
     )

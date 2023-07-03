@@ -1,10 +1,12 @@
-import NavBar from "@/components/NavBar"
+import NavigationBar from "@/components/NavigationBar"
 
 export default function ViewTask() {
     return (
-        <main className='p-5'>
-            <NavBar />
-            <h1>view/[id].tsx</h1>
-        </main>
+        <>
+            <NavigationBar active="tasks" />
+            <main className='p-5'>
+                <h1>view/[id].tsx</h1>
+            </main>
+        </>
     )
 }

@@ -1,9 +1,9 @@
-import NavBar from '@/components/NavBar'
 import { useQuery, gql, useMutation } from '@apollo/client'
 import apolloClient from '@/lib/apolloClient'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import SecondaryButton from '@/components/SecondaryButton'
+import NavigationBar from '@/components/NavigationBar'
+import { Button } from '@mui/material'
 
 const GET_TASK = gql`
 query GetTask($id: ID!) {
@@ -54,12 +54,13 @@ export default function EditTask() {
 
 
     return (
-        <main className='p-5'>
-            <NavBar />
-
-            <TaskMetadata id={task.id} fullName={task.fullName} origin={task.origin} authors={task.authors} />
-            <VersionTable versions={task.versions} />
-        </main>
+        <>
+            <NavigationBar active='tasks' />
+            <main className='p-5'>
+                <TaskMetadata id={task.id} fullName={task.fullName} origin={task.origin} authors={task.authors} />
+                <VersionTable versions={task.versions} />
+            </main>
+        </>
     )
 }
 
@@ -106,7 +107,7 @@ mutation UpdateTask($id: ID!, $fullName: String, $origin: String, $authors: [Str
 `
 
 function TaskMetadata(props: TaskMetadataProps) {
-    const { loading, error, data:taskSourceData } = useQuery(GET_TASK_SOURCES, { client: apolloClient })
+    const { loading, error, data: taskSourceData } = useQuery(GET_TASK_SOURCES, { client: apolloClient })
     const [updateTaskMetadata] = useMutation(UPDATE_TASK_METADATA, { client: apolloClient })
 
     const [fullName, setFullName] = useState('')
@@ -127,7 +128,7 @@ function TaskMetadata(props: TaskMetadataProps) {
     }, [taskSourceData])
 
     async function handleUpdateTaskMetadata() {
-        try{
+        try {
             type UpdateTaskMetadataVariables = {
                 id: string
                 fullName: string
@@ -135,7 +136,7 @@ function TaskMetadata(props: TaskMetadataProps) {
                 authors?: string[]
             }
 
-            let data:UpdateTaskMetadataVariables = {
+            let data: UpdateTaskMetadataVariables = {
                 id: props.id,
                 fullName: fullName,
                 origin: origin,
@@ -174,10 +175,7 @@ function TaskMetadata(props: TaskMetadataProps) {
                 </select>
             </div>
 
-            {/* <div className='my-2'>
-                autori: <span className="text-blue-600 font-bold">{props.authors.join(', ')}</span>
-            </div> */}
-            <SecondaryButton text="saglabāt izmaiņas" onClick={handleUpdateTaskMetadata}/>
+            <Button onClick={handleUpdateTaskMetadata} variant='contained' color='primary'>saglabāt</Button>
         </div>
     )
 }
