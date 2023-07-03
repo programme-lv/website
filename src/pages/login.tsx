@@ -8,16 +8,19 @@ import { useUser } from '@/contexts/UserContext'
 import { useRouter } from 'next/router'
 import useTranslation from 'next-translate/useTranslation'
 import NavigationBar from '@/components/NavigationBar';
-import { Card } from '@mui/material';
+import { Button, Card } from '@mui/material';
+import { Container } from '@mui/system';
 
 export default function Login() {
 	return (
 		<div>
 			<NavigationBar active='login' />
 			<main className="container m-auto">
+                <Container maxWidth='sm'>
                 <Card className='my-5 p-5' variant='outlined'>
 				<LoginForm />
                 </Card>
+                </Container>
 			</main>
 		</div>
 	)
@@ -61,12 +64,10 @@ function LoginForm() {
 	}
 
 	return (
-		<form onSubmit={handleLogin}>
+		<form onSubmit={handleLogin} className="flex flex-col gap-5">
 			<UsernameInput username={username} setUsername={setUsername} />
 			<PasswordInput password={password} setPassword={setPassword} />
-			<button disabled={loggingIn} type="submit" className="disabled:opacity-70 rounded self-end p-2 px-12 mt-4 text-sm border max-w-xs bg-blue-600 text-white font-semibold hover:bg-blue-500">
-				Pieslēgties
-			</button>
+            <Button type='submit' variant='contained' color='primary'>Pieslēgties</Button>
 			<div className="mt-4">
 				Neesi piereģistrējies? <Link href="/register" className="underline text-blue-500 hover:no-underline">Reģistrēties</Link>
 			</div>
