@@ -9,45 +9,51 @@ type NavBarProps = {
 
 export default function NavigationBar(props: NavBarProps) {
     const { t } = useTranslation('common');
-    const { userData,loginError } = useUser();
+    const { userData, loginError } = useUser();
 
-    const borderCss = 'border border-solid border-white border-b-gray-420';
-    const linkCss = 'hover:underline no-underline text-gray-420';
+    const active = props.active ?? '';
 
     return (
-        <nav className={`flex justify-aroud items-center p-2 px-6 ${borderCss}`}>
+        <nav className={`flex justify-aroud items-center p-2 px-6 border border-solid border-white border-b-gray-200`}>
             <div className="flex-grow flex justify-start gap-3">
-                <Link href="/" className={linkCss}>
-                    <span className={(props.active == 'index') ? 'font-bold' : ''}>Programme.lv</span>
-                </Link>
+                <NavLink href="/" active={active}>Programme.lv</NavLink>
             </div>
             <div className="flex-grow flex justify-between gap-3">
-                <Link href="/tasks" className={linkCss}>
-                    <span className={(props.active == 'tasks') ? 'font-bold' : ''}>{t('navbar_tasks')}</span>
-                </Link>
-                <Link href="/editor" className={linkCss}>
-                    <span className={(props.active == 'editor') ? 'font-bold' : ''}>{t('navbar_editor')}</span>
-                </Link>
+                <NavLink href='/tasks' active={active}>{t('navbar_tasks')}</NavLink>
+                <NavLink href='/editor' active={active}>{t('navbar_editor')}</NavLink>
             </div>
             <div className="flex-grow flex justify-end gap-3">
-                {userData&&!loginError ? (
+                {userData && !loginError ? (
                     <>
-                    <span>Lietotājs:</span>
-                    <Link href="/profile" className={linkCss}>
-                        <span className={`text-blue-69 text-lg `+(props.active == 'login') ? 'font-bold' : ''}>{userData.username}</span>
-                    </Link>
+                        <span>Lietotājs:</span>
+                        <NavLink href="/login" active={active}>{userData.username}</NavLink>
                     </>
                 ) : (<>
-                    <Link href="/login" className={linkCss}>
-                        <span className={(props.active == 'login') ? 'font-bold' : ''}>{t('navbar_login')}</span>
-                    </Link>
-
-                    <Link href="/register" className={linkCss}>
-                        <span className={(props.active == 'register') ? 'font-bold' : ''}>{t('navbar_register')}</span>
-                    </Link>
+                    <NavLink href="/login" active={active}>{t('navbar_login')}</NavLink>
+                    <NavLink href="/register" active={active}>{t('navbar_register')}</NavLink>
                 </>)
                 }
             </div>
         </nav>
     );
+}
+
+function NavLink(props: { href: string, active: string, children: any }) {
+    let current = props.active;
+    let target = props.href;
+    let active = ("/" + current == target) || (current == 'index' && target == '/');
+
+    if (active) return (
+        <Link href={props.href} className='p-2 rounded-lg hover:bg-gray-100 no-underline text-black transition-all'>
+            <NavLinkSpan active={active}>{props.children}</NavLinkSpan>
+        </Link>)
+    else return (
+        <Link href={props.href} className='p-2 rounded-lg hover:bg-gray-100 no-underline text-gray-420 hover:text-gray-900 transition-all'>
+            <NavLinkSpan active={active}>{props.children}</NavLinkSpan>
+        </Link>)
+}
+
+function NavLinkSpan(props: { active: boolean, children: any }) {
+    if (props.active) return (<span className="text-sm transition-all font-medium">{props.children}</span>)
+    else return (<span className="text-sm transition-all">{props.children}</span>)
 }
