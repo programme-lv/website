@@ -8,13 +8,16 @@ import { useUser } from '@/contexts/UserContext'
 import { useRouter } from 'next/router'
 import useTranslation from 'next-translate/useTranslation'
 import NavigationBar from '@/components/NavigationBar';
+import { Card } from '@mui/material';
 
 export default function Login() {
 	return (
 		<div>
 			<NavigationBar active='login' />
-			<main>
+			<main className="container m-auto">
+                <Card className='my-5 p-5' variant='outlined'>
 				<LoginForm />
+                </Card>
 			</main>
 		</div>
 	)
@@ -47,20 +50,18 @@ function LoginForm() {
 		setLoggingIn(true);
 		try {
 			await login({ variables: { username, password } });
-			await refreshUser();
+			
+            refreshUser();
 			router.push('/');
 		} catch (error: any) {
-			if (error.message) {
-				setError(error.message)
-			} else {
-				setError('Nezināma kļūda')
-			}
+            setError(error.message ?? 'Nezināma kļūda')
 		}
+
 		setLoggingIn(false);
 	}
 
 	return (
-		<form className='flex flex-col border border-gray-400 rounded p-5 my-5 max-w-md' onSubmit={handleLogin}>
+		<form onSubmit={handleLogin}>
 			<UsernameInput username={username} setUsername={setUsername} />
 			<PasswordInput password={password} setPassword={setPassword} />
 			<button disabled={loggingIn} type="submit" className="disabled:opacity-70 rounded self-end p-2 px-12 mt-4 text-sm border max-w-xs bg-blue-600 text-white font-semibold hover:bg-blue-500">

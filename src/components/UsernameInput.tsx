@@ -1,21 +1,32 @@
-import PersonIcon from '@mui/icons-material/Person';
+import { OutlinedInput, InputAdornment,  FormControl, InputLabel } from '@mui/material';
+import AccountCircle from '@mui/icons-material/AccountCircle';
 
 interface UsernameInputProps {
-	username: string
-	setUsername: (username: any) => void
+    username: string
+    setUsername: (_: any) => void
 }
 
 function UsernameInput(props: UsernameInputProps) {
-	return (
-		<div className="flex flex-col gap-1 my-2">
-			<label htmlFor="username">Lietotājvārds</label>
-			<div className="flex flex-grow items-center w-full border border-gray-400">
-				<input type="text" placeholder="jūsu lietotājvārds" name="username" id="username" required className="p-2  flex-grow"
-					value={props.username} onChange={(e) => props.setUsername(e.target.value)} />
-			</div>
-
-		</div>
-	)
+    return (
+        <FormControl variant="outlined">
+          <InputLabel htmlFor="username-input">Lietotājvārds</InputLabel>
+          <OutlinedInput
+            id="username-input"
+            type='text'
+            endAdornment={
+              <InputAdornment position="end">
+                <AccountCircle/>
+              </InputAdornment>
+            }
+            label="username"
+            value={props.username}
+            onChange={(e)=>props.setUsername(e.target.value)}
+            required
+            autoFocus
+            autoComplete='username'
+          />
+        </FormControl>
+    )
 }
 
 export default UsernameInput;
