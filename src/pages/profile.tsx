@@ -9,7 +9,7 @@ export default function Profile() {
     return (
         <>
             <NavigationBar active='profile' />
-            <main>
+            <main className="container m-auto">
                 <UserData />
             </main>
         </>
