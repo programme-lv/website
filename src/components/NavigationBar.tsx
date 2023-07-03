@@ -12,12 +12,12 @@ export default function NavigationBar(props: NavBarProps) {
     const { userData,loginError } = useUser();
 
     const borderCss = 'border border-solid border-white border-b-gray-420';
-    const linkCss = 'hover:underline no-underline text-black';
+    const linkCss = 'hover:underline no-underline text-gray-420';
 
     return (
-        <nav className={`flex justify-aroud items-center p-2 ${borderCss}`}>
+        <nav className={`flex justify-aroud items-center p-2 px-6 ${borderCss}`}>
             <div className="flex-grow flex justify-start gap-3">
-                <Link href="/" className='hover:underline no-underline text-black font-bold text-lg'>
+                <Link href="/" className={linkCss}>
                     <span className={(props.active == 'index') ? 'font-bold' : ''}>Programme.lv</span>
                 </Link>
             </div>
