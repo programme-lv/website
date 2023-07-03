@@ -24,10 +24,10 @@ export default function NavigationBar(props: NavBarProps) {
             </div>
             <div className="flex-grow flex justify-end gap-3">
                 {userData && !loginError ? (
-                    <>
-                        <span>Lietotājs:</span>
-                        <NavLink href="/login" active={active}>{userData.username}</NavLink>
-                    </>
+                    <div className="flex items-center">
+                        <span className="text-sm">Lietotājs:</span>
+                        <NavLink href="/login" active={active}><span className="text-blue-69 text-base">{userData.username}</span></NavLink>
+                    </div>
                 ) : (<>
                     <NavLink href="/login" active={active}>{t('navbar_login')}</NavLink>
                     <NavLink href="/register" active={active}>{t('navbar_register')}</NavLink>

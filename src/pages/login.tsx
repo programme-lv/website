@@ -31,8 +31,8 @@ mutation Login($username: String!, $password: String!) {
 
 function LoginForm() {
 	const { t } = useTranslation('errors')
-	const { userData, loginError, refreshUser } = useUser();
-	const [login, { data }] = useMutation(LOGIN_MUTATION, { client: apolloClient });
+	const { refreshUser } = useUser();
+	const [login] = useMutation(LOGIN_MUTATION, { client: apolloClient });
 	const router = useRouter();
 
 	const [username, setUsername] = useState('')

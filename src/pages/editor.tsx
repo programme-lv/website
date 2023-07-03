@@ -4,6 +4,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import apolloClient from "@/lib/apolloClient";
 import MonacoEditor from "@monaco-editor/react";
 import { ApolloClient, InMemoryCache } from "@apollo/client";
+import NavigationBar from "@/components/NavigationBar";
 
 const EXECUTE_CODE_MUTATION = gql`
 mutation ExecuteCode($languageID: ID!, $code: String!) {
@@ -47,7 +48,6 @@ export default function Editor() {
         }
     }, [selectedLanguage, languages])
 
-    console.log(monacoLangId)
     useEffect(() => {
         if (listLangData) {
             setLanguages(listLangData.listLanguages);
@@ -84,74 +84,74 @@ export default function Editor() {
         setRunning(false);
     }
 
-    function handleEditorKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
-        if (e.key === 'Tab') {
-            e.preventDefault();
-            const { selectionStart, selectionEnd, value } = e.currentTarget;
-            const newValue = value.substring(0, selectionStart) + '\t' + value.substring(selectionEnd);
-            setCode(newValue);
-            e.currentTarget.selectionStart = newValue.length;
-        }
+    if(listLangLoading) {
+        return <p> loading languages </p>
+    }
+    
+    if(listLangError) {
+        return <p> couldnt load languages </p>
     }
 
     return (
-        <main className='p-5'>
-            <NavBar active="editor" />
+        <>
+            <NavigationBar active="editor" />
+            <main>
 
-            <div className="flex flex-col w-[600px] m-auto gap-3 mt-12">
+                <div className="flex flex-col w-[600px] m-auto gap-3 mt-12">
 
-                <div className="w-full flex flex-col">
-                    <div className="flex justify-between">
-                        <span>
-                            tavs kods:
-                        </span>
-                        <div> programmēšanas valoda
-                            {selectedLanguage &&
-                                <select className="ml-2" value={selectedLanguage} onChange={(e) => { setSelectedLanguage(e.target.value) }}>
-                                    {languages.map(language => <option key={language.id} value={language.id}>{language.fullName}</option>)}
-                                </select>}
+                    <div className="w-full flex flex-col">
+                        <div className="flex justify-between">
+                            <span>
+                                tavs kods:
+                            </span>
+                            <div> programmēšanas valoda
+                                {selectedLanguage &&
+                                    <select className="ml-2" value={selectedLanguage} onChange={(e) => { setSelectedLanguage(e.target.value) }}>
+                                        {languages.map(language => <option key={language.id} value={language.id}>{language.fullName}</option>)}
+                                    </select>}
+                            </div>
+                        </div>
+
+                        <div className="w-[600px] h-[200px] my-2">
+                            <MonacoEditor
+                                value={code}
+                                theme="vs-dark"
+                                language={monacoLangId}
+
+                                onChange={(value, event) => setCode(value as string)}
+                                className="w-full h-full"
+                            />
                         </div>
                     </div>
 
-                    <div className="w-[600px] h-[200px] my-2">
-                        <MonacoEditor
-                            value={code}
-                            theme="vs-dark"
-                            language={monacoLangId}
-
-                            onChange={(value, event) => setCode(value as string)}
-                            className="w-full h-full"
-                        />
+                    <div className="w-full flex flex-col">
+                        ievaddati:
+                        <textarea className='w-full h-[100px]' style={{ resize: 'vertical' }} value={stdin} onChange={e => setStdin(e.target.value)}></textarea>
                     </div>
-                </div>
 
-                <div className="w-full flex flex-col">
-                    ievaddati:
-                    <textarea className='w-full h-[100px]' style={{ resize: 'vertical' }} value={stdin} onChange={e => setStdin(e.target.value)}></textarea>
-                </div>
+                    <button onClick={handleExecuteCode} className="my-2" disabled={running}>izpildīt</button>
 
-                <button onClick={handleExecuteCode} className="my-2" disabled={running}>izpildīt</button>
-
-                <div className="w-full flex flex-col">
-                    kompilācijas paziņojumi:
-                    <textarea className='w-full h-[60px]' style={{ resize: 'vertical' }} value={stdin} onChange={e => setStdin(e.target.value)}></textarea>
-                </div>
-
-                <div className="flex w-full gap-x-10 content-between">
-                    <div className="flex-grow-[1] flex flex-col">
-                        izpildes stdout:
-                        <textarea className='w-full h-[100px]' style={{ resize: 'vertical' }} value={stdout} readOnly onChange={e => setStdout(e.target.value)}></textarea>
+                    <div className="w-full flex flex-col">
+                        kompilācijas paziņojumi:
+                        <textarea className='w-full h-[60px]' style={{ resize: 'vertical' }} value={stdin} onChange={e => setStdin(e.target.value)}></textarea>
                     </div>
-                    <div className="flex-grow-[0.5] flex flex-col">
-                        izpildes stderr:
-                        <textarea className='w-full h-[100px]' style={{ resize: 'vertical' }} value={stderr} readOnly onChange={e => setStderr(e.target.value)}></textarea>
+
+                    <div className="flex w-full gap-x-10 content-between">
+                        <div className="flex-grow-[1] flex flex-col">
+                            izpildes stdout:
+                            <textarea className='w-full h-[100px]' style={{ resize: 'vertical' }} value={stdout} readOnly onChange={e => setStdout(e.target.value)}></textarea>
+                        </div>
+                        <div className="flex-grow-[0.5] flex flex-col">
+                            izpildes stderr:
+                            <textarea className='w-full h-[100px]' style={{ resize: 'vertical' }} value={stderr} readOnly onChange={e => setStderr(e.target.value)}></textarea>
+                        </div>
                     </div>
+
+
+                    {error && <div className="text-red-500">{error}</div>}
                 </div>
-
-
-                {error && <div className="text-red-500">{error}</div>}
-            </div>
-        </main>
+            </main>
+        </>
     )
 }
 
