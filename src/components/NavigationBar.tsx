@@ -14,7 +14,7 @@ export default function NavigationBar(props: NavBarProps) {
     const active = props.active ?? '';
 
     return (
-        <nav className={`flex justify-aroud items-center p-2 px-6 border border-solid border-white border-b-gray-200`}>
+        <nav className={`flex justify-aroud items-center p-2 px-6 border border-solid border-white border-b-gray-200 m-auto`}>
             <div className="flex-grow flex justify-start gap-3">
                 <NavLink href="/" active={active}>Programme.lv</NavLink>
             </div>
@@ -44,11 +44,11 @@ function NavLink(props: { href: string, active: string, children: any }) {
     let active = ("/" + current == target) || (current == 'index' && target == '/');
 
     if (active) return (
-        <Link href={props.href} className='p-2 rounded-lg hover:bg-gray-100 no-underline text-black transition-all'>
+        <Link href={props.href} className='p-2 rounded-lg no-underline hover:underline text-black transition-all'>
             <NavLinkSpan active={active}>{props.children}</NavLinkSpan>
         </Link>)
     else return (
-        <Link href={props.href} className='p-2 rounded-lg hover:bg-gray-100 no-underline text-gray-420 hover:text-gray-900 transition-all'>
+        <Link href={props.href} className='p-2 rounded-lg no-underline hover:underline text-gray-420 hover:text-gray-900 transition-all'>
             <NavLinkSpan active={active}>{props.children}</NavLinkSpan>
         </Link>)
 }
