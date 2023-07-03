@@ -1,10 +1,22 @@
 import { gql, useQuery, useMutation } from '@apollo/client'
 import apolloClient from '@/lib/apolloClient'
 import Link from 'next/link'
-import Modal from '@/components/Modal'
 import { useEffect, useState } from 'react'
 import NavigationBar from '@/components/NavigationBar'
 import { Button } from '@mui/material'
+import { Card, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+
+export default function Tasks() {
+    return (
+        <>
+            <NavigationBar active='tasks' />
+            <main>
+                <TaskTable />
+            </main>
+        </>
+    )
+}
+
 
 export const GET_TASKS = gql`
 query ListTasks {
@@ -29,17 +41,6 @@ query ListTasks {
 }
 `
 
-export default function Tasks() {
-    return (
-        <>
-            <NavigationBar active='tasks' />
-            <main>
-                <TaskTable />
-            </main>
-        </>
-    )
-}
-
 type Task = {
     id: string
     fullName: string
@@ -59,65 +60,18 @@ type Task = {
     }[]
 }
 
-const CREATE_TASK = gql`
-mutation CreateTask($id: String!, $fullName: String!){
-    createTask(id: $id, fullName: $fullName) {
-        id
-        fullName
-        origin
-        authors
-    }
-}
-`
-
 function TaskTable() {
     const { loading, error, data } = useQuery(GET_TASKS, { client: apolloClient })
-    const [createTask] = useMutation(CREATE_TASK, { client: apolloClient })
-
     const [tasks, setTasks] = useState<Task[]>([])
-
-    const [newTaskId, setNewTaskId] = useState<string>("")
-    const [newTaskFullName, setNewTaskFullName] = useState<string>("")
-
-    useEffect(() => {
-        if (data) {
-            setTasks(data.listTasks)
-        }
-    }, [data])
-
-    const [isCreateTaskModalOpen, setIsCreateTaskModalOpen] = useState(false)
-
-    if (loading) return <p>Loading...</p>
-    if (error) return <p>Error: {error.message}</p>
+    useEffect(() => { if (data) setTasks(data.listTasks)}, [data])
 
 
-    function handleOpenCreateTaskModal() {
-        setIsCreateTaskModalOpen(true);
-    }
+    if (loading) return <p>ielādē uzdevumus</p>
+    if (error) return <p>kļūda: {error.message}</p>
 
-    function handleCloseCreateTaskModal() {
-        setIsCreateTaskModalOpen(false);
-    }
-
-    async function handleCreateTask() {
-        try {
-            let response = await createTask({ variables: { id: newTaskId, fullName: newTaskFullName } })
-            if (response.data.createTask) {
-                setTasks([...tasks, response.data.createTask])
-                setIsCreateTaskModalOpen(false)
-            }
-        } catch (e: any) {
-            if (e.message)
-                alert(e.message)
-            else
-                alert("nezināma kļūda")
-        }
-
-    }
 
     return (
         <div className="flex flex-col border border-gray-400 rounded p-5 my-5">
-
             <table className="min-w-full border-collapse text-sm table-fixed w-full">
                 <thead>
                     <tr>
@@ -140,21 +94,32 @@ function TaskTable() {
                     ))}
                 </tbody>
             </table>
-            <div className="self-start mt-4">
-                <Button variant='contained' color='primary' onClick={handleOpenCreateTaskModal}>pievienot</Button>
-            </div>
-            <Modal isOpen={isCreateTaskModalOpen} closeModal={handleCloseCreateTaskModal} continueText="Izveidot uzdevumu!" continueCallback={handleCreateTask} title='Jauna uzdevuma izveide!'>
-                <div className="flex flex-col gap-3">
-                    <label>uzdevuma kods (id):</label>
-                    <input type="text" className="border border-gray-400 rounded p-2"
-                        onChange={(e) => setNewTaskId(e.target.value)} />
-                </div>
-                <div className='flex flex-col gap-3 mt-4'>
-                    <label>pilnais nosaukums:</label>
-                    <input type="text" className="border border-gray-400 rounded p-2"
-                        onChange={(e) => setNewTaskFullName(e.target.value)} />
-                </div>
-            </Modal>
+            <Card variant='outlined' className='my-5'>
+                <TableContainer>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell> uzdevuma kods </TableCell>
+                                <TableCell>pilnais nosaukums</TableCell>
+                                <TableCell>avots</TableCell>
+                                <TableCell>autori</TableCell>
+                                <TableCell>darbības</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {tasks.map((task:Task) => (
+                            <TableRow key={task.id}>
+                                <TableCell>{task.id}</TableCell>
+                                <TableCell>{task.fullName}</TableCell>
+                                <TableCell>{task.origin}</TableCell>
+                                <TableCell>{(task.authors).join(" ")}</TableCell>
+                                <TableCell><TaskActions taskID={task.id}/></TableCell>
+                            </TableRow>))
+                            }
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </Card>
         </div>
     )
 }

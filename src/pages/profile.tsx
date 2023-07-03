@@ -1,12 +1,9 @@
-import { useMutation } from '@apollo/client';
-import { gql } from '@apollo/client';
 import useTranslation from 'next-translate/useTranslation'
-import apolloClient from '@/lib/apolloClient';
 import { useUser } from '@/contexts/UserContext'
 import NavigationBar from '@/components/NavigationBar';
-import { mutate } from 'swr';
-import { Button, Card, Paper } from '@mui/material';
+import { Card } from '@mui/material';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import LogOutButton from '@/components/LogOutButton';
 
 export default function Profile() {
     return (
@@ -40,61 +37,42 @@ function UserData() {
         <div className='flex flex-col border border-gray-400 rounded p-5 my-5 max-w-md'>
             <h1 className='text-2xl font-bold'>{tCommon("home_user_data")}</h1>
             <Card variant='outlined' className="my-5">
-            <TableContainer>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>lauks</TableCell>
-                            <TableCell>vērtība</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        <TableRow>
-                            <TableCell>lietotāja id</TableCell>
-                            <TableCell><strong>{userData.id}</strong></TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell>lietotājvārds</TableCell>
-                            <TableCell><strong>{userData.username}</strong></TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell>vārds</TableCell>
-                            <TableCell>{userData.firstName}</TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell>uzvārds</TableCell>
-                            <TableCell>{userData.lastName}</TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell>e-pasts</TableCell>
-                            <TableCell>{userData.email}</TableCell>
-                        </TableRow>
-                    </TableBody>
-                </Table>
-            </TableContainer>
+                <TableContainer>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>lauks</TableCell>
+                                <TableCell>vērtība</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            <TableRow>
+                                <TableCell>lietotāja id</TableCell>
+                                <TableCell><strong>{userData.id}</strong></TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>lietotājvārds</TableCell>
+                                <TableCell><strong>{userData.username}</strong></TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>vārds</TableCell>
+                                <TableCell>{userData.firstName}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>uzvārds</TableCell>
+                                <TableCell>{userData.lastName}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>e-pasts</TableCell>
+                                <TableCell>{userData.email}</TableCell>
+                            </TableRow>
+                        </TableBody>
+                    </Table>
+                </TableContainer>
             </Card>
             <div className="flex justify-end">
-            <LogOutButton />
+                <LogOutButton />
             </div>
         </div>
-    )
-}
-
-const LOGOUT_MUTATION = gql`
-mutation Logout {
-	logout
-}
-`;
-
-function LogOutButton() {
-    const [logout] = useMutation(LOGOUT_MUTATION, { client: apolloClient });
-
-    async function handleLogout() {
-        await logout();
-        await mutate('whoami');
-    }
-
-    return (
-        <Button onClick={handleLogout} variant='contained' color='warning'>Iziet</Button>
     )
 }
