@@ -1,12 +1,10 @@
 import { gql, useQuery, useMutation } from '@apollo/client'
 import apolloClient from '@/lib/apolloClient'
 import Link from 'next/link'
-import PrimaryButton from '@/components/PrimaryButton'
-import SecondaryButton from '@/components/SecondaryButton'
-import DangerButton from '@/components/DangerButton'
 import Modal from '@/components/Modal'
 import { useEffect, useState } from 'react'
 import NavigationBar from '@/components/NavigationBar'
+import { Button } from '@mui/material'
 
 export const GET_TASKS = gql`
 query ListTasks {
@@ -143,7 +141,7 @@ function TaskTable() {
                 </tbody>
             </table>
             <div className="self-start mt-4">
-                <SecondaryButton text="pievienot jaunu uzdevumu" onClick={handleOpenCreateTaskModal} />
+                <Button variant='contained' color='primary' onClick={handleOpenCreateTaskModal}>pievienot</Button>
             </div>
             <Modal isOpen={isCreateTaskModalOpen} closeModal={handleCloseCreateTaskModal} continueText="Izveidot uzdevumu!" continueCallback={handleCreateTask} title='Jauna uzdevuma izveide!'>
                 <div className="flex flex-col gap-3">
@@ -191,13 +189,13 @@ function TaskActions(props: TaskActionsProps) {
     return (
         <div className="flex gap-3 justify-center items-center ">
             <Link href={`/tasks/${props.taskID}`}>
-                <PrimaryButton text="skatīt kā lietotājs" />
+                <Button variant='contained' color='primary'>skatīt</Button>
             </Link>
             <Link href={`/tasks/edit/${props.taskID}`}>
-                <SecondaryButton text="rediģēt" />
+                <Button variant='contained' color='secondary'>rediģēt</Button>
             </Link>
             <div>
-                <DangerButton text='dzēst' onClick={() => handleDeleteTask(props.taskID)} />
+                <Button onClick={()=>handleDeleteTask(props.taskID)} variant='contained' color='error'>dzēst</Button>
             </div>
         </div>
     )

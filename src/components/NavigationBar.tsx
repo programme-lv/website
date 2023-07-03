@@ -26,7 +26,7 @@ export default function NavigationBar(props: NavBarProps) {
                 {userData && !loginError ? (
                     <div className="flex items-center">
                         <span className="text-sm">Lietotājs:</span>
-                        <NavLink href="/login" active={active}><span className="text-blue-69 text-base">{userData.username}</span></NavLink>
+                        <NavLink href="/profile" active={active}><span className="text-blue-69 text-base">{userData.username}</span></NavLink>
                     </div>
                 ) : (<>
                     <NavLink href="/login" active={active}>{t('navbar_login')}</NavLink>
