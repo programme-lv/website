@@ -5,6 +5,7 @@ import { Dialog, TextField, DialogTitle, DialogContent, DialogActions, DialogCon
 import LoadingButton from "@mui/lab/LoadingButton";
 import useTranslation from "next-translate/useTranslation";
 import { useEffect } from "react";
+import Router from "next/router";
 
 const CREATE_TASK = gql`
 mutation CreateTask($id: String!, $fullName: String!){
@@ -49,6 +50,7 @@ export default function CreateTaskDialog(props: CreateTaskModalProps) {
                 console.log(response.data.createTask);
             }
             setSuccess(true);
+            await Router.push(`/tasks/edit/${newTaskId}`)
         } catch (e: any) {
             setError(e.message ?? "nezināma kļūda")
         }

@@ -104,7 +104,7 @@ function TaskActions(props: TaskActionsProps) {
     const [deleteTask] = useMutation(DELETE_TASK, { client: apolloClient })
  
     async function handleDeleteTask(taskID: string) {
-        if (confirm("Vai tiešām vēlaties dzēst šo uzdevumu?")) {
+        if (confirm(`Vai tiešām vēlaties dzēst uzdevumu ar kodu "${taskID}"?`)) {
             try {
                 await deleteTask({ variables: { id: taskID } })
                 window.location.reload()

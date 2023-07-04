@@ -56,7 +56,7 @@ export default function EditTask() {
     return (
         <>
             <NavigationBar active='tasks' />
-            <main className='p-5'>
+            <main className='container m-auto'>
                 <TaskMetadata id={task.id} fullName={task.fullName} origin={task.origin} authors={task.authors} />
                 <VersionTable versions={task.versions} />
             </main>
