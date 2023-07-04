@@ -5,15 +5,21 @@ import { useEffect, useState } from 'react'
 import NavigationBar from '@/components/NavigationBar'
 import { Button } from '@mui/material'
 import { Card, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import Task from '@/types/task'
+import CreateTaskDialog from '@/components/CreateTaskModal'
 
 export default function Tasks() {
+    const [createTaskOpen, setCreateTaskOpen] = useState<boolean>(false)
+
     return (
         <>
+            <CreateTaskDialog open={createTaskOpen} handleClose={()=>setCreateTaskOpen(false)}/>
             <NavigationBar active='tasks' />
             <main className="container m-auto">
                 <div className="w-full">
-                <TaskTable />
+                    <TaskTable />
                 </div>
+                <Button variant='contained' onClick={() => setCreateTaskOpen(true)}>Izveidot</Button>
             </main>
         </>
     )
@@ -42,25 +48,6 @@ query ListTasks {
     }
 }
 `
-
-type Task = {
-    id: string
-    fullName: string
-    origin: string
-    authors: string[]
-    versions: {
-        id: string
-        versionName: string
-        timeLimitMs: number
-        memoryLimitKb: number
-        createdAt: string
-        updatedAt: string
-        evalType: {
-            id: string
-            descriptionEn: string
-        }
-    }[]
-}
 
 function TaskTable() {
     const { loading, error, data } = useQuery(GET_TASKS, { client: apolloClient })
@@ -115,7 +102,7 @@ mutation DeleteTask ($id: ID!) {
 // view as user, edit as admin, delete as admin
 function TaskActions(props: TaskActionsProps) {
     const [deleteTask] = useMutation(DELETE_TASK, { client: apolloClient })
-
+ 
     async function handleDeleteTask(taskID: string) {
         if (confirm("Vai tiešām vēlaties dzēst šo uzdevumu?")) {
             try {
@@ -144,15 +131,3 @@ function TaskActions(props: TaskActionsProps) {
         </div>
     )
 }
-
-const TaskTableTh = (props: { children: any }) => (
-    <th scope="col" className="px-6 py-3 text-center border border-solid">
-        {props.children}
-    </th>
-)
-
-const TaskTableTd = (props: { children: any }) => (
-    <td className="px-6 py-4  border border-solid">
-        <div className="text-sm text-gray-900">{props.children}</div>
-    </td>
-)

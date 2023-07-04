@@ -1,4 +1,4 @@
-import {FormControl, InputLabel, OutlinedInput} from '@mui/material';
+import { FormControl, InputLabel, OutlinedInput } from '@mui/material';
 
 interface RepeatPasswordInputProps {
     password: string
