@@ -11,7 +11,6 @@ interface PasswordInputProps {
 function PasswordInput(props: PasswordInputProps) {
     const [showPassword, setShowPassword] = useState<boolean>(false);
 
-
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 
     const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {

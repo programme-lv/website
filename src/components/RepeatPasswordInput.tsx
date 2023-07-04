@@ -1,7 +1,4 @@
-import { IconButton, FormControl, InputLabel, OutlinedInput, InputAdornment } from '@mui/material';
-import { useState } from 'react';
-import Visibility from '@mui/icons-material/Visibility'
-import VisibilityOff from '@mui/icons-material/VisibilityOff'
+import {FormControl, InputLabel, OutlinedInput} from '@mui/material';
 
 interface RepeatPasswordInputProps {
     password: string

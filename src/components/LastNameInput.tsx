@@ -16,7 +16,6 @@ function LastNameInput(props: LastNameInputProps) {
                 value={props.lastname}
                 onChange={(e) => props.setLastName(e.target.value)}
                 required
-                autoFocus
                 autoComplete='lastname'
             />
         </FormControl>

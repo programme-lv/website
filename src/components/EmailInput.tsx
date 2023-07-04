@@ -16,13 +16,12 @@ function EmailInput(props: EmailInputProps) {
                 endAdornment={
                     <InputAdornment position="end">
                         <EmailIcon />
-                        </InputAdornment>
+                    </InputAdornment>
                 }
                 label="email"
-                value = {props.email}
-                onChange = {(e)=>props.setEmail(e.target.value)}
+                value={props.email}
+                onChange={(e) => props.setEmail(e.target.value)}
                 required
-                autoFocus
                 autoComplete='email'
             />
         </FormControl>

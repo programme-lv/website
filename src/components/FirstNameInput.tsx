@@ -1,6 +1,5 @@
-import PersonIcon from '@mui/icons-material/Person';
 import { OutlinedInput } from '@mui/material';
-import {FormControl, InputLabel} from '@mui/material';
+import { FormControl, InputLabel } from '@mui/material';
 
 interface FirstNameInputProps {
     firstname: string
@@ -18,7 +17,6 @@ function FirstNameInput(props: FirstNameInputProps) {
                 value={props.firstname}
                 onChange={(e) => props.setFirstName(e.target.value)}
                 required
-                autoFocus
                 autoComplete='firstname'
             />
         </FormControl>

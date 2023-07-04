@@ -14,6 +14,7 @@ import Container from '@mui/material/Container';
 import Card from '@mui/material/Card';
 import HowToRegIcon from '@mui/icons-material/HowToReg';
 import LoadingButton from '@mui/lab/LoadingButton';
+import Alert from '@mui/material/Alert';
 
 export default function Register() {
     return (
@@ -79,20 +80,14 @@ function RegistrationForm() {
         setRegistering(false);
     }
 
-    if (success) {
-        return (<div>
-            Reģistrācija veiksmīga!
-            <br></br>
-            <Link href="/login">Pieslēgties</Link>
-        </div>);
-    }
-
     return (
-        <form className='flex flex-col border border-gray-400 rounded p-5 my-5 max-w-md' onSubmit={handleRegistration}>
+        <form className='flex flex-col gap-5' onSubmit={handleRegistration}>
             <UsernameInput username={username} setUsername={setUsername} />
             <EmailInput email={email} setEmail={setEmail} />
+            <div className="flex gap-3">
             <FirstNameInput firstname={firstName} setFirstName={setFirstName} />
             <LastNameInput lastname={lastName} setLastName={setLastName} />
+            </div>
             <PasswordInput password={password} setPassword={setPassword} />
             <RepeatPasswordInput password={repeatPassword} setPassword={setRepeatPassword} />
             <LoadingButton type='submit' variant='contained' color='primary'
@@ -102,9 +97,16 @@ function RegistrationForm() {
             <div className="mt-4">
                 Jau esi piereģistrējies? <Link href="/login" className="underline text-blue-500 hover:no-underline">Pieslēgties</Link>
             </div>
-            <div>
-                {t(error)}
-            </div>
+            {error &&
+                <Alert severity='error'>
+                    {t(error)}
+                </Alert>
+            }
+            {success &&
+                <Alert severity='success'>
+                    <span>Reģistrācija veiksmīga!</span>
+                </Alert>
+            }
         </form>
     )
 }
