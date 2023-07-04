@@ -1,4 +1,4 @@
-import PersonIcon from '@mui/icons-material/Person';
+import { FormControl, InputLabel, OutlinedInput } from "@mui/material";
 
 interface LastNameInputProps {
     lastname: string
@@ -7,18 +7,19 @@ interface LastNameInputProps {
 
 function LastNameInput(props: LastNameInputProps) {
     return (
-        <div className="flex flex-col gap-1 my-2">
-            <label htmlFor="lastname">Uzvārds</label>
-            <div className="flex flex-grow items-center w-full border border-gray-400">
-            <input type="text" name="lastname" id="lastname" required className="p-2 flex-grow"
-                value={props.lastname} onChange={(e)=>props.setLastName(e.target.value)}  placeholder="jūsu uzvārds"/>
-				<div className="rounded-l-none py-2 px-3 bg-gray-200 border border-l-gray-400">
-					<PersonIcon />
-				</div>
-            
-            </div>
-
-        </div>
+        <FormControl variant="outlined">
+            <InputLabel htmlFor="lastname-input">Uzvārds</InputLabel>
+            <OutlinedInput
+                id="lastname-input"
+                type='text'
+                label="lastname"
+                value={props.lastname}
+                onChange={(e) => props.setLastName(e.target.value)}
+                required
+                autoFocus
+                autoComplete='lastname'
+            />
+        </FormControl>
     )
 }
 
