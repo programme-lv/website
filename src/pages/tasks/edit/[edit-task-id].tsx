@@ -3,7 +3,7 @@ import apolloClient from '@/lib/apolloClient'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import NavigationBar from '@/components/NavigationBar'
-import { Button } from '@mui/material'
+import { Button, Card, CardContent, Typography, CardActions, Table, TableCell, TableHead, TableRow, Paper } from '@mui/material'
 
 const GET_TASK = gql`
 query GetTask($id: ID!) {
@@ -85,16 +85,6 @@ type TaskMetadataProps = {
     authors: string[]
 }
 
-/*
-mutation UpdateTask {
-    updateTask(id: "baobabi", fullName: "Baobabi2", authors: ["123","1231"]) {
-        origin
-        authors
-        fullName
-        id
-    }
-}
-*/
 const UPDATE_TASK_METADATA = gql`
 mutation UpdateTask($id: ID!, $fullName: String, $origin: String, $authors: [String!]) {
     updateTask(id: $id, fullName: $fullName, origin: $origin, authors: $authors) {
@@ -153,30 +143,83 @@ function TaskMetadata(props: TaskMetadataProps) {
     if (error) return <p>Error: {error.message}</p>
 
     return (
-
-        <div className="flex flex-col border border-gray-400 rounded p-5 my-5 max-w-md">
-
-            <div className="my-2">
-                uzdevuma kods: <strong>{props.id}</strong>
+        <>
+            <div className="flex my-5 gap-5">
+                <FirstMetadataPanel id={props.id} createdAt='todo' updatedAt='todo'/>
+                <SecondMetadataPanel />
             </div>
+            <div className="flex flex-col border border-gray-400 rounded p-5 my-5 max-w-md">
 
-            <div className="flex flex-col gap-1 my-2">
-                <label htmlFor="full-task-name">pilnais nosaukums</label>
-                <input id="full-task-name" type="text" placeholder="pilnais nosaukums" value={fullName} onChange={(e) => { setFullName(e.target.value) }} className="p-2 border border-gray-400" />
+                <div className="my-2">
+                    uzdevuma kods: <strong>{props.id}</strong>
+                </div>
+
+                <div className="flex flex-col gap-1 my-2">
+                    <label htmlFor="full-task-name">pilnais nosaukums</label>
+                    <input id="full-task-name" type="text" placeholder="pilnais nosaukums" value={fullName} onChange={(e) => { setFullName(e.target.value) }} className="p-2 border border-gray-400" />
+                </div>
+
+                <div className="flex flex-col gap-1 my-2">
+                    <label htmlFor="task-origin">uzdevuma avots:</label>
+                    <select id="task-origin" value={origin} onChange={(e) => setOrigin(e.target.value)} className="p-2">
+                        <option value="">pašdarināts</option>
+                        {taskSources.map(taskSource => (
+                            <option key={taskSource.abbreviation} value={taskSource.abbreviation}>{taskSource.fullName}</option>
+                        ))}
+                    </select>
+                </div>
+
+                <Button onClick={handleUpdateTaskMetadata} variant='contained' color='primary'>saglabāt</Button>
             </div>
+        </>
+    )
+}
 
-            <div className="flex flex-col gap-1 my-2">
-                <label htmlFor="task-origin">uzdevuma avots:</label>
-                <select id="task-origin" value={origin} onChange={(e) => setOrigin(e.target.value)} className="p-2">
-                    <option value="">pašdarināts</option>
-                    {taskSources.map(taskSource => (
-                        <option key={taskSource.abbreviation} value={taskSource.abbreviation}>{taskSource.fullName}</option>
-                    ))}
-                </select>
-            </div>
+type FirstMetadataPanelProps = {
+    id: string
+    createdAt: string
+    updatedAt: string
+};
 
-            <Button onClick={handleUpdateTaskMetadata} variant='contained' color='primary'>saglabāt</Button>
-        </div>
+function FirstMetadataPanel(props: FirstMetadataPanelProps) {
+    return (
+        <Card sx={{ minWidth: 275 }} variant='outlined'>
+            <CardContent>
+                <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                    Uzdevuma izveides informācija
+                </Typography>
+                <Table>
+                    <TableRow>
+                        <TableCell className="pl-0">uzdevuma kods:</TableCell>
+                        <TableCell><strong>{props.id}</strong></TableCell>
+                    </TableRow>
+                    <TableRow>
+                        <TableCell className="pl-0">izveidots:</TableCell>
+                        <TableCell>{props.createdAt}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                        <TableCell className="pl-0">pēdējoreiz labots:</TableCell>
+                        <TableCell>{props.updatedAt}</TableCell>
+                    </TableRow>
+                </Table>
+            </CardContent>
+            <CardActions className="flex justify-end">
+                <Button size="small">Skatīt uzdevumu</Button>
+                <Button size="small" color="error">Dzēst</Button>
+            </CardActions>
+        </Card>
+    );
+}
+
+function SecondMetadataPanel() {
+    return (
+        <Card sx={{ minWidth: 275 }} variant='outlined'>
+            <CardContent>
+                <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                    Avota informācija
+                </Typography>
+            </CardContent>
+        </Card>
     )
 }
 
