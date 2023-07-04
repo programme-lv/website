@@ -187,18 +187,13 @@ export async function getServerSideProps(context: any) {
     } catch (error) {
         return {
             redirect: {
-                destination: '/login',
+                destination: '/forbidden',
                 permanent: false,
             },
         }
     }
 
     console.log(context.req.headers.cookie)
-    // make request to backend to check if user is logged in
-    // if not logged in, redirect to login page
-    // if logged in, redirect to editor page
-
-
     return {
         props: {}, // Will be passed to the page component as props
     }
