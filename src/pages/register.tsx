@@ -10,13 +10,24 @@ import { useMutation, gql } from '@apollo/client';
 import apolloClient from '@/lib/apolloClient';
 import useTranslation from 'next-translate/useTranslation'
 import NavigationBar from '@/components/NavigationBar'
+import Container from '@mui/material/Container';
+import Card from '@mui/material/Card';
+import HowToRegIcon from '@mui/icons-material/HowToReg';
+import LoadingButton from '@mui/lab/LoadingButton';
 
 export default function Register() {
     return (
-        <main className='p-5'>
-            <NavigationBar active='register'/>
-            <RegistrationForm />
-        </main>
+        <>
+            <NavigationBar active='register' />
+            <main className="container m-auto">
+                <Container maxWidth='sm'>
+                    <Card className='my-5 px-5 pb-5' variant='outlined'>
+                        <h2 className="text-center font-normal">Sveiks, programmētāj!</h2>
+                        <RegistrationForm />
+                    </Card>
+                </Container>
+            </main>
+        </>
     )
 }
 
@@ -45,26 +56,27 @@ function RegistrationForm() {
 
     const [error, setError] = useState<string>('')
     const [success, setSuccess] = useState<boolean>(false);
+    const [registering, setRegistering] = useState<boolean>(false);
 
     async function handleRegistration(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
+        setError('');
+        setSuccess(false);
+        setRegistering(true);
+
         if (password !== repeatPassword) {
-            setError('Paroles nesakrīt')
+            setError('Paroles nesakrīt!')
             return
         }
 
         try {
             await register({ variables: { username, password, email, firstName, lastName } })
+            setSuccess(true);
         } catch (error: any) {
-            if (error.message) {
-                setError(error.message)
-            } else {
-                setError('Nezināma kļūda')
-            }
-            return;
+            setError(error.message ?? 'Nezināma kļūda');
         }
 
-        setSuccess(true);
+        setRegistering(false);
     }
 
     if (success) {
@@ -83,7 +95,10 @@ function RegistrationForm() {
             <LastNameInput lastname={lastName} setLastName={setLastName} />
             <PasswordInput password={password} setPassword={setPassword} />
             <RepeatPasswordInput password={repeatPassword} setPassword={setRepeatPassword} />
-            <button type="submit" className="rounded self-end p-2 px-12 mt-4 text-sm border max-w-xs bg-blue-600 text-white font-semibold hover:bg-blue-500">Reģistrēties</button>
+            <LoadingButton type='submit' variant='contained' color='primary'
+                loading={registering} loadingPosition='end' endIcon={<HowToRegIcon />}>
+                Reģistrēties
+            </LoadingButton>
             <div className="mt-4">
                 Jau esi piereģistrējies? <Link href="/login" className="underline text-blue-500 hover:no-underline">Pieslēgties</Link>
             </div>
