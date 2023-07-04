@@ -5,6 +5,7 @@ import { Dialog, TextField, DialogTitle, DialogContent, DialogActions, DialogCon
 import LoadingButton from "@mui/lab/LoadingButton";
 import useTranslation from "next-translate/useTranslation";
 import { useEffect } from "react";
+
 const CREATE_TASK = gql`
 mutation CreateTask($id: String!, $fullName: String!){
     createTask(id: $id, fullName: $fullName) {
@@ -39,6 +40,9 @@ export default function CreateTaskDialog(props: CreateTaskModalProps) {
 
     async function handleCreateTask() {
         setTaskIsBeingCreated(true);
+        setError(null);
+        setSuccess(false);
+
         try {
             let response = await createTask({ variables: { id: newTaskId, fullName: newTaskFullName } })
             if (response.data.createTask) {
