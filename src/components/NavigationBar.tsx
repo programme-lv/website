@@ -14,7 +14,7 @@ export default function NavigationBar(props: NavBarProps) {
     const active = props.active ?? '';
 
     return (
-        <nav className={`flex justify-aroud items-center p-2 px-6 border border-solid border-white border-b-gray-200 m-auto`}>
+        <nav className="flex justify-aroud items-center p-2 px-6 border border-solid border-white border-b-gray-200 m-auto">
             <div className="container flex m-auto">
             <div className="flex-grow flex justify-start gap-3">
                 <NavLink href="/" active={active}>Programme.lv</NavLink>
