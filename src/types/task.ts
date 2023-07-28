@@ -1,20 +1,24 @@
 export type Task = {
     id: string
-    fullName: string
-    origin: string
-    authors: string[]
-    versions: {
+    code: string
+    name: string
+
+    description: {
         id: string
-        versionName: string
+        story: string
+        input: string
+        output: string
+    }
+
+    constraints: {
         timeLimitMs: number
         memoryLimitKb: number
-        createdAt: string
-        updatedAt: string
-        evalType: {
-            id: string
-            descriptionEn: string
-        }
-    }[]
+    }
+
+    metadata: {
+        authors: string[]
+        origin: string
+    }
 }
 
 export default Task;
