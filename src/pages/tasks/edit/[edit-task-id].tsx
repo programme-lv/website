@@ -2,6 +2,7 @@ import NavigationBar from '@/components/NavigationBar'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import Textarea from '@mui/joy/Textarea';
+import JoyButton from '@mui/joy/Button';
 
 type View = 'description' | 'testing' | 'metadata'
 
@@ -111,6 +112,9 @@ function DescriptionView() {
                     <label>Izvaddatu apraksts</label>
                     <Textarea minRows={5} />
                 </div>
+            </div>
+            <div className="flex justify-end">
+                <JoyButton color='success'>Saglabāt</JoyButton>
             </div>
         </div>
     </>)

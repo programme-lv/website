@@ -2,7 +2,7 @@ import { gql, useQuery } from '@apollo/client'
 import apolloClient from '@/lib/apolloClient'
 import { useEffect, useState } from 'react'
 import NavigationBar from '@/components/NavigationBar'
-import { Button } from '@mui/material'
+import JoyButton from '@mui/joy/Button'
 import Task from '@/types/task'
 import CreateTaskDialog from '@/components/CreateTaskModal'
 import Link from 'next/link'
@@ -18,7 +18,9 @@ export default function Tasks() {
                 <div className="w-full my-5">
                     <TaskTable />
                 </div>
-                <Button variant='contained' onClick={() => setCreateTaskDialogOpened(true)}>Izveidot</Button>
+                <div className="flex justify-end">
+                <JoyButton onClick={() => setCreateTaskDialogOpened(true)} className='font-normal'>Izveidot</JoyButton>
+                </div>
             </main>
         </>
     )
