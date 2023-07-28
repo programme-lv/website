@@ -1,6 +1,7 @@
 import NavigationBar from '@/components/NavigationBar'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
+import Textarea from '@mui/joy/Textarea';
 
 type View = 'description' | 'testing' | 'metadata'
 
@@ -15,11 +16,8 @@ export default function EditTask() {
         <>
             <NavigationBar active='tasks' />
             <main className="container m-auto">
-                <h1 className="text-xl font-normal">Uzdevuma
-                    <code className="mx-2">{router.query['edit-task-id']}</code>
-                    rediģēšana</h1>
-                <div className="flex justify-between gap-2">
-                    <div className="flex-grow max-w-[10em]">
+                <div className="flex justify-between gap-12 mt-12">
+                    <div className="flex-grow max-w-[15em]">
                         <ActionList openedView={openedView} setOpenedView={setOpenedView} />
                     </div>
                     <div className="flex-grow">
@@ -33,7 +31,7 @@ export default function EditTask() {
 
 function ActionList(props: { openedView: View, setOpenedView: (view: View) => void }) {
     return (
-        <nav className="flex flex-col gap-2 border border-solid border-gray-200 p-2">
+        <nav className="flex flex-col gap-2 border-0 border-r border-solid border-gray-200 p-2">
             <ActionListButton
                 isActive={props.openedView === 'description'}
                 onClick={() => props.setOpenedView('description')}>
@@ -54,16 +52,24 @@ function ActionList(props: { openedView: View, setOpenedView: (view: View) => vo
 }
 
 function ActionListButton(props: { isActive: boolean, onClick: () => void, children: any }) {
-    return (
+
+    if (props.isActive) return (
+        <div className="flex items-center w-full">
+            <span className="font-extrabold text-blue-69 text-xl">|</span>
+            <button type='button'
+                className="bg-transparent border-none bg-gray-69 hover:bg-gray-69 p-2 text-left text-md w-full">
+                <span className="font-semibold">{props.children}</span>
+            </button>
+        </div>
+    )
+    else return (
         <button type='button'
-            className="bg-transparent border-none cursor-pointer hover:bg-gray-69 rounded-lg p-2 text-left"
+            className="bg-transparent border-none cursor-pointer hover:bg-gray-69 rounded-lg p-2 text-left text-md"
             onClick={props.onClick}>
-            {(!props.isActive) && props.children}
-            {(props.isActive) && <span className="text-blue-69">{props.children}</span>}
-        </button>
+            {props.children}
+        </button >
     )
 }
-
 
 function TaskEditView(props: { view: View }) {
     switch (props.view) {
@@ -84,7 +90,30 @@ function TaskEditView(props: { view: View }) {
 */
 
 function DescriptionView() {
-    return (<>description</>)
+    return (<>
+        <h2 className="m-0 font-light border-0 border-b border-b-gray-420 border-solid pb-2 mb-6">
+            Uzdevuma Apraksts</h2>
+        <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-1">
+                <label>Nosaukums</label>
+                <Textarea />
+            </div>
+            <div className="flex flex-col gap-1">
+                <label>Stāsts / uzdevuma izklāsts</label>
+                <Textarea minRows={5} />
+            </div>
+            <div className="flex gap-4">
+                <div className="flex flex-col gap-1 flex-grow">
+                    <label>Ievaddatu apraksts</label>
+                    <Textarea minRows={5} />
+                </div>
+                <div className="flex flex-col gap-1 flex-grow">
+                    <label>Izvaddatu apraksts</label>
+                    <Textarea minRows={5} />
+                </div>
+            </div>
+        </div>
+    </>)
 }
 
 function TestingView() {

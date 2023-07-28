@@ -14,36 +14,36 @@ export default function NavigationBar(props: NavBarProps) {
     const active = props.active ?? '';
 
     return (
-        <nav className="flex justify-aroud items-center p-2 px-6 border border-solid border-white border-b-gray-200 m-auto">
+        <nav className="flex justify-around items-center p-1 px-6 border border-solid border-white border-b-gray-200 m-auto">
             <div className="container flex m-auto">
-            <div className="flex-grow flex justify-start gap-3">
-                <NavLink href="/" active={active}>Programme.lv</NavLink>
-            </div>
-            <div className="flex-grow flex justify-between gap-3">
-                <NavLink href='/tasks' active={active}>{t('navbar_tasks')}</NavLink>
-                <NavLink href='/editor' active={active}>{t('navbar_editor')}</NavLink>
-            </div>
-            <div className="flex-grow flex justify-end gap-3">
-                {userData && !loginError ? (
-                    <div className="flex items-center">
-                        <span className="text-sm">Lietotājs:</span>
-                        <NavLink href="/profile" active={active}><span className="text-blue-69 text-base">{userData.username}</span></NavLink>
-                    </div>
-                ) : (<>
-                    <NavLink href="/login" active={active}>{t('navbar_login')}</NavLink>
-                    <NavLink href="/register" active={active}>{t('navbar_register')}</NavLink>
-                </>)
-                }
-            </div>
+                <div className="flex-grow flex justify-start gap-3">
+                    <NavLink href="/" active={active}>Programme.lv</NavLink>
+                </div>
+                <div className="flex-grow flex justify-between gap-3">
+                    <NavLink href='/tasks' active={active}>{t('navbar_tasks')}</NavLink>
+                    <NavLink href='/editor' active={active}>{t('navbar_editor')}</NavLink>
+                </div>
+                <div className="flex-grow flex justify-end gap-3">
+                    {userData && !loginError ? (
+                        <div className="flex items-center">
+                            <span className="text-sm">Lietotājs:</span>
+                            <NavLink href="/profile" active={active}><span className="text-blue-69 text-base">{userData.username}</span></NavLink>
+                        </div>
+                    ) : (<>
+                        <NavLink href="/login" active={active}>{t('navbar_login')}</NavLink>
+                        <NavLink href="/register" active={active}>{t('navbar_register')}</NavLink>
+                    </>)
+                    }
+                </div>
             </div>
         </nav>
     );
 }
 
 function NavLink(props: { href: string, active: string, children: any }) {
-    let current = props.active;
-    let target = props.href;
-    let active = ("/" + current == target) || (current == 'index' && target == '/');
+    const current = props.active;
+    const target = props.href;
+    const active = ("/" + current == target) || (current == 'index' && target == '/');
 
     if (active) return (
         <Link href={props.href} className='p-2 rounded-lg no-underline hover:underline text-black transition-all'>
