@@ -3,19 +3,20 @@ export type Task = {
     code: string
     name: string
 
-    description: {
+    Description: {
         id: string
         story: string
         input: string
         output: string
+        notes: string
     }
 
-    constraints: {
+    Constraints: {
         timeLimitMs: number
         memoryLimitKb: number
     }
 
-    metadata: {
+    Metadata: {
         authors: string[]
         origin: string
     }
