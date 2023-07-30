@@ -1,17 +1,61 @@
 import NavigationBar from '@/components/NavigationBar'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import Textarea from '@mui/joy/Textarea';
 import JoyButton from '@mui/joy/Button';
+import {gql, useQuery} from '@apollo/client'
+import apolloClient from '@/lib/apolloClient'
+import Task from '@/types/task';
+
+const GET_RELEVANT_TASK_BY_ID = gql`
+query GetRelevantTaskById($id: ID!) {
+    getRelevantTaskById(id: $id) {
+        id
+        code
+        name
+        createdAt
+        updatedAt
+        Metadata {
+            authors
+            origin
+        }
+        Constraints {
+            timeLimitMs
+            memoryLimitKb
+        }
+        Description {
+            id
+            story
+            input
+            output
+            notes
+        }
+    }
+}
+`
 
 type View = 'description' | 'testing' | 'metadata'
 
 export default function EditTask() {
     const router = useRouter()
+    const taskId = router.query['edit-task-id'] as string
+
+    const {loading, error, data} = useQuery(GET_RELEVANT_TASK_BY_ID, {
+        variables: {id: taskId},
+        client: apolloClient
+    })
+
+    const [task, setTask] = useState<Task|null>(null)
+    useEffect(()=>{
+        if(data)
+            setTask(data.getRelevantTaskById);
+    }, [data]);
 
     const [openedView, setOpenedView] =
         useState<View>('description');
 
+    if(error) return <p>Error: {error.message}</p>
+    if(loading||!task) return <p>Loading...</p>
 
     return (
         <>
@@ -22,7 +66,7 @@ export default function EditTask() {
                         <ActionList openedView={openedView} setOpenedView={setOpenedView} />
                     </div>
                     <div className="flex-grow">
-                        <TaskEditView view={openedView} />
+                        <TaskEditView task={task as Task} view={openedView} />
                     </div>
                 </div>
             </main>
@@ -72,10 +116,15 @@ function ActionListButton(props: { isActive: boolean, onClick: () => void, child
     )
 }
 
-function TaskEditView(props: { view: View }) {
+type TaskEditViewProps = {
+    task: Task,
+    view: View
+}
+
+function TaskEditView(props: TaskEditViewProps) {
     switch (props.view) {
         case 'description':
-            return <DescriptionView />
+            return <DescriptionView task={props.task}/>
         case 'testing':
             return <TestingView />
         case 'metadata':
@@ -90,14 +139,14 @@ function TaskEditView(props: { view: View }) {
  * publicēšana
 */
 
-function DescriptionView() {
+function DescriptionView(props: {task: Task}){
     return (<>
         <h2 className="m-0 font-light border-0 border-b border-b-gray-420 border-solid pb-2 mb-6">
             Uzdevuma Apraksts</h2>
         <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-1">
                 <label>Nosaukums</label>
-                <Textarea />
+                <Textarea value={props.task.name}/>
             </div>
             <div className="flex flex-col gap-1">
                 <label>Stāsts / uzdevuma izklāsts</label>
