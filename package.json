@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "codegen": "graphql-codegen --config codegen.ts"
   },
   "dependencies": {
     "@apollo/client": "^3.7.16",
@@ -50,8 +51,11 @@
     "unified": "^10.1.2"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "5.0.0",
     "eslint": "^8.43.0",
     "eslint-plugin-unused-imports": "^2.0.0",
-    "next-translate-plugin": "^2.4.2"
+    "next-translate-plugin": "^2.4.2",
+    "@graphql-codegen/introspection": "4.0.0",
+    "@graphql-codegen/client-preset": "4.1.0"
   }
 }

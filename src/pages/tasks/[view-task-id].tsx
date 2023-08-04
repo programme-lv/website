@@ -2,6 +2,7 @@ import NavigationBar from "@/components/NavigationBar"
 import { gql, useQuery } from "@apollo/client"
 import apolloClient from "@/lib/apolloClient"
 import { useRouter } from "next/router"
+import Task from "@/types/task"
 
 export const GET_TASK = gql`
 query GetTask($code: String!) {
@@ -28,6 +29,10 @@ query GetTask($code: String!) {
         }
     }
 }`
+
+type ViewTaskProps = {
+  task: Task
+}
 
 export default function ViewTask() {
   const router = useRouter()
@@ -56,5 +61,13 @@ export default function ViewTask() {
       </main>
     </>
   )
+}
+
+export async function getServerSideProps(context: any) {
+  return {
+    props: {
+      id: context.params.id
+    }
+  }
 }
 
