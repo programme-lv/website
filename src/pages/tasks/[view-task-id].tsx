@@ -30,29 +30,31 @@ query GetTask($code: String!) {
 }`
 
 export default function ViewTask() {
-    const router = useRouter()
-    const { loading, error, data } = useQuery(GET_TASK, { client: apolloClient,
-        variables: { code: router.query['view-task-id'] } });
+  const router = useRouter()
+  const { loading, error, data } = useQuery(GET_TASK, {
+    client: apolloClient,
+    variables: { code: router.query['view-task-id'] }
+  });
 
-    if (loading) return <p>ielādē uzdevumu</p>
-    if (error) return <p>kļūda: {error.message}</p>
+  if (loading) return <p>ielādē uzdevumu</p>
+  if (error) return <p>kļūda: {error.message}</p>
 
-    const task = data.getPublishedTaskByCode
+  const task = data.getPublishedTaskByCode
 
-    return (
-        <>
-            <NavigationBar active="tasks" />
-            <main className='p-5'>
-                <h1>view/[id].tsx</h1>
-                <h1>{task.name}</h1>
-                <h2>Stāsts</h2>
-                <p>{task.Description.story}</p>
-                <h2>Ievaddatu apraksts</h2>
-                <p>{task.Description.input}</p>
-                <h2>Izvaddatu apraksts</h2>
-                <p>{task.Description.output}</p>
-            </main>
-        </>
-    )
+  return (
+    <>
+      <NavigationBar active="tasks" />
+      <main className='p-5'>
+        <h1>view/[id].tsx</h1>
+        <h1>{task.name}</h1>
+        <h2>Stāsts</h2>
+        <p>{task.Description.story}</p>
+        <h2>Ievaddatu apraksts</h2>
+        <p>{task.Description.input}</p>
+        <h2>Izvaddatu apraksts</h2>
+        <p>{task.Description.output}</p>
+      </main>
+    </>
+  )
 }
 
