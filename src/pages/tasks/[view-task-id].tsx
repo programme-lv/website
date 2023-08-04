@@ -1,10 +1,33 @@
 import NavigationBar from "@/components/NavigationBar"
-import { gql, useQuery } from "@apollo/client"
 import apolloClient from "@/lib/apolloClient"
-import { useRouter } from "next/router"
-import Task from "@/types/task"
+import { graphql } from "@/gql"
+import { GetTaskQuery } from "@/gql/graphql"
 
-export const GET_TASK = gql`
+type ViewTaskProps = {
+  data: GetTaskQuery
+}
+
+export default function ViewTask(props: ViewTaskProps) {
+  const task = props.data.getPublishedTaskByCode
+
+  return (
+    <>
+      <NavigationBar active="tasks" />
+      <main className='p-5'>
+        <h1>view/[id].tsx</h1>
+        <h1>{task.name}</h1>
+        <h2>Stāsts</h2>
+        <p>{task.Description.story}</p>
+        <h2>Ievaddatu apraksts</h2>
+        <p>{task.Description.input}</p>
+        <p>{task.Description.output}</p>
+        <h2>Izvaddatu apraksts</h2>
+      </main>
+    </>
+  )
+}
+
+const GET_TASK = graphql(`
 query GetTask($code: String!) {
     getPublishedTaskByCode(code: $code) {
         id
@@ -28,45 +51,17 @@ query GetTask($code: String!) {
             origin
         }
     }
-}`
-
-type ViewTaskProps = {
-  task: Task
-}
-
-export default function ViewTask() {
-  const router = useRouter()
-  const { loading, error, data } = useQuery(GET_TASK, {
-    client: apolloClient,
-    variables: { code: router.query['view-task-id'] }
-  });
-
-  if (loading) return <p>ielādē uzdevumu</p>
-  if (error) return <p>kļūda: {error.message}</p>
-
-  const task = data.getPublishedTaskByCode
-
-  return (
-    <>
-      <NavigationBar active="tasks" />
-      <main className='p-5'>
-        <h1>view/[id].tsx</h1>
-        <h1>{task.name}</h1>
-        <h2>Stāsts</h2>
-        <p>{task.Description.story}</p>
-        <h2>Ievaddatu apraksts</h2>
-        <p>{task.Description.input}</p>
-        <h2>Izvaddatu apraksts</h2>
-        <p>{task.Description.output}</p>
-      </main>
-    </>
-  )
-}
+}`)
 
 export async function getServerSideProps(context: any) {
+  const { data } = await apolloClient.query({
+    query: GET_TASK,
+    variables: { code: context.params['view-task-id'] }
+  })
+
   return {
     props: {
-      id: context.params.id
+      data
     }
   }
 }
