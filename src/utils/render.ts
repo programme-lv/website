@@ -5,7 +5,7 @@ import remarkRehype from 'remark-rehype'
 import rehypeKatex from 'rehype-katex'
 import rehypeStringify from 'rehype-stringify'
 
-export default function RenderMD(md: string) {
+export default function renderMD(md: string) {
   return unified()
     .use(remarkParse)
     .use(remarkMath)
