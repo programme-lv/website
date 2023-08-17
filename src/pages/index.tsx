@@ -3,7 +3,7 @@ import Image from 'next/image'
 export default function Home() {
   return (
     <>
-      <main className="text-justify container m-auto py-12 text-xl font-sans">
+      <main className="text-justify container m-auto py-12 text-lg font-sans">
         <Image src={Logo} alt="Programme.lv logo" />
         <h2>Par projektu</h2>
         <section>
