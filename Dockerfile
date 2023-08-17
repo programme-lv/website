@@ -2,9 +2,7 @@
 FROM node:17-alpine AS deps
 WORKDIR /app
 COPY package*.json .
-ARG NODE_ENV
-ENV NODE_ENV $NODE_ENV
-RUN npm install
+RUN yarn install
 
 # Stage 2: build & run
 FROM node:17-alpine AS builder
