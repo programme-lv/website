@@ -2,10 +2,10 @@ name: Deploy
 
 on:
   push:
-    branches: [ "prod" ]
+    tags:
+      - '*'
 
 jobs:
-
   build:
     runs-on: ubuntu-latest
     steps:
@@ -17,10 +17,6 @@ jobs:
       uses: docker/metadata-action@v4
       with:
         images: krisjanisp/proglv-frontend
-        tags: |
-          type=schedule
-          type=schedule,pattern={{date 'YYYYMMDD-hhmmss'}}
-          type=sha
 
     - name: Login to DockerHub
       if: github.event_name != 'pull_request'
@@ -46,14 +42,12 @@ jobs:
       run: mkdir -p kubernetes
 
     - name: Download manifest
-      run: wget https://raw.githubusercontent.com/programme-lv/devops/main/kubernetes/proglv_frontend_deployment.yaml -P kubernetes/
+      run: wget https://raw.githubusercontent.com/programme-lv/devops/main/kubernetes/programme.lv/frontend_deployment.yaml -P kubernetes/
 
     - name: Replace manifest tokens
       run: |
-        sed -e 's/__IMAGE_AUTHOR__/krisjanisp/g' \
-            -e 's/__IMAGE_NAME__/proglv-frontend/g' \
-            -e 's/__IMAGE_TAG__/${{env.DOCKER_METADATA_OUTPUT_VERSION}}/g' \
-            < ./kubernetes/proglv_frontend_deployment.yaml > ./kubernetes/gucci_deployment.yaml
+        sed -e 's/latest/${{env.DOCKER_METADATA_OUTPUT_VERSION}}/g' \
+            < ./kubernetes/frontend_deployment.yaml > ./kubernetes/gucci_deployment.yaml
 
     - name: Log manifest
       run: cat ./kubernetes/gucci_deployment.yaml
@@ -65,7 +59,7 @@ jobs:
       run: kubectl apply -f ./kubernetes/gucci_deployment.yaml
 
     - name: Verify deployment
-      run: timeout 120s kubectl rollout status deployment/proglv-frontend -n backend
+      run: timeout 120s kubectl rollout status deployment/frontend -n proglv
 
     - name: Display running pods
-      run: kubectl get pods -n backend
+      run: kubectl get pods -n proglv

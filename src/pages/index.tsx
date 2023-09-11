@@ -9,7 +9,7 @@ export default function Home() {
           <h2>Par projektu</h2>
           <section>
             <p>
-              Programme.lv ir jauna programmēšanas apguves platforma ar mērķi darīt Latviju par programmēšanas lielvalsti.
+              Programme.lv ir jauna programmēšanas apguves platforma ar mērķi darīt Latviju par programmēšanas lielvalsti. :)
             </p>
             <p>
               Platforma palīdzēs skolēniem un studentiem apgūt programmēšanu,
