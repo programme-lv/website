@@ -1,5 +1,9 @@
 const nextTranslate = require('next-translate-plugin')
 
-module.exports = nextTranslate({
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+});
+
+module.exports = withBundleAnalyzer(nextTranslate({
   output: 'standalone',
-})
+}))
