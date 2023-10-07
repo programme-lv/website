@@ -25,7 +25,7 @@ export default function Home() {
                         className={"p-2 px-4 font-medium border border-logoblue-69 border-solid rounded-lg text-logoblue-69"}>Pieslēgties</span>
                 </div>
             </nav>
-            <div className={"px-10 mt-5 flex justify-center"}>
+            <div className={"flex justify-center"}>
                 <div className={"w-full relative"}>
                     <Image src={Hills} alt={"Hills - background image"} style={{
                         width: '100%',
@@ -33,7 +33,7 @@ export default function Home() {
                         maxHeight: '600px',
                         overflow: 'hidden',
                         objectFit: 'cover'
-                    }} className={"rounded-lg"}/>
+                    }}/>
                     <div className={"absolute w-full h-full flex justify-around items-center top-0"}>
                         <div className={"bg-white p-10 rounded-lg text-3xl text-center flex flex-col gap-5"}>
                             <div className={"max-w-[14em]"}>
@@ -65,7 +65,7 @@ export default function Home() {
                             overflow: 'hidden',
                             objectFit: 'cover'
                         }} className={"rounded-lg"}/>
-                        <div className={"bg-white p-10 rounded-lg flex flex-col gap-5 columns-1 w-1/2"}>
+                        <div className={"bg-white p-5 rounded-lg flex flex-col gap-5 columns-1 w-1/2"}>
                             <div className={"font-semibold text-lg text-center"}>Skolēniem un studentiem</div>
                             <ul className={"list-disc text-left text-base"}>
                                 <li>Apgūsti jaunas zināšanas!</li>
@@ -84,12 +84,11 @@ export default function Home() {
             <div className={"px-10 mt-5 flex justify-center"}>
                 <div className={"w-full relative"}>
                     <div className={"grid-cols-2 flex justify-center items-center gap-5"}>
-                        <div className={"bg-white p-10 rounded-lg flex flex-col gap-5 columns-1 w-1/2"}>
+                        <div className={"bg-white p-5 rounded-lg flex flex-col gap-5 columns-1 w-1/2"}>
                             <div className={"font-semibold text-lg text-center"}>Skolotājiem un pasniedzējiem</div>
                             <ul className={"list-disc text-left text-base"}>
                                 <li>Iespēja veidot savus uzdevumus</li>
                                 <li>Iespēja grupēt lietotājus un sekot līdzī grupas aktivitātei</li>
-                                <li>Seko līdzi savai izaugsmei!</li>
                             </ul>
                         </div>
                         <Image src={LP_2} alt={"Programming student"} style={{
