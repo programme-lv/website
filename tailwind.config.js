@@ -26,9 +26,16 @@ module.exports = {
         },
         yellow: {
           69: '#F2B135',
+        },
+        logoblue: {
+          69: '#023D89',
+          420: '#0264F9',
         }
       }
     },
+    scale: {
+      69: '-1',
+    }
   },
   important: '#__next',
   corePlugins: {
