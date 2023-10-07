@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Footer from "@/components/Footer";
-import ReversedLogo from "@/../public/reverse_logo.png"
+import FirstNavBar from "@/components/FirstNavBar";
 import Hills from "@/../public/hills.png"
 import LP_1 from "@/../public/land_page_1.png"
 import LP_2 from "@/../public/land_page_2.png"
@@ -12,19 +12,7 @@ import StartIT_logo from "@/../public/startIT_logo.png"
 export default function Home() {
     return (
         <>
-            <nav className={"flex bg-white p-4 px-10 justify-between items-center gap-4"}>
-                <div className={"flex justify-center items-center gap-4"}>
-                    <Image src={ReversedLogo} alt={"Logo"} width={40}/>
-                    <div className={"flex gap-2 items-baseline"}>
-                        <span className={"text-2xl font-semibold text-logoblue-69"}>Programme.lv</span>
-                        <span className={"font-semibold text-logoblue-420"}>Alpha</span>
-                    </div>
-                </div>
-                <div>
-                    <span
-                        className={"p-2 px-4 font-medium border border-logoblue-69 border-solid rounded-lg text-logoblue-69"}>Pieslēgties</span>
-                </div>
-            </nav>
+            <FirstNavBar/>
             <div className={"flex justify-center"}>
                 <div className={"w-full relative"}>
                     <Image src={Hills} alt={"Hills - background image"} style={{
@@ -57,13 +45,13 @@ export default function Home() {
             </div>
             <div className={"px-10 mt-5 flex justify-center"}>
                 <div className={"w-full relative"}>
-                    <div className={"columns-2 flex justify-center items-center gap-5"}>
-                        <Image src={LP_1} alt={"Programming student"} style={{
+                    <div className={"columns-2 flex justify-center items-center gap-5 transform -scale-x-69"}>
+                        <Image src={LP_2} alt={"Programming student"} style={{
                             width: '25%',
                             height: 'auto',
                             maxHeight: '300px',
                             overflow: 'hidden',
-                            objectFit: 'cover'
+                            objectFit: 'cover',
                         }} className={"rounded-lg"}/>
                         <div className={"bg-white p-5 rounded-lg flex flex-col gap-5 columns-1 w-1/2"}>
                             <div className={"font-semibold text-lg text-center"}>Skolēniem un studentiem</div>
@@ -91,7 +79,7 @@ export default function Home() {
                                 <li>Iespēja grupēt lietotājus un sekot līdzī grupas aktivitātei</li>
                             </ul>
                         </div>
-                        <Image src={LP_2} alt={"Programming student"} style={{
+                        <Image src={LP_1} alt={"Programming student"} style={{
                             width: '25%',
                             height: 'auto',
                             maxHeight: '300px',
@@ -109,28 +97,28 @@ export default function Home() {
                                style={{
                                    width: 'auto',
                                    maxWidth: '100%',
-                                   height:'auto',
-                                   maxHeight:'100px',
+                                   height: 'auto',
+                                   maxHeight: '100px',
                                }}/>
                         <Image src={PPS_logo} alt={"Pirmā Programmēšanas Skola"}
                                style={{
                                    width: 'auto',
                                    maxWidth: '100%',
-                                   height:'auto',
-                                   maxHeight:'100px',
+                                   height: 'auto',
+                                   maxHeight: '100px',
                                }}/>
                         <Image src={NMS_logo} alt={"Latvijas Universitātes A. Liepas Neklātienes matemātikas skola"}
                                style={{
                                    width: 'auto',
                                    maxWidth: '100%',
-                                   height:'auto',
-                                   maxHeight:'100px',
+                                   height: 'auto',
+                                   maxHeight: '100px',
                                }}/>
                         <Image src={StartIT_logo} alt={"IT Izglītības fonds - start(it)"} style={{
                             width: 'auto',
                             maxWidth: '100%',
-                            height:'auto',
-                            maxHeight:'100px',
+                            height: 'auto',
+                            maxHeight: '100px',
                         }}/>
                     </div>
                 </div>

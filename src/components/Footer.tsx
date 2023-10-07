@@ -26,7 +26,7 @@ export default function Footer() {
                     <a href={"mailto:programme.lv@gmail.com"} className={"text-white p-1"} style={{textDecoration:"none"}}>
                         programme.lv@gmail.com
                     </a>
-                        <a href={"https://youtu.be/9Aio5MadFUY?si=0kmqmduwm51jkvnx"} className={"text-white p-1"} style={{textDecoration:"none"}} >
+                        <a href={"/about"} className={"text-white p-1"} style={{textDecoration:"none"}} >
                         | par mums
                     </a>
                     </span>
