@@ -1,12 +1,12 @@
 import Image from "next/image";
-import ReversedLogo from "../../public/reverse_logo.png";
+import Logo from "@/../public/P_logo_simple.png"
 
 export default function FirstNavBar(){
     return (
         <nav className={"flex bg-white p-4 px-10 justify-between items-center gap-4"}>
             <div className={"flex justify-center items-center gap-4"}>
                 <a href={'/'} style={{textDecoration: "none"}}>
-                    <Image src={ReversedLogo} alt={"Logo"} width={40}/>
+                    <Image src={Logo} alt={"Logo"} width={40}/>
                 </a>
                 <div className={"flex gap-2 items-baseline"}>
                     <span className={"text-2xl font-semibold text-logoblue-69"}>Programme.lv</span>

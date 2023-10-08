@@ -31,6 +31,10 @@ module.exports = {
           69: '#023D89',
           420: '#0264F9',
         }
+      },
+      gridTemplateColumns : {
+        sidebar: '64px auto',
+        "sidebar-collapsed": '300px auto',
       }
     },
     scale: {
