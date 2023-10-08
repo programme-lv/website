@@ -8,6 +8,7 @@ import LIO_logo from "@/../public/LIO_logo.png"
 import PPS_logo from "@/../public/PPS_logo_transparent.png"
 import NMS_logo from "@/../public/nms_logo.jpg"
 import StartIT_logo from "@/../public/startIT_logo.png"
+import JoyButton from "@mui/joy/Button";
 
 export default function Home() {
     return (
@@ -96,6 +97,7 @@ function Hero() {
                         cienītājiem
                     </div>
                     <div>
+                        <JoyButton color={"primary"} className={"text-xl px-10"}>Ieiet portālā</JoyButton>
                             <span className={"bg-blue-69 text-white font-semibold text-xl p-2 px-12 rounded-lg"}>
                                 Ieiet portālā
                             </span>
@@ -122,14 +124,12 @@ function StudentSection() {
         <div className={"bg-white flex-grow p-6"}>
             <div className={"flex flex-col gap-5 justify-between h-full max-w-md m-auto"}>
                 <h3 className={"font-semibold text-3xl text-center m-0"}>Skolēniem & Studentiem</h3>
-                <ul className={"list-disc text-left text-2xl flex-grow flex flex-col justify-around"}>
+                <ul className={"list-disc text-left text-2xl flex-grow leading-10"}>
                     <li>Apgūsti jaunas zināšanas!</li>
                     <li>Cīnies ar aizraujošiem uzdevumiem!</li>
                     <li>Seko līdzi savai izaugsmei!</li>
                 </ul>
-                <span className={"bg-green-69 text-white font-semibold text-base text-center p-2 px-4 rounded-lg"}>
-                    Skatīt uzdevumus
-                </span>
+                <JoyButton color={"primary"} size={"lg"} className={"text-xl"}>Skatīt uzdevumus</JoyButton>
             </div>
         </div>
     </div>)

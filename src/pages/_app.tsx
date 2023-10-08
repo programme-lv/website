@@ -1,28 +1,32 @@
 import '@/styles/globals.css'
-import type { AppProps } from 'next/app'
-import { Inter } from 'next/font/google'
-import { StyledEngineProvider } from '@mui/material/styles';
-import { CacheProvider } from '@emotion/react';
+import type {AppProps} from 'next/app'
+import {Inter} from 'next/font/google'
+import {StyledEngineProvider} from '@mui/material/styles';
+import {CacheProvider} from '@emotion/react';
 import createCache from '@emotion/cache';
-import { UserProvider } from '@/contexts/UserContext'
+import {UserProvider} from '@/contexts/UserContext'
+import {CssVarsProvider} from '@mui/joy/styles';
+import muiTheme from "@/styles/mui-theme";
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({subsets: ['latin']})
 const cache = createCache({
-	key: 'css',
-	prepend: true,
+    key: 'css',
+    prepend: true,
 });
 
-export default function App({ Component, pageProps }: AppProps) {
+export default function App({Component, pageProps}: AppProps) {
 
-	return (
-		<CacheProvider value={cache}>
-			<StyledEngineProvider injectFirst>
-				<div className={inter.className}>
-					<UserProvider>
-						<Component {...pageProps} />
-					</UserProvider>
-				</div>
-			</StyledEngineProvider>
-		</CacheProvider>
-	)
+    return (
+        <CacheProvider value={cache}>
+            <StyledEngineProvider injectFirst>
+                <CssVarsProvider theme={muiTheme}>
+                    <div className={inter.className}>
+                        <UserProvider>
+                            <Component {...pageProps} />
+                        </UserProvider>
+                    </div>
+                </CssVarsProvider>
+            </StyledEngineProvider>
+        </CacheProvider>
+    )
 }
