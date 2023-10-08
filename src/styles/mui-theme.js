@@ -1,13 +1,18 @@
 
 import { extendTheme } from '@mui/joy/styles';
 
+/*
+Green - #179E7E
+Dark blue - #003F87
+Light blue - #0066FF
+Soft gray - #F8F8F8
+Charcoal - #333333
+Golden - #F2B135
+ */
 
 const theme = extendTheme({
     "colorSchemes": {
         "light": {
-            "palette": {}
-        },
-        "dark": {
             "palette": {
                 "primary": {
                     "50": "#eff6ff",
@@ -15,7 +20,7 @@ const theme = extendTheme({
                     "200": "#bfdbfe",
                     "300": "#93c5fd",
                     "400": "#60a5fa",
-                    "500": "#3b82f6",
+                    "500": "#0066FF", // <-- modified
                     "600": "#2563eb",
                     "700": "#1d4ed8",
                     "800": "#1e40af",
@@ -51,7 +56,7 @@ const theme = extendTheme({
                     "200": "#bbf7d0",
                     "300": "#86efac",
                     "400": "#4ade80",
-                    "500": "#22c55e",
+                    "500": "#179E7E", // <-- modified
                     "600": "#16a34a",
                     "700": "#15803d",
                     "800": "#166534",

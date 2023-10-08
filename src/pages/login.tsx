@@ -21,7 +21,7 @@ export default function Login() {
                 <Container maxWidth='sm'>
                     <Card className='my-5 px-5 pb-5' variant='outlined'>
                         <h2 className="text-center font-normal">Sveiks, programmētāj!</h2>
-                        {/*<LoginForm />*/}
+                        <LoginForm />
                     </Card>
                 </Container>
             </main>

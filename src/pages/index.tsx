@@ -9,6 +9,7 @@ import PPS_logo from "@/../public/PPS_logo_transparent.png"
 import NMS_logo from "@/../public/nms_logo.jpg"
 import StartIT_logo from "@/../public/startIT_logo.png"
 import JoyButton from "@mui/joy/Button";
+import Link from "next/link";
 
 export default function Home() {
     return (
@@ -96,12 +97,9 @@ function Hero() {
                         matemātikas
                         cienītājiem
                     </div>
-                    <div>
-                        <JoyButton color={"primary"} className={"text-xl px-10"}>Ieiet portālā</JoyButton>
-                            <span className={"bg-blue-69 text-white font-semibold text-xl p-2 px-12 rounded-lg"}>
-                                Ieiet portālā
-                            </span>
-                    </div>
+                    <Link href={"/login"} className={""}>
+                        <JoyButton color={"primary"} className={"text-xl px-12"}>Ieiet portālā</JoyButton>
+                    </Link>
                 </div>
                 <span></span>
                 <span></span>
@@ -129,7 +127,11 @@ function StudentSection() {
                     <li>Cīnies ar aizraujošiem uzdevumiem!</li>
                     <li>Seko līdzi savai izaugsmei!</li>
                 </ul>
-                <JoyButton color={"primary"} size={"lg"} className={"text-xl"}>Skatīt uzdevumus</JoyButton>
+                <Link href={"/tasks"}>
+                    <JoyButton color={"success"} size={"lg"} className={"text-xl w-full"}>
+                        Skatīt uzdevumus
+                    </JoyButton>
+                </Link>
             </div>
         </div>
     </div>)
