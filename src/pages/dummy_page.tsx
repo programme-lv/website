@@ -1,9 +1,9 @@
-import Sidebar from "@/components/Sidebar"
+import Navigation from "@/components/Navigation"
 
 export default function Dummy_page(){
     return(
         <>
-            <Sidebar/>
+            <Navigation/>
         </>
     )
 }
