@@ -15,31 +15,14 @@ export default function Home() {
     return (
         <>
             <FirstNavBar/>
-            <div className={"container m-auto mt-6"}>
+            <div className={"container m-auto mt-6 rounded-lg"}>
                 <Hero/>
             </div>
-            <div className={"container m-auto mt-6"}>
+            <div className={"container m-auto mt-6 rounded-lg"}>
                 <StudentSection/>
             </div>
-            <div className={"px-10 mt-5 flex justify-center"}>
-                <div className={"w-full relative"}>
-                    <div className={"grid-cols-2 flex justify-center items-center gap-5"}>
-                        <div className={"bg-white p-5 rounded-lg flex flex-col gap-5 columns-1 w-1/2"}>
-                            <div className={"font-semibold text-lg text-center"}>Skolotājiem un pasniedzējiem</div>
-                            <ul className={"list-disc text-left text-base"}>
-                                <li>Iespēja veidot savus uzdevumus</li>
-                                <li>Iespēja grupēt lietotājus un sekot līdzī grupas aktivitātei</li>
-                            </ul>
-                        </div>
-                        <Image src={LP_1} alt={"Programming student"} style={{
-                            width: '25%',
-                            height: 'auto',
-                            maxHeight: '300px',
-                            overflow: 'hidden',
-                            objectFit: 'cover',
-                        }} className={"rounded-lg transform scale-x-69 items-center justify-center"}/>
-                    </div>
-                </div>
+            <div className={"container m-auto mt-6 rounded-lg"}>
+                <TeacherSection/>
             </div>
             <div className={"px-10 mt-5 flex justify-center bg-white p-8 rounded"}>
                 <div className={"w-full relative"}>
@@ -110,6 +93,7 @@ function Hero() {
     </div>)
 }
 
+
 function StudentSection() {
     return (<div className={"flex"}>
         <Image src={LP_2} alt={"Programming student"} style={{
@@ -135,4 +119,30 @@ function StudentSection() {
             </div>
         </div>
     </div>)
+}
+
+function TeacherSection(){
+    return (<div className={"flex"}>
+        <div className={"bg-white flex-grow p-6"}>
+            <div className={"flex flex-col gap-5 justify-between h-full max-w-md m-auto"}>
+                <h3 className={"font-semibold text-3xl text-center m-0"}>Skolotājiem un pasniedzējiem</h3>
+                <ul className={"list-disc text-left text-2xl flex-grow leading-10"}>
+                    <li>Iespēja veidot savus uzdevumus</li>
+                    <li>Iespēja grupēt lietotājus un sekot līdzī grupas aktivitātei</li>
+                </ul>
+                <Link href={"https://youtu.be/dQw4w9WgXcQ?si=CnDJZv0kD9alCV3M"}>
+                    <JoyButton color={"success"} size={"lg"} className={"text-xl w-full"}>
+                        Veidot uzdevumus
+                    </JoyButton>
+                </Link>
+            </div>
+        </div>
+        <Image src={LP_1} alt={"Programming student"} style={{
+            width: "400px",
+            height: "auto",
+            overflow: 'hidden',
+            objectFit: 'contain',
+        }}/>
+    </div>
+    )
 }
