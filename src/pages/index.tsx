@@ -18,15 +18,27 @@ export default function Home() {
             <div className={"container m-auto mt-6 rounded-lg"}>
                 <Hero/>
             </div>
-            <div className={"container m-auto mt-6 rounded-lg"}>
-                <StudentSection/>
-            </div>
-            <div className={"container m-auto mt-6 rounded-lg"}>
-                <TeacherSection/>
+            <div className={"m-auto container flex mt-6 gap-6"}>
+                <div className={"max-w-4xl flex flex-col gap-6"}>
+                    <div className={""}>
+                        <StudentSection/>
+                    </div>
+                    <div className={""}>
+                        <TeacherSection/>
+                    </div>
+                </div>
+                <div className={"flex-grow"}>
+                    <div className={"bg-white flex-grow h-full p-5"}>
+                        maybe something can go here
+                        <br/>
+                        some example code or something
+                    </div>
+                </div>
+
             </div>
             <div className={"px-10 mt-5 flex justify-center bg-white p-8 rounded"}>
                 <div className={"w-full relative"}>
-                    <div className={"grid grid-cols-5 gap-5 flex items-center"}>
+                    <div className={"grid grid-cols-5 gap-5 items-center"}>
                         <div className={"text-lg font-semibold"}>Mūs atbalsta</div>
                         <Image src={LIO_logo} alt={"Latvijas Informātikas Olimpiāde"}
                                style={{
@@ -80,9 +92,11 @@ function Hero() {
                         matemātikas
                         cienītājiem
                     </div>
-                    <Link href={"/login"} className={""}>
-                        <JoyButton color={"primary"} className={"text-xl px-12"}>Ieiet portālā</JoyButton>
-                    </Link>
+                    <div className={"flex justify-center"}>
+                        <Link href={"/login"} className={""}>
+                            <JoyButton color={"primary"} className={"text-xl px-12"}>Ieiet portālā</JoyButton>
+                        </Link>
+                    </div>
                 </div>
                 <span></span>
                 <span></span>
@@ -121,28 +135,28 @@ function StudentSection() {
     </div>)
 }
 
-function TeacherSection(){
+function TeacherSection() {
     return (<div className={"flex"}>
-        <div className={"bg-white flex-grow p-6"}>
-            <div className={"flex flex-col gap-5 justify-between h-full max-w-md m-auto"}>
-                <h3 className={"font-semibold text-3xl text-center m-0"}>Skolotājiem un pasniedzējiem</h3>
-                <ul className={"list-disc text-left text-2xl flex-grow leading-10"}>
-                    <li>Iespēja veidot savus uzdevumus</li>
-                    <li>Iespēja grupēt lietotājus un sekot līdzī grupas aktivitātei</li>
-                </ul>
-                <Link href={"https://youtu.be/dQw4w9WgXcQ?si=CnDJZv0kD9alCV3M"}>
-                    <JoyButton color={"success"} size={"lg"} className={"text-xl w-full"}>
-                        Veidot uzdevumus
-                    </JoyButton>
-                </Link>
+            <div className={"bg-white flex-grow p-6"}>
+                <div className={"flex flex-col gap-5 justify-between h-full max-w-md m-auto"}>
+                    <h3 className={"font-semibold text-3xl text-center m-0"}>Skolotājiem un pasniedzējiem</h3>
+                    <ul className={"list-disc text-left text-2xl flex-grow leading-10"}>
+                        <li>Iespēja veidot savus uzdevumus</li>
+                        <li>Iespēja grupēt lietotājus un sekot līdzī grupas aktivitātei</li>
+                    </ul>
+                    <Link href={"https://youtu.be/dQw4w9WgXcQ?si=CnDJZv0kD9alCV3M"}>
+                        <JoyButton color={"success"} size={"lg"} className={"text-xl w-full"}>
+                            Veidot uzdevumus
+                        </JoyButton>
+                    </Link>
+                </div>
             </div>
+            <Image src={LP_1} alt={"Programming student"} style={{
+                width: "400px",
+                height: "auto",
+                overflow: 'hidden',
+                objectFit: 'contain',
+            }}/>
         </div>
-        <Image src={LP_1} alt={"Programming student"} style={{
-            width: "400px",
-            height: "auto",
-            overflow: 'hidden',
-            objectFit: 'contain',
-        }}/>
-    </div>
     )
 }
