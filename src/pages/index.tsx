@@ -45,6 +45,7 @@ export default function Home() {
                                        height: 'auto',
                                        maxHeight: '100px',
                                    }}/></Link>
+                        <Link href={"https://pps.lv"}>
                         <Image src={PPS_logo} alt={"Pirmā Programmēšanas Skola"}
                                style={{
                                    width: 'auto',
@@ -52,6 +53,8 @@ export default function Home() {
                                    height: 'auto',
                                    maxHeight: '100px',
                                }}/>
+                        </Link>
+                        <Link href={"https://nms.lu.lv"}>
                         <Image src={NMS_logo} alt={"Latvijas Universitātes A. Liepas Neklātienes matemātikas skola"}
                                style={{
                                    width: 'auto',
@@ -59,12 +62,15 @@ export default function Home() {
                                    height: 'auto',
                                    maxHeight: '100px',
                                }}/>
+                        </Link>
+                        <Link href={"https://startit.lv"}>
                         <Image src={StartIT_logo} alt={"IT Izglītības fonds - start(it)"} style={{
                             width: 'auto',
                             maxWidth: '100%',
                             height: 'auto',
                             maxHeight: '100px',
                         }}/>
+                            </Link>
                     </div>
                 </div>
             </div>
