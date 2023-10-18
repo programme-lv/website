@@ -1,16 +1,17 @@
 import NavigationBar from "@/components/NavigationBar"
 import apolloClient from "@/lib/apolloClient"
 import { graphql } from "@/gql"
-import { GetTaskQuery } from "@/gql/graphql"
 import renderMD from "@/utils/render"
 import "katex/dist/katex.min.css"
 
 type ViewTaskProps = {
-  data: GetTaskQuery
+  data: undefined
 }
 
+
+
 export default function ViewTask(props: ViewTaskProps) {
-  const task = props.data.getPublishedTaskByCode
+  const task = props.data. // TODO: fix this
 
   return (
     <>
@@ -66,8 +67,8 @@ export async function getServerSideProps(context: any) {
     variables: { code: context.params['view-task-id'] }
   })
 
-  if (data.getPublishedTaskByCode) {
-    const d = data.getPublishedTaskByCode.Description
+  if (data) {
+    const d = data..Description
     d.story = renderMD(d.story)
     d.input = renderMD(d.input)
     d.output = renderMD(d.output)

@@ -21,9 +21,6 @@ const documents = {
     "\nquery Authenticate {\n    whoami {\n        id\n        username\n    }\n}\n": types.AuthenticateDocument,
     "\nmutation Login($username: String!, $password: String!) {\n\tlogin(username: $username, password: $password) {\n\t\tid\n\t\tusername\n\t}\n}\n": types.LoginDocument,
     "\n  mutation Register($username: String!, $password: String!, $email: String!, $firstName: String!, $lastName: String!) {\n    register(username: $username, password: $password, email: $email, firstName: $firstName, lastName: $lastName) {\n      id\n      username\n    }\n  }\n": types.RegisterDocument,
-    "\nquery ListTasks {\n    listTasks {\n        id\n        code\n        name\n    }\n}\n": types.ListTasksDocument,
-    "\nquery GetTask($code: String!) {\n    getPublishedTaskByCode(code: $code) {\n        id\n        code\n        name\n        createdAt\n        updatedAt\n        Description {\n            id\n            story\n            input\n            output\n            notes\n        }\n        Constraints {\n            timeLimitMs\n            memoryLimitKb\n        }\n        Metadata {\n            authors\n            origin\n        }\n    }\n}": types.GetTaskDocument,
-    "\nquery GetRelevantTaskById($id: ID!) {\n    getRelevantTaskById(id: $id) {\n        id\n        code\n        name\n        createdAt\n        updatedAt\n        Metadata {\n            authors\n            origin\n        }\n        Constraints {\n            timeLimitMs\n            memoryLimitKb\n        }\n        Description {\n            id\n            story\n            input\n            output\n            notes\n        }\n    }\n}\n": types.GetRelevantTaskByIdDocument,
 };
 
 /**
@@ -72,18 +69,6 @@ export function graphql(source: "\nmutation Login($username: String!, $password:
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  mutation Register($username: String!, $password: String!, $email: String!, $firstName: String!, $lastName: String!) {\n    register(username: $username, password: $password, email: $email, firstName: $firstName, lastName: $lastName) {\n      id\n      username\n    }\n  }\n"): (typeof documents)["\n  mutation Register($username: String!, $password: String!, $email: String!, $firstName: String!, $lastName: String!) {\n    register(username: $username, password: $password, email: $email, firstName: $firstName, lastName: $lastName) {\n      id\n      username\n    }\n  }\n"];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(source: "\nquery ListTasks {\n    listTasks {\n        id\n        code\n        name\n    }\n}\n"): (typeof documents)["\nquery ListTasks {\n    listTasks {\n        id\n        code\n        name\n    }\n}\n"];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(source: "\nquery GetTask($code: String!) {\n    getPublishedTaskByCode(code: $code) {\n        id\n        code\n        name\n        createdAt\n        updatedAt\n        Description {\n            id\n            story\n            input\n            output\n            notes\n        }\n        Constraints {\n            timeLimitMs\n            memoryLimitKb\n        }\n        Metadata {\n            authors\n            origin\n        }\n    }\n}"): (typeof documents)["\nquery GetTask($code: String!) {\n    getPublishedTaskByCode(code: $code) {\n        id\n        code\n        name\n        createdAt\n        updatedAt\n        Description {\n            id\n            story\n            input\n            output\n            notes\n        }\n        Constraints {\n            timeLimitMs\n            memoryLimitKb\n        }\n        Metadata {\n            authors\n            origin\n        }\n    }\n}"];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(source: "\nquery GetRelevantTaskById($id: ID!) {\n    getRelevantTaskById(id: $id) {\n        id\n        code\n        name\n        createdAt\n        updatedAt\n        Metadata {\n            authors\n            origin\n        }\n        Constraints {\n            timeLimitMs\n            memoryLimitKb\n        }\n        Description {\n            id\n            story\n            input\n            output\n            notes\n        }\n    }\n}\n"): (typeof documents)["\nquery GetRelevantTaskById($id: ID!) {\n    getRelevantTaskById(id: $id) {\n        id\n        code\n        name\n        createdAt\n        updatedAt\n        Metadata {\n            authors\n            origin\n        }\n        Constraints {\n            timeLimitMs\n            memoryLimitKb\n        }\n        Description {\n            id\n            story\n            input\n            output\n            notes\n        }\n    }\n}\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

@@ -25,13 +25,7 @@ export default function Tasks() {
 
 
 export const GET_TASKS = gql`
-query ListTasks {
-    listTasks {
-        id
-        code
-        name
-    }
-}
+
 `
 
 interface TaskDisplayProps {
