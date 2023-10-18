@@ -9,24 +9,24 @@ export default function Footer() {
     return (
         <>
             <div className={"items-center bg-logoblue-69 p-3"}>
-                <div className={"grid grid-cols-3 justify-between items-center"}>
-                    <span>
-                        <a href={"https://discord.gg/eV6tArk2Xe"} target={"_blank"} className={"p-3"}>
+                <div className={"grid grid-cols-3 justify-between items-center container m-auto"}>
+                    <div className={"flex gap-6"}>
+                        <a href={"https://discord.gg/eV6tArk2Xe"} target={"_blank"}>
                             <Image src={Discord_logo} alt={"Join our Discord server!"}/>
                         </a>
-                        <a href={"https://www.instagram.com/programme.lv/"} target={"_blank"} className={"p-3"}>
+                        <a href={"https://www.instagram.com/programme.lv/"} target={"_blank"}>
                             <Image src={Instagram_logo} alt={"Follow us on Instagram!"}/>
                         </a>
-                        <a href={"https://youtu.be/dQw4w9WgXcQ?si=UoCMO0GOa-H37AI2"} target={"_blank"}
-                           className={"p-3"}>
+                        <a href={"https://youtu.be/dQw4w9WgXcQ?si=UoCMO0GOa-H37AI2"} target={"_blank"}>
                             <Image src={Linkendin_logo} alt={"Join our team via Linkendin!"}/>
                         </a>
-                    </span>
+                    </div>
                     <span className={"flex justify-center"}>
-                    <a href={"mailto:programme.lv@gmail.com"} className={"text-white p-1"} style={{textDecoration:"none"}}>
+                    <a href={"mailto:programme.lv@gmail.com"} className={"text-white p-1"}
+                       style={{textDecoration: "none"}}>
                         programme.lv@gmail.com
                     </a>
-                        <a href={"/about"} className={"text-white p-1"} style={{textDecoration:"none"}} >
+                        <a href={"/about"} className={"text-white p-1"} style={{textDecoration: "none"}}>
                         | par mums
                     </a>
                     </span>

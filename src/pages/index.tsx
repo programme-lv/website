@@ -20,33 +20,31 @@ export default function Home() {
             </div>
             <div className={"m-auto container flex mt-6 gap-6"}>
                 <div className={"max-w-4xl flex flex-col gap-6"}>
-                    <div className={""}>
-                        <StudentSection/>
-                    </div>
-                    <div className={""}>
-                        <TeacherSection/>
-                    </div>
+                    <StudentSection/>
+                    <TeacherSection/>
                 </div>
                 <div className={"flex-grow"}>
-                    <div className={"bg-white flex-grow h-full p-5"}>
-                        maybe something can go here
-                        <br/>
-                        some example code or something
+                    <div className={"bg-white flex-grow h-full"}>
+                        <div className={"p-5"}>
+                            maybe something can go here
+                            <br/>
+                            some example code or something
+                        </div>
                     </div>
                 </div>
-
             </div>
-            <div className={"px-10 mt-5 flex justify-center bg-white p-8 rounded"}>
-                <div className={"w-full relative"}>
-                    <div className={"grid grid-cols-5 gap-5 items-center"}>
-                        <div className={"text-lg font-semibold"}>Mūs atbalsta</div>
-                        <Image src={LIO_logo} alt={"Latvijas Informātikas Olimpiāde"}
-                               style={{
-                                   width: 'auto',
-                                   maxWidth: '100%',
-                                   height: 'auto',
-                                   maxHeight: '100px',
-                               }}/>
+
+            <div className={"my-6"}>
+                <div className={"container m-auto bg-white"}>
+                    <div className={"flex justify-between p-6"}>
+                        <Link href={"https://lio.lv"}>
+                            <Image src={LIO_logo} alt={"Latvijas Informātikas Olimpiāde"}
+                                   style={{
+                                       width: 'auto',
+                                       maxWidth: '100%',
+                                       height: 'auto',
+                                       maxHeight: '100px',
+                                   }}/></Link>
                         <Image src={PPS_logo} alt={"Pirmā Programmēšanas Skola"}
                                style={{
                                    width: 'auto',
@@ -70,7 +68,9 @@ export default function Home() {
                     </div>
                 </div>
             </div>
-            <Footer/>
+            <div className={"mt-6"}>
+                <Footer/>
+            </div>
         </>
     )
 }
