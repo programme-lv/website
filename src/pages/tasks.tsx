@@ -6,6 +6,7 @@ import apolloClient from "@/lib/apolloClient";
 import renderMD from "@/utils/render";
 import {ListPublishedTasksQuery} from "@/gql/graphql";
 import "katex/dist/katex.min.css"
+import Navigation from "@/components/Navigation";
 
 export default function Tasks(props: ListPublishedTasksQuery) {
 
@@ -13,6 +14,7 @@ export default function Tasks(props: ListPublishedTasksQuery) {
     return (
         <>
             <NavigationBar active='tasks'/>
+            <Navigation/>
             <main className="container m-auto">
                 {
                     props.listPublishedTasks.map(task => (
