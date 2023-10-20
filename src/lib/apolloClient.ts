@@ -17,4 +17,5 @@ const apolloClient = new ApolloClient({
   }
 });
 
+console.log('backend uri: ' + process.env['BACKEND_URI'] ?? '/api/query')
 export default apolloClient;
