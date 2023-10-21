@@ -1,287 +1,133 @@
 import React from "react";
-import Image from 'next/image';
-import {CSSObject, styled, Theme, useTheme} from "@mui/material/styles";
-import MuiDrawer from '@mui/material/Drawer';
-import MuiAppBar, {AppBarProps as MuiAppBarProps} from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import MenuIcon from '@mui/icons-material/Menu';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
-import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
-import PlaylistAddCheckRoundedIcon from '@mui/icons-material/PlaylistAddCheckRounded';
-import ListItemText from '@mui/material/ListItemText';
-import Logo_coloured from '@/../public/P_logo_simple.png';
-import Logo_white from '@/../public/Logo_white.png';
-import Avatar from '@mui/material/Avatar';
-import Krisjanis_photo from '@/../public/team_photo/krisjanis.png'
-import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
-import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
-import ExitToAppRoundedIcon from '@mui/icons-material/ExitToAppRounded';
-import SwipeableDrawer from '@mui/material/SwipeableDrawer';
+import Box from '@mui/joy/Box';
+import Sheet from "@mui/joy/Sheet";
+// import { CssVarsProvider, extendTheme } from '@mui/joy/styles';
+import GlobalStyles from '@mui/joy/GlobalStyles';
+import Divider from "@mui/joy/Divider";
+import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
+import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
+// import ExitToAppRoundedIcon from "@mui/icons-material/ExitToAppRounded";
+import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
+import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
+import PlaylistAddCheckRoundedIcon from "@mui/icons-material/PlaylistAddCheckRounded";
 
-const drawerWidth = 240;
-
-const openedMixin = (theme: Theme): CSSObject => ({
-    width: drawerWidth,
-    transition: theme.transitions.create('width', {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.enteringScreen,
-    }),
-    overflowX: 'hidden',
-    backgroundColor: '#003F87',
-});
-
-const closedMixin = (theme: Theme): CSSObject => ({
-    transition: theme.transitions.create('width', {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-    }),
-    overflowX: 'hidden',
-    width: `calc(${theme.spacing(7)} + 1px)`,
-    [theme.breakpoints.up('sm')]: {
-        width: `calc(${theme.spacing(8)} + 1px)`,
-    },
-    backgroundColor: '#003F87',
-});
-const DrawerHeader = styled('div')(({theme}) => ({
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    padding: theme.spacing(0, 1),
-    // necessary for content to be below app bar
-    ...theme.mixins.toolbar,
-}));
-
-const DrawerHeader2 = styled('div')(({theme}) => ({
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    padding: theme.spacing(0, 1),
-    // necessary for content to be below app bar
-    ...theme.mixins.toolbar,
-}));
-
-interface AppBarProps extends MuiAppBarProps {
-    open?: boolean;
-}
-
-const AppBar = styled(MuiAppBar, {
-    shouldForwardProp: (prop) => prop !== 'open',
-})<AppBarProps>(({theme, open}) => ({
-    zIndex: theme.zIndex.drawer + 1,
-    transition: theme.transitions.create(['width', 'margin'], {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-    }),
-    ...(open && {
-        marginLeft: drawerWidth,
-        width: `calc(100% - ${drawerWidth}px)`,
-        transition: theme.transitions.create(['width', 'margin'], {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
-    }),
-}));
-
-const Drawer = styled(MuiDrawer, {shouldForwardProp: (prop) => prop !== 'open'})(
-    ({theme, open}) => ({
-        width: drawerWidth,
-        flexShrink: 0,
-        whiteSpace: 'nowrap',
-        boxSizing: 'border-box',
-        ...(open && {
-            ...openedMixin(theme),
-            '& .MuiDrawer-paper': openedMixin(theme),
-        }),
-        ...(!open && {
-            ...closedMixin(theme),
-            '& .MuiDrawer-paper': closedMixin(theme),
-        }),
-    }),
-);
+import List from '@mui/joy/List';
+import ListItem from '@mui/joy/ListItem';
+import ListItemButton from '@mui/joy/ListItemButton';
+import ListItemContent from '@mui/joy/ListItemContent';
+import ListItemDecorator from '@mui/joy/ListItemDecorator';
+import Avatar from "@mui/joy/Avatar";
+import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 
 
-
-export default function Navigation() {
-    const theme = useTheme();
-    const [open, setOpen] = React.useState(false);
-    const [open2, setOpen2] = React.useState(false);
-    const handleDrawerOpen = () => {
-        setOpen(true);
-    };
-    const handleDrawerClose = () => {
-        setOpen(false);
-    };
-    const toggleDrawer2 =
-        (open: boolean) =>
-            (event: React.KeyboardEvent | React.MouseEvent) => {
-                if (
-                    event &&
-                    event.type === 'keydown' &&
-                    ((event as React.KeyboardEvent).key === 'Tab' ||
-                        (event as React.KeyboardEvent).key === 'Shift')
-                ) {
-                    return;
-                }
-                setOpen2(open);
-            };
-
+export default function Sidebar(){
+    const menuOptions1 = [
+        {
+            icon: <HomeRoundedIcon className={"fill-white"}/>,
+            name: 'Sākums',
+            link: '',
+        },
+        {
+            icon: <SearchRoundedIcon className={"fill-white"}/>,
+            name:  'Mēklēt',
+            link: '',
+        },
+        {
+            icon: <PlaylistAddCheckRoundedIcon className={"fill-white"}/>,
+            name: 'Iesūtījumi',
+            link: ''
+        }
+    ];
+    const menuOptions2 = [
+        {
+            icon: <PersonRoundedIcon className={"fill-white"}/>,
+            name: 'Profils',
+            link: ''
+        },
+        {
+            icon: <SettingsRoundedIcon className={"fill-white"}/>,
+            name: 'Iestatījumi',
+            link: ''
+        },
+        {
+            icon: <LogoutRoundedIcon className={"fill-white"}/>,
+            name: 'Izrakstīties',
+            link: ''
+        }
+    ]
     return (
-        <>
-            <AppBar position="fixed" open={open} elevation={0}>
-                <Toolbar sx={{bgcolor: 'white'}}>
-                    <IconButton
-                        aria-label="open menu"
-                        onClick={handleDrawerOpen}
-                        edge="start"
-                        sx={{
-                            color: "#003F87",
-                            marginRight: 5,
-                            "border-radius": 8,
-                            "&:hover": {
-                                backgroundColor: '#0066FF',
-                                color: 'white',
-                            },
-                            ...(open && {display: 'none'}),
-                        }}>
-                        <MenuIcon/>
-                    </IconButton>
+        <Sheet
+        className="flex justify-items-center px-1 bg-logoblue-69 overflow-hidden"
+        sx={{
+            position: 'fixed',
+            transform: {
+                xs: 'translateX(calc(100% * (var(--SideNavigation-slideIn, 0) - 1)))',
+                md: 'none',
+            },
+            transition: 'transform 0.4s, width 0.4s',
+            zIndex: 10000,
+            height: '96.7dvh',
+            minWidth: '0',
+            width: 'auto',
+            top: 0,
+            p: 2,
+            flexShrink: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 2,
+            borderRight: '1px solid',
+            borderColor: 'divider',
+        }}>
 
-                    <Image src={Logo_coloured} alt={"logo"} style={{
-                        width: 'auto',
-                        height: 'auto',
-                        maxWidth: '40px',
-                        ...(open && {display: 'none'}),
-                    }} className={"pr-3"}/>
-                    <div className={"px-3"} style={{
-                        marginLeft: 'auto',
-                    }}>
-                        <Avatar sx={{"border-radius": 8}} onClick={toggleDrawer2(!open2)}>
-                            <Image src={Krisjanis_photo} alt={"Krišjānis Petručeņa"} style={{
-                                width: 'auto',
-                                height: 'auto',
-                                maxWidth: '40px',
-                            }}/>
-                        </Avatar>
+            <div className={"flex justify-items-center px-2"}>
+                <div className={"flex text-white font-bold text-center"}>Programme.lv</div>
+            </div>
+            <Divider className="bg-logoblue-420"/>
+            <List className={"flex pt-0"}>
+                {menuOptions1.map(({icon, name, link}) => (
+                    <ListItem key={name} className={"justify-items-center"}>
+                        <ListItemButton className="flex text-white font-semibold align-text-center align-items-center rounded hover:bg-logoblue-420" href={link}>
+                            <ListItemDecorator className={"flex"}>
+                                {icon}
+                            </ListItemDecorator>
+                            <ListItemContent className={"flex"}>
+                                <div>{name}</div>
+                            </ListItemContent>
+                        </ListItemButton>
+                    </ListItem>
+                ))}
+            </List>
+            <div>
+            <Divider className="bg-logoblue-420"/>
+            <List className={"align-items-end mt-auto mb-0"}>
+                {menuOptions2.map(({icon, name, link}) => (
+                    <ListItem key={name} className={"flex justify-items-center"}>
+                        <ListItemButton className={"flex text-white font-semibold  align-items-center rounded hover:bg-logoblue-420"} href={link}>
+                            <ListItemDecorator className={"flex"}>
+                                {icon}
+                            </ListItemDecorator>
+                            <ListItemContent className={"flex"}>
+                                <div>{name}</div>
+                            </ListItemContent>
+                        </ListItemButton>
+                    </ListItem>
+                ))}
+            </List>
+            <Divider className="bg-logoblue-420"/>
+            <Box className={"flex align-items-center pt-3 ps-1"}>
+                <Avatar className={"rounded"} variant="soft" size="md" src="team_photo/krisjanis.png"/>
+                <Box className={"flex"}>
+                    <div className={"columns-1 px-2 align-items-center"}>
+                    <div className={"text-sm text-white flex"}>K. Petručeņa</div>
+                    <div className={"text-xs text-gray-300 flex"}>@KrisjanisP</div>
                     </div>
-                </Toolbar>
-            </AppBar>
-            <Drawer variant="permanent" open={open}>
-                <DrawerHeader>
-                    <Image src={Logo_white} alt={'Logo'} style={{
-                        width: 'auto',
-                        height: 'auto',
-                        maxWidth: '40px'
-                    }}/>
-                    <div className={"font-semibold text-white px-3"}>Programme.lv</div>
-                    <IconButton onClick={handleDrawerClose} sx={{
-                        color: 'white',
-                        "border-radius": 8,
-                        "&:hover": {
-                            backgroundColor: '#0066FF',
-                        }
-                    }}>
-                        {theme.direction === 'rtl' ? <ChevronRightIcon/> : <ChevronLeftIcon/>}
-                    </IconButton>
+                </Box>
+            </Box>
+            </div>
 
-                </DrawerHeader>
-                <Divider/>
-                <List>
-                    {['Sākums', 'Mēklēt', 'Iesūtījumi'].map((text, index) => (
-                        <ListItem key={text} disablePadding sx={{
-                            display: "block",
-                            "border-radius": 8,
-                            "&:hover": {
-                                backgroundColor: '#0066FF',
-                            }
-                        }}>
-                            <ListItemButton
-                                sx={{
-                                    minHeight: 48,
-                                    justifyContent: open ? 'initial' : 'center',
-                                    px: 2.5,
-                                    color: 'white'
-                                }}
-                            >
-                                <ListItemIcon
-                                    sx={{
-                                        minWidth: 0,
-                                        mr: open ? 3 : 'auto',
-                                        justifyContent: 'center',
-                                        color: 'white'
 
-                                    }}
-                                >
-                                    {index === 0 && <HomeRoundedIcon/>}
-                                    {index === 1 && <SearchRoundedIcon/>}
-                                    {index === 2 && <PlaylistAddCheckRoundedIcon/>}
-                                </ListItemIcon>
-                                <ListItemText primary={text} sx={{opacity: open ? 1 : 0}}/>
-                            </ListItemButton>
-                        </ListItem>
-                    ))}
-                </List>
-            </Drawer>
-            <SwipeableDrawer
-                anchor="right"
-                open={open2}
-                onOpen={toggleDrawer2(true)}
-                onClose={toggleDrawer2(false)}
-                elevation={0}
-                PaperProps={{
-                    sx: {
-                        backgroundColor: '#003F87'
-                    }
-                }}
-                sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
-            >
-                <DrawerHeader2>
-                    <List>
-                        <ListItem disablePadding>
-                            <ListItemIcon>
-                                <Avatar sx={{"border-radius": 8}} onClick={toggleDrawer2(!open2)}>
-                                    <Image src={Krisjanis_photo} alt={"Krišjānis Petručeņa"} style={{
-                                        width: 'auto',
-                                        height: 'auto',
-                                        maxWidth: '40px',
-                                        borderRadius: '8px'
-                                    }}/>
-                                </Avatar>
-                            </ListItemIcon>
-                            <ListItemText primary={"krisjanisp"} sx={{color: 'white', fontWeight: '600 !importantya'}}/>
-                        </ListItem>
-                    </List>
 
-                </DrawerHeader2>
-                <Divider/>
-                <List>
-                    {['Profils', 'Iestatījumi', 'Izrakstīties'].map((text, index) => (
-                        <ListItem key={text} disablePadding sx={{
-                            display: "block",
-                            "border-radius": 8,
-                            "&:hover": {
-                                backgroundColor: '#0066FF',
-                            }
-                        }}>
-                            <ListItemButton sx={{color: 'white'}}>
-                                <ListItemIcon sx={{color: 'white'}}>
-                                    {index === 0 && <PersonRoundedIcon/>}
-                                    {index === 1 && <SettingsRoundedIcon/>}
-                                    {index === 2 && <ExitToAppRoundedIcon/>}
-                                </ListItemIcon>
-                                <ListItemText primary={text}/>
-                            </ListItemButton>
-                        </ListItem>
-                    ))}
-                </List>
-            </SwipeableDrawer>
-        </>
+
+        </Sheet>
     )
 }

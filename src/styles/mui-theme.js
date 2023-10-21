@@ -73,7 +73,15 @@ const theme = extendTheme({
                     "700": "#a16207",
                     "800": "#854d0e",
                     "900": "#713f12"
-                }
+                },
+                // "brandcolors": {
+                //     "dblue": "#003F87",
+                //     "lblue" : "#0066FF",
+                //     "green": "#179E7E",
+                //     "sgray": "#F8F8F8",
+                //     "dgray": "#333333",
+                //     "gold": "#F2B135"
+                // },
             }
         }
     }
