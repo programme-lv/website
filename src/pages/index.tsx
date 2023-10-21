@@ -93,7 +93,6 @@ function Hero() {
     </div>)
 }
 
-
 function StudentSection() {
     return (<div className={"flex"}>
         <Image src={LP_2} alt={"Programming student"} style={{

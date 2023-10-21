@@ -37,6 +37,7 @@ const openedMixin = (theme: Theme): CSSObject => ({
     overflowX: 'hidden',
     backgroundColor: '#003F87',
 });
+
 const closedMixin = (theme: Theme): CSSObject => ({
     transition: theme.transitions.create('width', {
         easing: theme.transitions.easing.sharp,
@@ -105,6 +106,8 @@ const Drawer = styled(MuiDrawer, {shouldForwardProp: (prop) => prop !== 'open'})
         }),
     }),
 );
+
+
 
 export default function Navigation() {
     const theme = useTheme();
@@ -243,14 +246,22 @@ export default function Navigation() {
                 sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
             >
                 <DrawerHeader2>
-                    <Avatar sx={{"border-radius": 8}} onClick={toggleDrawer2(!open2)}>
-                        <Image src={Krisjanis_photo} alt={"Krišjānis Petručeņa"} style={{
-                            width: 'auto',
-                            height: 'auto',
-                            maxWidth: '40px',
-                        }}/>
-                    </Avatar>
-                    <div className={"font-semibold text-white px-3"}>krisjanisp</div>
+                    <List>
+                        <ListItem disablePadding>
+                            <ListItemIcon>
+                                <Avatar sx={{"border-radius": 8}} onClick={toggleDrawer2(!open2)}>
+                                    <Image src={Krisjanis_photo} alt={"Krišjānis Petručeņa"} style={{
+                                        width: 'auto',
+                                        height: 'auto',
+                                        maxWidth: '40px',
+                                        borderRadius: '8px'
+                                    }}/>
+                                </Avatar>
+                            </ListItemIcon>
+                            <ListItemText primary={"krisjanisp"} sx={{color: 'white', fontWeight: '600 !importantya'}}/>
+                        </ListItem>
+                    </List>
+
                 </DrawerHeader2>
                 <Divider/>
                 <List>
