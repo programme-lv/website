@@ -150,11 +150,8 @@ export default function Navigation() {
                                 color: 'white',
                             },
                             ...(open && {display: 'none'}),
-                        }}
-                    >
-
+                        }}>
                         <MenuIcon/>
-
                     </IconButton>
 
                     <Image src={Logo_coloured} alt={"logo"} style={{
