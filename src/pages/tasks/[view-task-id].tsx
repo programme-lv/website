@@ -54,6 +54,15 @@ query ListLanguages {
 }
 `;
 
+const cppStartCode = `#include <iostream>
+
+using namespace std;
+
+int main() {
+    cout << "Hello, World!";
+}
+`;
+
 function Editor() {
     const {
         loading: listLangLoading,
@@ -81,7 +90,7 @@ function Editor() {
         }
     }, [listLangData])
 
-    const [code, setCode] = useState('')
+    const [code, setCode] = useState(cppStartCode)
 
     if (listLangLoading) return <div>Loading...</div>
     if (listLangError) return <div>Error: {listLangError.message}</div>
