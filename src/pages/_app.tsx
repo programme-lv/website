@@ -12,6 +12,7 @@ import {
     Experimental_CssVarsProvider as MaterialCssVarsProvider,
     THEME_ID as MATERIAL_THEME_ID,
 } from '@mui/material/styles';
+import NextNProgress from 'nextjs-progressbar';
 
 const inter = Inter({subsets: ['latin']})
 const cache = createCache({
@@ -31,6 +32,7 @@ export default function App({Component, pageProps}: AppProps) {
                 <JoyCssVarsProvider theme={muiTheme}>
                     <div className={inter.className}>
                         <UserProvider>
+                            <NextNProgress showOnShallow={false}/>
                             <Component {...pageProps} />
                         </UserProvider>
                     </div>

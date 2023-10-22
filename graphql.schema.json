@@ -174,6 +174,22 @@
         "description": null,
         "fields": [
           {
+            "name": "answer",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "id",
             "description": null,
             "args": [],
@@ -191,22 +207,6 @@
           },
           {
             "name": "input",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "output",
             "description": null,
             "args": [],
             "type": {
@@ -302,65 +302,6 @@
       },
       {
         "kind": "OBJECT",
-        "name": "Language",
-        "description": null,
-        "fields": [
-          {
-            "name": "fullName",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "id",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "ID",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "monacoID",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "SCALAR",
-                "name": "ID",
-                "ofType": null
-              }
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          }
-        ],
-        "inputFields": null,
-        "interfaces": [],
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "OBJECT",
         "name": "Metadata",
         "description": null,
         "fields": [
@@ -409,7 +350,7 @@
         "fields": [
           {
             "name": "createTask",
-            "description": null,
+            "description": "Creates a new task with the given name and code.\nThe code is used to access the task via url like /task/:code.\nCurrently only admins can create tasks.\nA default task version is assigned to the task.",
             "args": [
               {
                 "name": "code",
@@ -1118,12 +1059,71 @@
       },
       {
         "kind": "OBJECT",
+        "name": "ProgrammingLanguage",
+        "description": null,
+        "fields": [
+          {
+            "name": "fullName",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "id",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "ID",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "monacoID",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "ID",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
         "name": "Query",
         "description": null,
         "fields": [
           {
             "name": "getCurrentTaskVersionById",
-            "description": null,
+            "description": "Returns the latest version of a task.\nUsed for task preparation / development / editing.",
             "args": [
               {
                 "name": "id",
@@ -1156,7 +1156,7 @@
           },
           {
             "name": "getPublishedTaskVersionByCode",
-            "description": null,
+            "description": "Returns the latest published version / snapshot of a task.\nUsed when accessing url like /task/:code.",
             "args": [
               {
                 "name": "code",
@@ -1189,7 +1189,7 @@
           },
           {
             "name": "listEditableTasks",
-            "description": null,
+            "description": "Returns a list of all tasks that are editable by the current user.\nUsed for rendering the editable task list in user profile.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -1226,7 +1226,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "Language",
+                    "name": "ProgrammingLanguage",
                     "ofType": null
                   }
                 }
@@ -1237,7 +1237,7 @@
           },
           {
             "name": "listPublishedTasks",
-            "description": null,
+            "description": "Returns a list of all tasks that have a published version.\nUsed for rendering the public task view.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -1357,7 +1357,7 @@
               "name": null,
               "ofType": {
                 "kind": "OBJECT",
-                "name": "Language",
+                "name": "ProgrammingLanguage",
                 "ofType": null
               }
             },

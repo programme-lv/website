@@ -1,27 +1,50 @@
 import UsernameInput from '@/components/UsernameInput'
 import PasswordInput from '@/components/PasswordInput'
-import { useState } from 'react'
+import {useState} from 'react'
 import Link from 'next/link'
-import { useMutation, gql } from '@apollo/client';
+import {useMutation, gql} from '@apollo/client';
 import apolloClient from '@/lib/apolloClient';
-import { useUser } from '@/contexts/UserContext'
-import { useRouter } from 'next/router'
+import {useUser} from '@/contexts/UserContext'
+import {useRouter} from 'next/router'
 import useTranslation from 'next-translate/useTranslation'
-import NavigationBar from '@/components/NavigationBar';
-import { Alert, Card } from '@mui/material';
+import {Alert, Card} from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { Container } from '@mui/system';
+import {Container} from '@mui/system';
 import LoginIcon from '@mui/icons-material/Login';
+import mountains from "../../public/mountains.png";
+import LogoWithText from "@/components/LogoWithText";
 
 export default function Login() {
+    // Redirect to /tasks if the user is already logged in
+    const {userData, loginError} = useUser();
+    const router = useRouter();
+    if (!loginError && userData) {
+        router.push('/tasks').then();
+    }
+
     return (
-        <div>
-            <NavigationBar active='login' />
+        <div
+            style={{
+                // use the src property of the image object
+                backgroundImage: `url(${mountains.src})`,
+                // other styles
+                backgroundPosition: "center",
+                backgroundSize: "cover",
+                backgroundRepeat: "no-repeat",
+                width: "100vw",
+                height: "100vh",
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+            }}
+        >
             <main className="container m-auto">
                 <Container maxWidth='sm'>
                     <Card className='my-5 px-5 pb-5' variant='outlined'>
-                        <h2 className="text-center font-normal">Sveiks, programmētāj!</h2>
-                        <LoginForm />
+                        <div className={"p-6"}>
+                            <LogoWithText/>
+                        </div>
+                        <LoginForm/>
                     </Card>
                 </Container>
             </main>
@@ -39,9 +62,9 @@ mutation Login($username: String!, $password: String!) {
 `;
 
 function LoginForm() {
-    const { t } = useTranslation('errors')
-    const { refreshUser } = useUser();
-    const [login] = useMutation(LOGIN_MUTATION, { client: apolloClient });
+    const {t} = useTranslation('errors')
+    const {refreshUser} = useUser();
+    const [login] = useMutation(LOGIN_MUTATION, {client: apolloClient});
     const router = useRouter();
 
     const [username, setUsername] = useState('')
@@ -57,7 +80,7 @@ function LoginForm() {
         setSuccess('');
         setLoggingIn(true);
         try {
-            await login({ variables: { username, password } });
+            await login({variables: {username, password}});
             setSuccess('Pieslēgšanās veiksmīga!');
             refreshUser();
             await router.push('/');
@@ -70,14 +93,16 @@ function LoginForm() {
 
     return (
         <form onSubmit={handleLogin} className="flex flex-col gap-5">
-            <UsernameInput username={username} setUsername={setUsername} />
-            <PasswordInput password={password} setPassword={setPassword} />
+            <UsernameInput username={username} setUsername={setUsername}/>
+            <PasswordInput password={password} setPassword={setPassword}/>
             <LoadingButton type='submit' variant='contained' color='primary'
-                loading={loggingIn} loadingPosition='end' endIcon={<LoginIcon />}>
+                           loading={loggingIn} loadingPosition='end' endIcon={<LoginIcon/>}>
                 Pieslēgties
             </LoadingButton>
+
             <div className="mt-4">
-                Neesi piereģistrējies? <Link href="/register" className="underline text-blue-500 hover:no-underline">Reģistrēties</Link>
+                Neesi piereģistrējies? <Link href="/register"
+                                             className="underline text-blue-500 hover:no-underline">Reģistrēties</Link>
             </div>
             {error &&
                 <Alert severity='error'>

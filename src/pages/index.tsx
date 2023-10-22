@@ -10,14 +10,19 @@ import NMS_logo from "@/../public/nms_logo.jpg"
 import StartIT_logo from "@/../public/startIT_logo.png"
 import JoyButton from "@mui/joy/Button";
 import Link from "next/link";
+import {useUser} from "@/contexts/UserContext";
 
 export default function Home() {
+    const {userData, loginError} = useUser();
+    const loggedIn = userData && !loginError;
+
     return (
         <>
             <FirstNavBar/>
-            <div className={"container m-auto mt-6 rounded-lg"}>
-                <Hero/>
+            <div className={"container m-auto mt-6 rounded-lg hover:drop-shadow-lg"}>
+                <Hero loggedIn={loggedIn}/>
             </div>
+
             <div className={"m-auto container flex mt-6 gap-6"}>
                 <div className={"max-w-4xl flex flex-col gap-6"}>
                     <StudentSection/>
@@ -81,7 +86,11 @@ export default function Home() {
     )
 }
 
-function Hero() {
+function Hero(props: { loggedIn?: boolean }) {
+    let link = "/login"
+    if (props.loggedIn) {
+        link = "/tasks"
+    }
     return (<div className={"flex justify-center"}>
         <div className={"w-full relative"}>
             <Image src={Hills} alt={"Hills - background image"} style={{
@@ -99,7 +108,7 @@ function Hero() {
                         cienītājiem
                     </div>
                     <div className={"flex justify-center"}>
-                        <Link href={"/login"} className={""}>
+                        <Link href={link} className={""}>
                             <JoyButton color={"primary"} className={"text-xl px-12"}>Ieiet portālā</JoyButton>
                         </Link>
                     </div>
@@ -114,7 +123,7 @@ function Hero() {
 }
 
 function StudentSection() {
-    return (<div className={"flex"}>
+    return (<div className={"flex hover:drop-shadow-lg transition hover:-translate-y-0.5"}>
         <Image src={LP_2} alt={"Programming student"} style={{
             width: "400px",
             height: "auto",
@@ -141,7 +150,7 @@ function StudentSection() {
 }
 
 function TeacherSection() {
-    return (<div className={"flex"}>
+    return (<div className={"flex hover:drop-shadow-lg transition hover:-translate-y-0.5"}>
             <div className={"bg-white flex-grow p-6"}>
                 <div className={"flex flex-col gap-5 justify-between h-full max-w-md m-auto"}>
                     <h3 className={"font-semibold text-3xl text-center m-0"}>Skolotājiem un pasniedzējiem</h3>

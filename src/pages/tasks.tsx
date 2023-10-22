@@ -1,26 +1,21 @@
-import {useState} from 'react'
 import NavigationBar from '@/components/NavigationBar'
-import {Chip} from "@mui/joy";
 import {graphql} from "@/gql";
 import apolloClient from "@/lib/apolloClient";
 import renderMD from "@/utils/render";
 import {ListPublishedTasksQuery} from "@/gql/graphql";
 import "katex/dist/katex.min.css"
-import Navigation from "@/components/Navigation";
+import Link from "next/link";
 
 export default function Tasks(props: ListPublishedTasksQuery) {
 
-    console.log(props.listPublishedTasks[0].description.story)
     return (
         <>
             <NavigationBar active='tasks'/>
-            <Navigation/>
-            <main className="container m-auto">
+            <main className="container m-auto mt-6">
                 {
                     props.listPublishedTasks.map(task => (
                         <TaskDisplay key={task.id} code={task.code} name={task.name}
-                                     description={task.description.story}
-                                     tags={["matemātika", "pilnā pārlase"]} difficulty={"easy"}/>
+                                     description={task.description.story}/>
                     ))
                 }
             </main>
@@ -33,24 +28,16 @@ interface TaskDisplayProps {
     code: string;
     name: string;
     description: string;
-    tags: string[];
-    difficulty: "easy" | "medium" | "hard";
 }
 
 function TaskDisplay(props: TaskDisplayProps) {
     return (
-        <div className="flex flex-col rounded-lg p-5 bg-white">
+        <Link href={`/tasks/${props.code}`} className={"text-black no-underline"}>
+        <div className="flex flex-col p-5 bg-white hover:shadow">
             <h3 className="text-xl font-semibold my-0">{props.name}</h3>
             <div className="text-gray-600" dangerouslySetInnerHTML={{__html: props.description}}></div>
-            <div className={"w-full flex justify-between"}>
-                <div className="flex flex-row flex-wrap gap-2">
-                    {props.tags.map(tag => (
-                        <Chip key={tag} variant="outlined" size="md">{tag}</Chip>
-                    ))}
-                </div>
-                <Chip variant="solid" color={"success"} size="md">{props.difficulty}</Chip>
-            </div>
         </div>
+        </Link>
     )
 }
 
@@ -71,7 +58,7 @@ query ListPublishedTasks {
             examples {
                 id
                 input
-                output
+                answer
             }
         }
         constraints {
