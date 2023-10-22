@@ -18,7 +18,7 @@ export default function ViewTask(props: GetPublishedTaskVersionByCodeQuery) {
             <NavigationBar active="tasks"/>
             <main className='p-5'>
                 <div className={"flex"}>
-                    <div className={"border border-solid resize-x flex-grow bg-white"}>
+                    <div className={"resize-x flex-grow bg-white"}>
                         <div className={"p-5"}>
                             <div className={"flex items-baseline justify-between"}>
                                 <h2 className={"font-medium my-4 mb-2"}>{task.name}</h2>
@@ -116,7 +116,7 @@ function Editor() {
                 </div>
             </div>
 
-            <div className="h-[200px] my-2">
+            <div className="h-[600px] my-2">
                 <MonacoEditor
                     value={code}
                     theme="vs-dark"
