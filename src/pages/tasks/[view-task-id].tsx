@@ -7,6 +7,7 @@ import {GetPublishedTaskVersionByCodeQuery} from "@/gql/graphql";
 import MonacoEditor from "@monaco-editor/react";
 import {gql, useQuery} from "@apollo/client";
 import {useEffect, useState} from "react";
+import {Resizable} from "re-resizable";
 
 export default function ViewTask(props: GetPublishedTaskVersionByCodeQuery) {
     const task = props.getPublishedTaskVersionByCode
@@ -15,11 +16,19 @@ export default function ViewTask(props: GetPublishedTaskVersionByCodeQuery) {
         <>
             <NavigationBar active="tasks"/>
             <main className='p-5'>
-                <h1>{task.name}</h1>
-                <StatementSection title="Stāsts" content={task.description.story}/>
-                <StatementSection title="Ievaddatu apraksts" content={task.description.input}/>
-                <StatementSection title="Izvaddatu apraksts" content={task.description.output}/>
-                <Editor/>
+                <div className={"flex"}>
+                    <div className={"border border-solid resize-x flex-grow"}>
+                        <div className={"p-5"}>
+                        <h1>{task.name}</h1>
+                        <StatementSection title="Stāsts" content={task.description.story}/>
+                        <StatementSection title="Ievaddatu apraksts" content={task.description.input}/>
+                        <StatementSection title="Izvaddatu apraksts" content={task.description.output}/>
+                        </div>
+                    </div>
+                    <Resizable enable={{left:true}} defaultSize={{width: "50%", height: 'auto'}} className={"border border-solid p-5 resize-x"} >
+                        <Editor/>
+                    </Resizable>
+                </div>
             </main>
         </>
     )
@@ -70,14 +79,11 @@ function Editor() {
 
     const [code, setCode] = useState('')
 
-    if(listLangLoading) return <div>Loading...</div>
-    if(listLangError) return <div>Error: {listLangError.message}</div>
+    if (listLangLoading) return <div>Loading...</div>
+    if (listLangError) return <div>Error: {listLangError.message}</div>
     return (
         <div className="w-full flex flex-col">
-            <div className="flex justify-between">
-                            <span>
-                                tavs kods:
-                            </span>
+            <div className="flex justify-end">
                 <div> programmēšanas valoda
                     {selectedLanguage &&
                         <select className="ml-2" value={selectedLanguage} onChange={(e) => {
@@ -89,7 +95,7 @@ function Editor() {
                 </div>
             </div>
 
-            <div className="w-[600px] h-[200px] my-2">
+            <div className="h-[200px] my-2">
                 <MonacoEditor
                     value={code}
                     theme="vs-dark"
