@@ -16,6 +16,7 @@ import HowToRegIcon from '@mui/icons-material/HowToReg';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Alert from '@mui/material/Alert';
 import autumn from "@/../public/autumn.png";
+import LogoWithText from "@/components/LogoWithText";
 
 export default function Register() {
     return (
@@ -37,7 +38,9 @@ export default function Register() {
             <main className="container m-auto">
                 <Container maxWidth='sm'>
                     <Card className='my-5 px-5 pb-5' variant='outlined'>
-                        <h2 className="text-center font-normal">Sveiks, programmētāj!</h2>
+                        <div className={"p-6"}>
+                            <LogoWithText/>
+                        </div>
                         <RegistrationForm />
                     </Card>
                 </Container>
