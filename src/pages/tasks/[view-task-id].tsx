@@ -20,12 +20,14 @@ export default function ViewTask(props: GetPublishedTaskVersionByCodeQuery) {
                 <div className={"flex"}>
                     <div className={"border border-solid resize-x flex-grow bg-white"}>
                         <div className={"p-5"}>
-                            <h1>{task.name}</h1>
+                            <h2 className={"font-medium my-4"}>{task.name}</h2>
                             <Divider orientation={"horizontal"}/>
+                            <div className={"flex flex-col gap-4"}>
                             <StatementSection title="Stāsts" content={task.description.story}/>
                             <StatementSection title="Ievaddatu apraksts" content={task.description.input}/>
                             <StatementSection title="Izvaddatu apraksts" content={task.description.output}/>
                             {task.description.examples && <StatementExamples examples={task.description.examples}/>}
+                            </div>
                         </div>
                     </div>
                     <Resizable enable={{left: true}} defaultSize={{width: "50%", height: 'auto'}}
@@ -125,7 +127,7 @@ function Editor() {
 function StatementSection(props: { title: string, content: string }) {
     return (
         <div>
-            <h2>{props.title}</h2>
+            <h3 className={"font-medium"}>{props.title}</h3>
             <div dangerouslySetInnerHTML={{__html: props.content}}></div>
         </div>
     )
@@ -146,7 +148,7 @@ function BodyCell(props: { children: string }) {
 function StatementExamples(props: { examples: { id: string, input: string, answer: string }[] }) {
     return (
         <div>
-            <h2>Testu piemēri</h2>
+            <h3 className={"font-medium"}>Testu piemēri</h3>
             <div className={"flex flex-col gap-4"}>
             {props.examples.map(example => (
                 <table key={example.id} className={"border-collapse w-full"}>
