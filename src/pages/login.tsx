@@ -7,16 +7,29 @@ import apolloClient from '@/lib/apolloClient';
 import { useUser } from '@/contexts/UserContext'
 import { useRouter } from 'next/router'
 import useTranslation from 'next-translate/useTranslation'
-import NavigationBar from '@/components/NavigationBar';
-import { Alert, Card } from '@mui/material';
+import {Alert, Card} from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { Container } from '@mui/system';
 import LoginIcon from '@mui/icons-material/Login';
+import mountains from "../../public/mountains.png";
 
 export default function Login() {
     return (
-        <div>
-            <NavigationBar active='login' />
+        <div
+            style={{
+                // use the src property of the image object
+                backgroundImage: `url(${mountains.src})`,
+                // other styles
+                backgroundPosition: "center",
+                backgroundSize: "cover",
+                backgroundRepeat: "no-repeat",
+                width: "100vw",
+                height: "100vh",
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+            }}
+        >
             <main className="container m-auto">
                 <Container maxWidth='sm'>
                     <Card className='my-5 px-5 pb-5' variant='outlined'>
@@ -76,6 +89,7 @@ function LoginForm() {
                 loading={loggingIn} loadingPosition='end' endIcon={<LoginIcon />}>
                 Pieslēgties
             </LoadingButton>
+            
             <div className="mt-4">
                 Neesi piereģistrējies? <Link href="/register" className="underline text-blue-500 hover:no-underline">Reģistrēties</Link>
             </div>

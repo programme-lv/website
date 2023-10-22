@@ -15,11 +15,25 @@ import Card from '@mui/material/Card';
 import HowToRegIcon from '@mui/icons-material/HowToReg';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Alert from '@mui/material/Alert';
+import autumn from "@/../public/autumn.png";
 
 export default function Register() {
     return (
-        <>
-            <NavigationBar active='register' />
+        <div
+            style={{
+                // use the src property of the image object
+                backgroundImage: `url(${autumn.src})`,
+                // other styles
+                backgroundPosition: "center",
+                backgroundSize: "cover",
+                backgroundRepeat: "no-repeat",
+                width: "100vw",
+                height: "100vh",
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+            }}
+        >
             <main className="container m-auto">
                 <Container maxWidth='sm'>
                     <Card className='my-5 px-5 pb-5' variant='outlined'>
@@ -28,7 +42,7 @@ export default function Register() {
                     </Card>
                 </Container>
             </main>
-        </>
+        </div>
     )
 }
 
