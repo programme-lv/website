@@ -10,13 +10,17 @@ import NMS_logo from "@/../public/nms_logo.jpg"
 import StartIT_logo from "@/../public/startIT_logo.png"
 import JoyButton from "@mui/joy/Button";
 import Link from "next/link";
+import {useUser} from "@/contexts/UserContext";
 
 export default function Home() {
+    const {userData, loginError} = useUser();
+    const loggedIn = userData && !loginError;
+
     return (
         <>
             <FirstNavBar/>
             <div className={"container m-auto mt-6 rounded-lg hover:drop-shadow-lg"}>
-                <Hero/>
+                <Hero loggedIn={loggedIn}/>
             </div>
 
             <div className={"m-auto container flex mt-6 gap-6"}>
@@ -82,7 +86,11 @@ export default function Home() {
     )
 }
 
-function Hero() {
+function Hero(props: { loggedIn?: boolean }) {
+    let link = "/login"
+    if (props.loggedIn) {
+        link = "/tasks"
+    }
     return (<div className={"flex justify-center"}>
         <div className={"w-full relative"}>
             <Image src={Hills} alt={"Hills - background image"} style={{
@@ -100,7 +108,7 @@ function Hero() {
                         cienītājiem
                     </div>
                     <div className={"flex justify-center"}>
-                        <Link href={"/login"} className={""}>
+                        <Link href={link} className={""}>
                             <JoyButton color={"primary"} className={"text-xl px-12"}>Ieiet portālā</JoyButton>
                         </Link>
                     </div>
