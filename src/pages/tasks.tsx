@@ -8,7 +8,6 @@ import Link from "next/link";
 
 export default function Tasks(props: ListPublishedTasksQuery) {
 
-    console.log(props.listPublishedTasks[0].description.story)
     return (
         <>
             <NavigationBar active='tasks'/>
@@ -59,7 +58,7 @@ query ListPublishedTasks {
             examples {
                 id
                 input
-                output
+                answer
             }
         }
         constraints {

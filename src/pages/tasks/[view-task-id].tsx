@@ -8,6 +8,7 @@ import MonacoEditor from "@monaco-editor/react";
 import {gql, useQuery} from "@apollo/client";
 import {useEffect, useState} from "react";
 import {Resizable} from "re-resizable";
+import Divider from "@mui/material/Divider";
 
 export default function ViewTask(props: GetPublishedTaskVersionByCodeQuery) {
     const task = props.getPublishedTaskVersionByCode
@@ -17,15 +18,18 @@ export default function ViewTask(props: GetPublishedTaskVersionByCodeQuery) {
             <NavigationBar active="tasks"/>
             <main className='p-5'>
                 <div className={"flex"}>
-                    <div className={"border border-solid resize-x flex-grow"}>
+                    <div className={"border border-solid resize-x flex-grow bg-white"}>
                         <div className={"p-5"}>
-                        <h1>{task.name}</h1>
-                        <StatementSection title="Stāsts" content={task.description.story}/>
-                        <StatementSection title="Ievaddatu apraksts" content={task.description.input}/>
-                        <StatementSection title="Izvaddatu apraksts" content={task.description.output}/>
+                            <h1>{task.name}</h1>
+                            <Divider orientation={"horizontal"}/>
+                            <StatementSection title="Stāsts" content={task.description.story}/>
+                            <StatementSection title="Ievaddatu apraksts" content={task.description.input}/>
+                            <StatementSection title="Izvaddatu apraksts" content={task.description.output}/>
+                            {task.description.examples && <StatementExamples examples={task.description.examples}/>}
                         </div>
                     </div>
-                    <Resizable enable={{left:true}} defaultSize={{width: "50%", height: 'auto'}} className={"border border-solid p-5 resize-x"} >
+                    <Resizable enable={{left: true}} defaultSize={{width: "50%", height: 'auto'}}
+                               className={"border border-solid p-5 resize-x"}>
                         <Editor/>
                     </Resizable>
                 </div>
@@ -118,6 +122,44 @@ function StatementSection(props: { title: string, content: string }) {
     )
 }
 
+function HeaderCell(props: { children: string }) {
+    return (
+        <th className={"p-2 py-1 border border-gray-300 border-solid font-light text-left"}>{props.children}</th>
+    )
+}
+
+function BodyCell(props: { children: string }) {
+    return (
+        <td className={"p-2 border border-gray-300 border-solid"}><code>{props.children}</code></td>
+    )
+}
+
+function StatementExamples(props: { examples: { id: string, input: string, answer: string }[] }) {
+    return (
+        <div>
+            <h2>Testu piemēri</h2>
+            <div className={"flex flex-col gap-4"}>
+            {props.examples.map(example => (
+                <table key={example.id} className={"border-collapse w-full"}>
+                    <thead>
+                    <tr>
+                        <HeaderCell>Ievaddati</HeaderCell>
+                        <HeaderCell>Izvaddati</HeaderCell>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <BodyCell>{example.input}</BodyCell>
+                        <BodyCell>{example.answer}</BodyCell>
+                    </tr>
+                    </tbody>
+                </table>
+            ))}
+            </div>
+        </div>
+    )
+}
+
 const GET_TASK = graphql(`
 query GetPublishedTaskVersionByCode($code: String!) {
     getPublishedTaskVersionByCode(code: $code) {
@@ -135,7 +177,7 @@ query GetPublishedTaskVersionByCode($code: String!) {
             examples {
                 id
                 input
-                output
+                answer
             }
         }
         constraints {
