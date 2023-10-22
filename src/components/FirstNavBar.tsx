@@ -1,5 +1,7 @@
 import Image from "next/image";
 import Logo from "@/../public/P_logo_simple.png"
+import Link from "next/link";
+import JoyButton from "@mui/joy/Button";
 
 export default function FirstNavBar() {
     return (
@@ -15,9 +17,11 @@ export default function FirstNavBar() {
                     </div>
 
                 </div>
-                <div>
-                    <span
-                        className={"p-2 px-4 font-medium border border-logoblue-69 border-solid rounded-lg text-logoblue-69"}>Pieslēgties</span>
+                <div className={"flex gap-4 items-center"}>
+                    <Link href={"/login"} className={"no-underline text-black hover:text-gray-420"}>Pieslēgties</Link>
+                    <Link href={"/register"} className={""}>
+                        <JoyButton color={"neutral"} variant={"outlined"} className={"text-md px-6"}>Reģistrēties</JoyButton>
+                    </Link>
                 </div>
             </div>
         </nav>
