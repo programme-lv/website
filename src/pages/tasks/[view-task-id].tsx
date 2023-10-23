@@ -9,6 +9,9 @@ import {gql, useQuery} from "@apollo/client";
 import {useEffect, useState} from "react";
 import {Resizable} from "re-resizable";
 import Divider from "@mui/material/Divider";
+import {Button} from "@mui/joy";
+import SendIcon from "@mui/icons-material/Send";
+import {useRouter} from "next/router";
 
 export default function ViewTask(props: GetPublishedTaskVersionByCodeQuery) {
     const task = props.getPublishedTaskVersionByCode
@@ -23,8 +26,12 @@ export default function ViewTask(props: GetPublishedTaskVersionByCodeQuery) {
                             <div className={"flex items-baseline justify-between"}>
                                 <h2 className={"font-medium my-4 mb-2"}>{task.name}</h2>
                                 <div className={"flex gap-4"}>
-                                    <div><span className={"text-gray-600"}>laiks:</span> {task.constraints.timeLimitMs} ms</div>
-                                    <div><span className={"text-gray-600"}>atmiņa:</span> {task.constraints.memoryLimitKb} kB</div>
+                                    <div><span
+                                        className={"text-gray-600"}>laiks:</span> {task.constraints.timeLimitMs} ms
+                                    </div>
+                                    <div><span
+                                        className={"text-gray-600"}>atmiņa:</span> {task.constraints.memoryLimitKb} kB
+                                    </div>
                                 </div>
                             </div>
                             <Divider orientation={"horizontal"}/>
@@ -71,6 +78,24 @@ int main() {
 }
 `;
 
+const ENQUEUE_SUBMISSION_FOR_PUBLISHED_TASK_VERSION = gql`
+mutation EnqueueSubmissionForPublishedTaskVersion($taskID: ID!, $languageID: ID!, $submissionCode: String!) {
+    enqueueSubmissionForPublishedTaskVersion(
+        taskID: $taskID
+        languageID: $languageID
+        submissionCode: $submissionCode
+    ) {
+        id
+        code
+        language {
+            id
+            fullName
+            monacoID
+        }
+    }
+}
+`
+
 function Editor() {
     const {
         loading: listLangLoading,
@@ -100,6 +125,25 @@ function Editor() {
 
     const [code, setCode] = useState(cppStartCode)
 
+    const router = useRouter()
+
+    async function submitSolution() {
+        if (selectedLanguage) {
+            try {
+                await apolloClient.mutate({
+                    mutation: ENQUEUE_SUBMISSION_FOR_PUBLISHED_TASK_VERSION,
+                    variables: {
+                        taskID: "2",
+                        languageID: selectedLanguage,
+                        submissionCode: code
+                    }
+                })
+                await router.push("/submissions")
+            } catch (e) {
+                console.error(e)
+            }
+        }
+    }
     if (listLangLoading) return <div>Loading...</div>
     if (listLangError) return <div>Error: {listLangError.message}</div>
     return (
@@ -125,6 +169,12 @@ function Editor() {
                     onChange={(value) => setCode(value as string)}
                     className="w-full h-full"
                 />
+            </div>
+
+            <div className={"flex justify-end"}>
+                <Button endDecorator={<SendIcon/>} color="success" onClick={submitSolution}>
+                    Iesūtīt
+                </Button>
             </div>
         </div>
     )
