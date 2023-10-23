@@ -26,9 +26,20 @@ module.exports = {
         },
         yellow: {
           69: '#F2B135',
+        },
+        logoblue: {
+          69: '#023D89',
+          420: '#0264F9',
         }
+      },
+      gridTemplateColumns : {
+        sidebar: '64px auto',
+        "sidebar-collapsed": '300px auto',
       }
     },
+    scale: {
+      69: '-1',
+    }
   },
   important: '#__next',
   corePlugins: {

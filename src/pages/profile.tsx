@@ -1,15 +1,18 @@
 import useTranslation from 'next-translate/useTranslation'
 import { useUser } from '@/contexts/UserContext'
-import NavigationBar from '@/components/NavigationBar';
+// import NavigationBar from '@/components/NavigationBar';
 import { Card } from '@mui/material';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import LogOutButton from '@/components/LogOutButton';
-
+import Sidebar from "@/components/Navigation";
+import BreadcrumbNav from "@/components/BreadcrumbNav";
 export default function Profile() {
     return (
         <>
-            <NavigationBar active='profile' />
+            {/*<NavigationBar active='profile' />*/}
+            <Sidebar/>
             <main className="container m-auto">
+                <BreadcrumbNav path={[{name: "Profils", link: "/profile"}]}/>
                 <UserData />
             </main>
         </>

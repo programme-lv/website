@@ -1,55 +1,176 @@
-import Logo from '../../public/logo.png'
-import Image from 'next/image'
+import Image from "next/image";
+import Footer from "@/components/Footer";
+import FirstNavBar from "@/components/FirstNavBar";
+import Hills from "@/../public/hills.png"
+import LP_1 from "@/../public/land_page_1.png"
+import LP_2 from "@/../public/land_page_2.png"
+import LIO_logo from "@/../public/LIO_logo.png"
+import PPS_logo from "@/../public/PPS_logo_transparent.png"
+import NMS_logo from "@/../public/nms_logo.jpg"
+import StartIT_logo from "@/../public/startIT_logo.png"
+import JoyButton from "@mui/joy/Button";
+import Link from "next/link";
+import {useUser} from "@/contexts/UserContext";
+
 export default function Home() {
-  return (
-    <>
-      <main className="container m-auto py-6 lg:py-12">
-        <Image src={Logo} alt="Programme.lv logo" fill={false} style={{ maxWidth: '100%', objectFit: 'contain' }} />
-        <div className="px-4 lg:text-justify text-md lg:text-lg font-sans">
-          <h2>Par projektu</h2>
-          <section>
-            <p>
-              Programme.lv ir jauna programmēšanas apguves platforma ar mērķi darīt Latviju par programmēšanas lielvalsti. :)
-            </p>
-            <p>
-              Platforma palīdzēs skolēniem un studentiem apgūt programmēšanu,
-              nodrošinot tās lietotājus ar bāgātību teorijas klāstu, kā arī risināmiem uzdevumiem dažādos līmeņus.
-              Programme.lv arī nodrošina iespēju pasniedzējiem veidot savus uzdevumus,
-              sekot līdzi grupas aktivitātei un piemeklēt tēmai atbilstošus programmēšanas uzdevumus.
-            </p>
-            <p>
-              Diemžēl projekts joprojām ir izstrādes fāzē. Jaunais plānotais publiskās versijas izlaiduma laiks ir oktobra beigas.
-            </p>
-            <p>
-              Programme.lv pirmkods ir pieejams <a href="https://github.com/orgs/programme-lv/repositories">github.com/orgs/programme-lv</a> ar GPLv3 licenci.
-            </p>
-          </section>
-          <h2>Iecerētā funkcionalitāte</h2>
-          <ul>
-            <li>Automātiska risinājumu testēšana ar reāllaika atgriezenisko saiti;</li>
-            <li>Modernu programmēšanas valodu atbalsts;</li>
-            <li>Integrēta programmēšanas vide ar zemu latentumu;</li>
-            <li>Iespēja iegūt daļēju punktu skaitu par risinājumu;</li>
-            <li>Latvijas informātiaks olimpiādes udevumu arhīvs;</li>
-            <li>NP, kā arī interaktīvo un citu uzdevumu veidu atbalsts;</li>
-            <li>Iespēja veidot savus uzdevumus un dalīties ar time;</li>
-            <li>Iespēja skatīt citu cilvēku risinājumus pēc uzd. atrisināšanas;</li>
-            <li>Uzdevumu filtrēšana pēc avota, nepieciešamajām zināšanām;</li>
-            <li>Augošs klāsts ar algoritmu, datu struktūru un matemātikas teoriju;</li>
-          </ul>
-          <h2>Mūsu komanda</h2>
-          <ul>
-            <li>Krišjānis Petručeņa</li>
-            <li>Veronika Lohmanova</li>
-            <li>Milana Timoņina</li>
-            <li>Raivis Ieviņš</li>
-          </ul>
-          <h2>Kontakti</h2>
-          <p>
-            Sazinies ar mums rakstot uz <a href="mailto:programme.lv@gmail.com">programme.lv@gmail.com</a> vai pievienojoties mūsu <a href="https://discord.gg/7rMcjFde">Discord</a>.
-          </p>
+    const {userData, loginError} = useUser();
+    const loggedIn = userData && !loginError;
+
+    return (
+        <>
+            <FirstNavBar/>
+            <div className={"container m-auto mt-6 rounded-lg hover:drop-shadow-lg"}>
+                <Hero loggedIn={loggedIn}/>
+            </div>
+
+            <div className={"m-auto container flex mt-6 gap-6"}>
+                <div className={"max-w-4xl flex flex-col gap-6"}>
+                    <StudentSection/>
+                    <TeacherSection/>
+                </div>
+                <div className={"flex-grow"}>
+                    <div className={"bg-white flex-grow h-full"}>
+                        <div className={"p-5"}>
+                            maybe something can go here
+                            <br/>
+                            some example code or something
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div className={"my-6"}>
+                <div className={"container m-auto bg-white"}>
+                    <div className={"flex justify-between p-6"}>
+                        <Link href={"https://lio.lv"}>
+                            <Image src={LIO_logo} alt={"Latvijas Informātikas Olimpiāde"}
+                                   style={{
+                                       width: 'auto',
+                                       maxWidth: '100%',
+                                       height: 'auto',
+                                       maxHeight: '100px',
+                                   }}/></Link>
+                        <Link href={"https://pps.lv"}>
+                        <Image src={PPS_logo} alt={"Pirmā Programmēšanas Skola"}
+                               style={{
+                                   width: 'auto',
+                                   maxWidth: '100%',
+                                   height: 'auto',
+                                   maxHeight: '100px',
+                               }}/>
+                        </Link>
+                        <Link href={"https://nms.lu.lv"}>
+                        <Image src={NMS_logo} alt={"Latvijas Universitātes A. Liepas Neklātienes matemātikas skola"}
+                               style={{
+                                   width: 'auto',
+                                   maxWidth: '100%',
+                                   height: 'auto',
+                                   maxHeight: '100px',
+                               }}/>
+                        </Link>
+                        <Link href={"https://startit.lv"}>
+                        <Image src={StartIT_logo} alt={"IT Izglītības fonds - start(it)"} style={{
+                            width: 'auto',
+                            maxWidth: '100%',
+                            height: 'auto',
+                            maxHeight: '100px',
+                        }}/>
+                            </Link>
+                    </div>
+                </div>
+            </div>
+            <div className={"mt-6"}>
+                <Footer/>
+            </div>
+        </>
+    )
+}
+
+function Hero(props: { loggedIn?: boolean }) {
+    let link = "/login"
+    if (props.loggedIn) {
+        link = "/tasks"
+    }
+    return (<div className={"flex justify-center"}>
+        <div className={"w-full relative"}>
+            <Image src={Hills} alt={"Hills - background image"} style={{
+                width: '100%',
+                height: 'auto',
+                maxHeight: '600px',
+                overflow: 'hidden',
+                objectFit: 'cover'
+            }}/>
+            <div className={"absolute w-full h-full flex justify-around items-center top-0"}>
+                <div className={"bg-white p-10 rounded-lg text-3xl text-center flex flex-col gap-5"}>
+                    <div className={"max-w-[14em]"}>
+                        Jauna <span className={"text-green-69 font-medium"}>Pasaule</span> informātikas un
+                        matemātikas
+                        cienītājiem
+                    </div>
+                    <div className={"flex justify-center"}>
+                        <Link href={link} className={""}>
+                            <JoyButton color={"primary"} className={"text-xl px-12"}>Ieiet portālā</JoyButton>
+                        </Link>
+                    </div>
+                </div>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
         </div>
-      </main>
-    </>
-  )
+    </div>)
+}
+
+function StudentSection() {
+    return (<div className={"flex hover:drop-shadow-lg transition hover:-translate-y-0.5"}>
+        <Image src={LP_2} alt={"Programming student"} style={{
+            width: "400px",
+            height: "auto",
+            overflow: 'hidden',
+            objectFit: 'contain',
+        }}/>
+
+        <div className={"bg-white flex-grow p-6"}>
+            <div className={"flex flex-col gap-5 justify-between h-full max-w-md m-auto"}>
+                <h3 className={"font-semibold text-3xl text-center m-0"}>Skolēniem & Studentiem</h3>
+                <ul className={"list-disc text-left text-2xl flex-grow leading-10"}>
+                    <li>Apgūsti jaunas zināšanas!</li>
+                    <li>Cīnies ar aizraujošiem uzdevumiem!</li>
+                    <li>Seko līdzi savai izaugsmei!</li>
+                </ul>
+                <Link href={"/tasks"}>
+                    <JoyButton color={"success"} size={"lg"} className={"text-xl w-full"}>
+                        Skatīt uzdevumus
+                    </JoyButton>
+                </Link>
+            </div>
+        </div>
+    </div>)
+}
+
+function TeacherSection() {
+    return (<div className={"flex hover:drop-shadow-lg transition hover:-translate-y-0.5"}>
+            <div className={"bg-white flex-grow p-6"}>
+                <div className={"flex flex-col gap-5 justify-between h-full max-w-md m-auto"}>
+                    <h3 className={"font-semibold text-3xl text-center m-0"}>Skolotājiem un pasniedzējiem</h3>
+                    <ul className={"list-disc text-left text-2xl flex-grow leading-10"}>
+                        <li>Iespēja veidot savus uzdevumus</li>
+                        <li>Iespēja grupēt lietotājus un sekot līdzī grupas aktivitātei</li>
+                    </ul>
+                    <Link href={"https://youtu.be/dQw4w9WgXcQ?si=CnDJZv0kD9alCV3M"}>
+                        <JoyButton color={"success"} size={"lg"} className={"text-xl w-full"}>
+                            Veidot uzdevumus
+                        </JoyButton>
+                    </Link>
+                </div>
+            </div>
+            <Image src={LP_1} alt={"Programming student"} style={{
+                width: "400px",
+                height: "auto",
+                overflow: 'hidden',
+                objectFit: 'contain',
+            }}/>
+        </div>
+    )
 }

@@ -8,31 +8,10 @@ import apolloClient from '@/lib/apolloClient'
 import Task from '@/types/task';
 
 const GET_RELEVANT_TASK_BY_ID = gql`
-query GetRelevantTaskById($id: ID!) {
-    getRelevantTaskById(id: $id) {
-        id
-        code
-        name
-        createdAt
-        updatedAt
-        Metadata {
-            authors
-            origin
-        }
-        Constraints {
-            timeLimitMs
-            memoryLimitKb
-        }
-        Description {
-            id
-            story
-            input
-            output
-            notes
-        }
-    }
-}
+    
 `
+
+
 
 type View = 'description' | 'testing' | 'metadata'
 
