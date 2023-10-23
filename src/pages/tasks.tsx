@@ -79,17 +79,10 @@ query ListPublishedTasks {
 }
 `)
 
-<<<<<<< HEAD
 export async function getServerSideProps() {
     const {data} = await apolloClient.query({
         query: GET_TASKS,
     })
-=======
-function TaskTable() { // TODO: convert to server side rendering
-  const { loading, error, data } = useQuery(GET_TASKS, { client: apolloClient })
-  const [tasks, setTasks] = useState<Task[]>([])
-  useEffect(() => { if (data) setTasks(data.listTasks) }, [data])
->>>>>>> e3c1586aa911ecdd98d4de1b02b783ae0e9ca3bb
 
     if (data) {
         const d = data.listPublishedTasks
@@ -100,52 +93,8 @@ function TaskTable() { // TODO: convert to server side rendering
         }
     }
 
-<<<<<<< HEAD
     return {
         props: data
     }
 }
 
-=======
-  if (loading) return <p>ielādē uzdevumus</p>
-  if (error) return <p>kļūda: {error.message}</p>
-
-
-  return (
-    <table className="proglvtable text-sm">
-      <thead>
-        <tr>
-          <th className="w-[10em] text-center capitalize">ID</th>
-          <th className="text-left capitalize">uzdevums</th>
-          <th className="w-[5em] text-center capitalize">iesūtījumi</th>
-          <th className="w-[5em] text-center capitalize">atrisinājuši</th>
-        </tr>
-      </thead>
-      <tbody>
-        {tasks.map((task: Task) => <TaskTableRow key={task.id} task={task} />)}
-      </tbody>
-    </table>
-  )
-}
-
-function TaskTableRow({ task }: { task: Task }) {
-  const tags = ['matemātika', 'skaitļu teorija', 'pilnā pārlase'];
-  return (
-    <tr key={task.id}>
-      <td className="text-center">{task.code}</td>
-      <td>
-        <div className="flex justify-between">
-          <Link href={`tasks/${task.code}`} className="no-underline hover:underline">
-            <span className="text-blue-69">{task.name}</span>
-          </Link>
-          <div className="flex gap-1 text-sm font-normal text-gray-500">
-            {tags.join(', ')}
-          </div>
-        </div>
-      </td>
-      <td className="text-center">0</td>
-      <td className="text-center">0</td>
-    </tr>
-  )
-}
->>>>>>> e3c1586aa911ecdd98d4de1b02b783ae0e9ca3bb
