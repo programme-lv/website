@@ -15,6 +15,8 @@ import VisibilityRoundedIcon from "@mui/icons-material/VisibilityRounded";
 import Link from "next/link";
 import Alert from "@mui/joy/Alert";
 import HowToRegRoundedIcon from '@mui/icons-material/HowToRegRounded';
+import {useRouter} from "next/router";
+import {StyledInput} from "@/components/StyledInput";
 
 export default function Register() {
     return (
@@ -57,47 +59,14 @@ const REGISTER_MUTATION = gql`
   }
 `;
 
-const StyledInput = styled('input')({
-    border: 'none', // remove the native input border
-    minWidth: 0, // remove the native input width
-    outline: 0, // remove the native input outline
-    padding: 0, // remove the native input padding
-    paddingTop: '1em',
-    flex: 1,
-    color: 'inherit',
-    backgroundColor: 'transparent',
-    fontFamily: 'inherit',
-    fontSize: 'inherit',
-    fontStyle: 'inherit',
-    fontWeight: 'inherit',
-    lineHeight: 'inherit',
-    textOverflow: 'ellipsis',
-    '&::placeholder': {
-        opacity: 0,
-        transition: '0.1s ease-out',
-    },
-    '&:focus::placeholder': {
-        opacity: 1,
-    },
-    '&:focus ~ label, &:not(:placeholder-shown) ~ label, &:-webkit-autofill ~ label': {
-        top: '0.5rem',
-        fontSize: '0.75rem',
-    },
-    '&:focus ~ label': {
-        color: 'var(--Input-focusedHighlight)',
-    },
-    '&:-webkit-autofill': {
-        alignSelf: 'stretch', // to fill the height of the root slot
-    },
-    '&:-webkit-autofill:not(* + &)': {
-        marginInlineStart: 'calc(-1 * var(--Input-paddingInline))',
-        paddingInlineStart: 'var(--Input-paddingInline)',
-        borderTopLeftRadius:
-            'calc(var(--Input-radius) - var(--variant-borderWidth, 0px))',
-        borderBottomLeftRadius:
-            'calc(var(--Input-radius) - var(--variant-borderWidth, 0px))',
-    },
-});
+const LOGIN_MUTATION = gql`
+mutation Login($username: String!, $password: String!) {
+    login(username: $username, password: $password) {
+        id
+        username
+    }
+}
+`;
 
 const StyledLabel = styled('label')(({theme}) => ({
     position: 'absolute',
@@ -188,7 +157,8 @@ const InnerInputRepeatPassword = React.forwardRef<
 function RegistrationForm() {
     const {t} = useTranslation('errors')
 
-    const [register, {data}] = useMutation(REGISTER_MUTATION, {client: apolloClient});
+    const [register] = useMutation(REGISTER_MUTATION, {client: apolloClient});
+    const [login] = useMutation(LOGIN_MUTATION, {client: apolloClient});
 
     const [username, setUsername] = useState<string>('')
     const [firstName, setFirstName] = useState<string>('')
@@ -206,6 +176,8 @@ function RegistrationForm() {
         setPasswordVisible(!passwordVisible);
     };
 
+    const router = useRouter();
+
     async function handleRegistration(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
         setError('');
@@ -214,12 +186,15 @@ function RegistrationForm() {
 
         if (password !== repeatPassword) {
             setError('Paroles nesakrīt!')
+            setRegistering(false);
             return
         }
 
         try {
             await register({variables: {username, password, email, firstName, lastName}})
+            await login({variables: {username, password}});
             setSuccess(true);
+            await router.push('/tasks');
         } catch (error: any) {
             setError(error.message ?? 'Nezināma kļūda');
         }
@@ -313,20 +288,20 @@ function RegistrationForm() {
             />
             <Button type='submit' color="primary" loadingPosition='end' endDecorator={<HowToRegRoundedIcon/>}
                     loading={registering}>Reģistrēties</Button>
-            <div className="mt-4">
-                Jau esi piereģistrējies? <Link href="/login"
-                                               className="underline text-blue-500 hover:no-underline">Pieslēgties</Link>
-            </div>
             {error &&
-                <Alert variant="outlined" color="danger">
+                <Alert variant="soft" color="danger" size={"lg"}>
                     {t(error)}
                 </Alert>
             }
             {success &&
-                <Alert variant="outlined" color='success'>
+                <Alert variant="soft" color='success' size={"lg"}>
                     <span>Reģistrācija veiksmīga!</span>
                 </Alert>
             }
+            <div className="mt-4">
+                Jau esi piereģistrējies? <Link href="/login"
+                                               className="underline text-blue-500 hover:no-underline">Pieslēgties</Link>
+            </div>
 
         </form>
     )
