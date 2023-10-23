@@ -245,7 +245,7 @@ function RegistrationForm() {
             <Input
                 endDecorator={<EmailRoundedIcon className={"fill-blue-420"}/>}
                 slots={{input: InnerInputEmail}}
-                slotProps={{input: {placeholder: 'noreply@example.com', type: 'email'}}}
+                slotProps={{input: {placeholder: '', type: 'email'}}}
                 sx={{
                     '--Input-minHeight': '56px',
                     '--Input-radius': '6px',
