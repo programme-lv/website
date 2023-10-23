@@ -1,27 +1,29 @@
-import UsernameInput from '@/components/UsernameInput'
-import PasswordInput from '@/components/PasswordInput'
-import {useState} from 'react'
-import Link from 'next/link'
-import {useMutation, gql} from '@apollo/client';
-import apolloClient from '@/lib/apolloClient';
-import {useUser} from '@/contexts/UserContext'
-import {useRouter} from 'next/router'
-import useTranslation from 'next-translate/useTranslation'
-import {Alert, Card} from '@mui/material';
-import LoadingButton from '@mui/lab/LoadingButton';
-import {Container} from '@mui/system';
-import LoginIcon from '@mui/icons-material/Login';
+import {useUser} from "@/contexts/UserContext";
+import {useRouter} from "next/router";
 import mountains from "../../public/mountains.png";
+import React from 'react';
+import {Container} from "@mui/system";
+import {Card, Input, Button} from "@mui/joy";
 import LogoWithText from "@/components/LogoWithText";
+import {gql, useMutation} from "@apollo/client";
+import useTranslation from "next-translate/useTranslation";
+import apolloClient from "@/lib/apolloClient";
+import {useState} from "react";
+import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
+import Link from "next/link";
+import {Alert} from "@mui/joy";
+import VisibilityRoundedIcon from '@mui/icons-material/VisibilityRounded';
+import VisibilityOffRoundedIcon from '@mui/icons-material/VisibilityOffRounded';
+import LoginRoundedIcon from '@mui/icons-material/LoginRounded';
+import { styled } from '@mui/joy/styles';
+import IconButton from '@mui/joy/IconButton';
 
-export default function Login() {
-    // Redirect to /tasks if the user is already logged in
+export default function Login(){
     const {userData, loginError} = useUser();
     const router = useRouter();
     if (!loginError && userData) {
         router.push('/tasks').then();
     }
-
     return (
         <div
             style={{
@@ -61,24 +63,109 @@ mutation Login($username: String!, $password: String!) {
 }
 `;
 
+const StyledInput = styled('input')({
+    border: 'none', // remove the native input border
+    minWidth: 0, // remove the native input width
+    outline: 0, // remove the native input outline
+    padding: 0, // remove the native input padding
+    paddingTop: '1em',
+    flex: 1,
+    color: 'inherit',
+    backgroundColor: 'transparent',
+    fontFamily: 'inherit',
+    fontSize: 'inherit',
+    fontStyle: 'inherit',
+    fontWeight: 'inherit',
+    lineHeight: 'inherit',
+    textOverflow: 'ellipsis',
+    '&::placeholder': {
+        opacity: 0,
+        transition: '0.1s ease-out',
+    },
+    '&:focus::placeholder': {
+        opacity: 1,
+    },
+    '&:focus ~ label, &:not(:placeholder-shown) ~ label, &:-webkit-autofill ~ label': {
+        top: '0.5rem',
+        fontSize: '0.75rem',
+    },
+    '&:focus ~ label': {
+        color: 'var(--Input-focusedHighlight)',
+    },
+    '&:-webkit-autofill': {
+        alignSelf: 'stretch', // to fill the height of the root slot
+    },
+    '&:-webkit-autofill:not(* + &)': {
+        marginInlineStart: 'calc(-1 * var(--Input-paddingInline))',
+        paddingInlineStart: 'var(--Input-paddingInline)',
+        borderTopLeftRadius:
+            'calc(var(--Input-radius) - var(--variant-borderWidth, 0px))',
+        borderBottomLeftRadius:
+            'calc(var(--Input-radius) - var(--variant-borderWidth, 0px))',
+    },
+});
+
+const StyledLabel = styled('label')(({ theme }) => ({
+    position: 'absolute',
+    lineHeight: 1,
+    top: 'calc((var(--Input-minHeight) - 1em) / 2)',
+    color: theme.vars.palette.text.tertiary,
+    fontWeight: theme.vars.fontWeight.md,
+    transition: 'all 150ms cubic-bezier(0.4, 0, 0.2, 1)',
+}));
+
+const InnerInputUsername = React.forwardRef<
+    HTMLInputElement,
+    JSX.IntrinsicElements['input']
+>(function InnerInput(props, ref) {
+    const id = React.useId();
+    return (
+        <React.Fragment>
+            <StyledInput {...props} ref={ref} id={id} />
+            <StyledLabel htmlFor={id}>Lietotājvārds</StyledLabel>
+        </React.Fragment>
+    );
+});
+const InnerInputPassword = React.forwardRef<
+    HTMLInputElement,
+    JSX.IntrinsicElements['input']
+>(function InnerInput(props, ref) {
+    const id = React.useId();
+    return (
+        <React.Fragment>
+            <StyledInput {...props} ref={ref} id={id} />
+            <StyledLabel htmlFor={id}>Parole</StyledLabel>
+        </React.Fragment>
+    );
+});
+
+
+
 function LoginForm() {
     const {t} = useTranslation('errors')
     const {refreshUser} = useUser();
     const [login] = useMutation(LOGIN_MUTATION, {client: apolloClient});
     const router = useRouter();
 
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
+    // const [username, setUsername] = useState('')
+    // const [password, setPassword] = useState('')
 
     const [loggingIn, setLoggingIn] = useState(false)
     const [error, setError] = useState('')
     const [success, setSuccess] = useState('')
+    const [passwordVisible, setPasswordVisible] = useState(false);
+    const handlePasswordVisibilityChange = () => {
+        setPasswordVisible(!passwordVisible);
+    };
 
     async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         setError('');
         setSuccess('');
         setLoggingIn(true);
+        const formElements = e.currentTarget.elements;
+        const username = formElements[0].value;
+        const password = formElements[1].value;
         try {
             await login({variables: {username, password}});
             setSuccess('Pieslēgšanās veiksmīga!');
@@ -90,27 +177,49 @@ function LoginForm() {
 
         setLoggingIn(false);
     }
-
     return (
         <form onSubmit={handleLogin} className="flex flex-col gap-5">
-            <UsernameInput username={username} setUsername={setUsername}/>
-            <PasswordInput password={password} setPassword={setPassword}/>
-            <LoadingButton type='submit' variant='contained' color='primary'
-                           loading={loggingIn} loadingPosition='end' endIcon={<LoginIcon/>}>
-                Pieslēgties
-            </LoadingButton>
-
+            {/*<Input variant={"outlined"}  placeholder={"Lietotājvārds"} endDecorator={<PersonRoundedIcon className={"fill-blue-420"}/>} required/>*/}
+            {/*<Input type="password"  variant={"outlined"} placeholder={"Parole"} endDecorator={<KeyRoundedIcon className={"fill-blue-420"}/>} required/>*/}
+            <Input
+                endDecorator={<PersonRoundedIcon className={"fill-blue-420"}/>}
+                slots={{ input: InnerInputUsername }}
+                slotProps={{ input: { placeholder: 'username'} }}
+                sx={{
+                    '--Input-minHeight': '56px',
+                    '--Input-radius': '6px',
+                }}
+                name={"username"}
+                required
+            />
+            <Input
+                endDecorator={
+                    <div onClick={handlePasswordVisibilityChange}>
+                        {passwordVisible ? <VisibilityOffRoundedIcon className={"fill-blue-420"}/>: <VisibilityRoundedIcon className={"fill-blue-420"}/>}
+                    </div>
+                }
+                slots={{ input: InnerInputPassword }}
+                slotProps={{ input: { placeholder: 'password',  ...(!passwordVisible && {type: "password"})}}}
+                sx={{
+                    '--Input-minHeight': '56px',
+                    '--Input-radius': '6px',
+                }}
+                name={"password"}
+                required
+            />
+            <Button  type='submit' className={"bg-blue-420"} loadingPosition='end' endDecorator={<LoginRoundedIcon/>} loading={loggingIn}>Pieslēgties</Button>
             <div className="mt-4">
                 Neesi piereģistrējies? <Link href="/register"
                                              className="underline text-blue-500 hover:no-underline">Reģistrēties</Link>
             </div>
+
             {error &&
-                <Alert severity='error'>
+                <Alert variant="outlined" color="danger">
                     {t(error)}
                 </Alert>
             }
             {success &&
-                <Alert severity='success'>
+                <Alert variant="outlined" color="success">
                     {t(success)}
                 </Alert>
             }
