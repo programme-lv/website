@@ -18,15 +18,21 @@ export default function ViewTask(props: GetPublishedTaskVersionByCodeQuery) {
             <NavigationBar active="tasks"/>
             <main className='p-5'>
                 <div className={"flex"}>
-                    <div className={"border border-solid resize-x flex-grow bg-white"}>
+                    <div className={"resize-x flex-grow bg-white"}>
                         <div className={"p-5"}>
-                            <h2 className={"font-medium my-4"}>{task.name}</h2>
+                            <div className={"flex items-baseline justify-between"}>
+                                <h2 className={"font-medium my-4 mb-2"}>{task.name}</h2>
+                                <div className={"flex gap-4"}>
+                                    <div><span className={"text-gray-600"}>laiks:</span> {task.constraints.timeLimitMs} ms</div>
+                                    <div><span className={"text-gray-600"}>atmiņa:</span> {task.constraints.memoryLimitKb} kB</div>
+                                </div>
+                            </div>
                             <Divider orientation={"horizontal"}/>
                             <div className={"flex flex-col gap-4"}>
-                            <StatementSection title="Stāsts" content={task.description.story}/>
-                            <StatementSection title="Ievaddatu apraksts" content={task.description.input}/>
-                            <StatementSection title="Izvaddatu apraksts" content={task.description.output}/>
-                            {task.description.examples && <StatementExamples examples={task.description.examples}/>}
+                                <StatementSection title="Stāsts" content={task.description.story}/>
+                                <StatementSection title="Ievaddatu apraksts" content={task.description.input}/>
+                                <StatementSection title="Izvaddatu apraksts" content={task.description.output}/>
+                                {task.description.examples && <StatementExamples examples={task.description.examples}/>}
                             </div>
                         </div>
                     </div>
@@ -110,7 +116,7 @@ function Editor() {
                 </div>
             </div>
 
-            <div className="h-[200px] my-2">
+            <div className="h-[600px] my-2">
                 <MonacoEditor
                     value={code}
                     theme="vs-dark"
@@ -150,22 +156,22 @@ function StatementExamples(props: { examples: { id: string, input: string, answe
         <div>
             <h3 className={"font-medium"}>Testu piemēri</h3>
             <div className={"flex flex-col gap-4"}>
-            {props.examples.map(example => (
-                <table key={example.id} className={"border-collapse w-full"}>
-                    <thead>
-                    <tr>
-                        <HeaderCell>Ievaddati</HeaderCell>
-                        <HeaderCell>Izvaddati</HeaderCell>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <BodyCell>{example.input}</BodyCell>
-                        <BodyCell>{example.answer}</BodyCell>
-                    </tr>
-                    </tbody>
-                </table>
-            ))}
+                {props.examples.map(example => (
+                    <table key={example.id} className={"border-collapse w-full"}>
+                        <thead>
+                        <tr>
+                            <HeaderCell>Ievaddati</HeaderCell>
+                            <HeaderCell>Izvaddati</HeaderCell>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <BodyCell>{example.input}</BodyCell>
+                            <BodyCell>{example.answer}</BodyCell>
+                        </tr>
+                        </tbody>
+                    </table>
+                ))}
             </div>
         </div>
     )
