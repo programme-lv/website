@@ -1,23 +1,21 @@
 import {useUser} from "@/contexts/UserContext";
 import {useRouter} from "next/router";
 import mountains from "../../public/mountains.png";
-import React from 'react';
+import React, {useState} from 'react';
 import {Container} from "@mui/system";
-import {Card, Input, Button} from "@mui/joy";
+import {Alert, Button, Card, Input} from "@mui/joy";
 import LogoWithText from "@/components/LogoWithText";
 import {gql, useMutation} from "@apollo/client";
 import useTranslation from "next-translate/useTranslation";
 import apolloClient from "@/lib/apolloClient";
-import {useState} from "react";
 import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 import Link from "next/link";
-import {Alert} from "@mui/joy";
 import VisibilityRoundedIcon from '@mui/icons-material/VisibilityRounded';
 import VisibilityOffRoundedIcon from '@mui/icons-material/VisibilityOffRounded';
 import LoginRoundedIcon from '@mui/icons-material/LoginRounded';
-import { styled } from '@mui/joy/styles';
+import {styled} from '@mui/joy/styles';
 
-export default function Login(){
+export default function Login() {
     const {userData, loginError} = useUser();
     const router = useRouter();
     if (!loginError && userData) {
@@ -104,7 +102,7 @@ const StyledInput = styled('input')({
     },
 });
 
-const StyledLabel = styled('label')(({ theme }) => ({
+const StyledLabel = styled('label')(({theme}) => ({
     position: 'absolute',
     lineHeight: 1,
     top: 'calc((var(--Input-minHeight) - 1em) / 2)',
@@ -120,7 +118,7 @@ const InnerInputUsername = React.forwardRef<
     const id = React.useId();
     return (
         <React.Fragment>
-            <StyledInput {...props} ref={ref} id={id} />
+            <StyledInput {...props} ref={ref} id={id}/>
             <StyledLabel htmlFor={id}>Lietotājvārds</StyledLabel>
         </React.Fragment>
     );
@@ -132,12 +130,11 @@ const InnerInputPassword = React.forwardRef<
     const id = React.useId();
     return (
         <React.Fragment>
-            <StyledInput {...props} ref={ref} id={id} />
+            <StyledInput {...props} ref={ref} id={id}/>
             <StyledLabel htmlFor={id}>Parole</StyledLabel>
         </React.Fragment>
     );
 });
-
 
 
 function LoginForm() {
@@ -173,14 +170,15 @@ function LoginForm() {
 
         setLoggingIn(false);
     }
+
     return (
         <form onSubmit={handleLogin} className="flex flex-col gap-5">
             {/*<Input variant={"outlined"}  placeholder={"Lietotājvārds"} endDecorator={<PersonRoundedIcon className={"fill-blue-420"}/>} required/>*/}
             {/*<Input type="password"  variant={"outlined"} placeholder={"Parole"} endDecorator={<KeyRoundedIcon className={"fill-blue-420"}/>} required/>*/}
             <Input
                 endDecorator={<PersonRoundedIcon className={"fill-blue-420"}/>}
-                slots={{ input: InnerInputUsername }}
-                slotProps={{ input: { placeholder: ''} }}
+                slots={{input: InnerInputUsername}}
+                slotProps={{input: {placeholder: ''}}}
                 sx={{
                     '--Input-minHeight': '56px',
                     '--Input-radius': '6px',
@@ -193,11 +191,12 @@ function LoginForm() {
             <Input
                 endDecorator={
                     <div onClick={handlePasswordVisibilityChange} className={"flex"}>
-                        {passwordVisible ? <VisibilityOffRoundedIcon className={"fill-blue-420"}/>: <VisibilityRoundedIcon className={"fill-blue-420"}/>}
+                        {passwordVisible ? <VisibilityOffRoundedIcon className={"fill-blue-420"}/> :
+                            <VisibilityRoundedIcon className={"fill-blue-420"}/>}
                     </div>
                 }
-                slots={{ input: InnerInputPassword }}
-                slotProps={{ input: { placeholder: '',  ...(!passwordVisible && {type: "password"})}}}
+                slots={{input: InnerInputPassword}}
+                slotProps={{input: {placeholder: '', ...(!passwordVisible && {type: "password"})}}}
                 sx={{
                     '--Input-minHeight': '56px',
                     '--Input-radius': '6px',
@@ -207,7 +206,8 @@ function LoginForm() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
             />
-            <Button  type='submit' color="primary" loadingPosition='end' endDecorator={<LoginRoundedIcon/>} loading={loggingIn}>Pieslēgties</Button>
+            <Button type='submit' color="primary" loadingPosition='end' endDecorator={<LoginRoundedIcon/>}
+                    loading={loggingIn}>Pieslēgties</Button>
             <div className="mt-4">
                 Neesi piereģistrējies? <Link href="/register"
                                              className="underline text-blue-500 hover:no-underline">Reģistrēties</Link>

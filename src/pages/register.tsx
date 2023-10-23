@@ -39,7 +39,7 @@ export default function Register() {
                         <div className={"p-6"}>
                             <LogoWithText/>
                         </div>
-                        <RegistrationForm />
+                        <RegistrationForm/>
                     </Card>
                 </Container>
             </main>
@@ -99,7 +99,7 @@ const StyledInput = styled('input')({
     },
 });
 
-const StyledLabel = styled('label')(({ theme }) => ({
+const StyledLabel = styled('label')(({theme}) => ({
     position: 'absolute',
     lineHeight: 1,
     top: 'calc((var(--Input-minHeight) - 1em) / 2)',
@@ -115,7 +115,7 @@ const InnerInputUsername = React.forwardRef<
     const id = React.useId();
     return (
         <React.Fragment>
-            <StyledInput {...props} ref={ref} id={id} />
+            <StyledInput {...props} ref={ref} id={id}/>
             <StyledLabel htmlFor={id}>Lietotājvārds</StyledLabel>
         </React.Fragment>
     );
@@ -128,7 +128,7 @@ const InnerInputEmail = React.forwardRef<
     const id = React.useId();
     return (
         <React.Fragment>
-            <StyledInput {...props} ref={ref} id={id} />
+            <StyledInput {...props} ref={ref} id={id}/>
             <StyledLabel htmlFor={id}>E-pasts</StyledLabel>
         </React.Fragment>
     );
@@ -141,7 +141,7 @@ const InnerInputFirstName = React.forwardRef<
     const id = React.useId();
     return (
         <React.Fragment>
-            <StyledInput {...props} ref={ref} id={id} />
+            <StyledInput {...props} ref={ref} id={id}/>
             <StyledLabel htmlFor={id}>Vārds</StyledLabel>
         </React.Fragment>
     );
@@ -154,7 +154,7 @@ const InnerInputLastName = React.forwardRef<
     const id = React.useId();
     return (
         <React.Fragment>
-            <StyledInput {...props} ref={ref} id={id} />
+            <StyledInput {...props} ref={ref} id={id}/>
             <StyledLabel htmlFor={id}>Uzvārds</StyledLabel>
         </React.Fragment>
     );
@@ -166,7 +166,7 @@ const InnerInputPassword = React.forwardRef<
     const id = React.useId();
     return (
         <React.Fragment>
-            <StyledInput {...props} ref={ref} id={id} />
+            <StyledInput {...props} ref={ref} id={id}/>
             <StyledLabel htmlFor={id}>Parole</StyledLabel>
         </React.Fragment>
     );
@@ -179,11 +179,12 @@ const InnerInputRepeatPassword = React.forwardRef<
     const id = React.useId();
     return (
         <React.Fragment>
-            <StyledInput {...props} ref={ref} id={id} />
+            <StyledInput {...props} ref={ref} id={id}/>
             <StyledLabel htmlFor={id}>Atkārtota parole</StyledLabel>
         </React.Fragment>
     );
 });
+
 function RegistrationForm() {
     const {t} = useTranslation('errors')
 
@@ -230,8 +231,8 @@ function RegistrationForm() {
         <form className='flex flex-col gap-5' onSubmit={handleRegistration}>
             <Input
                 endDecorator={<PersonRoundedIcon className={"fill-blue-420"}/>}
-                slots={{ input: InnerInputUsername }}
-                slotProps={{ input: { placeholder: ''} }}
+                slots={{input: InnerInputUsername}}
+                slotProps={{input: {placeholder: ''}}}
                 sx={{
                     '--Input-minHeight': '56px',
                     '--Input-radius': '6px',
@@ -243,8 +244,8 @@ function RegistrationForm() {
             />
             <Input
                 endDecorator={<EmailRoundedIcon className={"fill-blue-420"}/>}
-                slots={{ input: InnerInputEmail }}
-                slotProps={{ input: { placeholder: 'noreply@example.com', type: 'email'} }}
+                slots={{input: InnerInputEmail}}
+                slotProps={{input: {placeholder: 'noreply@example.com', type: 'email'}}}
                 sx={{
                     '--Input-minHeight': '56px',
                     '--Input-radius': '6px',
@@ -256,8 +257,8 @@ function RegistrationForm() {
             />
             <div className="columns-2">
                 <Input
-                    slots={{ input: InnerInputFirstName }}
-                    slotProps={{ input: { placeholder: ''} }}
+                    slots={{input: InnerInputFirstName}}
+                    slotProps={{input: {placeholder: ''}}}
                     sx={{
                         '--Input-minHeight': '56px',
                         '--Input-radius': '6px',
@@ -268,8 +269,8 @@ function RegistrationForm() {
                     required
                 />
                 <Input
-                    slots={{ input: InnerInputLastName }}
-                    slotProps={{ input: { placeholder: ''} }}
+                    slots={{input: InnerInputLastName}}
+                    slotProps={{input: {placeholder: ''}}}
                     sx={{
                         '--Input-minHeight': '56px',
                         '--Input-radius': '6px',
@@ -283,11 +284,12 @@ function RegistrationForm() {
             <Input
                 endDecorator={
                     <div onClick={handlePasswordVisibilityChange} className={"flex"}>
-                        {passwordVisible ? <VisibilityOffRoundedIcon className={"fill-blue-420"}/>: <VisibilityRoundedIcon className={"fill-blue-420"}/>}
+                        {passwordVisible ? <VisibilityOffRoundedIcon className={"fill-blue-420"}/> :
+                            <VisibilityRoundedIcon className={"fill-blue-420"}/>}
                     </div>
                 }
-                slots={{ input: InnerInputPassword }}
-                slotProps={{ input: { placeholder: '',  ...(!passwordVisible && {type: "password"})}}}
+                slots={{input: InnerInputPassword}}
+                slotProps={{input: {placeholder: '', ...(!passwordVisible && {type: "password"})}}}
                 sx={{
                     '--Input-minHeight': '56px',
                     '--Input-radius': '6px',
@@ -298,8 +300,8 @@ function RegistrationForm() {
                 required
             />
             <Input
-                slots={{ input: InnerInputRepeatPassword }}
-                slotProps={{ input: { placeholder: '',  type: "password"}}}
+                slots={{input: InnerInputRepeatPassword}}
+                slotProps={{input: {placeholder: '', type: "password"}}}
                 sx={{
                     '--Input-minHeight': '56px',
                     '--Input-radius': '6px',
@@ -309,9 +311,11 @@ function RegistrationForm() {
                 onChange={(e) => setRepeatPassword(e.target.value)}
                 required
             />
-            <Button  type='submit' color="primary" loadingPosition='end' endDecorator={<HowToRegRoundedIcon/>} loading={registering}>Reģistrēties</Button>
+            <Button type='submit' color="primary" loadingPosition='end' endDecorator={<HowToRegRoundedIcon/>}
+                    loading={registering}>Reģistrēties</Button>
             <div className="mt-4">
-                Jau esi piereģistrējies? <Link href="/login" className="underline text-blue-500 hover:no-underline">Pieslēgties</Link>
+                Jau esi piereģistrējies? <Link href="/login"
+                                               className="underline text-blue-500 hover:no-underline">Pieslēgties</Link>
             </div>
             {error &&
                 <Alert variant="outlined" color="danger">
