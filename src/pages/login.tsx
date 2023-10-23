@@ -16,7 +16,6 @@ import VisibilityRoundedIcon from '@mui/icons-material/VisibilityRounded';
 import VisibilityOffRoundedIcon from '@mui/icons-material/VisibilityOffRounded';
 import LoginRoundedIcon from '@mui/icons-material/LoginRounded';
 import { styled } from '@mui/joy/styles';
-import IconButton from '@mui/joy/IconButton';
 
 export default function Login(){
     const {userData, loginError} = useUser();
@@ -43,7 +42,7 @@ export default function Login(){
             <main className="container m-auto">
                 <Container maxWidth='sm'>
                     <Card className='my-5 px-5 pb-5' variant='outlined'>
-                        <div className={"p-6"}>
+                        <div className={"py-4"}>
                             <LogoWithText/>
                         </div>
                         <LoginForm/>
@@ -147,8 +146,8 @@ function LoginForm() {
     const [login] = useMutation(LOGIN_MUTATION, {client: apolloClient});
     const router = useRouter();
 
-    // const [username, setUsername] = useState('')
-    // const [password, setPassword] = useState('')
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
 
     const [loggingIn, setLoggingIn] = useState(false)
     const [error, setError] = useState('')
@@ -163,14 +162,11 @@ function LoginForm() {
         setError('');
         setSuccess('');
         setLoggingIn(true);
-        const formElements = e.currentTarget.elements;
-        const username = formElements[0].value;
-        const password = formElements[1].value;
         try {
             await login({variables: {username, password}});
             setSuccess('Pieslēgšanās veiksmīga!');
             refreshUser();
-            await router.push('/');
+            await router.push('/tasks');
         } catch (error: any) {
             setError(error.message ?? 'Nezināma kļūda')
         }
@@ -184,30 +180,34 @@ function LoginForm() {
             <Input
                 endDecorator={<PersonRoundedIcon className={"fill-blue-420"}/>}
                 slots={{ input: InnerInputUsername }}
-                slotProps={{ input: { placeholder: 'username'} }}
+                slotProps={{ input: { placeholder: ''} }}
                 sx={{
                     '--Input-minHeight': '56px',
                     '--Input-radius': '6px',
                 }}
                 name={"username"}
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 required
             />
             <Input
                 endDecorator={
-                    <div onClick={handlePasswordVisibilityChange}>
+                    <div onClick={handlePasswordVisibilityChange} className={"flex"}>
                         {passwordVisible ? <VisibilityOffRoundedIcon className={"fill-blue-420"}/>: <VisibilityRoundedIcon className={"fill-blue-420"}/>}
                     </div>
                 }
                 slots={{ input: InnerInputPassword }}
-                slotProps={{ input: { placeholder: 'password',  ...(!passwordVisible && {type: "password"})}}}
+                slotProps={{ input: { placeholder: '',  ...(!passwordVisible && {type: "password"})}}}
                 sx={{
                     '--Input-minHeight': '56px',
                     '--Input-radius': '6px',
                 }}
                 name={"password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 required
             />
-            <Button  type='submit' className={"bg-blue-420"} loadingPosition='end' endDecorator={<LoginRoundedIcon/>} loading={loggingIn}>Pieslēgties</Button>
+            <Button  type='submit' color="primary" loadingPosition='end' endDecorator={<LoginRoundedIcon/>} loading={loggingIn}>Pieslēgties</Button>
             <div className="mt-4">
                 Neesi piereģistrējies? <Link href="/register"
                                              className="underline text-blue-500 hover:no-underline">Reģistrēties</Link>
