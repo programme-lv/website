@@ -4,7 +4,7 @@ import useTranslation from 'next-translate/useTranslation';
 import { useUser } from '@/contexts/UserContext';
 
 type NavBarProps = {
-    active?: 'index' | 'login' | 'tasks' | 'editor' | 'register' | 'profile';
+    active?: 'index' | 'login' | 'tasks' | 'editor' | 'register' | 'profile' | 'submissions';
 }
 
 export default function NavigationBar(props: NavBarProps) {
