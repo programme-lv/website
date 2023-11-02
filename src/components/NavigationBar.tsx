@@ -22,6 +22,7 @@ export default function NavigationBar(props: NavBarProps) {
                 <div className="flex-grow flex justify-between gap-3">
                     <NavLink href='/tasks' active={active}>{t('navbar_tasks')}</NavLink>
                     <NavLink href='/editor' active={active}>{t('navbar_editor')}</NavLink>
+                    <NavLink href='/submissions' active={active}>{t('navbar_submissions')}</NavLink>
                 </div>
                 <div className="flex-grow flex justify-end gap-3">
                     {userData && !loginError ? (
