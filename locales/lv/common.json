@@ -9,5 +9,9 @@
   "home_login": "Pieslēgties",
   "home_register": "Reģistrēties",
   "home_user_data": "Lietotāja dati",
-  "home_user_data_error_exclamation": "Kļūda!"
+  "home_user_data_error_exclamation": "Kļūda!",
+  "IQ": "Gaida rindā",
+  "T": "Testē",
+  "F": "Pabeigts",
+  "RJ": "Noraidīts"
 }

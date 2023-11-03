@@ -27,3 +27,9 @@ table.proglvtable th {
 table.proglvtable tbody tr:hover {
     @apply bg-gray-69
 }
+
+@layer utilities {
+    .table-striped > tbody > tr:nth-child(even) {
+        @apply bg-gray-100; /* Change 'bg-gray-200' to your desired background color */
+    }
+}
