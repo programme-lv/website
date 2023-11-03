@@ -86,7 +86,7 @@ mutation EnqueueSubmissionForPublishedTaskVersion($taskID: ID!, $languageID: ID!
         submissionCode: $submissionCode
     ) {
         id
-        code
+        submission
         language {
             id
             fullName
