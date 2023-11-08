@@ -19,6 +19,26 @@ export default function ViewTask(props: GetPublishedTaskVersionByCodeQuery) {
     const [editorSelLang, setEditorSelLang] = useState<string | null>(null);
     const [editorCode, setEditorCode] = useState(cppStartCode);
 
+    const router = useRouter()
+
+    async function submitSolution() {
+        if (editorSelLang) {
+            try {
+                await apolloClient.mutate({
+                    mutation: ENQUEUE_SUBMISSION_FOR_PUBLISHED_TASK_VERSION,
+                    variables: {
+                        taskID: task.id,
+                        languageID: editorSelLang,
+                        submissionCode: editorCode
+                    }
+                })
+                await router.push("/submissions")
+            } catch (e) {
+                console.error(e)
+            }
+        }
+    }
+
     return (
         <>
             <NavigationBar active="tasks" />
@@ -31,6 +51,11 @@ export default function ViewTask(props: GetPublishedTaskVersionByCodeQuery) {
                         className={"border border-solid p-5 resize-x"}>
                         <Editor code={editorCode} setCode={setEditorCode}
                             selectedLanguage={editorSelLang} setSelectedLanguage={setEditorSelLang} />
+                        <div className={"flex justify-end"}>
+                            <Button endDecorator={<SendIcon />} color="success" onClick={submitSolution}>
+                                Iesūtīt
+                            </Button>
+                        </div>
                     </Resizable>
                 </div>
             </main>
@@ -118,25 +143,6 @@ function Editor(props: EditorProps) {
     }, [listLangData])
 
 
-    const router = useRouter()
-
-    async function submitSolution() {
-        if (selectedLanguage) {
-            try {
-                await apolloClient.mutate({
-                    mutation: ENQUEUE_SUBMISSION_FOR_PUBLISHED_TASK_VERSION,
-                    variables: {
-                        taskID: "2",
-                        languageID: selectedLanguage,
-                        submissionCode: code
-                    }
-                })
-                await router.push("/submissions")
-            } catch (e) {
-                console.error(e)
-            }
-        }
-    }
     if (listLangLoading) return <div>Loading...</div>
     if (listLangError) return <div>Error: {listLangError.message}</div>
     return (
@@ -164,11 +170,6 @@ function Editor(props: EditorProps) {
                 />
             </div>
 
-            <div className={"flex justify-end"}>
-                <Button endDecorator={<SendIcon />} color="success" onClick={submitSolution}>
-                    Iesūtīt
-                </Button>
-            </div>
         </div>
     )
 }
