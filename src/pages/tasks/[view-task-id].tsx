@@ -1,57 +1,43 @@
 import NavigationBar from "@/components/NavigationBar"
 import apolloClient from "@/lib/apolloClient"
-import {graphql} from "@/gql"
+import { graphql } from "@/gql"
 import renderMD from "@/utils/render"
 import "katex/dist/katex.min.css"
-import {GetPublishedTaskVersionByCodeQuery} from "@/gql/graphql";
+import { GetPublishedTaskVersionByCodeQuery } from "@/gql/graphql";
 import MonacoEditor from "@monaco-editor/react";
-import {gql, useQuery} from "@apollo/client";
-import {useEffect, useState} from "react";
-import {Resizable} from "re-resizable";
-import Divider from "@mui/material/Divider";
-import {Button} from "@mui/joy";
+import { gql, useQuery } from "@apollo/client";
+import { useEffect, useState } from "react";
+import { Resizable } from "re-resizable";
+import { Button } from "@mui/joy";
 import SendIcon from "@mui/icons-material/Send";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
+import TaskDisplay from "@/components/TaskDisplay"
 
 export default function ViewTask(props: GetPublishedTaskVersionByCodeQuery) {
     const task = props.getPublishedTaskVersionByCode
 
+    const [editorSelLang, setEditorSelLang] = useState<string | null>(null);
+    const [editorCode, setEditorCode] = useState(cppStartCode);
+
     return (
         <>
-            <NavigationBar active="tasks"/>
+            <NavigationBar active="tasks" />
             <main className='p-5'>
                 <div className={"flex"}>
-                    <div className={"resize-x flex-grow bg-white"}>
-                        <div className={"p-5"}>
-                            <div className={"flex items-baseline justify-between"}>
-                                <h2 className={"font-medium my-4 mb-2"}>{task.name}</h2>
-                                <div className={"flex gap-4"}>
-                                    <div><span
-                                        className={"text-gray-600"}>laiks:</span> {task.constraints.timeLimitMs} ms
-                                    </div>
-                                    <div><span
-                                        className={"text-gray-600"}>atmiņa:</span> {task.constraints.memoryLimitKb} kB
-                                    </div>
-                                </div>
-                            </div>
-                            <Divider orientation={"horizontal"}/>
-                            <div className={"flex flex-col gap-4"}>
-                                <StatementSection title="Stāsts" content={task.description.story}/>
-                                <StatementSection title="Ievaddatu apraksts" content={task.description.input}/>
-                                <StatementSection title="Izvaddatu apraksts" content={task.description.output}/>
-                                {task.description.examples && <StatementExamples examples={task.description.examples}/>}
-                            </div>
-                        </div>
+                    <div className={"resize-x flex-grow bg-white p-5"}>
+                        <TaskDisplay task={task} />
                     </div>
-                    <Resizable enable={{left: true}} defaultSize={{width: "50%", height: 'auto'}}
-                               className={"border border-solid p-5 resize-x"}>
-                        <Editor/>
+                    <Resizable enable={{ left: true }} defaultSize={{ width: "50%", height: 'auto' }}
+                        className={"border border-solid p-5 resize-x"}>
+                        <Editor code={editorCode} setCode={setEditorCode}
+                            selectedLanguage={editorSelLang} setSelectedLanguage={setEditorSelLang} />
                     </Resizable>
                 </div>
             </main>
         </>
     )
 }
+
 
 type Language = {
     id: string;
@@ -96,15 +82,23 @@ mutation EnqueueSubmissionForPublishedTaskVersion($taskID: ID!, $languageID: ID!
 }
 `
 
-function Editor() {
+type EditorProps = {
+    selectedLanguage: string | null;
+    setSelectedLanguage: (language: string) => void;
+    code: string;
+    setCode: (code: string) => void;
+}
+
+function Editor(props: EditorProps) {
+    const { selectedLanguage, setSelectedLanguage, code, setCode } = props;
+
     const {
         loading: listLangLoading,
         error: listLangError,
         data: listLangData
-    } = useQuery(LIST_LANGUAGES_QUERY, {client: apolloClient});
+    } = useQuery(LIST_LANGUAGES_QUERY, { client: apolloClient });
 
     const [languages, setLanguages] = useState<Language[]>([]);
-    const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
     const [monacoLangId, setMonacoLangId] = useState<string>("");
 
     useEffect(() => {
@@ -123,7 +117,6 @@ function Editor() {
         }
     }, [listLangData])
 
-    const [code, setCode] = useState(cppStartCode)
 
     const router = useRouter()
 
@@ -155,7 +148,7 @@ function Editor() {
                             setSelectedLanguage(e.target.value)
                         }}>
                             {languages.map(language => <option key={language.id}
-                                                               value={language.id}>{language.fullName}</option>)}
+                                value={language.id}>{language.fullName}</option>)}
                         </select>}
                 </div>
             </div>
@@ -172,7 +165,7 @@ function Editor() {
             </div>
 
             <div className={"flex justify-end"}>
-                <Button endDecorator={<SendIcon/>} color="success" onClick={submitSolution}>
+                <Button endDecorator={<SendIcon />} color="success" onClick={submitSolution}>
                     Iesūtīt
                 </Button>
             </div>
@@ -180,52 +173,7 @@ function Editor() {
     )
 }
 
-function StatementSection(props: { title: string, content: string }) {
-    return (
-        <div>
-            <h3 className={"font-medium"}>{props.title}</h3>
-            <div dangerouslySetInnerHTML={{__html: props.content}}></div>
-        </div>
-    )
-}
 
-function HeaderCell(props: { children: string }) {
-    return (
-        <th className={"p-2 py-1 border border-gray-300 border-solid font-light text-left"}>{props.children}</th>
-    )
-}
-
-function BodyCell(props: { children: string }) {
-    return (
-        <td className={"p-2 border border-gray-300 border-solid"}><code>{props.children}</code></td>
-    )
-}
-
-function StatementExamples(props: { examples: { id: string, input: string, answer: string }[] }) {
-    return (
-        <div>
-            <h3 className={"font-medium"}>Testu piemēri</h3>
-            <div className={"flex flex-col gap-4"}>
-                {props.examples.map(example => (
-                    <table key={example.id} className={"border-collapse w-full"}>
-                        <thead>
-                        <tr>
-                            <HeaderCell>Ievaddati</HeaderCell>
-                            <HeaderCell>Izvaddati</HeaderCell>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <BodyCell>{example.input}</BodyCell>
-                            <BodyCell>{example.answer}</BodyCell>
-                        </tr>
-                        </tbody>
-                    </table>
-                ))}
-            </div>
-        </div>
-    )
-}
 
 const GET_TASK = graphql(`
 query GetPublishedTaskVersionByCode($code: String!) {
@@ -265,9 +213,9 @@ query GetPublishedTaskVersionByCode($code: String!) {
 }`)
 
 export async function getServerSideProps(context: any) {
-    const {data} = await apolloClient.query({
+    const { data } = await apolloClient.query({
         query: GET_TASK,
-        variables: {code: context.params['view-task-id']}
+        variables: { code: context.params['view-task-id'] }
     })
 
     if (data) {
