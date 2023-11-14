@@ -5,6 +5,8 @@ import Folder from "flat-color-icons/svg/folder.svg";
 import FilingCabinet from "flat-color-icons/svg/filing_cabinet.svg";
 import Breadcrumbs from "@mui/joy/Breadcrumbs";
 import {Typography} from "@mui/joy";
+import {useUser} from "@/contexts/UserContext";
+import React from "react";
 
 
 type NavFrameProps = {
@@ -14,14 +16,14 @@ type NavFrameProps = {
 }
 
 export default function NavFrame({path, children, active}: NavFrameProps){
+    const { userData, loginError } = useUser();
 
     return (
         <div className={"flex h-screen bg-gray-100"}>
             <SideBar active={active}/>
             <div className={"w-full h-full"}>
-                <nav className={"bg-white h-14 flex items-center"}>
+                <nav className={"bg-white h-14 flex items-center justify-between px-6 pe-10"}>
                     <Breadcrumbs>
-                        <span></span>
                         {path.slice(0,-1).map(({name, link})=>(
                             <Link key={name} color="neutral" href={link} className={"no-underline"}>
                                 <Typography className={"hover:underline"}>{name}</Typography>
@@ -31,6 +33,13 @@ export default function NavFrame({path, children, active}: NavFrameProps){
                             <Typography fontWeight={""} className={"text-black font-bold hover:underline"}>{path.slice(-1)[0].name}</Typography>
                         </Link>
                     </Breadcrumbs>
+                    {userData && !loginError ? (
+                            <div className="flex items-center">
+                                <Link href="/profile" className={"no-underline text-blue-69 font-medium"}>
+                                    {userData.username}
+                                </Link>
+                            </div>
+                        ) : (<> </>)}
                 </nav>
                 <main className={"w-full"}>
                     {children}

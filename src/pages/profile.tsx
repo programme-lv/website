@@ -2,7 +2,7 @@ import useTranslation from 'next-translate/useTranslation'
 import { useUser } from '@/contexts/UserContext'
 // import NavigationBar from '@/components/NavigationBar';
 import { Card } from '@mui/material';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableRow } from '@mui/material';
 import LogOutButton from '@/components/LogOutButton';
 import NavFrame from "@/components/NavFrame";
 
@@ -42,12 +42,6 @@ function UserData() {
             <Card variant='outlined' className="my-5">
                 <TableContainer>
                     <Table>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>lauks</TableCell>
-                                <TableCell>vērtība</TableCell>
-                            </TableRow>
-                        </TableHead>
                         <TableBody>
                             <TableRow>
                                 <TableCell>lietotāja id</TableCell>
