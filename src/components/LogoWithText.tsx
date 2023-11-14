@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Logo from "../../public/P_logo_simple.png";
+import Logo from "../../public/proglv_logo_simple.png";
 import Link from "next/link";
 
 export default function LogoWithText() {
