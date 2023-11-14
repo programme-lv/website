@@ -4,7 +4,6 @@ import { useUser } from '@/contexts/UserContext'
 import { Card } from '@mui/material';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import LogOutButton from '@/components/LogOutButton';
-import BreadcrumbNav from "@/components/BreadcrumbNav";
 import NavFrame from "@/components/NavFrame";
 
 export default function Profile() {
@@ -13,7 +12,6 @@ export default function Profile() {
             {/*<NavigationBar active='profile' />*/}
             <NavFrame path={[{name: "Profils", link: "profile"}]}>
                 <main className="container m-auto">
-                    <BreadcrumbNav path={[{name: "Profils", link: "/profile"}]}/>
                     <UserData />
                 </main>
             </NavFrame>
