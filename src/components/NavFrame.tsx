@@ -3,19 +3,35 @@ import Image from "next/image";
 import Logo from "../../public/proglv_logo_simple.png";
 import Folder from "flat-color-icons/svg/folder.svg";
 import FilingCabinet from "flat-color-icons/svg/filing_cabinet.svg";
+import Breadcrumbs from "@mui/joy/Breadcrumbs";
+import {Typography} from "@mui/joy";
 
 
 type NavFrameProps = {
+    path: {name: string, link: string}[];
     children: any;
 }
 
-export default function NavFrame({children}: NavFrameProps){
+export default function NavFrame({path, children}: NavFrameProps){
 
     return (
         <div className={"flex h-screen bg-gray-100"}>
             <SideBar/>
-            <div className="flex-1">
-                <main>
+            <div className={"w-full h-full"}>
+                <nav className={"bg-white h-14 flex items-center"}>
+                    <Breadcrumbs>
+                        <span></span>
+                        {path.slice(0,-1).map(({name, link})=>(
+                            <Link key={name} color="neutral" href={link}>
+                                {name}
+                            </Link>
+                        ))}
+                        <Link href={"#"} className={"no-underline"}>
+                            <Typography fontWeight={"bold"}>{path.slice(-2)[0].name}</Typography>
+                        </Link>
+                    </Breadcrumbs>
+                </nav>
+                <main className={"w-full"}>
                     {children}
                 </main>
             </div>

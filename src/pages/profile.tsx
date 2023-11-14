@@ -11,7 +11,7 @@ export default function Profile() {
     return (
         <>
             {/*<NavigationBar active='profile' />*/}
-            <NavFrame>
+            <NavFrame path={[{name: "Profils", link: "profile"}]}>
                 <main className="container m-auto">
                     <BreadcrumbNav path={[{name: "Profils", link: "/profile"}]}/>
                     <UserData />
