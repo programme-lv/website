@@ -10,13 +10,14 @@ import {Typography} from "@mui/joy";
 type NavFrameProps = {
     path: {name: string, link: string}[];
     children: any;
+    active?: "tasks" | "submissions";
 }
 
-export default function NavFrame({path, children}: NavFrameProps){
+export default function NavFrame({path, children, active}: NavFrameProps){
 
     return (
         <div className={"flex h-screen bg-gray-100"}>
-            <SideBar/>
+            <SideBar active={active}/>
             <div className={"w-full h-full"}>
                 <nav className={"bg-white h-14 flex items-center"}>
                     <Breadcrumbs>
@@ -39,10 +40,12 @@ export default function NavFrame({path, children}: NavFrameProps){
     )
 }
 
-type SideBarProps = {}
+type SideBarProps = {
+    active?: "tasks" | "submissions";
+}
 
 // TODO: the implementation of expanding sidebar was postponed to lack of time
-function SideBar({}: SideBarProps){
+function SideBar({active}: SideBarProps){
     return (
         <div className={`inset-y-0 left-0 z-30 bg-blue-420 overflow-auto w-20 flex flex-col gap-12 py-2`}>
             <Link href={"/"} className={"w-full justify-center align-middle flex"}>
@@ -52,11 +55,15 @@ function SideBar({}: SideBarProps){
             </Link>
 
             <Link href={"/tasks"} className={"w-full justify-center align-middle flex"}>
+                <div className={`hover:bg-gray-69 transition-all rounded-lg inline-flex p-1.5 ${active==="tasks" ? 'outline outline-white' : ''}`}>
                 <Image src={Folder} alt={"folder icon that leads to tasks"} width={45}/>
+                </div>
             </Link>
 
             <Link href={"/submissions"} className={"w-full justify-center align-middle flex"}>
-                <Image src={FilingCabinet} alt={"icon that leads to submissions"} width={45}/>
+                <div className={`hover:bg-gray-69 transition-all rounded-lg inline-flex p-1.5 ${active==="submissions" ? 'outline outline-white' : ''}`}>
+                    <Image src={FilingCabinet} alt={"icon that leads to submissions"} width={45}/>
+                </div>
             </Link>
 
         </div>
