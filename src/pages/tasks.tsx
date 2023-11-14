@@ -1,16 +1,15 @@
-import NavigationBar from '@/components/NavigationBar'
 import {graphql} from "@/gql";
 import apolloClient from "@/lib/apolloClient";
 import renderMD from "@/utils/render";
 import {ListPublishedTasksQuery} from "@/gql/graphql";
 import "katex/dist/katex.min.css"
 import Link from "next/link";
+import NavFrame from "@/components/NavFrame";
 
 export default function Tasks(props: ListPublishedTasksQuery) {
 
     return (
-        <>
-            <NavigationBar active='tasks'/>
+        <NavFrame path={[{name: "Uzdevumi", link: "/tasks"}]}>
             <main className="container m-auto mt-6">
                 {
                     props.listPublishedTasks.map(task => (
@@ -19,7 +18,7 @@ export default function Tasks(props: ListPublishedTasksQuery) {
                     ))
                 }
             </main>
-        </>
+        </NavFrame>
     )
 }
 
@@ -33,10 +32,10 @@ interface TaskDisplayProps {
 function TaskDisplay(props: TaskDisplayProps) {
     return (
         <Link href={`/tasks/${props.code}`} className={"text-black no-underline"}>
-        <div className="flex flex-col p-5 bg-white hover:shadow">
-            <h3 className="text-xl font-semibold my-0">{props.name}</h3>
-            <div className="text-gray-600" dangerouslySetInnerHTML={{__html: props.description}}></div>
-        </div>
+            <div className="flex flex-col p-5 bg-white hover:shadow">
+                <h3 className="text-xl font-semibold my-0">{props.name}</h3>
+                <div className="text-gray-600" dangerouslySetInnerHTML={{__html: props.description}}></div>
+            </div>
         </Link>
     )
 }

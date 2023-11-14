@@ -4,11 +4,11 @@ import useTranslation from "next-translate/useTranslation";
 import {graphql} from "@/gql";
 import apolloClient from "@/lib/apolloClient";
 import {ListPublicSubmissionsQuery} from "@/gql/graphql";
+import NavFrame from "@/components/NavFrame";
 
 export default function Submissions(props: ListPublicSubmissionsQuery) {
     return (
-        <div>
-            <NavigationBar active='submissions'/>
+        <NavFrame path={[{name: "Iesūtījumi", link: "/submissions"}]}>
             <main className="container m-auto mt-6">
                 <table className={"bg-white border-collapse w-full border border-solid border-gray-200"}>
                     <SubmissionTableHeaderRow/>
@@ -31,7 +31,7 @@ export default function Submissions(props: ListPublicSubmissionsQuery) {
                     </tbody>
                 </table>
             </main>
-        </div>
+        </NavFrame>
     )
 }
 

@@ -27,7 +27,7 @@ export default function NavFrame({path, children}: NavFrameProps){
                             </Link>
                         ))}
                         <Link href={"#"} className={"no-underline"}>
-                            <Typography fontWeight={"bold"}>{path.slice(-2)[0].name}</Typography>
+                            <Typography fontWeight={"bold"} className={"text-black"}>{path.slice(-2)[0].name}</Typography>
                         </Link>
                     </Breadcrumbs>
                 </nav>
