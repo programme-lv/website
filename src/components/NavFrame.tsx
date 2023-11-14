@@ -22,12 +22,12 @@ export default function NavFrame({path, children}: NavFrameProps){
                     <Breadcrumbs>
                         <span></span>
                         {path.slice(0,-1).map(({name, link})=>(
-                            <Link key={name} color="neutral" href={link}>
-                                {name}
+                            <Link key={name} color="neutral" href={link} className={"no-underline"}>
+                                <Typography className={"hover:underline"}>{name}</Typography>
                             </Link>
                         ))}
-                        <Link href={"#"} className={"no-underline"}>
-                            <Typography fontWeight={"bold"} className={"text-black"}>{path.slice(-2)[0].name}</Typography>
+                        <Link href={path.slice(-1)[0].link} className={"no-underline"}>
+                            <Typography fontWeight={""} className={"text-black font-bold hover:underline"}>{path.slice(-1)[0].name}</Typography>
                         </Link>
                     </Breadcrumbs>
                 </nav>

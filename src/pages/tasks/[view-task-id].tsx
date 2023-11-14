@@ -12,6 +12,7 @@ import { Button } from "@mui/joy";
 import SendIcon from "@mui/icons-material/Send";
 import { useRouter } from "next/router";
 import TaskDisplay from "@/components/TaskDisplay"
+import NavFrame from "@/components/NavFrame";
 
 export default function ViewTask(props: GetPublishedTaskVersionByCodeQuery) {
     const task = props.getPublishedTaskVersionByCode
@@ -40,8 +41,7 @@ export default function ViewTask(props: GetPublishedTaskVersionByCodeQuery) {
     }
 
     return (
-        <>
-            <NavigationBar active="tasks" />
+        <NavFrame path={[{ name: "Uzdevumi", link: "/tasks" }, { name: task.name, link: `/tasks/${task.code}` }]}>
             <main className='p-5'>
                 <div className={"flex"}>
                     <div className={"resize-x flex-grow bg-white p-5"}>
@@ -59,7 +59,7 @@ export default function ViewTask(props: GetPublishedTaskVersionByCodeQuery) {
                     </Resizable>
                 </div>
             </main>
-        </>
+        </NavFrame>
     )
 }
 
