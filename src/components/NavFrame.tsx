@@ -7,6 +7,7 @@ import Breadcrumbs from "@mui/joy/Breadcrumbs";
 import {Typography} from "@mui/joy";
 import {useUser} from "@/contexts/UserContext";
 import React from "react";
+import JoyButton from "@mui/joy/Button";
 
 
 type NavFrameProps = {
@@ -39,7 +40,10 @@ export default function NavFrame({path, children, active}: NavFrameProps){
                                     {userData.username}
                                 </Link>
                             </div>
-                        ) : (<> </>)}
+                        ) : (
+                        <div className={"flex gap-4 items-center"}>
+                            <Link href={"/login"} className={"no-underline bg-green-600 hover:bg-green-500 transition-all duration-75 text-white p-1.5 px-3 rounded-lg"}>Pieslēgties</Link>
+                        </div>)}
                 </nav>
                 <main className={"w-full"}>
                     {children}
