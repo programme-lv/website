@@ -23,7 +23,7 @@ export default function Submissions(props: ListPublicSubmissionsQuery) {
                                 username={submission.username}
                                 language={submission.language.fullName}
                                 status={submission.evaluation.status}
-                                result={(submission.evaluation.totalScore && submission.evaluation.possibleScore) ?
+                                result={(submission.evaluation.totalScore != null && submission.evaluation.possibleScore != null) ?
                                     submission.evaluation.totalScore + " / " + submission.evaluation.possibleScore :
                                     "- / -"}/>
                         ))
