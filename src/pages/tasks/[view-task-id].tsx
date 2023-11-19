@@ -12,6 +12,7 @@ import SendIcon from "@mui/icons-material/Send";
 import { useRouter } from "next/router";
 import TaskDisplay from "@/components/TaskDisplay"
 import NavFrame from "@/components/NavFrame";
+import {useUser} from "@/contexts/UserContext";
 
 type ViewTaskProps = {
     task: GetPublishedTaskVersionByCodeQuery["getPublishedTaskVersionByCode"],
@@ -22,6 +23,7 @@ export default function ViewTask(props: ViewTaskProps) {
     const task = props.task
     const langs = props.langs
 
+    const {userData, loginError} = useUser()
     console.log(langs)
 
     const [editorSelLang, setEditorSelLang] = useState<string | null>("cpp17");
@@ -59,9 +61,10 @@ export default function ViewTask(props: ViewTaskProps) {
                         <Editor code={editorCode} setCode={setEditorCode} langs={langs.map(lang => ({ ...lang, monacoID: lang.monacoID || "cpp" }))}
                             selectedLanguage={editorSelLang} setSelectedLanguage={setEditorSelLang} />
                         <div className={"flex justify-end"}>
-                            <Button endDecorator={<SendIcon />} color="success" onClick={submitSolution}>
+                            {(userData && !loginError ) ?
+                            <Button endDecorator={<SendIcon />} color="success" onClick={submitSolution} className={"bg-green-600 hover:bg-green-500"}>
                                 Iesūtīt
-                            </Button>
+                            </Button> : <span className={"my-2"}>Pieslēdzieties, lai iesūtīt risinājumu!</span>}
                         </div>
                     </Resizable>
                 </div>
