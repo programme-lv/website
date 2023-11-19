@@ -21,7 +21,7 @@ export default function NavFrame({path, children, active}: NavFrameProps){
     return (
         <div className={"flex h-screen bg-gray-100"}>
             <SideBar active={active}/>
-            <div className={"w-full h-full"}>
+            <div className={"w-full h-full overflow-auto"}>
                 <nav className={"bg-white h-14 flex items-center justify-between px-6 pe-10"}>
                     <Breadcrumbs>
                         {path.slice(0,-1).map(({name, link})=>(
