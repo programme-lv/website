@@ -1,11 +1,10 @@
-import NavigationBar from "@/components/NavigationBar"
 import apolloClient from "@/lib/apolloClient"
 import { graphql } from "@/gql"
 import renderMD from "@/utils/render"
 import "katex/dist/katex.min.css"
-import { GetPublishedTaskVersionByCodeQuery } from "@/gql/graphql";
+import { GetPublishedTaskVersionByCodeQuery, ListLanguagesQuery } from "@/gql/graphql";
 import MonacoEditor from "@monaco-editor/react";
-import { gql, useQuery } from "@apollo/client";
+import { gql } from "@apollo/client";
 import { useEffect, useState } from "react";
 import { Resizable } from "re-resizable";
 import { Button } from "@mui/joy";
@@ -14,10 +13,18 @@ import { useRouter } from "next/router";
 import TaskDisplay from "@/components/TaskDisplay"
 import NavFrame from "@/components/NavFrame";
 
-export default function ViewTask(props: GetPublishedTaskVersionByCodeQuery) {
-    const task = props.getPublishedTaskVersionByCode
+type ViewTaskProps = {
+    task: GetPublishedTaskVersionByCodeQuery["getPublishedTaskVersionByCode"],
+    langs: ListLanguagesQuery["listLanguages"]
+}
 
-    const [editorSelLang, setEditorSelLang] = useState<string | null>(null);
+export default function ViewTask(props: ViewTaskProps) {
+    const task = props.task
+    const langs = props.langs
+
+    console.log(langs)
+
+    const [editorSelLang, setEditorSelLang] = useState<string | null>("cpp17");
     const [editorCode, setEditorCode] = useState(cppStartCode);
 
     const router = useRouter()
@@ -49,7 +56,7 @@ export default function ViewTask(props: GetPublishedTaskVersionByCodeQuery) {
                     </div>
                     <Resizable enable={{ left: true }} defaultSize={{ width: "50%", height: 'auto' }}
                         className={"border border-solid p-5 resize-x"}>
-                        <Editor code={editorCode} setCode={setEditorCode}
+                        <Editor code={editorCode} setCode={setEditorCode} langs={langs.map(lang => ({ ...lang, monacoID: lang.monacoID || "cpp" }))}
                             selectedLanguage={editorSelLang} setSelectedLanguage={setEditorSelLang} />
                         <div className={"flex justify-end"}>
                             <Button endDecorator={<SendIcon />} color="success" onClick={submitSolution}>
@@ -62,23 +69,6 @@ export default function ViewTask(props: GetPublishedTaskVersionByCodeQuery) {
         </NavFrame>
     )
 }
-
-
-type Language = {
-    id: string;
-    fullName: string;
-    monacoID: string;
-}
-
-const LIST_LANGUAGES_QUERY = gql`
-query ListLanguages {
-    listLanguages {
-        id
-        fullName
-        monacoID
-    }
-}
-`;
 
 const cppStartCode = `#include <iostream>
 
@@ -106,45 +96,35 @@ mutation EnqueueSubmissionForPublishedTaskVersion($taskID: ID!, $languageID: ID!
     }
 }
 `
+type Language = {
+    id: string;
+    fullName: string;
+    monacoID?: string;
+}
 
 type EditorProps = {
     selectedLanguage: string | null;
-    setSelectedLanguage: (language: string) => void;
+    setSelectedLanguage: (_: string) => void;
     code: string;
-    setCode: (code: string) => void;
+    setCode: (_: string) => void;
+    langs: Language[];
 }
 
 function Editor(props: EditorProps) {
-    const { selectedLanguage, setSelectedLanguage, code, setCode } = props;
+    const { selectedLanguage, setSelectedLanguage, code, setCode, langs: languages } = props;
 
-    const {
-        loading: listLangLoading,
-        error: listLangError,
-        data: listLangData
-    } = useQuery(LIST_LANGUAGES_QUERY, { client: apolloClient });
-
-    const [languages, setLanguages] = useState<Language[]>([]);
+    console.log("langs", languages)
     const [monacoLangId, setMonacoLangId] = useState<string>("");
 
     useEffect(() => {
         if (selectedLanguage) {
             const selectedLanguageObj = languages.find(language => language.id === selectedLanguage);
             if (selectedLanguageObj) {
-                setMonacoLangId(selectedLanguageObj.monacoID);
+                setMonacoLangId(selectedLanguageObj.monacoID || "");
             }
         }
     }, [selectedLanguage, languages])
 
-    useEffect(() => {
-        if (listLangData) {
-            setLanguages(listLangData.listLanguages);
-            setSelectedLanguage(listLangData.listLanguages[0].id);
-        }
-    }, [listLangData])
-
-
-    if (listLangLoading) return <div>Loading...</div>
-    if (listLangError) return <div>Error: {listLangError.message}</div>
     return (
         <div className="w-full flex flex-col">
             <div className="flex justify-end">
@@ -213,21 +193,38 @@ query GetPublishedTaskVersionByCode($code: String!) {
     }
 }`)
 
+const LIST_LANGUAGES_QUERY = gql`
+query ListLanguagesLol {
+    listLanguages(enabled: true) {
+        id
+        fullName
+        monacoID
+    }
+}
+`
+
 export async function getServerSideProps(context: any) {
-    const { data } = await apolloClient.query({
+    const { data: task } = await apolloClient.query({
         query: GET_TASK,
         variables: { code: context.params['view-task-id'] }
     })
 
-    if (data) {
-        const d = data.getPublishedTaskVersionByCode.description
+    const {data : langs} = await apolloClient.query({
+        query: LIST_LANGUAGES_QUERY
+    })
+
+    if (task) {
+        const d = task.getPublishedTaskVersionByCode.description
         d.story = renderMD(d.story)
         d.input = renderMD(d.input)
         d.output = renderMD(d.output)
     }
 
     return {
-        props: data
+        props: {
+            task: task.getPublishedTaskVersionByCode,
+            langs: langs.listLanguages
+        }
     }
 }
 

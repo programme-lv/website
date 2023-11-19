@@ -1122,6 +1122,22 @@
         "description": null,
         "fields": [
           {
+            "name": "enabled",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "fullName",
             "description": null,
             "args": [],
@@ -1269,7 +1285,20 @@
           {
             "name": "listLanguages",
             "description": null,
-            "args": [],
+            "args": [
+              {
+                "name": "enabled",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
             "type": {
               "kind": "NON_NULL",
               "name": null,
