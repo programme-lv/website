@@ -126,7 +126,7 @@ function InfoSection() {
             <div className={"px-6 pe-8 flex flex-col justify-between pb-4"}>
                 <div className={"m-0 text-justify"}>
                     <p className="mb-2">
-                        Šī mājaslapa ir izstrādāta, lai palīdzētu studentiem un skolotājiem apgūt kodēšanas mākslu. Tā
+                        Šī mājaslapa ir izstrādāta, lai palīdzētu skolēniem un studentiem apgūt kodēšanas mākslu. Tā
                         piedāvās bagātīgu teorētisko materiālu klāstu, kā arī dažādu prasmju līmeņiem piemērotus
                         praktiskos programmēšanas uzdevumus.
                     </p>

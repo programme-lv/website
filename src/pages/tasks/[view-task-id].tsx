@@ -7,7 +7,7 @@ import MonacoEditor from "@monaco-editor/react";
 import { gql } from "@apollo/client";
 import { useEffect, useState } from "react";
 import { Resizable } from "re-resizable";
-import { Button } from "@mui/joy";
+import {Button, Option, Select} from "@mui/joy";
 import SendIcon from "@mui/icons-material/Send";
 import { useRouter } from "next/router";
 import TaskDisplay from "@/components/TaskDisplay"
@@ -50,12 +50,12 @@ export default function ViewTask(props: ViewTaskProps) {
     return (
         <NavFrame path={[{ name: "Uzdevumi", link: "/tasks" }, { name: task.name, link: `/tasks/${task.code}` }]}>
             <main className='p-5'>
-                <div className={"flex"}>
+                <div className={"flex gap-4"}>
                     <div className={"resize-x flex-grow bg-white p-5"}>
                         <TaskDisplay task={task} />
                     </div>
                     <Resizable enable={{ left: true }} defaultSize={{ width: "50%", height: 'auto' }}
-                        className={"border border-solid p-5 resize-x"}>
+                        className={"bg-white p-5 resize-x"}>
                         <Editor code={editorCode} setCode={setEditorCode} langs={langs.map(lang => ({ ...lang, monacoID: lang.monacoID || "cpp" }))}
                             selectedLanguage={editorSelLang} setSelectedLanguage={setEditorSelLang} />
                         <div className={"flex justify-end"}>
@@ -128,15 +128,12 @@ function Editor(props: EditorProps) {
     return (
         <div className="w-full flex flex-col">
             <div className="flex justify-end">
-                <div> programmēšanas valoda
                     {selectedLanguage &&
-                        <select className="ml-2" value={selectedLanguage} onChange={(e) => {
-                            setSelectedLanguage(e.target.value)
-                        }}>
-                            {languages.map(language => <option key={language.id}
-                                value={language.id}>{language.fullName}</option>)}
-                        </select>}
-                </div>
+                        <Select className="ml-2" value={selectedLanguage} size={"sm"}
+                                onChange={(e, newSelect) => setSelectedLanguage(newSelect??"")}>
+                            {languages.map(language => (<Option key={language.id}
+                                value={language.id}>{language.fullName}</Option>))}
+                        </Select>}
             </div>
 
             <div className="h-[600px] my-2">
