@@ -44,7 +44,7 @@ export default function NavFrame({path, children, active}: NavFrameProps){
                             <Link href={"/login"} className={"no-underline bg-green-600 hover:bg-green-500 transition-all duration-75 text-white p-1.5 px-3 rounded-lg"}>Pieslēgties</Link>
                         </div>)}
                 </nav>
-                <main className={"w-full"}>
+                <main className={"w-full pb-8"}>
                     {children}
                 </main>
             </div>
