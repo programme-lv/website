@@ -26,9 +26,9 @@ export default function Footer() {
                        style={{textDecoration: "none"}}>
                         programme.lv@gmail.com
                     </a>
-                        <a href={"/about"} className={"text-white p-1"} style={{textDecoration: "none"}}>
-                        | par mums
-                    </a>
+                    {/*    <a href={"/about"} className={"text-white p-1"} style={{textDecoration: "none"}}>*/}
+                    {/*    | par mums*/}
+                    {/*</a>*/}
                     </span>
 
                     <span className={"flex justify-end"}>
