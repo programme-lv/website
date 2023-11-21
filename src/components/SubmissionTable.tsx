@@ -61,6 +61,18 @@ function SubmissionTableHeaderRow() {
 
 }
 
+function formatTime(time: string) {
+    const date = new Date(time);
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const seconds = date.getSeconds().toString().padStart(2, '0');
+
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
+
 function SubmissionTableRow(props: SubmissionTableRowProps) {
     const {t} = useTranslation('common');
 
@@ -77,14 +89,22 @@ function SubmissionTableRow(props: SubmissionTableRowProps) {
     else if (props.status === "CE" || props.status == "RJ") statusSpan =
         <span className={"text-red-500"}>{t(props.status)}</span>
     return (
-        <tr className={"hover:bg-gray-100 border"}>
-            <Cell className={"px-6 w-40"}>{props.time}</Cell>
-            <Cell><Link href={`/tasks/${props.taskCode}`}
-                        className={"no-underline text-gray-420 font-medium"}>{props.taskFullName}</Link></Cell>
-            <Cell>{props.username}</Cell>
-            <Cell>{props.language}</Cell>
-            <Cell>{statusSpan}</Cell>
-            <Cell>{props.result ?? '- / -'}</Cell>
-        </tr>
+        <>
+            <tr className={"hover:bg-gray-100 border"}>
+                <td className={"border-x border-y-0 border-gray-200 border-solid py-3 text-center px-6 w-40"}>
+                    <div className={"flex flex-col gap-1"}>
+                        <span>{formatTime(props.time).slice(0, 10)}</span>
+                        <span>{formatTime(props.time).slice(11)}</span>
+                    </div>
+                </td>
+                <td className={"text-center border-x border-y-0 border-solid border-gray-200"}><Link
+                    href={`/tasks/${props.taskCode}`}
+                    className={"no-underline text-gray-420 font-medium"}>{props.taskFullName}</Link></td>
+                <Cell>{props.username}</Cell>
+                <Cell>{props.language}</Cell>
+                <td className={"border-x border-y-0 border-gray-200 border-solid py-3 text-center "}>{statusSpan}</td>
+                <Cell>{props.result ?? '- / -'}</Cell>
+            </tr>
+        </>
     )
 }

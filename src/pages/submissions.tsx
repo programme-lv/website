@@ -28,7 +28,7 @@ export default function Submissions(props: ListPublicSubmissionsQuery) {
         }, 500); // Fetch every 100ms
 
         return () => clearInterval(interval); // Clear interval on component unmount
-    }, []);
+    });
 
     if (!submissions) {
         return <div>Loading...</div>;
@@ -61,6 +61,14 @@ query ListPublicSubmissions {
             status
             totalScore
             possibleScore
+            totalTimeMs
+            maxTimeMs
+            totalMemoryKb
+            maxMemoryKb
+            testVerdictStatistics {
+                verdict
+                count
+            }
         }
         submission
         username
