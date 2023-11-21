@@ -84,23 +84,21 @@ function formatTime(time: string) {
 }
 
 const getBackgroundColor = (score: number) => {
-    // Scale score from 0-1 to 0-100
-    let scaledScore = score * 100;
-    let red, green, blue, alpha = 0.7; // Fixed alpha for controlled brightness
+    let colors = [[237,27,36], [255, 194, 13],[58, 176, 34] ];
+    let points = [0, 1/3, 1];
 
-    if (scaledScore <= 33) {
-        // Interpolate between red (255,0,0) and yellow (255,255,0)
-        red = 255;
-        green = Math.round(255 * (scaledScore / 33));
-        blue = 0;
-    } else {
-        // Interpolate between yellow (255,255,0) and green (0,128,0)
-        red = Math.round(255 * ((100 - scaledScore) / 67));
-        green = 255 - red;
-        blue = 0;
+    let l_idx=0, r_idx=1;
+    while (r_idx < points.length && score > points[r_idx]) {
+        l_idx++; r_idx++;
     }
 
-    return `rgba(${red}, ${green}, ${blue}, ${0.3})`;
+    let f = (score-points[l_idx])/(points[r_idx]-points[l_idx]);
+    let res = [0, 0, 0];
+    res[0] = colors[l_idx][0] + f*(colors[r_idx][0]-colors[l_idx][0]);
+    res[1] = colors[l_idx][1] + f*(colors[r_idx][1]-colors[l_idx][1]);
+    res[2] = colors[l_idx][2] + f*(colors[r_idx][2]-colors[l_idx][2]);
+
+    return `rgba(${res[0]}, ${res[1]}, ${res[2]}, ${0.3})`;
 };
 
 function StatusSpan(props: { status: string, totalScore: number, possibleScore: number | undefined }) {
@@ -108,7 +106,7 @@ function StatusSpan(props: { status: string, totalScore: number, possibleScore: 
     const {status, totalScore, possibleScore} = props;
     // return status unless status == "F", in which case return totalScore / possibleScore
     if (status === "F") return (
-        <span style={{backgroundColor: getBackgroundColor(0 / (possibleScore ?? totalScore))}}
+        <span style={{backgroundColor: getBackgroundColor(totalScore / (possibleScore ?? totalScore))}}
               className={"w-full h-full bg-green-69 flex justify-center align-middle items-center"}>
             {totalScore + " / " + possibleScore}
         </span>);
