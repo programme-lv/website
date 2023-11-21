@@ -8,7 +8,7 @@ type SubmissionTableProps = {
 
 export default function SubmissionTable(props: SubmissionTableProps) {
     return (
-        <table className={"bg-white border-collapse w-full border border-solid border-gray-200 h-fit"}>
+        <table className={"bg-white border-collapse w-full border border-solid border-gray-200 h-fit table-fixed"}>
             <SubmissionTableHeaderRow/>
             <tbody>
             {
@@ -25,6 +25,8 @@ export default function SubmissionTable(props: SubmissionTableProps) {
                         possibleScore={submission.evaluation.possibleScore ?? undefined}
                         totalTimeMs={submission.evaluation.totalTimeMs ?? undefined}
                         maxTimeMs={submission.evaluation.maxTimeMs ?? undefined}
+                        totalMemoryKb={submission.evaluation.totalMemoryKb ?? undefined}
+                        maxMemoryKb={submission.evaluation.maxMemoryKb ?? undefined}
                     />
                 ))
             }
@@ -44,6 +46,8 @@ type SubmissionTableRowProps = {
     possibleScore?: number,
     totalTimeMs?: number,
     maxTimeMs?: number,
+    totalMemoryKb?: number,
+    maxMemoryKb?: number,
 }
 
 function SubmissionTableHeaderRow() {
@@ -160,11 +164,28 @@ function SubmissionTableRow(props: SubmissionTableRowProps) {
                             </div>
                         </div>
                     ) : (
-                        <></>
+                        <div className={"flex justify-center font-bold"}>
+                            -
+                        </div>
                     )}
                 </td>
                 <td>
-                    {props.possibleScore}
+                    {(props.totalMemoryKb && props.maxMemoryKb) ? (
+                        <div className={"flex gap-2 justify-center"}>
+                            <div className={"flex flex-col gap-2"}>
+                                <div>avg:</div>
+                                <div>max:</div>
+                            </div>
+                            <div className={"flex flex-col gap-2"}>
+                                <div>{(props.totalMemoryKb / 1000).toFixed(3)} kB</div>
+                                <div>{(props.maxMemoryKb / 1000).toFixed(3)} kB</div>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className={"flex justify-center font-bold"}>
+                            -
+                        </div>
+                    )}
                 </td>
             </tr>
         </>
