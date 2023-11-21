@@ -12,6 +12,8 @@
   "home_user_data_error_exclamation": "Kļūda!",
   "IQ": "Gaida rindā",
   "T": "Testē",
-  "F": "Pabeigts",
+  "F": "Izpildīts",
+  "CE": "Kompilācijas kļūda",
+  "C": "Kompilē",
   "RJ": "Noraidīts"
 }

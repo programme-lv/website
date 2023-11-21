@@ -25,7 +25,7 @@ export default function Submissions(props: ListPublicSubmissionsQuery) {
                 setIsFetching(false);
             }
 
-        }, 500); // Fetch every 100ms
+        }, 5000); // Fetch every 100ms
 
         return () => clearInterval(interval); // Clear interval on component unmount
     });
