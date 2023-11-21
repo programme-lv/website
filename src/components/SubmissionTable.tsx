@@ -131,7 +131,7 @@ function SubmissionTableRow(props: SubmissionTableRowProps) {
         <span className={"text-red-500"}>{t(props.status)}</span>
     return (
         <>
-            <tr className={"hover:bg-gray-100 border h-full"}>
+            <tr className={"hover:bg-gray-100 h-full border-0 border-b border-solid border-gray-200"}>
                 <td className={"border-x border-y-0 border-gray-200 border-solid py-3 text-center px-6 w-40"}>
                     <div className={"flex flex-col gap-1"}>
                         <span>{formatTime(props.time).slice(0, 10)}</span>
