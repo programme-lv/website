@@ -175,8 +175,8 @@ function SubmissionTableRow(props: SubmissionTableRowProps) {
                                 <div>max:</div>
                             </div>
                             <div className={"flex flex-col gap-2"}>
-                                <div>{(props.avgMemoryKb / 1000).toFixed(3)} kB</div>
-                                <div>{(props.maxMemoryKb / 1000).toFixed(3)} kB</div>
+                                <div>{(props.avgMemoryKb / 1000).toFixed(2)} MB</div>
+                                <div>{(props.maxMemoryKb / 1000).toFixed(2)} MB</div>
                             </div>
                         </div>
                     ) : (
