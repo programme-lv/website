@@ -61,9 +61,9 @@ query ListPublicSubmissions {
             status
             totalScore
             possibleScore
-            totalTimeMs
+            avgTimeMs
             maxTimeMs
-            totalMemoryKb
+            avgMemoryKb
             maxMemoryKb
             testVerdictStatistics {
                 verdict

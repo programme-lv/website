@@ -23,9 +23,9 @@ export default function SubmissionTable(props: SubmissionTableProps) {
                         status={submission.evaluation.status}
                         totalScore={submission.evaluation.totalScore}
                         possibleScore={submission.evaluation.possibleScore ?? undefined}
-                        totalTimeMs={submission.evaluation.totalTimeMs ?? undefined}
+                        avgTimeMs={submission.evaluation.avgTimeMs ?? undefined}
                         maxTimeMs={submission.evaluation.maxTimeMs ?? undefined}
-                        totalMemoryKb={submission.evaluation.totalMemoryKb ?? undefined}
+                        avgMemoryKb={submission.evaluation.avgMemoryKb ?? undefined}
                         maxMemoryKb={submission.evaluation.maxMemoryKb ?? undefined}
                     />
                 ))
@@ -44,9 +44,9 @@ type SubmissionTableRowProps = {
     status: string | "IQ" | "R" | "C" | "T" | "F" | "CE" | "RJ",
     totalScore: number,
     possibleScore?: number,
-    totalTimeMs?: number,
+    avgTimeMs?: number,
     maxTimeMs?: number,
-    totalMemoryKb?: number,
+    avgMemoryKb?: number,
     maxMemoryKb?: number,
 }
 
@@ -150,14 +150,14 @@ function SubmissionTableRow(props: SubmissionTableRowProps) {
                                 possibleScore={props.possibleScore}/>
                 </td>
                 <td>
-                    {(props.totalTimeMs && props.maxTimeMs) ? (
+                    {(props.avgTimeMs && props.maxTimeMs) ? (
                         <div className={"flex gap-2 justify-center"}>
                             <div className={"flex flex-col gap-2"}>
                                 <div>avg:</div>
                                 <div>max:</div>
                             </div>
                             <div className={"flex flex-col gap-2"}>
-                                <div>{(props.totalTimeMs / 1000).toFixed(3)} s.</div>
+                                <div>{(props.avgTimeMs / 1000).toFixed(3)} s.</div>
                                 <div>{(props.maxTimeMs / 1000).toFixed(3)} s.</div>
                             </div>
                         </div>
@@ -168,14 +168,14 @@ function SubmissionTableRow(props: SubmissionTableRowProps) {
                     )}
                 </td>
                 <td>
-                    {(props.totalMemoryKb && props.maxMemoryKb) ? (
+                    {(props.avgMemoryKb && props.maxMemoryKb) ? (
                         <div className={"flex gap-2 justify-center"}>
                             <div className={"flex flex-col gap-2"}>
                                 <div>avg:</div>
                                 <div>max:</div>
                             </div>
                             <div className={"flex flex-col gap-2"}>
-                                <div>{(props.totalMemoryKb / 1000).toFixed(3)} kB</div>
+                                <div>{(props.avgMemoryKb / 1000).toFixed(3)} kB</div>
                                 <div>{(props.maxMemoryKb / 1000).toFixed(3)} kB</div>
                             </div>
                         </div>
