@@ -4,10 +4,10 @@ import LogoWithText from "@/components/LogoWithText";
 
 export default function FirstNavBar() {
     return (
-        <nav className={"bg-white py-3"}>
+        <nav className={"bg-white py-3 px-2"}>
             <div className={"container m-auto flex justify-between items-center gap-4"}>
                 <LogoWithText/>
-                <div className={"flex gap-4 items-center"}>
+                <div className={"sm:flex gap-4 items-center hidden"}>
                     <Link href={"/login"} className={"no-underline text-black hover:text-gray-420"}>Pieslēgties</Link>
                     <Link href={"/register"} className={""}>
                         <JoyButton color={"neutral"} variant={"outlined"} className={"text-md px-6"}>Reģistrēties</JoyButton>

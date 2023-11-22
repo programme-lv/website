@@ -22,7 +22,8 @@ export default function NavFrame({path, children, active}: NavFrameProps){
         <div className={"flex h-screen bg-gray-100"}>
             <SideBar active={active}/>
             <div className={"w-full h-full overflow-auto"}>
-                <nav className={"bg-white h-14 flex items-center justify-between px-6 pe-10"}>
+                <nav className={"bg-white h-14 flex items-center justify-end sm:justify-between px-6 pe-10"}>
+                    <div className={"hidden sm:block"}>
                     <Breadcrumbs>
                         {path.slice(0,-1).map(({name, link})=>(
                             <Link key={name} color="neutral" href={link} className={"no-underline"}>
@@ -33,6 +34,7 @@ export default function NavFrame({path, children, active}: NavFrameProps){
                             <Typography fontWeight={""} className={"text-black font-bold hover:underline"}>{path.slice(-1)[0].name}</Typography>
                         </Link>
                     </Breadcrumbs>
+                        </div>
                     {userData && !loginError ? (
                             <div className="flex items-center">
                                 <Link href="/profile" className={"no-underline text-blue-69 font-medium"}>

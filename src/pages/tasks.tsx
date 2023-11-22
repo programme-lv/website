@@ -10,13 +10,15 @@ export default function Tasks(props: ListPublishedTasksQuery) {
 
     return (
         <NavFrame path={[{name: "Uzdevumi", link: "/tasks"}]}>
-            <main className="container m-auto mt-6">
+            <main className="container m-auto mt-6 relative">
+                <div className={"mx-3"}>
                 {
                     props.listPublishedTasks.map(task => (
                         <TaskDisplay key={task.id} code={task.code} name={task.name}
                                      description={task.description.story}/>
                     ))
                 }
+                </div>
             </main>
         </NavFrame>
     )

@@ -9,7 +9,7 @@ export default function LogoWithText() {
                 <Image src={Logo} alt={"Logo"} width={40}/>
                 <div className={"flex gap-2 items-baseline"}>
                     <span className={"text-2xl font-semibold text-logoblue-69"}>programme.lv</span>
-                    <span className={"text-logoblue-420"}>Alpha</span>
+                    <span className={"hidden sm:block text-logoblue-420"}>Alpha</span>
                 </div>
             </div>
         </Link>

@@ -9,7 +9,7 @@ export default function Footer() {
     return (
         <>
             <div className={"items-center bg-logoblue-69 p-3"}>
-                <div className={"grid grid-cols-3 justify-between items-center container m-auto"}>
+                <div className={"flex justify-between flex-wrap items-center container m-auto"}>
                     <div className={"flex gap-6"}>
                         <a href={"https://discord.gg/eV6tArk2Xe"} target={"_blank"}>
                             <Image src={Discord_logo} alt={"Join our Discord server!"}/>

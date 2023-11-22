@@ -79,43 +79,44 @@ function Hero(props: { loggedIn?: boolean }) {
     if (props.loggedIn) {
         link = "/tasks"
     }
-    return (<div className={"flex justify-center"}>
-        <div className={"w-full relative"}>
-            <Image src={Hills} alt={"Hills - background image"} style={{
-                width: '100%',
-                height: 'auto',
-                maxHeight: '600px',
-                overflow: 'hidden',
-                objectFit: 'cover'
-            }}/>
-            <div className={"absolute w-full h-full flex justify-around items-center top-0"}>
-                <div className={"bg-white p-10 rounded-lg text-3xl text-center flex flex-col gap-5"}>
-                    <div className={"max-w-[14em]"}>
-                        Jauna <span className={"text-green-69 font-medium"}>Pasaule</span> informātikas un
-                        matemātikas
-                        cienītājiem
+    return (
+        <div className={"flex justify-center"}>
+            <div className={"w-full relative"}>
+                <Image src={Hills} alt={"Hills - background image"} style={{
+                    width: '100%',
+                    height: 'auto',
+                    maxHeight: '600px',
+                    overflow: 'hidden',
+                    objectFit: 'cover'
+                }}/>
+                <div className={"absolute w-full h-full flex justify-around items-center top-0"}>
+                    <div className={"bg-white p-3 sm:p-8 rounded-lg text-xl sm:text-2xl text-center flex flex-col gap-5"}>
+                        <div className={"max-w-[14em]"}>
+                            Jauna <span className={"text-green-69 font-medium"}>Pasaule</span> informātikas un
+                            matemātikas
+                            cienītājiem
+                        </div>
+                        <div className={"flex justify-center"}>
+                            <Link href={link} className={""}>
+                                <JoyButton color={"primary"}
+                                           className={"text-xl px-12 font-medium bg-blue-700 hover:bg-blue-600"}>Ieiet
+                                    portālā</JoyButton>
+                            </Link>
+                        </div>
                     </div>
-                    <div className={"flex justify-center"}>
-                        <Link href={link} className={""}>
-                            <JoyButton color={"primary"}
-                                       className={"text-xl px-12 font-medium bg-blue-700 hover:bg-blue-600"}>Ieiet
-                                portālā</JoyButton>
-                        </Link>
-                    </div>
+                    <span className={"hidden sm:block"}></span>
+                    <span className={"hidden sm:block"}></span>
+                    <span className={"hidden sm:block"}></span>
                 </div>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
             </div>
         </div>
-    </div>)
+    )
 }
 
 function InfoSection() {
     return (
         <div className={"bg-white flex gap-4"}>
-            <div className={"flex-grow"}>
+            <div className={"flex-grow hidden lg:block"}>
                 <Image src={LP_1} alt={"Programming student"} style={{
                     width: "400px",
                     height: "auto",
@@ -124,7 +125,7 @@ function InfoSection() {
                 }}/>
             </div>
             <div className={"px-6 pe-8 flex flex-col justify-between pb-4"}>
-                <div className={"m-0 text-justify"}>
+                <div className={"m-0 text-center md:text-justify "}>
                     <p className="mb-2">
                         Šī mājaslapa ir izstrādāta, lai palīdzētu skolēniem un studentiem apgūt kodēšanas mākslu. Tā
                         piedāvās bagātīgu teorētisko materiālu klāstu, kā arī dažādu prasmju līmeņiem piemērotus
