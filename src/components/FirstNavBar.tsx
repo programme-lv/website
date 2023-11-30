@@ -9,10 +9,10 @@ export default function FirstNavBar() {
                 <LogoWithText />
                 <div className={"sm:flex gap-4 items-center hidden"}>
                     <Link href={"/login"} className={"no-underline text-black hover:text-gray-420"}>
-                        <JoyButton className={"text-base px-3 bg-logoblue-69 hover:bg-logoblue-420"}>Pieslēgties</JoyButton>
+                        <JoyButton className={"text-sm px-3 bg-logoblue-69 hover:bg-logoblue-420 font-normal"} size={"sm"}>Pieslēgties</JoyButton>
                     </Link>
                     <Link href={"/register"} className={""}>
-                        <JoyButton className={"text-base px-3 bg-green-69 hover:bg-green-420"}>Reģistrēties</JoyButton>
+                        <JoyButton className={"text-sm px-3 bg-green-69 hover:bg-green-420 font-normal"} size={"sm"}>Reģistrēties</JoyButton>
                     </Link>
                 </div>
             </div>
