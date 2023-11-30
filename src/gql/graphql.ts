@@ -16,6 +16,15 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
+export type CompilationDetails = {
+  __typename?: 'CompilationDetails';
+  exitCode: Scalars['Int']['output'];
+  memoryKb: Scalars['Int']['output'];
+  stderr: Scalars['String']['output'];
+  stdout: Scalars['String']['output'];
+  timeMs: Scalars['Int']['output'];
+};
+
 export type Constraints = {
   __typename?: 'Constraints';
   memoryLimitKb: Scalars['Int']['output'];
@@ -34,14 +43,13 @@ export type Description = {
 
 export type Evaluation = {
   __typename?: 'Evaluation';
-  avgMemoryKb?: Maybe<Scalars['Int']['output']>;
-  avgTimeMs?: Maybe<Scalars['Int']['output']>;
+  /** Some programming languages do not support compilation, so this field may be null. */
+  compilation?: Maybe<CompilationDetails>;
   id: Scalars['ID']['output'];
-  maxMemoryKb?: Maybe<Scalars['Int']['output']>;
-  maxTimeMs?: Maybe<Scalars['Int']['output']>;
   possibleScore?: Maybe<Scalars['Int']['output']>;
+  runtimeStatistics?: Maybe<RuntimeStatistics>;
   status: Scalars['String']['output'];
-  testVerdictStatistics: Array<TestVerdictStatistic>;
+  testResults: Array<TestResult>;
   totalScore: Scalars['Int']['output'];
 };
 
@@ -182,6 +190,7 @@ export type Query = {
    * Used when accessing url like /task/:code.
    */
   getPublishedTaskVersionByCode: Task;
+  getSubmission: Submission;
   /**
    * Returns a list of all tasks that are editable by the current user.
    * Used for rendering the editable task list in user profile.
@@ -212,8 +221,21 @@ export type QueryGetPublishedTaskVersionByCodeArgs = {
 };
 
 
+export type QueryGetSubmissionArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
 export type QueryListLanguagesArgs = {
   enabled?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type RuntimeStatistics = {
+  __typename?: 'RuntimeStatistics';
+  avgMemoryKb: Scalars['Int']['output'];
+  avgTimeMs: Scalars['Int']['output'];
+  maxMemoryKb: Scalars['Int']['output'];
+  maxTimeMs: Scalars['Int']['output'];
 };
 
 export type Submission = {
@@ -249,11 +271,26 @@ export type Test = {
   name: Scalars['String']['output'];
 };
 
-export type TestVerdictStatistic = {
-  __typename?: 'TestVerdictStatistic';
-  count: Scalars['Int']['output'];
-  verdict: Scalars['String']['output'];
+export type TestResult = {
+  __typename?: 'TestResult';
+  memoryKb: Scalars['Int']['output'];
+  result: TestResultType;
+  timeMs: Scalars['Int']['output'];
 };
+
+export enum TestResultType {
+  Ac = 'AC',
+  Ig = 'IG',
+  Ile = 'ILE',
+  Ise = 'ISE',
+  Mle = 'MLE',
+  Pe = 'PE',
+  Pt = 'PT',
+  Re = 'RE',
+  Sv = 'SV',
+  Tle = 'TLE',
+  Wa = 'WA'
+}
 
 export type User = {
   __typename?: 'User';
@@ -323,7 +360,14 @@ export type RegisterMutation = { __typename?: 'Mutation', register: { __typename
 export type ListPublicSubmissionsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ListPublicSubmissionsQuery = { __typename?: 'Query', listPublicSubmissions: Array<{ __typename?: 'Submission', id: string, submission: string, username: string, createdAt: string, task: { __typename?: 'Task', id: string, code: string, name: string }, language: { __typename?: 'ProgrammingLanguage', id: string, fullName: string }, evaluation: { __typename?: 'Evaluation', id: string, status: string, totalScore: number, possibleScore?: number | null, avgTimeMs?: number | null, maxTimeMs?: number | null, avgMemoryKb?: number | null, maxMemoryKb?: number | null, testVerdictStatistics: Array<{ __typename?: 'TestVerdictStatistic', verdict: string, count: number }> } }> };
+export type ListPublicSubmissionsQuery = { __typename?: 'Query', listPublicSubmissions: Array<{ __typename?: 'Submission', id: string, submission: string, username: string, createdAt: string, task: { __typename?: 'Task', id: string, code: string, name: string }, language: { __typename?: 'ProgrammingLanguage', id: string, fullName: string }, evaluation: { __typename?: 'Evaluation', id: string, status: string, totalScore: number, possibleScore?: number | null, runtimeStatistics?: { __typename?: 'RuntimeStatistics', avgTimeMs: number, maxTimeMs: number, avgMemoryKb: number, maxMemoryKb: number } | null } }> };
+
+export type GetSubmissionQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type GetSubmissionQuery = { __typename?: 'Query', getSubmission: { __typename?: 'Submission', id: string, submission: string, username: string, createdAt: string, task: { __typename?: 'Task', id: string, name: string, createdAt: string, updatedAt: string, code: string }, language: { __typename?: 'ProgrammingLanguage', id: string, fullName: string, monacoID?: string | null, enabled: boolean }, evaluation: { __typename?: 'Evaluation', id: string, status: string, totalScore: number, possibleScore?: number | null, runtimeStatistics?: { __typename?: 'RuntimeStatistics', avgTimeMs: number, maxTimeMs: number, avgMemoryKb: number, maxMemoryKb: number } | null, compilation?: { __typename?: 'CompilationDetails', timeMs: number, memoryKb: number, exitCode: number, stdout: string, stderr: string } | null, testResults: Array<{ __typename?: 'TestResult', timeMs: number, result: TestResultType, memoryKb: number }> } } };
 
 export type ListPublishedTasksQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -360,7 +404,8 @@ export const ListLanguagesDocument = {"kind":"Document","definitions":[{"kind":"
 export const AuthenticateDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Authenticate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"whoami"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}}]}}]}}]} as unknown as DocumentNode<AuthenticateQuery, AuthenticateQueryVariables>;
 export const LoginDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Login"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"username"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"password"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"login"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"username"},"value":{"kind":"Variable","name":{"kind":"Name","value":"username"}}},{"kind":"Argument","name":{"kind":"Name","value":"password"},"value":{"kind":"Variable","name":{"kind":"Name","value":"password"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}}]}}]}}]} as unknown as DocumentNode<LoginMutation, LoginMutationVariables>;
 export const RegisterDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Register"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"username"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"password"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"email"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"firstName"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"lastName"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"register"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"username"},"value":{"kind":"Variable","name":{"kind":"Name","value":"username"}}},{"kind":"Argument","name":{"kind":"Name","value":"password"},"value":{"kind":"Variable","name":{"kind":"Name","value":"password"}}},{"kind":"Argument","name":{"kind":"Name","value":"email"},"value":{"kind":"Variable","name":{"kind":"Name","value":"email"}}},{"kind":"Argument","name":{"kind":"Name","value":"firstName"},"value":{"kind":"Variable","name":{"kind":"Name","value":"firstName"}}},{"kind":"Argument","name":{"kind":"Name","value":"lastName"},"value":{"kind":"Variable","name":{"kind":"Name","value":"lastName"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}}]}}]}}]} as unknown as DocumentNode<RegisterMutation, RegisterMutationVariables>;
-export const ListPublicSubmissionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ListPublicSubmissions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"listPublicSubmissions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"task"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"language"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"fullName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"evaluation"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"totalScore"}},{"kind":"Field","name":{"kind":"Name","value":"possibleScore"}},{"kind":"Field","name":{"kind":"Name","value":"avgTimeMs"}},{"kind":"Field","name":{"kind":"Name","value":"maxTimeMs"}},{"kind":"Field","name":{"kind":"Name","value":"avgMemoryKb"}},{"kind":"Field","name":{"kind":"Name","value":"maxMemoryKb"}},{"kind":"Field","name":{"kind":"Name","value":"testVerdictStatistics"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"verdict"}},{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"submission"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]}}]} as unknown as DocumentNode<ListPublicSubmissionsQuery, ListPublicSubmissionsQueryVariables>;
+export const ListPublicSubmissionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ListPublicSubmissions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"listPublicSubmissions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"task"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"language"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"fullName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"evaluation"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"totalScore"}},{"kind":"Field","name":{"kind":"Name","value":"possibleScore"}},{"kind":"Field","name":{"kind":"Name","value":"runtimeStatistics"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"avgTimeMs"}},{"kind":"Field","name":{"kind":"Name","value":"maxTimeMs"}},{"kind":"Field","name":{"kind":"Name","value":"avgMemoryKb"}},{"kind":"Field","name":{"kind":"Name","value":"maxMemoryKb"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"submission"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]}}]} as unknown as DocumentNode<ListPublicSubmissionsQuery, ListPublicSubmissionsQueryVariables>;
+export const GetSubmissionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetSubmission"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getSubmission"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"submission"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"task"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"code"}}]}},{"kind":"Field","name":{"kind":"Name","value":"language"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"fullName"}},{"kind":"Field","name":{"kind":"Name","value":"monacoID"}},{"kind":"Field","name":{"kind":"Name","value":"enabled"}}]}},{"kind":"Field","name":{"kind":"Name","value":"evaluation"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"totalScore"}},{"kind":"Field","name":{"kind":"Name","value":"possibleScore"}},{"kind":"Field","name":{"kind":"Name","value":"runtimeStatistics"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"avgTimeMs"}},{"kind":"Field","name":{"kind":"Name","value":"maxTimeMs"}},{"kind":"Field","name":{"kind":"Name","value":"avgMemoryKb"}},{"kind":"Field","name":{"kind":"Name","value":"maxMemoryKb"}}]}},{"kind":"Field","name":{"kind":"Name","value":"compilation"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"timeMs"}},{"kind":"Field","name":{"kind":"Name","value":"memoryKb"}},{"kind":"Field","name":{"kind":"Name","value":"exitCode"}},{"kind":"Field","name":{"kind":"Name","value":"stdout"}},{"kind":"Field","name":{"kind":"Name","value":"stderr"}}]}},{"kind":"Field","name":{"kind":"Name","value":"testResults"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"timeMs"}},{"kind":"Field","name":{"kind":"Name","value":"result"}},{"kind":"Field","name":{"kind":"Name","value":"memoryKb"}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetSubmissionQuery, GetSubmissionQueryVariables>;
 export const ListPublishedTasksDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ListPublishedTasks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"listPublishedTasks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"description"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"story"}},{"kind":"Field","name":{"kind":"Name","value":"input"}},{"kind":"Field","name":{"kind":"Name","value":"output"}},{"kind":"Field","name":{"kind":"Name","value":"notes"}},{"kind":"Field","name":{"kind":"Name","value":"examples"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"input"}},{"kind":"Field","name":{"kind":"Name","value":"answer"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"constraints"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"timeLimitMs"}},{"kind":"Field","name":{"kind":"Name","value":"memoryLimitKb"}}]}},{"kind":"Field","name":{"kind":"Name","value":"metadata"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"authors"}},{"kind":"Field","name":{"kind":"Name","value":"origin"}}]}},{"kind":"Field","name":{"kind":"Name","value":"tests"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"input"}},{"kind":"Field","name":{"kind":"Name","value":"answer"}}]}}]}}]}}]} as unknown as DocumentNode<ListPublishedTasksQuery, ListPublishedTasksQueryVariables>;
 export const EnqueueSubmissionForPublishedTaskVersionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"EnqueueSubmissionForPublishedTaskVersion"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"taskID"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"languageID"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"submissionCode"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"enqueueSubmissionForPublishedTaskVersion"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"taskID"},"value":{"kind":"Variable","name":{"kind":"Name","value":"taskID"}}},{"kind":"Argument","name":{"kind":"Name","value":"languageID"},"value":{"kind":"Variable","name":{"kind":"Name","value":"languageID"}}},{"kind":"Argument","name":{"kind":"Name","value":"submissionCode"},"value":{"kind":"Variable","name":{"kind":"Name","value":"submissionCode"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"submission"}},{"kind":"Field","name":{"kind":"Name","value":"language"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"fullName"}},{"kind":"Field","name":{"kind":"Name","value":"monacoID"}}]}}]}}]}}]} as unknown as DocumentNode<EnqueueSubmissionForPublishedTaskVersionMutation, EnqueueSubmissionForPublishedTaskVersionMutationVariables>;
 export const GetPublishedTaskVersionByCodeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetPublishedTaskVersionByCode"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"code"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getPublishedTaskVersionByCode"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"code"},"value":{"kind":"Variable","name":{"kind":"Name","value":"code"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"description"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"story"}},{"kind":"Field","name":{"kind":"Name","value":"input"}},{"kind":"Field","name":{"kind":"Name","value":"output"}},{"kind":"Field","name":{"kind":"Name","value":"notes"}},{"kind":"Field","name":{"kind":"Name","value":"examples"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"input"}},{"kind":"Field","name":{"kind":"Name","value":"answer"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"constraints"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"timeLimitMs"}},{"kind":"Field","name":{"kind":"Name","value":"memoryLimitKb"}}]}},{"kind":"Field","name":{"kind":"Name","value":"metadata"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"authors"}},{"kind":"Field","name":{"kind":"Name","value":"origin"}}]}},{"kind":"Field","name":{"kind":"Name","value":"tests"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"input"}},{"kind":"Field","name":{"kind":"Name","value":"answer"}}]}}]}}]}}]} as unknown as DocumentNode<GetPublishedTaskVersionByCodeQuery, GetPublishedTaskVersionByCodeQueryVariables>;

@@ -15,6 +15,7 @@ export default function SubmissionTable(props: SubmissionTableProps) {
                 props.submissions.listPublicSubmissions.map(submission => (
                     <SubmissionTableRow
                         key={submission.id}
+                        id={submission.id}
                         time={submission.createdAt}
                         taskFullName={submission.task.name}
                         taskCode={submission.task.code}
@@ -23,10 +24,10 @@ export default function SubmissionTable(props: SubmissionTableProps) {
                         status={submission.evaluation.status}
                         totalScore={submission.evaluation.totalScore}
                         possibleScore={submission.evaluation.possibleScore ?? undefined}
-                        avgTimeMs={submission.evaluation.avgTimeMs ?? undefined}
-                        maxTimeMs={submission.evaluation.maxTimeMs ?? undefined}
-                        avgMemoryKb={submission.evaluation.avgMemoryKb ?? undefined}
-                        maxMemoryKb={submission.evaluation.maxMemoryKb ?? undefined}
+                        avgTimeMs={submission.evaluation.runtimeStatistics?.avgTimeMs ?? undefined}
+                        maxTimeMs={submission.evaluation.runtimeStatistics?.maxTimeMs ?? undefined}
+                        avgMemoryKb={submission.evaluation.runtimeStatistics?.avgMemoryKb ?? undefined}
+                        maxMemoryKb={submission.evaluation.runtimeStatistics?.maxMemoryKb ?? undefined}
                     />
                 ))
             }
@@ -36,6 +37,7 @@ export default function SubmissionTable(props: SubmissionTableProps) {
 }
 
 type SubmissionTableRowProps = {
+    id: string,
     time: string,
     taskFullName: string,
     taskCode: string,
@@ -146,8 +148,10 @@ function SubmissionTableRow(props: SubmissionTableRowProps) {
                 <Cell>{props.username}</Cell>
                 <Cell>{props.language}</Cell>
                 <td className={"border-x border-y-0 border-gray-200 border-solid text-center"}>
+                    <Link href={`/submissions/${props.id}`} className={"text-black no-underline"}>
                     <StatusSpan status={props.status} totalScore={props.totalScore}
                                 possibleScore={props.possibleScore}/>
+                    </Link>
                 </td>
                 <td>
                     {(props.avgTimeMs && props.maxTimeMs) ? (
