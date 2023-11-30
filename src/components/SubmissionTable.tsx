@@ -8,7 +8,7 @@ type SubmissionTableProps = {
 
 export default function SubmissionTable(props: SubmissionTableProps) {
     return (
-        <table className={"bg-white border-collapse w-full border border-solid border-gray-200 h-fit table-fixed whitespace-nowrap block lg:table overflow-x-auto"}>
+        <table className={"bg-white border-collapse w-full border border-solid border-gray-400 h-fit table-fixed whitespace-nowrap block lg:table overflow-x-auto"}>
             <SubmissionTableHeaderRow/>
             <tbody>
             {
@@ -123,7 +123,7 @@ function SubmissionTableRow(props: SubmissionTableRowProps) {
 
     function Cell(props: { children: any, className?: string }) {
         return (
-            <td className={"border-x border-y-0 border-gray-200 border-solid py-3 text-center " + (props.className ?? "")}>{props.children}</td>
+            <td className={"border-x border-y-0 border-gray-400 border-solid py-3 text-center " + (props.className ?? "")}>{props.children}</td>
         )
     }
 
@@ -135,27 +135,27 @@ function SubmissionTableRow(props: SubmissionTableRowProps) {
         <span className={"text-red-500"}>{t(props.status)}</span>
     return (
         <>
-            <tr className={"hover:bg-gray-100 h-full border-0 border-b border-solid border-gray-200"}>
-                <td className={"border-x border-y-0 border-gray-200 border-solid py-3 text-center px-6 w-40"}>
+            <tr className={"hover:bg-gray-100 h-full border-0 border-b border-solid border-gray-400"}>
+                <td className={"border-x border-y-0 border-gray-400 border-solid py-3 text-center px-6 w-40"}>
                     <div className={"flex flex-col gap-1"}>
                         <span>{formatTime(props.time).slice(0, 10)}</span>
                         <span>{formatTime(props.time).slice(11)}</span>
                     </div>
                 </td>
-                <td className={"text-center border-x border-y-0 border-solid border-gray-200"}><Link
+                <td className={"text-center border-x border-y-0 border-solid border-gray-400"}><Link
                     href={`/tasks/${props.taskCode}`}
                     className={"no-underline text-gray-420 font-medium"}>{props.taskFullName}</Link></td>
                 <Cell>{props.username}</Cell>
                 <Cell>{props.language}</Cell>
-                <td className={"border-x border-y-0 border-gray-200 border-solid text-center"}>
+                <td className={"border-x border-y-0 border-gray-400 border-solid text-center"}>
                     <Link href={`/submissions/${props.id}`} className={"text-black no-underline"}>
                     <StatusSpan status={props.status} totalScore={props.totalScore}
                                 possibleScore={props.possibleScore}/>
                     </Link>
                 </td>
-                <td>
+                <td className={"border-x border-y-0 border-gray-400 border-solid text-center"}>
                     {(props.avgTimeMs && props.maxTimeMs) ? (
-                        <div className={"flex gap-2 justify-center"}>
+                        <div className={"flex gap-2 justify-center "}>
                             <div className={"flex flex-col gap-2"}>
                                 <div>avg:</div>
                                 <div>max:</div>
