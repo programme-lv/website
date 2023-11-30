@@ -99,7 +99,7 @@ function Hero(props: { loggedIn?: boolean }) {
                         <div className={"flex justify-center"}>
                             <Link href={link} className={""}>
                                 <JoyButton color={"primary"}
-                                           className={"text-xl px-12 font-medium bg-blue-700 hover:bg-blue-600"}>Ieiet
+                                           className={"text-xl px-12 font-medium bg-logoblue-69 hover:bg-logoblue-420"}>Ieiet
                                     portālā</JoyButton>
                             </Link>
                         </div>
@@ -150,8 +150,8 @@ function InfoSection() {
                 </div>
                 <div className={"flex gap-4 justify-end"}>
                     <Link href={"/tasks"}
-                          className={"no-underline bg-green-600 hover:bg-green-500 transition-all duration-75 text-white p-1.5 px-3 rounded-lg"}>Skatīt
-                        Uzdevumus</Link>
+                          className={"no-underline bg-green-69 hover:bg-green-420 transition-all duration-75 text-white p-1.5 px-3 rounded-lg"}>Skatīt
+                        uzdevumus</Link>
                 </div>
             </div>
         </div>

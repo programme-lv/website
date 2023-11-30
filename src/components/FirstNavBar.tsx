@@ -6,11 +6,13 @@ export default function FirstNavBar() {
     return (
         <nav className={"bg-white py-3 px-2"}>
             <div className={"container m-auto flex justify-between items-center gap-4"}>
-                <LogoWithText/>
+                <LogoWithText />
                 <div className={"sm:flex gap-4 items-center hidden"}>
-                    <Link href={"/login"} className={"no-underline text-black hover:text-gray-420"}>Pieslēgties</Link>
+                    <Link href={"/login"} className={"no-underline text-black hover:text-gray-420"}>
+                        <JoyButton className={"text-base px-3 bg-logoblue-69 hover:bg-logoblue-420"}>Pieslēgties</JoyButton>
+                    </Link>
                     <Link href={"/register"} className={""}>
-                        <JoyButton color={"neutral"} variant={"outlined"} className={"text-md px-6"}>Reģistrēties</JoyButton>
+                        <JoyButton className={"text-base px-3 bg-green-69 hover:bg-green-420"}>Reģistrēties</JoyButton>
                     </Link>
                 </div>
             </div>
