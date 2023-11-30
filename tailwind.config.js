@@ -13,15 +13,15 @@ module.exports = {
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
       colors: {
-        green:{
+        green: {
           69: '#179E7E',
-          420: '#AAB346',
+          420: '#00B67A',
         },
         blue: {
           69: '#0066FF',
           420: '#003F87'
         },
-        gray:{
+        gray: {
           69: '#F8F8F8',
           420: '#333333',
         },
@@ -33,7 +33,7 @@ module.exports = {
           420: '#0264F9',
         }
       },
-      gridTemplateColumns : {
+      gridTemplateColumns: {
         sidebar: '64px auto',
         "sidebar-collapsed": '300px auto',
       }
