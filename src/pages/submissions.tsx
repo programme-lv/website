@@ -61,13 +61,11 @@ query ListPublicSubmissions {
             status
             totalScore
             possibleScore
-            avgTimeMs
-            maxTimeMs
-            avgMemoryKb
-            maxMemoryKb
-            testVerdictStatistics {
-                verdict
-                count
+            runtimeStatistics {
+                avgTimeMs
+                maxTimeMs
+                avgMemoryKb
+                maxMemoryKb
             }
         }
         submission
