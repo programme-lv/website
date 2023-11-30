@@ -22,9 +22,9 @@ export default function Footer() {
                         </a>
                     </div>
                     <span className={"flex justify-center"}>
-                    <a href={"mailto:programme.lv@gmail.com"} className={"text-white p-1"}
+                    <a href={"mailto:info@programme.lv"} className={"text-white p-1"}
                        style={{textDecoration: "none"}}>
-                        programme.lv@gmail.com
+                        info@programme.lv
                     </a>
                     {/*    <a href={"/about"} className={"text-white p-1"} style={{textDecoration: "none"}}>*/}
                     {/*    | par mums*/}

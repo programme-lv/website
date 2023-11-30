@@ -17,6 +17,7 @@ import Alert from "@mui/joy/Alert";
 import HowToRegRoundedIcon from '@mui/icons-material/HowToRegRounded';
 import {useRouter} from "next/router";
 import {StyledInput} from "@/components/StyledInput";
+import {useUser} from "@/contexts/UserContext";
 
 export default function Register() {
     return (
@@ -156,6 +157,7 @@ const InnerInputRepeatPassword = React.forwardRef<
 
 function RegistrationForm() {
     const {t} = useTranslation('errors')
+    const {refreshUser} = useUser();
 
     const [register] = useMutation(REGISTER_MUTATION, {client: apolloClient});
     const [login] = useMutation(LOGIN_MUTATION, {client: apolloClient});
@@ -193,6 +195,7 @@ function RegistrationForm() {
         try {
             await register({variables: {username, password, email, firstName, lastName}})
             await login({variables: {username, password}});
+            refreshUser();
             setSuccess(true);
             await router.push('/tasks');
         } catch (error: any) {
