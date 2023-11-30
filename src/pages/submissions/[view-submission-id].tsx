@@ -11,13 +11,13 @@ type ViewSubmissionProps = {
     submission: GetSubmissionQuery["getSubmission"]
 }
 export default function ViewSubmission(props: ViewSubmissionProps) {
-    const [code, setCode] = useState(props.submission.submission)
     return (
         <NavFrame path={[{name: "Iesūtījumi", link: "/submissions"}, {name: props.submission.id, link: "#"}]}>
             <div className={"px-3 py-6"}>
                 <div className="container m-auto">
                     <SubmissionTable submissions={{listPublicSubmissions: [props.submission]}}/>
-                    <CodeDisplay code={code} langMonId={props.submission.language.monacoID ?? undefined}/>
+                    <CodeDisplay code={props.submission.submission}
+                                 langMonId={props.submission.language.monacoID ?? undefined}/>
                     {props.submission.evaluation.compilation &&
                         <CompilationData timeMs={props.submission.evaluation.compilation.timeMs}
                                      memoryKb={props.submission.evaluation.compilation.memoryKb}
@@ -26,8 +26,10 @@ export default function ViewSubmission(props: ViewSubmissionProps) {
                                      stderr={props.submission.evaluation.compilation.stderr}
                         />
                     }
-
-                    <pre>{JSON.stringify(props.submission, null, 2)}</pre>
+                    {props.submission.evaluation.testResults.length > 0 &&
+                    <TestResults testResults={props.submission.evaluation.testResults}/>
+                    }
+                    {/*<pre>{JSON.stringify(props.submission, null, 2)}</pre>*/}
                 </div>
             </div>
         </NavFrame>
@@ -46,6 +48,9 @@ function CodeDisplay(props: {code: string, langMonId: string | undefined}) {
                         readOnly: true,
                         padding: {top: 10, bottom: 10},
                         scrollBeyondLastLine: false,
+                        scrollbar: {
+                            alwaysConsumeMouseWheel: false
+                        }
                     }}
                     language={props.langMonId}
                     className="w-full h-full"
@@ -71,7 +76,7 @@ function CompilationData(props: CompilationDataProps){
         )
     }
     return (
-        <div className={"bg-white p-3 mt-3"}>
+        <div className={"bg-white p-3 mt-6"}>
         <h2 className={"mt-3"}>Kompilācijas dati</h2>
         <table className={"w-full table-fixed "}>
             <tbody>
@@ -108,7 +113,63 @@ function CompilationData(props: CompilationDataProps){
         </table>
         </div>
     )
+}
 
+type TestResultsProps = {
+    testResults: {
+        timeMs: number,
+        memoryKb: number,
+        result: string,
+    }[]
+}
+
+function TestResults(props: TestResultsProps){
+    function HeaderCell(props: { children: any }) {
+        return (
+            <th className={"bg-blue-420 text-white font-normal p-1.5"}>{props.children}</th>
+        )
+    }
+    return (
+        <div className={"bg-white p-3 mt-6"}>
+            <h2 className={"mt-3"}>Testu rezultāti</h2>
+            <table className={"w-full table-fixed border-collapse"}>
+                <tbody>
+                <tr>
+                    <th className={"bg-blue-420 text-white font-normal p-1.5 w-32"}>Tests</th>
+                    <HeaderCell>Laiks</HeaderCell>
+                    <HeaderCell>Atmiņa</HeaderCell>
+                    <HeaderCell>Rezultāts</HeaderCell>
+                </tr>
+                {
+                    props.testResults.map((testResult,index) => (
+                        <tr key={index}>
+                            <td className={"p-1.5 text-center border border-solid border-gray-400"}>
+                                {index+1}
+                            </td>
+                            <td className={"p-1.5 text-center border border-solid border-gray-400"}>
+                                {(testResult.timeMs / 1000).toFixed(3)} s.
+                            </td>
+                            <td className={"p-1.5 text-center border border-solid border-gray-400"}>
+                                {(testResult.memoryKb / 1000).toFixed(2)} MB
+                            </td>
+                            <td className={"p-1.5 text-center border border-solid border-gray-400 font-medium"}>
+                                <ResultSpan result={testResult.result}/>
+                            </td>
+                        </tr>
+                    ))
+                }
+                </tbody>
+            </table>
+        </div>
+    )
+}
+
+function ResultSpan(props: {result: string}){
+    let spans: {[key: string]: JSX.Element} = {
+        "AC": <span className={"text-green-500"}>AC</span>,
+        "WA": <span className={"text-red-500"}>WA</span>
+    }
+    return spans[props.result] ?? <span>{props.result}</span>
 }
 
 const GET_SUBMISSION = gql`
