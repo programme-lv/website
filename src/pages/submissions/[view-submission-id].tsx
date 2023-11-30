@@ -5,7 +5,6 @@ import SubmissionTable from "@/components/SubmissionTable";
 import NavFrame from "@/components/NavFrame";
 import {GetSubmissionQuery} from "@/gql/graphql";
 import MonacoEditor from "@monaco-editor/react";
-import {useState} from "react";
 
 type ViewSubmissionProps = {
     submission: GetSubmissionQuery["getSubmission"]
