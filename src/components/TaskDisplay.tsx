@@ -74,6 +74,6 @@ function HeaderCell(props: { children: string }) {
 
 function BodyCell(props: { children: string }) {
     return (
-        <td className={"p-2 border border-gray-300 border-solid font-bold"}><code>{props.children}</code></td>
+        <td className={"p-2 border border-gray-300 border-solid align-top font-medium"}><code><pre className={"p-0 m-0"}>{props.children}</pre></code></td>
     )
 }
