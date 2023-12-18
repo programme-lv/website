@@ -5,6 +5,8 @@ import {ListPublishedTasksQuery} from "@/gql/graphql";
 import "katex/dist/katex.min.css"
 import Link from "next/link";
 import NavFrame from "@/components/NavFrame";
+import Approval from "flat-color-icons/svg/ok.svg";
+import Image from "next/image";
 
 export default function Tasks(props: ListPublishedTasksQuery) {
 
@@ -15,7 +17,9 @@ export default function Tasks(props: ListPublishedTasksQuery) {
                 {
                     props.listPublishedTasks.map(task => (
                         <TaskDisplay key={task.id} code={task.code} name={task.name}
-                                     description={task.description.story}/>
+                                     description={task.description.story}
+                                     solved={true}
+                                     />
                     ))
                 }
                 </div>
@@ -29,6 +33,7 @@ interface TaskDisplayProps {
     code: string;
     name: string;
     description: string;
+    solved?: boolean;
 }
 
 function TaskDisplay(props: TaskDisplayProps) {
@@ -37,6 +42,10 @@ function TaskDisplay(props: TaskDisplayProps) {
             <div className="flex flex-col p-5 bg-white hover:shadow">
                 <h3 className="text-xl font-semibold my-0">{props.name}</h3>
                 <div className="text-gray-600" dangerouslySetInnerHTML={{__html: props.description}}></div>
+                {function completedCheckmark(){
+                    if(props.solved)
+                    return <Image src={Approval} alt="Task icon" width={40} height={40} className={"absolute right-8"}/>
+                }()}
             </div>
         </Link>
     )
