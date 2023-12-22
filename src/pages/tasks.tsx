@@ -39,12 +39,18 @@ interface TaskDisplayProps {
 function TaskDisplay(props: TaskDisplayProps) {
     return (
         <Link href={`/tasks/${props.code}`} className={"text-black no-underline"}>
-            <div className="flex flex-col p-5 bg-white hover:shadow-lg">
+            <div className={`flex flex-col p-5 hover:shadow-lg ${props.solved ? "bg-white border-2 border-solid border-green-500":"bg-white"}`}>
                 <h3 className="text-xl font-semibold my-0">{props.name}</h3>
                 <div className="text-gray-600" dangerouslySetInnerHTML={{__html: props.description}}></div>
                 {function completedCheckmark(){
-                    if(props.solved)
-                    return <Image src={Approval} alt="Task icon" width={40} height={40} className={"absolute right-8"}/>
+                    if(props.solved){  
+                        return (
+                            <div className="absolute right-8 flex justify-center items-center gap-2">
+                        <span className="font-semibold text-green-700">IZPILDĪTS</span>
+                        <Image src={Approval} alt="Task icon" width={26} height={26}/>
+                        </div>
+                        )
+                    }
                 }()}
             </div>
         </Link>
