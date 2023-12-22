@@ -10,7 +10,7 @@ export default function Tasks(props: ListPublishedTasksQuery) {
 
     return (
         <NavFrame path={[{name: "Uzdevumi", link: "/tasks"}]}>
-            <main className="container m-auto mt-6 relative">
+            <main className="container m-auto pt-6 relative">
                 <div className={"mx-3 flex flex-col gap-6"}>
                 {
                     props.listPublishedTasks.map(task => (
@@ -34,7 +34,7 @@ interface TaskDisplayProps {
 function TaskDisplay(props: TaskDisplayProps) {
     return (
         <Link href={`/tasks/${props.code}`} className={"text-black no-underline"}>
-            <div className="flex flex-col p-5 bg-white hover:shadow">
+            <div className="flex flex-col p-5 bg-white hover:shadow-lg">
                 <h3 className="text-xl font-semibold my-0">{props.name}</h3>
                 <div className="text-gray-600" dangerouslySetInnerHTML={{__html: props.description}}></div>
             </div>

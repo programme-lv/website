@@ -7,6 +7,8 @@ import Breadcrumbs from "@mui/joy/Breadcrumbs";
 import {Typography} from "@mui/joy";
 import {useUser} from "@/contexts/UserContext";
 import React from "react";
+import { url } from "inspector";
+import Winter from "@/../public/winter.png";
 
 
 type NavFrameProps = {
@@ -21,7 +23,7 @@ export default function NavFrame({path, children, active}: NavFrameProps){
     return (
         <div className={"flex h-screen bg-gray-100"}>
             <SideBar active={active}/>
-            <div className={"w-full h-full overflow-auto"}>
+            <div className={"w-full h-full overflow-auto flex flex-col"}>
                 <nav className={"bg-white h-14 flex items-center justify-end sm:justify-between px-6 pe-10"}>
                     <div className={"hidden sm:block"}>
                     <Breadcrumbs>
@@ -46,9 +48,9 @@ export default function NavFrame({path, children, active}: NavFrameProps){
                             <Link href={"/login"} className={"no-underline bg-green-600 hover:bg-green-500 transition-all duration-75 text-white p-1.5 px-3 rounded-lg"}>Pieslēgties</Link>
                         </div>)}
                 </nav>
-                <main className={"w-full pb-8"}>
+                <div className={"w-full pb-8 flex-grow bg-fixed bg-no-repeat bg-cover"} style={{backgroundImage:`url(${Winter.src})`}}>
                     {children}
-                </main>
+                </div>
             </div>
         </div>
     )
