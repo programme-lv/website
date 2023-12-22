@@ -45,7 +45,7 @@ function TaskDisplay(props: TaskDisplayProps) {
                 {function completedCheckmark(){
                     if(props.solved){  
                         return (
-                            <div className="absolute right-8 flex justify-center items-center gap-2">
+                            <div className="justify-end md:absolute right-8 flex md:justify-center items-center gap-2">
                         <span className="font-semibold text-green-700">IZPILDĪTS</span>
                         <Image src={Approval} alt="Task icon" width={26} height={26}/>
                         </div>
