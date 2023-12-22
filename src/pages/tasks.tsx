@@ -18,7 +18,7 @@ export default function Tasks(props: ListPublishedTasksQuery) {
                     props.listPublishedTasks.map(task => (
                         <TaskDisplay key={task.id} code={task.code} name={task.name}
                                      description={task.description.story}
-                                     solved={true}
+                                     solved={task.solved ?? false}
                                      />
                     ))
                 }
@@ -81,23 +81,20 @@ query ListPublishedTasks {
             timeLimitMs
             memoryLimitKb
         }
-        metadata {
-            authors
-            origin
-        }
-        tests {
-            id
-            name
-            input
-            answer
-        }
+        solved
     }
 }
 `)
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context: any) {
     const {data} = await apolloClient.query({
         query: GET_TASKS,
+        fetchPolicy: 'no-cache',
+        context: {
+            headers: {
+                cookie: context.req.headers.cookie
+            }
+        }
     })
 
     if (data) {
