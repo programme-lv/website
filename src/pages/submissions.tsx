@@ -36,8 +36,10 @@ export default function Submissions(props: ListPublicSubmissionsQuery) {
 
     return (
         <NavFrame path={[{name: "Iesūtījumi", link: "/submissions"}]}>
-            <main className="container m-auto mt-6">
-                <SubmissionTable submissions={submissions}/>
+            <main className="container m-auto pt-6 relative">
+                <div className="mx-3">
+                    <SubmissionTable submissions={submissions}/>
+                </div>
             </main>
         </NavFrame>
     )

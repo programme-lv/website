@@ -8,7 +8,7 @@ type SubmissionTableProps = {
 
 export default function SubmissionTable(props: SubmissionTableProps) {
     return (
-        <table className={"bg-white border-collapse w-full  h-fit table-fixed whitespace-nowrap block lg:table overflow-x-auto"}>
+        <table className={"bg-white border-collapse w-full h-fit table-fixed whitespace-nowrap block lg:table overflow-x-auto"}>
             <SubmissionTableHeaderRow/>
             <tbody>
             {
