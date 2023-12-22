@@ -52,7 +52,7 @@ export default function ViewTask(props: ViewTaskProps) {
     return (
         <NavFrame path={[{ name: "Uzdevumi", link: "/tasks" }, { name: task.name, link: `/tasks/${task.code}` }]}>
             <main className='py-5 container m-auto'>
-                <div className={"flex gap-4"}>
+                <div className={"flex gap-4 px-4"}>
                     <div className={"resize-x flex-grow bg-white p-5"}>
                         <TaskDisplay task={task} />
                     </div>

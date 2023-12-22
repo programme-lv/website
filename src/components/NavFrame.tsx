@@ -63,7 +63,7 @@ type SideBarProps = {
 // TODO: the implementation of expanding sidebar was postponed to lack of time
 function SideBar({active}: SideBarProps){
     return (
-        <div className={`inset-y-0 left-0 z-30 bg-blue-420 overflow-auto w-20 flex flex-col gap-12 py-2`}>
+        <div className={`inset-y-0 left-0 z-30 bg-blue-420 overflow-auto w-20 flex-col gap-12 py-2 hidden sm:flex`}>
             <Link href={"/"} className={"w-full justify-center align-middle flex"}>
                 <div className={"bg-white rounded-lg inline-flex p-1.5"}>
                     <Image src={Logo} alt={"programme.lv logo"} width={45}/>
