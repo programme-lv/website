@@ -9,19 +9,29 @@ export default function TaskDisplay(props: TaskDisplayProps) {
     const { task } = props;
     return (
         <>
-            <div className={"flex items-baseline justify-between"}>
-                <h2 className={"font-medium my-4 mb-2"}>{task.name}</h2>
-                <div className={"flex gap-4"}>
-                    <div><span
-                        className={"text-gray-600"}>laiks:</span> {task.constraints.timeLimitMs} ms
-                    </div>
-                    <div><span
-                        className={"text-gray-600"}>atmiņa:</span> {task.constraints.memoryLimitKb} kB
-                    </div>
-                </div>
+            <div className={"flex-col sm:flex-row flex sm:gap-4 justify-between items-center"}>
+                <h2 className={"font-medium mt-2 mb-0 sm:mb-2 whitespace-nowrap"}>{task.name}</h2>
+                <table className="table-fixed min-w-[10em] my-2 table lg:hidden">
+                    <thead><tr><td></td><td className="w-24 text-right"></td></tr></thead>
+                    <tbody>
+                        <tr><td className="text-right text-gray-600">laiks:</td>
+                            <td className="text-right">{task.constraints.timeLimitMs} ms</td></tr>
+                        <tr><td className="text-right text-gray-600">atmiņa:</td>
+                            <td className="text-right">{task.constraints.memoryLimitKb} kB</td></tr>
+                    </tbody>
+                </table>
+                <table className="table-fixed min-w-[10em] my-2 lg:table hidden">
+                    <tbody>
+                        <tr><td className="text-right text-gray-600">laiks:</td>
+                            <td className="text-right pe-4">{task.constraints.timeLimitMs} ms</td>
+                        <td className="text-right text-gray-600">atmiņa:</td>
+                            <td className="text-right">{task.constraints.memoryLimitKb} kB</td></tr>
+                    </tbody>
+                </table>
+
             </div>
             <Divider orientation={"horizontal"} />
-            <div className={"flex flex-col gap-4"}>
+            <div className={"flex flex-col gap-4 pb-4"}>
                 <StatementSection title="Stāsts" content={task.description.story} />
                 <StatementSection title="Ievaddatu apraksts" content={task.description.input} />
                 <StatementSection title="Izvaddatu apraksts" content={task.description.output} />
