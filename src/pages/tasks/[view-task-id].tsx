@@ -52,12 +52,12 @@ export default function ViewTask(props: ViewTaskProps) {
     return (
         <NavFrame path={[{ name: "Uzdevumi", link: "/tasks" }, { name: task.name, link: `/tasks/${task.code}` }]}>
             <main className='py-5 container m-auto'>
-                <div className={"flex gap-4"}>
-                    <div className={"resize-x flex-grow bg-white p-5"}>
+                <div className={"flex gap-4 px-4"}>
+                    <div className={"resize-x flex-grow bg-white px-5 py-2"}>
                         <TaskDisplay task={task} />
                     </div>
                     <Resizable enable={{ left: true }} defaultSize={{ width: "40%", height: 'auto' }}
-                        className={"bg-white p-5 resize-x hidden sm:block"}>
+                        className={"bg-white p-5 resize-x hidden md:block"}>
                         <Editor code={editorCode} setCode={setEditorCode} langs={langs.map(lang => ({ ...lang, monacoID: lang.monacoID || "cpp" }))}
                             selectedLanguage={editorSelLang} setSelectedLanguage={setEditorSelLang} />
                         <div className={"flex justify-end"}>

@@ -5,6 +5,8 @@ import {ListPublishedTasksQuery} from "@/gql/graphql";
 import "katex/dist/katex.min.css"
 import Link from "next/link";
 import NavFrame from "@/components/NavFrame";
+import Approval from "flat-color-icons/svg/ok.svg";
+import Image from "next/image";
 
 export default function Tasks(props: ListPublishedTasksQuery) {
 
@@ -12,12 +14,12 @@ export default function Tasks(props: ListPublishedTasksQuery) {
         <NavFrame path={[{name: "Uzdevumi", link: "/tasks"}]}>
             <main className="container m-auto pt-6 relative">
                 <div className={"mx-3 flex flex-col gap-6"}>
-                {
-                    props.listPublishedTasks.map(task => (
+                {props.listPublishedTasks.map(task => (
                         <TaskDisplay key={task.id} code={task.code} name={task.name}
-                                     description={task.description.story}/>
-                    ))
-                }
+                                     description={task.description.story}
+                                     solved={task.solved ?? false}
+                                     />
+                    ))}
                 </div>
             </main>
         </NavFrame>
@@ -29,14 +31,25 @@ interface TaskDisplayProps {
     code: string;
     name: string;
     description: string;
+    solved?: boolean;
 }
 
 function TaskDisplay(props: TaskDisplayProps) {
     return (
         <Link href={`/tasks/${props.code}`} className={"text-black no-underline"}>
-            <div className="flex flex-col p-5 bg-white hover:shadow-lg">
+            <div className={`flex flex-col p-5 hover:shadow-lg ${props.solved ? "bg-white border-2 border-solid border-green-500":"bg-white"}`}>
                 <h3 className="text-xl font-semibold my-0">{props.name}</h3>
                 <div className="text-gray-600" dangerouslySetInnerHTML={{__html: props.description}}></div>
+                {function completedCheckmark(){
+                    if(props.solved){  
+                        return (
+                            <div className="justify-end md:absolute right-8 flex md:justify-center items-center gap-2">
+                        <span className="font-semibold text-green-700">IZPILDĪTS</span>
+                        <Image src={Approval} alt="Task icon" width={26} height={26}/>
+                        </div>
+                        )
+                    }
+                }()}
             </div>
         </Link>
     )
@@ -66,23 +79,20 @@ query ListPublishedTasks {
             timeLimitMs
             memoryLimitKb
         }
-        metadata {
-            authors
-            origin
-        }
-        tests {
-            id
-            name
-            input
-            answer
-        }
+        solved
     }
 }
 `)
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context: any) {
     const {data} = await apolloClient.query({
         query: GET_TASKS,
+        fetchPolicy: 'no-cache',
+        context: {
+            headers: {
+                cookie: context.req.headers.cookie
+            }
+        }
     })
 
     if (data) {
