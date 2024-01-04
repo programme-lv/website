@@ -21,6 +21,10 @@ export default function NavFrame({ path, children, active }: NavFrameProps) {
 
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+    function closeMobileMenu() {
+        setMobileMenuOpen(false);
+    }
+
     return (
         <div className={"flex h-screen bg-gray-100"}>
             <SideBar active={active} />
@@ -56,7 +60,7 @@ export default function NavFrame({ path, children, active }: NavFrameProps) {
                     {children}
                 </div>
                 <div className={`${mobileMenuOpen?"block sm:hidden":"hidden"}`}>
-                    <MobileMenu />
+                    <MobileMenu closeMobileMenu={closeMobileMenu}/>
                 </div>
             </div>
         </div>
@@ -100,25 +104,26 @@ function SideBar({ active }: SideBarProps) {
 }
 
 
-function MobileMenu() {
+function MobileMenu(props: { closeMobileMenu: () => void }) {
+    const { closeMobileMenu } = props;
     let active = "i am tired";
     return (
         <div className={`flex flex-col gap-12 w-[12em] m-auto mt-6`}>
-            <Link href={"/"} className={"w-full no-underline flex justify-center align-middle bg-white h-12 p-2 rounded-md hover:shadow-sm"}>
+            <Link href={"/"} onClick={closeMobileMenu} className={"w-full no-underline flex justify-center align-middle bg-white h-12 p-2 rounded-md hover:shadow-sm"}>
                 <div className={"flex gap-4 items-center w-full justify-center"}>
                     <Image src={Logo} alt={"programme.lv logo"} width={45} />
                     <span className="text-black w-1/2">programme.lv</span>
                 </div>
             </Link>
 
-            <Link href={"/tasks"} className={"w-full no-underline flex justify-center align-middle bg-white h-12 p-2 hover:shadow-sm"}>
+            <Link href={"/tasks"} onClick={closeMobileMenu}  className={"w-full no-underline flex justify-center align-middle bg-white h-12 p-2 hover:shadow-sm"}>
                 <div className={`flex gap-4 items-center w-full justify-center ${active === "tasks" ? '' : ''}`}>
                     <Image src={Folder} alt={"folder icon that leads to tasks"} width={45} />
                     <span className="text-black w-1/2">uzdevumi</span>
                 </div>
             </Link>
 
-            <Link href={"/submissions"} className={"w-full no-underline flex justify-center align-middle bg-white h-12 p-2 hover:shadow-sm"}>
+            <Link href={"/submissions"} onClick={closeMobileMenu}  className={"w-full no-underline flex justify-center align-middle bg-white h-12 p-2 hover:shadow-sm"}>
                 <div className={`flex gap-4 items-center w-full justify-center ${active === "submissions" ? '' : ''}`}>
                     <Image src={FilingCabinet} alt={"icon that leads to submissions"} width={45} />
                     <span className="text-black w-[6em]">iesūtījumi</span>
