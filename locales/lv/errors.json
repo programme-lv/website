@@ -1,7 +1,0 @@
-{
-    "username or password is incorrect": "Lietotājvārds vai parole ir nepareiza.",
-    "not logged in": "Lietotājs nav pierakstījies.",
-    "password must be at least 8 characters": "Parolei jābūt vismaz 8 simbolus garai!",
-    "task with that id already exists": "Uzdevums ar šo kodu jau eksistē.",
-    "id must be between 3 and 20 characters": "Uzdevuma kodam jābūt no 3 līdz 20 simboliem garam."
-}
