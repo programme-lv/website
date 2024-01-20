@@ -44,7 +44,7 @@ const items = [
     </Anchor>
   ));
 
-export function HeaderTabs() {
+export function Header() {
   const theme = useMantineTheme();
   const [opened, { toggle }] = useDisclosure(false);
   const [userMenuOpened, setUserMenuOpened] = useState(false);

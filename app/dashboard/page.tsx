@@ -1,6 +1,6 @@
 'use client';
 
-import { HeaderTabs } from '@/components/Header/Header';
+import { Header } from '@/components/Header/Header';
 import { NavbarMinimal } from '@/components/NavbarMinimal/NavbarMinimal';
 import ProglvLogo from '@/components/ProglvLogo/ProglvLogo';
 import { AppShell, Burger } from '@mantine/core';
@@ -20,7 +20,7 @@ export default function Dashboard() {
       padding="md"
     >
       <AppShell.Header>
-        <HeaderTabs/>
+        <Header/>
       </AppShell.Header>
 
       <AppShell.Navbar>
