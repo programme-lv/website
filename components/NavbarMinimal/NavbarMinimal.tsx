@@ -55,10 +55,6 @@ export function NavbarMinimal() {
 
   return (
     <nav className={classes.navbar}>
-      <Center>
-        <ProglvLogo scale={0.1}/>
-      </Center>
-
       <div className={classes.navbarMain}>
         <Stack justify="center" gap={0}>
           {links}
