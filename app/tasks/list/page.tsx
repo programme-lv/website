@@ -30,7 +30,7 @@ type TaskDisplayProps = {
 
 function TaskDisplay({code, name, shortDesc}: TaskDisplayProps) {
   return (
-    <Link href={`/tasks/${code}`}  style={{ textDecoration: 'none' }}>
+    <Link href={`/tasks/view/${code}`}  style={{ textDecoration: 'none' }}>
     <Card withBorder padding={"md"}>
       <Stack> 
         <Text fw={500} size="lg">{name}</Text>
