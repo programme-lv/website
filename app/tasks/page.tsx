@@ -1,25 +1,42 @@
 'use client';
-import { Text, Card, SimpleGrid } from "@mantine/core";
+import { Text, Card, SimpleGrid, Group, Stack } from "@mantine/core";
+import Link from "next/link";
+
+const mockTask = {
+  code: "summa",
+  name: "Saskaiti skaitļus!",
+  shortDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia, minima nisi? Possimus."
+}
 
 export default function Tasks() {
 
   return (
     <SimpleGrid cols={1} verticalSpacing="xl">
-      <div style={{backgroundColor:'yellow'}}>1</div>
-      <TaskDisplay/>
-      <div>3</div>
-      <div>5</div>
+      <TaskDisplay {...mockTask}/>
+      <TaskDisplay {...mockTask}/>
+      <TaskDisplay {...mockTask}/>
+      <TaskDisplay {...mockTask}/>
+      <TaskDisplay {...mockTask}/>
+      <TaskDisplay {...mockTask}/>
     </SimpleGrid>
   );
 }
 
-function TaskDisplay() {
+type TaskDisplayProps = {
+  code: string; // used for navigation
+  name: string;
+  shortDesc: string;
+}
+
+function TaskDisplay({code, name, shortDesc}: TaskDisplayProps) {
   return (
-    <Card withBorder padding={"sm"}>
-      <Text fw={500} size="lg">Saskaiti skaitļus! </Text>
-      <Text>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia, minima nisi? Possimus, sit aliquid quae porro reprehenderit vitae iste. Vel quisquam quis illum dolorum dicta in aspernatur possimus asperiores a.
-      </Text>
+    <Link href={`/tasks/${code}`}  style={{ textDecoration: 'none' }}>
+    <Card withBorder padding={"md"}>
+      <Stack> 
+        <Text fw={500} size="lg">{name}</Text>
+        <Text>{shortDesc}</Text>
+      </Stack>
     </Card>
+    </Link>
   )
 } 
