@@ -3,67 +3,93 @@ import { Center, Tooltip, UnstyledButton, Stack, rem } from '@mantine/core';
 import {
     IconPuzzle,
     IconInbox,
-  IconHome2,
-  IconGauge,
-  IconDeviceDesktopAnalytics,
-  IconFingerprint,
-  IconCalendarStats,
-  IconUser,
-  IconSettings,
-  IconLogout,
-  IconSwitchHorizontal,
+    IconHome2,
+    IconGauge,
+    IconDeviceDesktopAnalytics,
+    IconFingerprint,
+    IconCalendarStats,
+    IconUser,
+    IconSettings,
+    IconLogout,
+    IconSwitchHorizontal,
 } from '@tabler/icons-react';
 import ProglvLogo from '../ProglvLogo/ProglvLogo';
 import classes from './NavbarMinimal.module.css';
+import Link from 'next/link';
 
 interface NavbarLinkProps {
-  icon: typeof IconHome2;
-  label: string;
-  active?: boolean;
-  onClick?(): void;
+    icon: typeof IconHome2;
+    label: string;
+    active?: boolean;
+    link?: string;
+    onClick?(): void;
 }
 
-function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
-  return (
-    <Tooltip label={label} position="right" transitionProps={{ duration: 0 }}>
-      <UnstyledButton onClick={onClick} className={classes.link} data-active={active || undefined}>
-        <Icon style={{ width: rem(20), height: rem(20) }} stroke={1.5} />
-      </UnstyledButton>
-    </Tooltip>
-  );
+function NavbarLink({ icon: Icon, label, active, onClick, link }: NavbarLinkProps) {
+    if (link) {
+        return (
+            <Tooltip label={label} position="right" transitionProps={{ duration: 0 }}>
+                <Link href={link}>
+                    <UnstyledButton onClick={onClick} className={classes.link} data-active={active || undefined}>
+                        <Icon style={{ width: rem(20), height: rem(20) }} stroke={1.5} />
+                    </UnstyledButton>
+                </Link>
+            </Tooltip>
+        );
+    } else {
+        return (
+            <Tooltip label={label} position="right" transitionProps={{ duration: 0 }}>
+                <UnstyledButton onClick={onClick} className={classes.link} data-active={active || undefined}>
+                    <Icon style={{ width: rem(20), height: rem(20) }} stroke={1.5} />
+                </UnstyledButton>
+            </Tooltip>
+        );
+
+    }
 }
 
 const elements = [
-  { icon: IconPuzzle, label: 'Uzdevumi' },
-  { icon: IconInbox, label: 'Iesūtījumi' },
-  { icon: IconUser, label: 'Profils' },
-  { icon: IconSettings, label: 'Iestatījumi' },
+    { icon: IconPuzzle, label: 'Uzdevumi', link: '/dashboard/tasks' },
+    { icon: IconInbox, label: 'Iesūtījumi', link: '/dashboard/submissions' },
+    { icon: IconUser, label: 'Profils' },
+    { icon: IconSettings, label: 'Iestatījumi' },
 ];
 
 export function NavbarMinimal() {
-  const [active, setActive] = useState(2);
+    // choose the correct active element
+    let defActive = -1;
+    for(let element of elements) {
+        if (element.link === window.location.pathname) {
+            defActive = elements.indexOf(element);            
+        }
+    }
+    if(defActive === -1) {
+        defActive = 0;
+    }
 
-  const links = elements.map((link, index) => (
-    <NavbarLink
-      {...link}
-      key={link.label}
-      active={index === active}
-      onClick={() => setActive(index)}
-    />
-  ));
+    const [active, setActive] = useState(defActive);
 
-  return (
-    <nav className={classes.navbar}>
-      <div className={classes.navbarMain}>
-        <Stack justify="center" gap={0}>
-          {links}
-        </Stack>
-      </div>
+    const links = elements.map((link, index) => (
+        <NavbarLink
+            {...link}
+            key={link.label}
+            active={index === active}
+            onClick={() => setActive(index)}
+        />
+    ));
 
-      <Stack justify="center" gap={0}>
-        <NavbarLink icon={IconSwitchHorizontal} label="Change account" />
-        <NavbarLink icon={IconLogout} label="Logout" />
-      </Stack>
-    </nav>
-  );
+    return (
+        <nav className={classes.navbar}>
+            <div className={classes.navbarMain}>
+                <Stack justify="center" gap={0}>
+                    {links}
+                </Stack>
+            </div>
+
+            <Stack justify="center" gap={0}>
+                <NavbarLink icon={IconSwitchHorizontal} label="Change account" />
+                <NavbarLink icon={IconLogout} label="Logout" />
+            </Stack>
+        </nav>
+    );
 }

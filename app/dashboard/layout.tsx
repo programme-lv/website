@@ -2,11 +2,10 @@
 
 import { Header } from '@/components/Header/Header';
 import { NavbarMinimal } from '@/components/NavbarMinimal/NavbarMinimal';
-import ProglvLogo from '@/components/ProglvLogo/ProglvLogo';
 import { AppShell, Burger } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 
-export default function Dashboard() {
+export default function DashboardLayout({ children }: { children: any }) {
   const [opened, { toggle }] = useDisclosure();
 
   return (
@@ -27,7 +26,7 @@ export default function Dashboard() {
         <NavbarMinimal/>
       </AppShell.Navbar>
 
-      <AppShell.Main>Main</AppShell.Main>
+      <AppShell.Main>{children}</AppShell.Main>
     </AppShell>
   );
 }
