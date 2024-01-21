@@ -50,7 +50,7 @@ function NavbarLink({ icon: Icon, label, active, onClick, link }: NavbarLinkProp
 
 const elements = [
     { id: 'tasks', icon: IconPuzzle, label: 'Uzdevumi', link: '/tasks/list' },
-    { id: 'submissions', icon: IconInbox, label: 'Iesūtījumi', link: '/submissions' },
+    { id: 'submissions', icon: IconInbox, label: 'Iesūtījumi', link: '/submissions/list' },
     { id: 'profile', icon: IconUser, label: 'Profils' },
     { id: 'settings', icon: IconSettings, label: 'Iestatījumi' },
 ];
