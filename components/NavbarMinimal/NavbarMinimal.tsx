@@ -49,23 +49,29 @@ function NavbarLink({ icon: Icon, label, active, onClick, link }: NavbarLinkProp
 }
 
 const elements = [
-    { icon: IconPuzzle, label: 'Uzdevumi', link: '/dashboard/tasks' },
-    { icon: IconInbox, label: 'Iesūtījumi', link: '/dashboard/submissions' },
-    { icon: IconUser, label: 'Profils' },
-    { icon: IconSettings, label: 'Iestatījumi' },
+    { id: 'tasks', icon: IconPuzzle, label: 'Uzdevumi', link: '/dashboard/tasks' },
+    { id: 'submissions', icon: IconInbox, label: 'Iesūtījumi', link: '/dashboard/submissions' },
+    { id: 'profile', icon: IconUser, label: 'Profils' },
+    { id: 'settings', icon: IconSettings, label: 'Iestatījumi' },
 ];
 
-export function NavbarMinimal() {
+type NavbarMinimalProps = {
+    pageID: "tasks" | "submissions" | "profile" | "settings";
+}
+
+export function NavbarMinimal({pageID}:NavbarMinimalProps) {
     // choose the correct active element
     let defActive = -1;
     for(let element of elements) {
-        if (element.link === window.location.pathname) {
-            defActive = elements.indexOf(element);            
+        if(element.id === pageID) {
+            defActive = elements.indexOf(element);
         }
     }
+    console.log(defActive);
     if(defActive === -1) {
         defActive = 0;
     }
+
 
     const [active, setActive] = useState(defActive);
 
