@@ -1,6 +1,5 @@
 'use client';
 import { Text, Card, SimpleGrid } from "@mantine/core";
-import DashboardLayout from "../dashboard/layout"; 
 
 export default function Tasks() {
 
@@ -24,9 +23,3 @@ function TaskDisplay() {
     </Card>
   )
 } 
-
-Tasks.getLayout = function getLayout(page: any) {
-  return (
-    <DashboardLayout pageID="tasks">{page}</DashboardLayout>
-  )
-}

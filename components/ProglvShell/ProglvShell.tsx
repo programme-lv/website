@@ -1,19 +1,18 @@
 'use client';
 
-import { Header } from '@/components/Header/Header';
-import { NavbarMinimal } from '@/components/NavbarMinimal/NavbarMinimal';
-import { AppShell, Burger } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
-import NextTopLoader from 'nextjs-toploader';
+import { Header } from "@/components/Header/Header";
+import { NavbarMinimal } from "@/components/NavbarMinimal/NavbarMinimal";
+import { AppShell } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import NextTopLoader from "nextjs-toploader";
 
-type DashboardLayoutProps = {
-  children: any;
-  pageID: "tasks" | "submissions" | "profile" | "settings";
+type ProglvShellProps = {
+    children: any;
+    pageID: "tasks" | "submissions" | "profile" | "settings";
 }
 
-export default function DashboardLayout({ children, pageID }: DashboardLayoutProps) {
+export default function ProglvShell({children, pageID}: ProglvShellProps) {
   const [opened, { toggle }] = useDisclosure();
-
   return (
     <AppShell
       header={{ height: 60 }}
@@ -33,7 +32,6 @@ export default function DashboardLayout({ children, pageID }: DashboardLayoutPro
       </AppShell.Navbar>
 
       <AppShell.Main bg={'--mantine-color-gray-0'}>
-        <NextTopLoader />
         {children}
       </AppShell.Main>
     </AppShell>
