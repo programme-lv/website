@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Center, Tooltip, UnstyledButton, Stack, rem } from '@mantine/core';
 import {
+    IconPuzzle,
+    IconInbox,
   IconHome2,
   IconGauge,
   IconDeviceDesktopAnalytics,
@@ -31,20 +33,17 @@ function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
   );
 }
 
-const mockdata = [
-  { icon: IconHome2, label: 'Home' },
-  { icon: IconGauge, label: 'Dashboard' },
-  { icon: IconDeviceDesktopAnalytics, label: 'Analytics' },
-  { icon: IconCalendarStats, label: 'Releases' },
-  { icon: IconUser, label: 'Account' },
-  { icon: IconFingerprint, label: 'Security' },
-  { icon: IconSettings, label: 'Settings' },
+const elements = [
+  { icon: IconPuzzle, label: 'Uzdevumi' },
+  { icon: IconInbox, label: 'Iesūtījumi' },
+  { icon: IconUser, label: 'Profils' },
+  { icon: IconSettings, label: 'Iestatījumi' },
 ];
 
 export function NavbarMinimal() {
   const [active, setActive] = useState(2);
 
-  const links = mockdata.map((link, index) => (
+  const links = elements.map((link, index) => (
     <NavbarLink
       {...link}
       key={link.label}
