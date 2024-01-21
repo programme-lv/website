@@ -9,9 +9,10 @@ import NextTopLoader from "nextjs-toploader";
 type ProglvShellProps = {
     children: any;
     pageID: "tasks" | "submissions" | "profile" | "settings";
+    breadcrumbs?: { title: string; href: string }[];
 }
 
-export default function ProglvShell({children, pageID}: ProglvShellProps) {
+export default function ProglvShell({children, pageID, breadcrumbs}: ProglvShellProps) {
   const [opened, { toggle }] = useDisclosure();
   const theme = useMantineTheme();
   return (
@@ -25,7 +26,7 @@ export default function ProglvShell({children, pageID}: ProglvShellProps) {
       padding="md"
     >
       <AppShell.Header>
-        <Header/>
+        <Header breadcrumbs={breadcrumbs}/>
       </AppShell.Header>
 
       <AppShell.Navbar>

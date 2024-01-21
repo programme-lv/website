@@ -9,6 +9,17 @@
   justify-content: space-between;
 }
 
+.breadcrumbLink {
+  text-decoration: none;
+}
+
+.breadcrumbLink:hover {
+  text-decoration: underline;
+}
+.breadcrumbLink:hover:active{
+  text-decoration: underline;
+  text-decoration-color: black;
+}
 .mainSection {
   margin-bottom: var(--mantine-spacing-md);
   

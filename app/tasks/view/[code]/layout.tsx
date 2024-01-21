@@ -1,5 +1,17 @@
 import ProglvShell from "@/components/ProglvShell/ProglvShell";
 
-export default function Layout({ children }: { children: any }) {
-	return <ProglvShell pageID="tasks">{children}</ProglvShell>;
+type LayoutProps = {
+	children: any;
+	params: {
+		code: string;
+	}
+};
+
+export default function Layout({ children, params }: LayoutProps) {
+	return <ProglvShell pageID="tasks" breadcrumbs={
+		[
+			{ title: "Uzdevumi", href: "/tasks/list" },
+			{ title: params.code, href: `/tasks/view/${params.code}` }
+		]
+	}>{children}</ProglvShell>;
 }
