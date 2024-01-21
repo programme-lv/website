@@ -82,7 +82,7 @@ export function NavbarMinimal({pageID}:NavbarMinimalProps) {
     return (
         <nav className={classes.navbar}>
             <div className={classes.navbarMain}>
-                <Stack justify="center" gap={0}>
+                <Stack justify="center" gap={'sm'}>
                     {links}
                 </Stack>
             </div>
