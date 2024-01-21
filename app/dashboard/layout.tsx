@@ -4,6 +4,7 @@ import { Header } from '@/components/Header/Header';
 import { NavbarMinimal } from '@/components/NavbarMinimal/NavbarMinimal';
 import { AppShell, Burger } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
+import NextTopLoader from 'nextjs-toploader';
 
 export default function DashboardLayout({ children }: { children: any }) {
   const [opened, { toggle }] = useDisclosure();
@@ -26,7 +27,10 @@ export default function DashboardLayout({ children }: { children: any }) {
         <NavbarMinimal/>
       </AppShell.Navbar>
 
-      <AppShell.Main>{children}</AppShell.Main>
+      <AppShell.Main>
+        <NextTopLoader />
+        {children}
+      </AppShell.Main>
     </AppShell>
   );
 }
