@@ -15,7 +15,7 @@ export default function Tasks() {
 
 function TaskDisplay() {
   return (
-    <Card shadow="md" padding={"sm"}>
+    <Card withBorder padding={"sm"}>
       <Text fw={500} size="lg">Saskaiti skaitļus! </Text>
       <Text>
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia, minima nisi? Possimus, sit aliquid quae porro reprehenderit vitae iste. Vel quisquam quis illum dolorum dicta in aspernatur possimus asperiores a.

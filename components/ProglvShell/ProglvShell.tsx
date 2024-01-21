@@ -2,7 +2,7 @@
 
 import { Header } from "@/components/Header/Header";
 import { NavbarMinimal } from "@/components/NavbarMinimal/NavbarMinimal";
-import { AppShell } from "@mantine/core";
+import { AppShell, useMantineTheme } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import NextTopLoader from "nextjs-toploader";
 
@@ -13,6 +13,7 @@ type ProglvShellProps = {
 
 export default function ProglvShell({children, pageID}: ProglvShellProps) {
   const [opened, { toggle }] = useDisclosure();
+  const theme = useMantineTheme();
   return (
     <AppShell
       header={{ height: 60 }}
@@ -31,7 +32,7 @@ export default function ProglvShell({children, pageID}: ProglvShellProps) {
         <NavbarMinimal pageID={pageID}/>
       </AppShell.Navbar>
 
-      <AppShell.Main bg={'--mantine-color-gray-0'}>
+      <AppShell.Main bg={theme.colors.gray[0]}>
         {children}
       </AppShell.Main>
     </AppShell>
