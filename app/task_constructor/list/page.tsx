@@ -1,5 +1,6 @@
 'use client';
 import { Button, Container, Grid, Group, Table} from "@mantine/core";
+import Link from "next/link";
 
 
 const Tasks = [
@@ -79,7 +80,9 @@ export default function List() {
             <Table.Td>{element.modified_at}</Table.Td>
             <Table.Td>
                 <Group>
+                    <Link href={'/task_constructor/edit/'+element.shortcode+'/general_info'}>
                     <Button variant="light">Rediģēt</Button>
+                    </Link>
                     <Button variant="light" color="red">Dzēst</Button>
                 </Group>
             </Table.Td>
