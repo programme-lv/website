@@ -1,7 +1,10 @@
-export default function TaskView(props: any) {
+import queryTaskDescription from "./queryTaskDesc"
+
+export default async function TaskView(props: any) {
+    const task = await queryTaskDescription(props.params.code)
     return (
         <div>
-        <h1>Task</h1>
+            {task.description.story}
         </div>
     )
 }

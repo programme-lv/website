@@ -1,20 +1,20 @@
 import { getClient } from "@/lib/client";
 import { graphql } from "@/gql";
 
-const queryTaskName = graphql(`
-    query GetPublishedTaskVersionByCode($code: String!){
+const queryTaskNameGQL = graphql(`
+    query getTaskFullName($code: String!){
         getPublishedTaskVersionByCode(code: $code) {
             name
         }
     }
 `);
 
-export default async function fetchTaskFullName(code: string): Promise<string> {
+export default async function queryTaskName(code: string): Promise<string> {
     'use server';
 
     const client = getClient();
     const { data } = await client.query({
-        query: queryTaskName,
+        query: queryTaskNameGQL,
         variables: { code },
     });
 

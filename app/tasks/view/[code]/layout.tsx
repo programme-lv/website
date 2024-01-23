@@ -1,5 +1,5 @@
 import ProglvShell from "@/components/ProglvShell/ProglvShell";
-import fetchTaskFullName from "./fetchTaskFullName";
+import queryTaskName from "./queryTaskName";
 
 type LayoutProps = {
 	children: any;
@@ -9,7 +9,7 @@ type LayoutProps = {
 };
 
 export default async function Layout({ children, params }: LayoutProps) {
-	const taskFullName = await fetchTaskFullName(params.code);
+	const taskFullName = await queryTaskName(params.code);
 	return <ProglvShell pageID="tasks" breadcrumbs={
 		[
 			{ title: "Uzdevumi", href: "/tasks/list" },
