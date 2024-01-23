@@ -3,6 +3,7 @@ import React from 'react';
 import { MantineProvider, ColorSchemeScript } from '@mantine/core';
 import { theme } from '../theme';
 import NextTopLoader from 'nextjs-toploader';
+import { ApolloWrapper } from './ApolloWrapper';
 
 export const metadata = {
   title: 'programme.lv',
@@ -21,8 +22,10 @@ export default function RootLayout({ children }: { children: any }) {
         />
       </head>
       <body>
+        <ApolloWrapper>
         <NextTopLoader />
         <MantineProvider theme={theme}>{children}</MantineProvider>
+        </ApolloWrapper>
       </body>
     </html>
   );

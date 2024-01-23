@@ -20,7 +20,7 @@
     "generate": "graphql-codegen"
   },
   "dependencies": {
-    "@apollo/client": "^3.9.0-rc.1",
+    "@apollo/client": "^3.8.10",
     "@apollo/experimental-nextjs-app-support": "^0.6.0",
     "@mantine/core": "7.4.2",
     "@mantine/hooks": "7.4.2",
