@@ -1,4 +1,4 @@
-import ShellTC from "@/components/task_constructor/ShellTC/ShellTC"
+import ShellTC2 from "@/components/task_constructor/ShellTC2/ShellTC2"
 
 
 type LayoutProps = {
@@ -9,11 +9,13 @@ type LayoutProps = {
 };
 
 export default function Layout({ children, params }: LayoutProps) {
-	return <ShellTC breadcrumbs={
+	return <ShellTC2 pageID="statement" breadcrumbs={
 		[
 			{ title: "Uzdevumu  konstruktors", href: "/task_constructor/main" },
 			{ title: "Mani uzdevumi", href: "/task_constructor/list" },
             { title: params.code, href: `/task_constructor/edit/${params.code}/general_info` }
 		]
-	}>{children}</ShellTC>;
+	}
+    shortcode={params.code}
+	>{children}</ShellTC2>;
 }
