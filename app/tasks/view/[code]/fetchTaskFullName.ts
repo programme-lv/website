@@ -1,15 +1,15 @@
 import { getClient } from "@/lib/client";
-import { gql } from "@apollo/client";
+import { graphql } from "@/gql";
 
-const queryTaskName = gql`
+const queryTaskName = graphql(`
     query GetPublishedTaskVersionByCode($code: String!){
         getPublishedTaskVersionByCode(code: $code) {
             name
         }
     }
-`;
+`);
 
-export default async function fetchTaskFullName(code: string): string {
+export default async function fetchTaskFullName(code: string): Promise<string> {
     'use server';
 
     const client = getClient();
