@@ -1,4 +1,4 @@
-import { Group, Stack, Text, useMantineTheme } from "@mantine/core";
+import { Divider, Group, Stack, Text, useMantineTheme } from "@mantine/core";
 import { StatementExamples } from "./StatementExamples";
 import renderMD from "@/lib/render";
 import { Task } from "./page";
