@@ -8,7 +8,7 @@ import {
     IconBrandAmongUs, // TODO: change icon ;D
 } from '@tabler/icons-react';
 // import ProglvLogo from '../../ProglvLogo/ProglvLogo';
-import classes from './NavbarTC.module.css';
+import classes from './NavbarSeggmented.module.css'
 // import Link from 'next/link';
 
 interface NavbarLinkProps {
@@ -20,16 +20,17 @@ interface NavbarLinkProps {
 }
 
 type NavbarMinimalProps = {
-    pageID: "general_info" | "statement" | "tests" | "solutions";
+    // pageID: "general_info" | "statement" | "tests" | "solutions";
+    pageID: string;
     shortcode?: string;
 }
 
-export function NavbarTC({pageID, shortcode}:NavbarMinimalProps) {
+export function NavbarSegmented({pageID, shortcode}:NavbarMinimalProps) {
     const elements = [
-        { id: 'general_info', icon: IconInfoCircle, label: 'Vispārīgi', link: '/task_constructor/edit/'+ shortcode + '/general_info'},
-        { id: 'statement', icon: IconFileText, label: 'Formulējums', link: '/task_constructor/edit/'+ shortcode + '/statement' },
-        { id: 'tests', icon: IconTestPipe, label: 'Testēšana', link: '/task_constructor/edit/'+ shortcode + '/tests'},
-        { id: 'solutions', icon: IconBrandAmongUs, label: 'Risinājumi', link: '/task_constructor/edit/'+ shortcode + '/solutions'},
+        { id: 'general_info', icon: IconInfoCircle, label: 'Vispārīgi', link: '/constructor/edit/'+ shortcode + '/general_info'},
+        { id: 'statement', icon: IconFileText, label: 'Formulējums', link: '/constructor/edit/'+ shortcode + '/statement' },
+        { id: 'tests', icon: IconTestPipe, label: 'Testēšana', link: '/constructor/edit/'+ shortcode + '/tests'},
+        { id: 'solutions', icon: IconBrandAmongUs, label: 'Risinājumi', link: '/constructor/edit/'+ shortcode + '/solutions'},
     ];
 
     // choose the correct active element

@@ -15,5 +15,6 @@ export default async function Layout({ children, params }: LayoutProps) {
 			{ title: "Uzdevumi", href: "/tasks/list" },
 			{ title: taskFullName, href: `/tasks/view/${params.code}` }
 		]
-	}>{children}</ProglvShell>;
+	}
+	navbarID="solve">{children}</ProglvShell>;
 }

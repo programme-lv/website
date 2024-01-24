@@ -1,5 +1,4 @@
-import ShellTC2 from "@/components/task_constructor/ShellTC2/ShellTC2"
-
+import ProglvShell from "@/components/ProglvShell/ProglvShell";
 
 type LayoutProps = {
 	children: any;
@@ -9,13 +8,14 @@ type LayoutProps = {
 };
 
 export default function Layout({ children, params }: LayoutProps) {
-	return <ShellTC2 pageID="statement" breadcrumbs={
+	return <ProglvShell pageID="tatement" breadcrumbs={
 		[
-			{ title: "Uzdevumu  konstruktors", href: "/task_constructor/main" },
-			{ title: "Mani uzdevumi", href: "/task_constructor/list" },
-            { title: params.code, href: `/task_constructor/edit/${params.code}/general_info` }
+			{ title: "Uzdevumu  konstruktors", href: "/constructor/main" },
+			{ title: "Mani uzdevumi", href: "/constructor/list" },
+            { title: params.code, href: `/constructor/edit/${params.code}/general_info` }
 		]
 	}
     shortcode={params.code}
-	>{children}</ShellTC2>;
+	navbarID="constructor"
+	>{children}</ProglvShell>;
 }

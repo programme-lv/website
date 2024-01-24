@@ -28,6 +28,7 @@ import {
 import ProglvLogo from '../ProglvLogo/ProglvLogo';
 import classes from './Header.module.css';
 import Link from 'next/link';
+import { profile } from 'console';
 
 const user = {
 	name: 'Krišjānis Petručeņa',
@@ -37,30 +38,32 @@ const user = {
 
 type HeaderProps = {
 	breadcrumbs?: { title: string; href: string }[];
+	// TODO:Add menu options
+	menuOptions?: { title: string; href: string }[];
+	// TODO: Add bool for profile menu
+	profileMenu?: boolean;
 };
 
-export function Header({breadcrumbs}: HeaderProps) {
+export function Header({breadcrumbs, menuOptions, profileMenu}: HeaderProps) {
 	breadcrumbs ??= [];
-	const items = breadcrumbs.map((item, index) => (
+	const breadcrumbLinks = breadcrumbs.map((item, index) => (
 		<Link href={item.href} key={index} className={classes.breadcrumbLink}>
 			<Text c='blue'>{item.title}</Text>
 		</Link>
 	));
+	menuOptions ??= [];
+	const menuOptionsLinks = menuOptions.map((item, index) => (
+		<a href={item.href} className={classes.link}>{item.title}</a>
+	));
+
 	const theme = useMantineTheme();
 	const [opened, { toggle }] = useDisclosure(false);
 	const [userMenuOpened, setUserMenuOpened] = useState(false);
 
-	return (
-		<div className={classes.header}>
-			<Group p={'xs'} gap={'xl'}>
-				<ProglvLogo scale={0.1} />
-
-				<Breadcrumbs>{items}</Breadcrumbs>
-			</Group>
-
-			<Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
-
-
+	profileMenu ??= true;
+	let profileLink;
+	if (profileMenu) {
+		profileLink = (
 			<Menu
 				width={260}
 				position="bottom-end"
@@ -158,6 +161,39 @@ export function Header({breadcrumbs}: HeaderProps) {
 					</Menu.Item>
 				</Menu.Dropdown>
 			</Menu>
+		);
+	} else {
+		profileLink = (
+			<UnstyledButton
+                    className={cx(classes.user, {[classes.userActive]: userMenuOpened})}
+                >
+                    <Group gap={7}>
+                        <Avatar src={user.image} alt={user.name} radius="xl" size={20}/>
+                        <Text fw={500} size="sm" lh={1} mr={3}>
+                            {user.name}
+                        </Text>
+                    </Group>
+                </UnstyledButton>
+		);
+	}
+
+	
+
+	return (
+		<div className={classes.header}>
+			<Group p={'xs'} gap={'xl'}>
+				<ProglvLogo scale={0.1} />
+				<Breadcrumbs>{breadcrumbLinks}</Breadcrumbs>
+			</Group>
+
+			<Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
+			<Group>
+				{menuOptionsLinks}
+				{profileLink}
+			</Group>
+
+
+			
 		</div>
 	);
 }

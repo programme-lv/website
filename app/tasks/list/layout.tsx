@@ -5,5 +5,5 @@ export default function Layout({ children }: { children: any }) {
 		[
 			{ title: "Uzdevumi", href: "/tasks/list" },
 		]
-	}>{children}</ProglvShell>;
+	} navbarID="solve">{children}</ProglvShell>;
 }

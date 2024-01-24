@@ -80,7 +80,7 @@ export default function List() {
             <Table.Td>{element.modified_at}</Table.Td>
             <Table.Td>
                 <Group>
-                    <Link href={'/task_constructor/edit/'+element.shortcode+'/general_info'}>
+                    <Link href={'/constructor/edit/'+element.shortcode+'/general_info'}>
                     <Button variant="light">Rediģēt</Button>
                     </Link>
                     <Button variant="light" color="red">Dzēst</Button>

@@ -5,5 +5,5 @@ export default function Layout({ children }: { children: any }) {
 		[
 			{ title: "Iesūtījumi", href: "/submissions/list" },
 		]
-	}>{children}</ProglvShell>;
+	} navbarID="solve">{children}</ProglvShell>;
 }

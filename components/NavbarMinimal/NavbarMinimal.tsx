@@ -56,7 +56,7 @@ const elements = [
 ];
 
 type NavbarMinimalProps = {
-    pageID: "tasks" | "submissions" | "profile" | "settings";
+    pageID: string;
 }
 
 export function NavbarMinimal({pageID}:NavbarMinimalProps) {
