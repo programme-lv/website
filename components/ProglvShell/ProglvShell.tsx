@@ -4,7 +4,6 @@ import { Header } from "@/components/Header/Header";
 import { NavbarMinimal } from "@/components/NavbarMinimal/NavbarMinimal";
 import { AppShell, useMantineTheme } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import NextTopLoader from "nextjs-toploader";
 
 type ProglvShellProps = {
     children: any;

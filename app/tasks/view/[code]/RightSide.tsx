@@ -1,26 +1,44 @@
 'use client';
-import { Select, Stack } from "@mantine/core";
+import { Center, Flex, Group, Select, Stack, rem, useMantineTheme } from "@mantine/core";
 import { Resizable } from "re-resizable";
 import { useEffect, useState } from "react";
 import MonacoEditor from "@monaco-editor/react";
+import { IconDotsVertical, IconGripVertical } from "@tabler/icons-react";
 
 export default function RightSide() {
     return (
 
-        <Resizable enable={{ left: true }} defaultSize={{ width: "40%", height: '100%' }}>
-        <Stack c={"blue"} bg="blue" h="100%" w="100%">
-            <Editor
-                selectedLanguage={""}
-                setSelectedLanguage={() => { }}
-                code={""}
-                setCode={() => { }}
-                langs={[]}
-            />
-        </Stack>
+        <Resizable handleComponent={
+            {left:<ResizeBar/>}} enable={{ left: true }} defaultSize={{ width: "40%", height: '100%' }}>
+            <Flex w={"100%"} h={"100%"}>
+                <Stack c={"blue"} bg="blue" h="100%" w="100%" p={"sm"}>
+                    <div style={{ flexGrow: 1 }}>
+                        <Editor
+                            selectedLanguage={""}
+                            setSelectedLanguage={() => { }}
+                            code={""}
+                            setCode={() => { }}
+                            langs={[]}
+                        />
+                    </div>
+                </Stack>
+            </Flex>
         </Resizable>
     )
 }
 
+function ResizeBar() {
+    const theme = useMantineTheme();
+    return (
+    <Center w={"10px"} h={"100%"}  p={0}>
+        <Stack gap={0}>
+            {[...Array(3)].map((_, i) =>
+            <IconGripVertical color={theme.colors.gray[7]} key={i} style={{ width: rem(20), height: rem(20) }} stroke={1.5}/>
+            )}
+        </Stack>
+    </Center>
+    );
+}
 
 type Language = {
     id: string;
@@ -54,16 +72,7 @@ function Editor(props: EditorProps) {
 
     return (
         <div className="w-full flex flex-col">
-            {/* <div className="flex justify-end">
-                    {selectedLanguage &&
-                        <Select className="ml-2" value={selectedLanguage} size={"sm"}
-                                onChange={(e, newSelect) => setSelectedLanguage(newSelect??"")}>
-                            {languages.map(language => (<Option key={language.id}
-                                value={language.id}>{language.fullName}</Option>))}
-                        </Select>}
-            </div> */}
-
-            <div className="h-[600px] my-2" style={{height: 600}}>
+            <div className="h-[600px] my-2" style={{ height: 600 }}>
                 <MonacoEditor
                     value={code}
                     theme="vs-dark"
