@@ -15301,6 +15301,7 @@ __metadata:
     postcss-preset-mantine: "npm:1.12.3"
     postcss-simple-vars: "npm:^7.0.1"
     prettier: "npm:^3.0.3"
+    re-resizable: "npm:^6.9.11"
     react: "npm:^18.2.0"
     react-dom: "npm:18.2.0"
     rehype-katex: "npm:^7.0.0"
@@ -15616,6 +15617,16 @@ __metadata:
   bin:
     rc: ./cli.js
   checksum: 24a07653150f0d9ac7168e52943cc3cb4b7a22c0e43c7dff3219977c2fdca5a2760a304a029c20811a0e79d351f57d46c9bde216193a0f73978496afc2b85b15
+  languageName: node
+  linkType: hard
+
+"re-resizable@npm:^6.9.11":
+  version: 6.9.11
+  resolution: "re-resizable@npm:6.9.11"
+  peerDependencies:
+    react: ^16.13.1 || ^17.0.0 || ^18.0.0
+    react-dom: ^16.13.1 || ^17.0.0 || ^18.0.0
+  checksum: d7361b63e8f819f821b34bb3234a8606f086155b739737243d3f0f7ad82fd66642aff6f90fbc5b2df2f81f8572ab3289b9c17a5142c39b98cd14194e391932f2
   languageName: node
   linkType: hard
 

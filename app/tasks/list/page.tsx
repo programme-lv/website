@@ -11,24 +11,26 @@ const mockTask = {
 export default function Tasks() {
 
   return (
+    <div style={{width: "100%"}}>
     <SimpleGrid cols={1} verticalSpacing="xl">
-      <TaskDisplay {...mockTask}/>
-      <TaskDisplay {...mockTask}/>
-      <TaskDisplay {...mockTask}/>
-      <TaskDisplay {...mockTask}/>
-      <TaskDisplay {...mockTask}/>
-      <TaskDisplay {...mockTask}/>
+      <TaskCard {...mockTask}/>
+      <TaskCard {...mockTask}/>
+      <TaskCard {...mockTask}/>
+      <TaskCard {...mockTask}/>
+      <TaskCard {...mockTask}/>
+      <TaskCard {...mockTask}/>
     </SimpleGrid>
+    </div>
   );
 }
 
-type TaskDisplayProps = {
+type TaskCardProps = {
   code: string; // used for navigation
   name: string;
   shortDesc: string;
 }
 
-function TaskDisplay({code, name, shortDesc}: TaskDisplayProps) {
+function TaskCard({code, name, shortDesc}: TaskCardProps) {
   return (
     <Link href={`/tasks/view/${code}`}  style={{ textDecoration: 'none' }}>
     <Card withBorder padding={"md"}>

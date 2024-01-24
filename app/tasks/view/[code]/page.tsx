@@ -1,8 +1,7 @@
-import renderMD from "@/lib/render"
 import queryTaskDescription from "./queryTaskDesc"
-import 'katex/dist/katex.min.css'
 import { TaskTabs } from "./TaskTabs"
 import { Group, Stack } from "@mantine/core"
+import RightSide from "./RightSide"
 
 type Examples = { id: string, input: string, answer: string }[]
 
@@ -28,9 +27,7 @@ export default async function TaskView(props: any) {
                 <h1>Uzdevums "{task.name}"</h1>
                 <TaskTabs task={task as Task}/>
             </Stack>
-            <Stack c={"blue"} bg="blue" h="100%" w={100}>
-
-            </Stack>
+            <RightSide/>
         </Group>
     )
 }

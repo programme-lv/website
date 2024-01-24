@@ -2,6 +2,7 @@ import { Group, Stack, Text, useMantineTheme } from "@mantine/core";
 import { StatementExamples } from "./StatementExamples";
 import renderMD from "@/lib/render";
 import { Task } from "./page";
+import 'katex/dist/katex.min.css'
 
 
 type TaskViewProps = {
