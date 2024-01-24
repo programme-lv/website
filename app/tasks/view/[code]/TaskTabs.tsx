@@ -1,9 +1,14 @@
 'use client';
 
 import { Tabs, rem } from "@mantine/core";
-import { IconMessageCircle, IconPhoto, IconSettings } from "@tabler/icons-react";
+import TaskView from "./TaskView";
+import { Task } from "./page";
 
-export function Demo() {
+type TaskTabsProps = {
+    task: Task;
+}
+
+export function TaskTabs({task}:TaskTabsProps) {
   const iconStyle = { width: rem(12), height: rem(12) };
 
   return (
@@ -15,7 +20,7 @@ export function Demo() {
       </Tabs.List>
 
       <Tabs.Panel value="task">
-        Gallery tab content
+        <TaskView task={task}/>
       </Tabs.Panel>
     </Tabs>
   );
