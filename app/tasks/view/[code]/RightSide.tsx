@@ -3,7 +3,7 @@ import { Center, Flex, Group, Select, Stack, rem, useMantineTheme } from "@manti
 import { Resizable } from "re-resizable";
 import { useEffect, useState } from "react";
 import MonacoEditor from "@monaco-editor/react";
-import { IconDotsVertical, IconGripVertical } from "@tabler/icons-react";
+import ResizeBar from "./ResizeBar";
 
 export default function RightSide() {
     return (
@@ -25,19 +25,6 @@ export default function RightSide() {
             </Flex>
         </Resizable>
     )
-}
-
-function ResizeBar() {
-    const theme = useMantineTheme();
-    return (
-    <Center w={"10px"} h={"100%"} p={0}>
-        <Stack gap={0}>
-            {[...Array(3)].map((_, i) =>
-            <IconGripVertical color={theme.colors.gray[7]} key={i} style={{ width: rem(20), height: rem(20) }} stroke={1.5}/>
-            )}
-        </Stack>
-    </Center>
-    );
 }
 
 type Language = {
