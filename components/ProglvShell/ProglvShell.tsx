@@ -5,8 +5,11 @@ import { NavbarMinimal } from "@/components/NavbarMinimal/NavbarMinimal";
 import { NavbarSegmented } from "@/components/NavbarSegmented/NavbarSegmented";
 import { AppShell, useMantineTheme } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+<<<<<<< HEAD
 import {IconHome} from "@tabler/icons-react";
 import NextTopLoader from "nextjs-toploader";
+=======
+>>>>>>> 5795537d56359942d98090708a3c18e35516f092
 
 type ProglvShellProps = {
     children: any;
@@ -55,7 +58,7 @@ export default function ProglvShell({children, pageID, breadcrumbs, navbarID, sh
         {/* <NavbarMinimal pageID={pageID}/> */}
         {navbar}
 
-      <AppShell.Main bg={theme.colors.gray[0]}>
+      <AppShell.Main bg={theme.colors.gray[0]} display={"flex"}>
         {children}
       </AppShell.Main>
     </AppShell>
