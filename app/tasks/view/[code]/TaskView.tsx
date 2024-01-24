@@ -34,11 +34,11 @@ export default function TaskView({task}: TaskViewProps){
                     <Group>
                         <Group>
                             <Text size="sm" c={theme.colors.gray[8]}>Laika ierobežojums uz testu:</Text>
-                            <Text size="md">{task.constraints.timeLimitMs*2} sekundes</Text>
+                            <Text size="md">{(task.constraints.timeLimitMs/1000).toFixed(1)} sekundes</Text>
                         </Group>
                         <Group>
                             <Text size="sm" c={theme.colors.gray[8]}>Atmiņas ierobežojums uz testu:</Text>
-                            <Text size="md">63 megabaiti</Text>
+                            <Text size="md">{(task.constraints.memoryLimitKb/1000).toFixed(1)} megabaiti</Text>
                         </Group>
                     </Group>
                 </div>
