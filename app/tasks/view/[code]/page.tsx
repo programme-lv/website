@@ -12,7 +12,11 @@ export type Task = {
         input: string;
         output: string;
         examples: Examples;
-    }
+    };
+    constraints: {
+        timeLimitMs: number;
+        memoryLimitKb: number;
+    };
 }
 
 export default async function TaskView(props: any) {

@@ -1,4 +1,4 @@
-import { Stack, Text } from "@mantine/core";
+import { Group, Stack, Text, useMantineTheme } from "@mantine/core";
 import { StatementExamples } from "./StatementExamples";
 import renderMD from "@/lib/render";
 import { Task } from "./page";
@@ -9,6 +9,7 @@ type TaskViewProps = {
 }
 
 export default function TaskView({task}: TaskViewProps){
+    const theme = useMantineTheme();
     return (
             <Stack bg="white" p={"lg"} gap={"xl"}>
                 <div>
@@ -27,6 +28,19 @@ export default function TaskView({task}: TaskViewProps){
                     <Text size="md" c="dark">Testu piemēri</Text>
                     <StatementExamples examples={task.description.examples} />
                 </div>}
+                <div>
+                    <Text size="md" c="dark" mb={"sm"}>Testēšana</Text>
+                    <Group>
+                        <Group>
+                            <Text size="sm" c={theme.colors.gray[8]}>Laika ierobežojums uz testu:</Text>
+                            <Text size="md">{task.constraints.timeLimitMs*2} sekundes</Text>
+                        </Group>
+                        <Group>
+                            <Text size="sm" c={theme.colors.gray[8]}>Atmiņas ierobežojums uz testu:</Text>
+                            <Text size="md">63 megabaiti</Text>
+                        </Group>
+                    </Group>
+                </div>
             </Stack>
     )
 }
