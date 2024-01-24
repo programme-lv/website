@@ -10,7 +10,7 @@ export default function RightSide() {
 
         <Resizable handleComponent={
             {left:<ResizeBar/>}} enable={{ left: true }} defaultSize={{ width: "40%", height: '100%' }}>
-            <Flex w={"100%"} h={"100%"}>
+            <Flex w={"100%"} h={"100%"} pl={"sm"}>
                 <Stack c={"blue"} bg="blue" h="100%" w="100%" p={"sm"}>
                     <div style={{ flexGrow: 1 }}>
                         <Editor
@@ -30,7 +30,7 @@ export default function RightSide() {
 function ResizeBar() {
     const theme = useMantineTheme();
     return (
-    <Center w={"10px"} h={"100%"}  p={0}>
+    <Center w={"10px"} h={"100%"} p={0}>
         <Stack gap={0}>
             {[...Array(3)].map((_, i) =>
             <IconGripVertical color={theme.colors.gray[7]} key={i} style={{ width: rem(20), height: rem(20) }} stroke={1.5}/>

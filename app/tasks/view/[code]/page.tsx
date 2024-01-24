@@ -22,7 +22,7 @@ export type Task = {
 export default async function TaskView(props: any) {
     let task = await queryTaskDescription(props.params.code)
     return (
-        <Flex w={"100%"}>
+        <Flex w={"100%"} gap={"sm"}>
             <Stack h="100%" style={{flexGrow:1}}>
                 <Title order={2} my={"md"}>Uzdevums "{task.name}"</Title>
                 <TaskTabs task={task as Task}/>
