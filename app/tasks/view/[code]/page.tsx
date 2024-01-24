@@ -1,6 +1,6 @@
 import queryTaskDescription from "./queryTaskDesc"
 import { TaskTabs } from "./TaskTabs"
-import { Flex, Group, Stack } from "@mantine/core"
+import { Flex, Text, Group, Stack, Title } from "@mantine/core"
 import RightSide from "./RightSide"
 
 type Examples = { id: string, input: string, answer: string }[]
@@ -24,7 +24,7 @@ export default async function TaskView(props: any) {
     return (
         <Flex w={"100%"}>
             <Stack h="100%" style={{flexGrow:1}}>
-                <h1>Uzdevums "{task.name}"</h1>
+                <Title order={2} my={"md"}>Uzdevums "{task.name}"</Title>
                 <TaskTabs task={task as Task}/>
             </Stack>
             <RightSide/>
