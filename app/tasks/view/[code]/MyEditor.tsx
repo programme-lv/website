@@ -49,5 +49,5 @@ export default function MyEditor(props: EditorProps) {
 }
 
 function LoadingDiv() {
-    return <LoadingOverlay visible={true} zIndex={1000} overlayProps={{ radius: 0, blur: 0 }} />
+    return <LoadingOverlay visible={true} zIndex={1000} overlayProps={{ radius: 0, blur: 0 }} loaderProps={{type: "bars"}}/>
 }
