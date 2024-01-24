@@ -2,6 +2,7 @@ import renderMD from "@/lib/render"
 import queryTaskDescription from "./queryTaskDesc"
 import 'katex/dist/katex.min.css'
 import { TaskTabs } from "./TaskTabs"
+import { Group, Stack } from "@mantine/core"
 
 type Examples = { id: string, input: string, answer: string }[]
 
@@ -22,12 +23,15 @@ export type Task = {
 export default async function TaskView(props: any) {
     let task = await queryTaskDescription(props.params.code)
     return (
-        <div>
-            <h1>Uzdevums "{task.name}"</h1>
-            <div>
+        <Group grow w={"100%"}>
+            <Stack h="100%">
+                <h1>Uzdevums "{task.name}"</h1>
                 <TaskTabs task={task as Task}/>
-            </div>
-        </div>
+            </Stack>
+            <Stack c={"blue"} bg="blue" h="100%" w={100}>
+
+            </Stack>
+        </Group>
     )
 }
 

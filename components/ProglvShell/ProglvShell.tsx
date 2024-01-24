@@ -33,7 +33,7 @@ export default function ProglvShell({children, pageID, breadcrumbs}: ProglvShell
         <NavbarMinimal pageID={pageID}/>
       </AppShell.Navbar>
 
-      <AppShell.Main bg={theme.colors.gray[0]}>
+      <AppShell.Main bg={theme.colors.gray[0]} display={"flex"}>
         {children}
       </AppShell.Main>
     </AppShell>
