@@ -14,23 +14,23 @@ export default function TaskStory({task}: TaskViewProps){
     return (
             <Stack bg="white" p={"lg"} gap={"xl"}>
                 <div>
-                    <Text size="md" c={"dark"}>Stāsts</Text>
+                    <Text size="sm" c={"dark"}>Stāsts</Text>
                     <MDDiv>{task.description.story}</MDDiv>
                 </div>
                 <div>
-                    <Text size="md" c="dark">Ievaddatu apraksts</Text>
+                    <Text size="sm" c="dark">Ievaddatu apraksts</Text>
                     <MDDiv>{task.description.input}</MDDiv>
                 </div>
                 <div>
-                    <Text size="md" c="dark">Izvaddatu apraksts</Text>
+                    <Text size="sm" c="dark">Izvaddatu apraksts</Text>
                     <MDDiv>{task.description.output}</MDDiv>
                 </div>
                 {task.description.examples && <div>
-                    <Text size="md" c="dark">Testu piemēri</Text>
+                    <Text size="sm" c="dark">Testu piemēri</Text>
                     <StatementExamples examples={task.description.examples} />
                 </div>}
                 <div>
-                    <Text size="md" c="dark" mb={"sm"}>Testēšana</Text>
+                    <Text size="sm" c="dark" mb={"sm"}>Testēšana</Text>
                     <Group>
                         <Group>
                             <Text size="sm" c={theme.colors.gray[8]}>Laika ierobežojums uz testu:</Text>

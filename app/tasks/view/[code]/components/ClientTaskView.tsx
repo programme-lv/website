@@ -1,6 +1,6 @@
 'use client';
 
-import { Tabs } from "@mantine/core";
+import { Card, Tabs } from "@mantine/core";
 import TaskStory from "./TaskStory";
 import { Task } from "../page";
 
@@ -18,9 +18,9 @@ export function ClientTaskView({task}:TaskTabsProps) {
       </Tabs.List>
 
       <Tabs.Panel value="task" bg={"white"} p={0} display={"flex"} style={{flexGrow:1, position:"relative"}}>
-        <div style={{height:"100%", width:"100%", overflow:"auto", position:"absolute"}}>
+        <Card withBorder p={0} style={{height:"100%", width:"100%", overflow:"auto", position:"absolute"}}>
         <TaskStory task={task}/>
-        </div>
+        </Card>
       </Tabs.Panel>
     </Tabs>
   );
