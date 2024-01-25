@@ -20,7 +20,7 @@ export default async function Layout({ children, params, codePanel }: LayoutProp
 		]
 	}
 	navbarID="solve">
-        <Flex w={"100%"} gap={"sm"}>
+        <Flex w={"100%"} gap={"sm"} pb={"md"}>
             <Stack h="100%" style={{flexGrow:1}}>
                 <Title order={2} my={"md"}>Uzdevums "{taskFullName}"</Title>
 				{children}
