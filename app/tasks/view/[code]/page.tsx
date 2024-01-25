@@ -1,7 +1,7 @@
 import queryTaskDescription from "./queryTaskDesc"
 import { TaskTabs } from "./TaskTabs"
 import { Flex, Stack, Title } from "@mantine/core"
-import RightSideLayout from "./RightSide"
+import RightSideLayout from "./RightSideLayout"
 import CodePanel, { ProgrammingLang } from "./CodePanel"
 import queryLanguages from "./queryLanguages"
 

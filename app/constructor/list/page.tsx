@@ -90,6 +90,7 @@ export default function List() {
     ))
 
     return (
+        <div style={{height:"100%", width: "100%"}}>
         <Grid>
             <Grid.Col span={2}>
                 <Button>Jauns uzdevums</Button>
@@ -111,5 +112,6 @@ export default function List() {
             </Container>
             </Grid.Col>
         </Grid>
+        </div>
     );
 }

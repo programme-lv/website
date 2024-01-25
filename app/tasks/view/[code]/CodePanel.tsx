@@ -2,7 +2,7 @@
 
 import { Dispatch, SetStateAction, useState } from "react";
 import MonacoEditor from "@monaco-editor/react";
-import { Flex, LoadingOverlay, Select } from "@mantine/core";
+import { Text, Flex, Group, LoadingOverlay, Select, useMantineTheme } from "@mantine/core";
 
 async function setSelectedLanguage(lang: string) {
     console.log("setSelectedLanguage", lang)
@@ -34,17 +34,19 @@ export default function CodePanel({ languages }: CodePanelProps) {
                 languages={languages}
                 selectedLanguage={selectedLanguage}
                 setSelectedLanguage={setSelectedLanguage} />
-            <div style={{ flexGrow: 1 }}>
-                <MonacoEditor
-                    value={code}
-                    theme="vs-dark"
-                    language={monacoLangId}
-                    loading={<LoadingDiv />}
-                    onChange={(value) => setCode(value as string)}
-                    options={{
-                        minimap: { enabled: false },
-                    }}
-                />
+            <div style={{ flexGrow: 1, position: "relative" }}>
+                <div style={{ width: "100%", height: "100%", position: "absolute" }}>
+                    <MonacoEditor
+                        value={code}
+                        theme="vs-dark"
+                        language={monacoLangId}
+                        loading={<LoadingDiv />}
+                        onChange={(value) => setCode(value as string)}
+                        options={{
+                            minimap: { enabled: false },
+                        }}
+                    />
+                </div>
             </div>
         </Flex>);
 }
@@ -62,9 +64,14 @@ type LanguageSelectProps = {
 
 function LanguageSelect(props: LanguageSelectProps) {
     const data = props.languages.map(lang => ({ value: lang.id, label: lang.fullName }));
-    return (<Select data={data}
+    const theme = useMantineTheme();
+    return (
+        <Group justify="flex-end">
+    <Text ta={"right"} size="sm" c={theme.colors.gray[8]}>Programmēšanas valoda:</Text>
+    <Select data={data}
         value={props.selectedLanguage}
-        onChange={(_value, option) => setSelectedLanguage(option.value)} />);
+        onChange={(_value, option) => setSelectedLanguage(option.value)} />
+        </Group>);
 }
 
 function LoadingDiv() {
