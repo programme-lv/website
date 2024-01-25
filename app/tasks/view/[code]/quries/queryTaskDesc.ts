@@ -36,7 +36,7 @@ const queryTaskDescriptionGQL = graphql(`
 `);
 
 export default async function queryTaskDescription(code: string) {
-
+    "use server";
     const client = getClient();
     const { data } = await client.query({
         query: queryTaskDescriptionGQL,

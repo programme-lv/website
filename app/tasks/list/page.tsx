@@ -12,7 +12,7 @@ export default function Tasks() {
 
   return (
     <div style={{width: "100%"}}>
-    <SimpleGrid cols={1} verticalSpacing="xl">
+    <SimpleGrid cols={1} verticalSpacing="xl" pt={"sm"}>
       <TaskCard {...mockTask}/>
       <TaskCard {...mockTask}/>
       <TaskCard {...mockTask}/>

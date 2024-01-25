@@ -12,6 +12,7 @@ query ListLanguages {
 }`)
 
 export default async function queryLanguages() {
+    "use server"
     const client = getClient();
     const { data } = await client.query({
         query: queryListLanguagesGQL,

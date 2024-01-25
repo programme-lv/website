@@ -13,6 +13,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
+    "\nquery ListPublishedTasks {\n    listPublishedTasks {\n        id\n        createdAt\n        updatedAt\n        constraints {\n            timeLimitMs\n            memoryLimitKb\n        }\n        metadata {\n            authors\n            origin\n        }\n        tests {\n            id\n            name\n            input\n            answer\n        }\n        code\n        name\n        description {\n            id\n            story\n            input\n            output\n            notes\n            examples {\n                id\n                input\n                answer\n            }\n        }\n        solved\n    }\n}": types.ListPublishedTasksDocument,
     "\nquery ListLanguages {\n    listLanguages(enabled: true) {\n        id\n        fullName\n        monacoID\n        enabled\n    }\n}": types.ListLanguagesDocument,
     "\n    query getTaskDescription($code: String!){\n        getPublishedTaskVersionByCode(code: $code) {\n            id\n            code\n            name\n            createdAt\n            updatedAt\n            description {\n                id\n                story\n                input\n                output\n                notes\n                examples {\n                    id\n                    input\n                    answer\n                }\n            }\n            constraints {\n                timeLimitMs\n                memoryLimitKb\n            }\n            metadata {\n                authors\n                origin\n            }\n        }\n    }\n": types.GetTaskDescriptionDocument,
     "\n    query getTaskFullName($code: String!){\n        getPublishedTaskVersionByCode(code: $code) {\n            name\n        }\n    }\n": types.GetTaskFullNameDocument,
@@ -32,6 +33,10 @@ const documents = {
  */
 export function graphql(source: string): unknown;
 
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\nquery ListPublishedTasks {\n    listPublishedTasks {\n        id\n        createdAt\n        updatedAt\n        constraints {\n            timeLimitMs\n            memoryLimitKb\n        }\n        metadata {\n            authors\n            origin\n        }\n        tests {\n            id\n            name\n            input\n            answer\n        }\n        code\n        name\n        description {\n            id\n            story\n            input\n            output\n            notes\n            examples {\n                id\n                input\n                answer\n            }\n        }\n        solved\n    }\n}"): (typeof documents)["\nquery ListPublishedTasks {\n    listPublishedTasks {\n        id\n        createdAt\n        updatedAt\n        constraints {\n            timeLimitMs\n            memoryLimitKb\n        }\n        metadata {\n            authors\n            origin\n        }\n        tests {\n            id\n            name\n            input\n            answer\n        }\n        code\n        name\n        description {\n            id\n            story\n            input\n            output\n            notes\n            examples {\n                id\n                input\n                answer\n            }\n        }\n        solved\n    }\n}"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
