@@ -1,44 +1,17 @@
-'use client';
-import { Text, Card, SimpleGrid, Group, Stack } from "@mantine/core";
-import Link from "next/link";
+"use server";
 
-const mockTask = {
-  code: "summa",
-  name: "Saskaiti skaitļus!",
-  shortDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia, minima nisi? Possimus."
+import ClientTasks from "./components/ClientTasks";
+import queryPublishedTasks from "./queries/queryPublishedTask";
+
+export default async function Tasks() {
+	const tasks = await queryPublishedTasks();
+	return (
+		<ClientTasks tasks={tasks.map(task=>{
+			return {
+				code: task.code,
+				name: task.name,
+				shortDesc: task.description.story
+			}
+		})}/>
+  	);
 }
-
-export default function Tasks() {
-
-  return (
-    <div style={{width: "100%"}}>
-    <SimpleGrid cols={1} verticalSpacing="xl" pt={"sm"}>
-      <TaskCard {...mockTask}/>
-      <TaskCard {...mockTask}/>
-      <TaskCard {...mockTask}/>
-      <TaskCard {...mockTask}/>
-      <TaskCard {...mockTask}/>
-      <TaskCard {...mockTask}/>
-    </SimpleGrid>
-    </div>
-  );
-}
-
-type TaskCardProps = {
-  code: string; // used for navigation
-  name: string;
-  shortDesc: string;
-}
-
-function TaskCard({code, name, shortDesc}: TaskCardProps) {
-  return (
-    <Link href={`/tasks/view/${code}`}  style={{ textDecoration: 'none' }}>
-    <Card withBorder padding={"md"}>
-      <Stack> 
-        <Text fw={500} size="lg">{name}</Text>
-        <Text>{shortDesc}</Text>
-      </Stack>
-    </Card>
-    </Link>
-  )
-} 
