@@ -15,7 +15,7 @@ type CodePanelProps = {
     languages: ProgrammingLang[];
 }
 
-export default function CodePanel({ languages }: CodePanelProps) {
+export default function ClientCodePanel({ languages }: CodePanelProps) {
     const [selectedLanguage, setSelectedLanguage] = useState<string>(languages[0].id);
     const [code, setCode] = useState<string>("");
 

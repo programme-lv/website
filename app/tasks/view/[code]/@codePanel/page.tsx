@@ -1,13 +1,13 @@
 'use server';
 
 import queryLanguages from "../quries/queryLanguages";
-import CodePanel, { ProgrammingLang } from "./CodePanel";
+import ClientCodePanel, { ProgrammingLang } from "../components/ClientCodePanel";
 
-export default async function TaskView(props: any) {
+export default async function CodePanel(props: any) {
     const languages = await queryLanguages();
     
     return (
-        <CodePanel languages={languages as ProgrammingLang[]} />
+        <ClientCodePanel languages={languages as ProgrammingLang[]} />
     )
 }
 

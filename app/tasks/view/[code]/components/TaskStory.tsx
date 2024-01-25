@@ -9,7 +9,7 @@ type TaskViewProps = {
     task: Task;
 }
 
-export default function TaskView({task}: TaskViewProps){
+export default function TaskStory({task}: TaskViewProps){
     const theme = useMantineTheme();
     return (
             <Stack bg="white" p={"lg"} gap={"xl"}>

@@ -1,5 +1,5 @@
 import queryTaskDescription from "./quries/queryTaskDesc"
-import { TaskTabs } from "./components/TaskTabs"
+import { ClientTaskView } from "./components/ClientTaskView"
 
 type Examples = { id: string, input: string, answer: string }[]
 
@@ -22,7 +22,7 @@ export default async function TaskView(props: any) {
     // const languages = await queryLanguages();
     
     return (
-        <TaskTabs task={task as Task}/>
+        <ClientTaskView task={task as Task}/>
     )
 }
 
