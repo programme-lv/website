@@ -1,4 +1,6 @@
 "use server";
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
 
 import renderMD from "@/lib/render";
 import ClientTasks from "./components/ClientTasks";
