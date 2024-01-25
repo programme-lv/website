@@ -2,7 +2,7 @@ import { Divider, Group, Stack, Text, useMantineTheme } from "@mantine/core";
 import { StatementExamples } from "./StatementExamples";
 import { Task } from "../page";
 import 'katex/dist/katex.min.css'
-import { MDDiv } from "../../../../../components/MDDiv/MDDiv";
+import MDDiv from "./MDDiv";
 
 
 type TaskViewProps = {
