@@ -20,7 +20,7 @@ export function TaskTabs({task}:TaskTabsProps) {
       </Tabs.List>
 
       <Tabs.Panel value="task" bg={"white"} p={0} display={"flex"} style={{flexGrow:1, position:"relative"}}>
-        <div style={{height:"100%", width:"100%", overflow:"scroll", position:"absolute"}}>
+        <div style={{height:"100%", width:"100%", overflow:"auto", position:"absolute"}}>
         <TaskView task={task}/>
         </div>
       </Tabs.Panel>
