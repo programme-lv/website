@@ -1,9 +1,9 @@
 'use client';
-import { Flex, Stack } from "@mantine/core";
+import { Card, Flex, Stack } from "@mantine/core";
 import { Resizable } from "re-resizable";
 import ResizeBar from "./ResizeBar";
 
-export default async function RightSideLayout({children}: {children: any}) {
+export default function RightSideLayout({children}: {children: any}) {
     return (
         <Resizable handleComponent={
             { left: <ResizeBar /> }}
@@ -13,11 +13,11 @@ export default async function RightSideLayout({children}: {children: any}) {
             maxWidth={"80%"}
             >
             <Flex w={"100%"} h={"100%"} pl={"sm"}>
-                <Stack bg="white" h="100%" w="100%" p={"sm"}>
+                <Card bg="white" h="100%" w="100%" p={"sm"} withBorder>
                     <div style={{ flexGrow: 1 }}>
                         {children}
                     </div>
-                </Stack>
+                </Card>
             </Flex>
         </Resizable>
     )
