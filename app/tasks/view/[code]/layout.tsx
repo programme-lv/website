@@ -1,14 +1,17 @@
 import ProglvShell from "@/components/ProglvShell/ProglvShell";
-import queryTaskName from "./queryTaskName";
+import queryTaskName from "./quries/queryTaskName";
+import { Flex, Stack, Title } from "@mantine/core";
+import RightSideLayout from "./components/RightSideLayout";
 
 type LayoutProps = {
 	children: any;
+	codePanel: any;
 	params: {
 		code: string;
 	}
 };
 
-export default async function Layout({ children, params }: LayoutProps) {
+export default async function Layout({ children, params, codePanel }: LayoutProps) {
 	const taskFullName = await queryTaskName(params.code);
 	return <ProglvShell pageID="tasks" breadcrumbs={
 		[
@@ -16,5 +19,16 @@ export default async function Layout({ children, params }: LayoutProps) {
 			{ title: taskFullName, href: `/tasks/view/${params.code}` }
 		]
 	}
-	navbarID="solve">{children}</ProglvShell>;
+	navbarID="solve">
+        <Flex w={"100%"} gap={"sm"}>
+            <Stack h="100%" style={{flexGrow:1}}>
+                <Title order={2} my={"md"}>Uzdevums "{taskFullName}"</Title>
+				{children}
+            </Stack>
+            <RightSideLayout>
+				{codePanel}
+            </RightSideLayout>
+        </Flex>
+
+	</ProglvShell>;
 }

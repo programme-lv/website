@@ -2,7 +2,7 @@
 
 import { Stack, Tabs, rem } from "@mantine/core";
 import TaskView from "./TaskView";
-import { Task } from "./page";
+import { Task } from "../page";
 
 type TaskTabsProps = {
     task: Task;

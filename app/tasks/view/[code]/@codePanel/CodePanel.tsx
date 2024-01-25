@@ -2,7 +2,8 @@
 
 import { Dispatch, SetStateAction, useState } from "react";
 import MonacoEditor from "@monaco-editor/react";
-import { Text, Flex, Group, LoadingOverlay, Select, useMantineTheme } from "@mantine/core";
+import { Text, Flex, Group, Select, useMantineTheme } from "@mantine/core";
+import { LoadingBarOverlay } from "../../../../../components/LoadingBarOverlay/LoadingBarOverlay";
 
 export type ProgrammingLang = {
     id: string;
@@ -32,7 +33,7 @@ export default function CodePanel({ languages }: CodePanelProps) {
                         value={code}
                         theme="vs-dark"
                         language={monacoLangId}
-                        loading={<LoadingDiv />}
+                        loading={<LoadingBarOverlay />}
                         onChange={(value) => setCode(value as string)}
                         options={{
                             minimap: { enabled: false },
@@ -67,6 +68,3 @@ function LanguageSelect(props: LanguageSelectProps) {
         </Group>);
 }
 
-function LoadingDiv() {
-    return <LoadingOverlay visible={true} zIndex={1000} overlayProps={{ radius: 0, blur: 0 }} loaderProps={{ type: "bars" }} />
-}

@@ -1,9 +1,5 @@
-import queryTaskDescription from "./queryTaskDesc"
-import { TaskTabs } from "./TaskTabs"
-import { Flex, Stack, Title } from "@mantine/core"
-import RightSideLayout from "./RightSideLayout"
-import CodePanel, { ProgrammingLang } from "./CodePanel"
-import queryLanguages from "./queryLanguages"
+import queryTaskDescription from "./quries/queryTaskDesc"
+import { TaskTabs } from "./components/TaskTabs"
 
 type Examples = { id: string, input: string, answer: string }[]
 
@@ -23,17 +19,10 @@ export type Task = {
 
 export default async function TaskView(props: any) {
     const task = await queryTaskDescription(props.params.code)
-    const languages = await queryLanguages();
+    // const languages = await queryLanguages();
+    
     return (
-        <Flex w={"100%"} gap={"sm"}>
-            <Stack h="100%" style={{flexGrow:1}}>
-                <Title order={2} my={"md"}>Uzdevums "{task.name}"</Title>
-                <TaskTabs task={task as Task}/>
-            </Stack>
-            <RightSideLayout>
-                <CodePanel languages={languages as ProgrammingLang[]}/>
-            </RightSideLayout>
-        </Flex>
+        <TaskTabs task={task as Task}/>
     )
 }
 
