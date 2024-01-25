@@ -30,8 +30,6 @@ export default async function TaskView(props: any) {
     rendered.description.input = renderMD(task.description.input)
     rendered.description.output = renderMD(task.description.output)
 
-    console.log(rendered)
-
     return (
         <ClientTaskView task={rendered}/>
     )

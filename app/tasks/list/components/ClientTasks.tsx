@@ -11,7 +11,6 @@ type ClientTasksProps = {
 }
 
 export default function ClientTasks({ tasks }: ClientTasksProps) {
-    console.log(tasks)
     return (
         <div style={{ width: "100%" }}>
             <SimpleGrid cols={1} verticalSpacing="xl" pt={"sm"}>
