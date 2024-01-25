@@ -4,14 +4,6 @@ import { Dispatch, SetStateAction, useState } from "react";
 import MonacoEditor from "@monaco-editor/react";
 import { Text, Flex, Group, LoadingOverlay, Select, useMantineTheme } from "@mantine/core";
 
-async function setSelectedLanguage(lang: string) {
-    console.log("setSelectedLanguage", lang)
-}
-
-async function setCode(code: string) {
-    console.log("setCode", code)
-}
-
 export type ProgrammingLang = {
     id: string;
     fullName: string;
@@ -67,10 +59,11 @@ function LanguageSelect(props: LanguageSelectProps) {
     const theme = useMantineTheme();
     return (
         <Group justify="flex-end">
-    <Text ta={"right"} size="sm" c={theme.colors.gray[8]}>Programmēšanas valoda:</Text>
-    <Select data={data}
-        value={props.selectedLanguage}
-        onChange={(_value, option) => setSelectedLanguage(option.value)} />
+            <Text ta={"right"} size="sm" c={theme.colors.gray[8]}>Programmēšanas valoda:</Text>
+            <Select data={data}
+                value={props.selectedLanguage}
+                allowDeselect={false}
+                onChange={(_value, option) => { (option && option.value) ? (props.setSelectedLanguage(option.value)) : (props.setSelectedLanguage(props.languages[0].id)) }} />
         </Group>);
 }
 
