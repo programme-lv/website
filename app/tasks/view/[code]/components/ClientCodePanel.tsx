@@ -2,8 +2,9 @@
 
 import { Dispatch, SetStateAction, useState } from "react";
 import MonacoEditor from "@monaco-editor/react";
-import { Text, Flex, Group, Select, useMantineTheme } from "@mantine/core";
+import { Text, Flex, Group, Select, useMantineTheme, Button } from "@mantine/core";
 import { LoadingBarOverlay } from "../../../../../components/LoadingBarOverlay/LoadingBarOverlay";
+import { IconSend } from "@tabler/icons-react";
 
 export type ProgrammingLang = {
     id: string;
@@ -41,7 +42,21 @@ export default function ClientCodePanel({ languages }: CodePanelProps) {
                     />
                 </div>
             </div>
+            <SubmitButton langId={selectedLanguage} code={code}/>
         </Flex>);
+}
+
+type SubmitButtonProps = {
+    langId: string;
+    code: string;
+}
+
+function SubmitButton({langId, code}: SubmitButtonProps) {
+  return (
+    <Group justify="flex-end">
+      <Button bg={"green"} rightSection={<IconSend size={14}/>} >Iesūtīt risinājumu</Button>
+    </Group>
+  );
 }
 
 type SelectLang = {
