@@ -1,5 +1,5 @@
 'use client';
-import { Container, Divider, TextInput, Grid, Group, Button} from "@mantine/core";
+import { Container, Divider, TextInput, Grid, Group, Button, Code, Table} from "@mantine/core";
 import { useForm } from '@mantine/form';
 
 const Task = {
@@ -52,7 +52,34 @@ export default function GeneralInfo(){
                     withAsterisk
                     my={'xs'}
                 />
-                <TextInput
+                </form>
+                </Grid.Col>
+            </Grid>
+            
+                <Table>
+                    <Table.Thead>
+                        <Table.Tr>
+                        <Table.Th>Izveidots</Table.Th>
+                        <Table.Th>Atjaunots</Table.Th>
+                        <Table.Th>Versija</Table.Th>
+                        </Table.Tr>
+                    </Table.Thead>
+                    <Table.Tbody>
+                        <Table.Tr>
+                            <Table.Td>
+                                <Code>{Task.created_at}</Code>
+                            </Table.Td>
+                            <Table.Td>
+                                <Code>{Task.modified_at}</Code>
+                            </Table.Td>
+                            <Table.Td>
+                                <Code>{Task.version}</Code>
+                            </Table.Td>
+                        </Table.Tr>
+                    </Table.Tbody>
+                </Table>
+                
+                {/* <TextInput
                     label="Izveidots"
                     {...form.getInputProps('created_at')}
                     disabled
@@ -69,10 +96,9 @@ export default function GeneralInfo(){
                     {...form.getInputProps('version')}
                     disabled
                     my={'xs'}
-                />
-            </form>
-            </Grid.Col>
-            </Grid>
+                /> */}
+            
+            
             <Divider my={'xs'}/>
             <Group my={'md'}>
                 <Button variant="light">Eksportēt</Button>
