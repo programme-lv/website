@@ -24,6 +24,7 @@ import {
 	IconTrash,
 	IconSwitchHorizontal,
 	IconChevronDown,
+	IconUser,
 } from '@tabler/icons-react';
 import ProglvLogo from '../ProglvLogo/ProglvLogo';
 import classes from './Header.module.css';
@@ -44,13 +45,17 @@ type HeaderProps = {
 	profileMenu?: boolean;
 };
 
-export function Header({breadcrumbs, menuOptions, profileMenu}: HeaderProps) {
+const iconSize = 18;
+const iconStrokeWidth = 1.5;
+
+export function Header({ breadcrumbs, menuOptions, profileMenu }: HeaderProps) {
 	breadcrumbs ??= [];
 	const breadcrumbLinks = breadcrumbs.map((item, index) => (
 		<Link href={item.href} key={index} className={classes.breadcrumbLink}>
 			<Text c='blue'>{item.title}</Text>
 		</Link>
 	));
+
 	menuOptions ??= [];
 	const menuOptionsLinks = menuOptions.map((item, index) => (
 		<a href={item.href} className={classes.link}>{item.title}</a>
@@ -88,96 +93,43 @@ export function Header({breadcrumbs, menuOptions, profileMenu}: HeaderProps) {
 				<Menu.Dropdown>
 					<Menu.Item
 						leftSection={
-							<IconHeart
-								style={{ width: rem(16), height: rem(16) }}
-								color={theme.colors.red[6]}
-								stroke={1.5}
-							/>
-						}
-					>
-						Liked posts
+							<IconUser style={{ width: rem(iconSize), height: rem(iconSize) }} stroke={iconStrokeWidth} />
+						}>
+						Mans profils
 					</Menu.Item>
 					<Menu.Item
 						leftSection={
-							<IconStar
-								style={{ width: rem(16), height: rem(16) }}
-								color={theme.colors.yellow[6]}
-								stroke={1.5}
-							/>
-						}
-					>
-						Saved posts
+							<IconSettings style={{ width: rem(iconSize), height: rem(iconSize) }} stroke={iconStrokeWidth} />
+						}>
+						Konta iestatījumi
 					</Menu.Item>
 					<Menu.Item
 						leftSection={
-							<IconMessage
-								style={{ width: rem(16), height: rem(16) }}
-								color={theme.colors.blue[6]}
-								stroke={1.5}
-							/>
+							<IconLogout style={{ width: rem(iconSize), height: rem(iconSize) }} stroke={iconStrokeWidth} />
 						}
 					>
-						Your comments
+						Iziet no konta
 					</Menu.Item>
-
-					<Menu.Label>Settings</Menu.Label>
-					<Menu.Item
-						leftSection={
-							<IconSettings style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
-						}
-					>
-						Account settings
-					</Menu.Item>
-					<Menu.Item
-						leftSection={
-							<IconSwitchHorizontal style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
-						}
-					>
-						Change account
-					</Menu.Item>
-					<Menu.Item
-						leftSection={
-							<IconLogout style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
-						}
-					>
-						Logout
-					</Menu.Item>
-
 					<Menu.Divider />
-
-					<Menu.Label>Danger zone</Menu.Label>
-					<Menu.Item
-						leftSection={
-							<IconPlayerPause style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
-						}
-					>
-						Pause subscription
-					</Menu.Item>
-					<Menu.Item
-						color="red"
-						leftSection={<IconTrash style={{ width: rem(16), height: rem(16) }} stroke={1.5} />}
-					>
-						Delete account
-					</Menu.Item>
 				</Menu.Dropdown>
 			</Menu>
 		);
 	} else {
 		profileLink = (
 			<UnstyledButton
-                    className={cx(classes.user, {[classes.userActive]: userMenuOpened})}
-                >
-                    <Group gap={7}>
-                        <Avatar src={user.image} alt={user.name} radius="xl" size={20}/>
-                        <Text fw={500} size="sm" lh={1} mr={3}>
-                            {user.name}
-                        </Text>
-                    </Group>
-                </UnstyledButton>
+				className={cx(classes.user, { [classes.userActive]: userMenuOpened })}
+			>
+				<Group gap={7}>
+					<Avatar src={user.image} alt={user.name} radius="xl" size={20} />
+					<Text fw={500} size="sm" lh={1} mr={3}>
+						{user.name}
+					</Text>
+				</Group>
+			</UnstyledButton>
 		);
 	}
 
-	
+
 
 	return (
 		<div className={classes.header}>
@@ -193,7 +145,7 @@ export function Header({breadcrumbs, menuOptions, profileMenu}: HeaderProps) {
 			</Group>
 
 
-			
+
 		</div>
 	);
 }

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Center, Tooltip, UnstyledButton, Stack, rem } from '@mantine/core';
+import { Tooltip, UnstyledButton, Stack, rem } from '@mantine/core';
 import {
     IconPuzzle,
     IconInbox,
@@ -9,7 +9,6 @@ import {
     IconLogout,
     IconSwitchHorizontal,
 } from '@tabler/icons-react';
-import ProglvLogo from '../ProglvLogo/ProglvLogo';
 import classes from './NavbarMinimal.module.css';
 import Link from 'next/link';
 
@@ -47,8 +46,6 @@ function NavbarLink({ icon: Icon, label, active, onClick, link }: NavbarLinkProp
 const elements = [
     { id: 'tasks', icon: IconPuzzle, label: 'Uzdevumi', link: '/tasks/list' },
     { id: 'submissions', icon: IconInbox, label: 'Iesūtījumi', link: '/submissions/list' },
-    { id: 'profile', icon: IconUser, label: 'Profils' },
-    { id: 'settings', icon: IconSettings, label: 'Iestatījumi' },
 ];
 
 type NavbarMinimalProps = {
@@ -56,15 +53,9 @@ type NavbarMinimalProps = {
 }
 
 export function NavbarMinimal({pageID}:NavbarMinimalProps) {
-    // choose the correct active element
-    let defActive = 0;
-    for(let element of elements) {
-        if(element.id === pageID)
-            defActive = elements.indexOf(element);
-    }
-
-
-    const [active, setActive] = useState(defActive);
+    let pageIDCorrespondingLink = elements.findIndex((element) => element.id === pageID);
+    
+    const [active, setActive] = useState(pageIDCorrespondingLink);
 
     const links = elements.map((link, index) => (
         <NavbarLink
@@ -84,8 +75,9 @@ export function NavbarMinimal({pageID}:NavbarMinimalProps) {
             </div>
 
             <Stack justify="center" gap={0}>
-                <NavbarLink icon={IconSwitchHorizontal} label="Change account" />
-                <NavbarLink icon={IconLogout} label="Logout" />
+                <NavbarLink icon={IconUser} label="Profils" />
+                <NavbarLink icon={IconSettings} label="Iestatījumi" />
+                <NavbarLink icon={IconLogout} label="Iziet" />
             </Stack>
         </nav>
     );
