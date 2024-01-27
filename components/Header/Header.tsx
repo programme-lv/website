@@ -38,10 +38,8 @@ const user = {
 };
 
 type HeaderProps = {
-	breadcrumbs?: { title: string; href: string }[];
-	// TODO:Add menu options
+	breadcrumbs?: { title: string; href: string }[];s
 	menuOptions?: { title: string; href: string }[];
-	// TODO: Add bool for profile menu
 	profileMenu?: boolean;
 };
 

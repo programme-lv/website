@@ -1,5 +1,6 @@
 'use client';
 import { Container, Divider, Textarea, Grid, Button} from "@mantine/core";
+import { useForm } from '@mantine/form';
 
 const Task = {
     story: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
@@ -9,7 +10,17 @@ const Task = {
 }
 
 export default function Statement(){
+    const form = useForm({
+        initialValues: {
+            story: Task.story,
+            input: Task.input,
+            output: Task.output,
+            notes: Task.notes,
+        }
+    })
+
     return (
+        <div style={{height: "100%", width: "100%"}}>
         <Container bg="white" py={1}>
             <h5>Formulējums</h5>
             <Divider my={'xs'}/>
@@ -18,7 +29,7 @@ export default function Statement(){
             <form>
                 <Textarea
                     label="Stāsts"
-                    value={Task.story}
+                    {...form.getInputProps('story')}
                     withAsterisk
                     my={'xs'}
                     autosize
@@ -26,7 +37,7 @@ export default function Statement(){
                 />
                 <Textarea
                     label="Ievaddati"
-                    value={Task.input}
+                    {...form.getInputProps('input')}
                     withAsterisk
                     my={'xs'}
                     autosize
@@ -34,7 +45,7 @@ export default function Statement(){
                 />
                 <Textarea
                     label="Izvaddati"
-                    value={Task.output}
+                    {...form.getInputProps('output')}
                     withAsterisk
                     my={'xs'}
                     autosize
@@ -43,7 +54,7 @@ export default function Statement(){
                 <Divider my={'xs'}/>
                 <Textarea
                     label="Piezīmes"
-                    value={Task.notes}
+                    {...form.getInputProps('notes')}
                     withAsterisk
                     my={'xs'}
                     autosize
@@ -52,8 +63,9 @@ export default function Statement(){
             </Grid.Col>
             </Grid>
             <Divider my={'xs'}/>
-            <Button my={'xs'}>Saglabāt izmaiņas</Button>
+            <Button my={'xs'} type="submit" >Saglabāt izmaiņas</Button>
 
         </Container>
+        </div>
     );
 }

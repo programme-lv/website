@@ -5,7 +5,7 @@ import {
     IconFileText,
     IconHome2,
     IconTestPipe,
-    IconBrandAmongUs, // TODO: change icon ;D
+    IconBrowserCheck
 } from '@tabler/icons-react';
 // import ProglvLogo from '../../ProglvLogo/ProglvLogo';
 import classes from './NavbarSeggmented.module.css'
@@ -30,7 +30,7 @@ export function NavbarSegmented({pageID, shortcode}:NavbarMinimalProps) {
         { id: 'general_info', icon: IconInfoCircle, label: 'Vispārīgi', link: '/constructor/edit/'+ shortcode + '/general_info'},
         { id: 'statement', icon: IconFileText, label: 'Formulējums', link: '/constructor/edit/'+ shortcode + '/statement' },
         { id: 'tests', icon: IconTestPipe, label: 'Testēšana', link: '/constructor/edit/'+ shortcode + '/tests'},
-        { id: 'solutions', icon: IconBrandAmongUs, label: 'Risinājumi', link: '/constructor/edit/'+ shortcode + '/solutions'},
+        { id: 'solutions', icon: IconBrowserCheck, label: 'Risinājumi', link: '/constructor/edit/'+ shortcode + '/solutions'},
     ];
 
     // choose the correct active element
