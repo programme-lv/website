@@ -19,18 +19,17 @@ export default function HomePage() {
 programme.lv
 [Pieslēgties] [Reģistrēties]
 
-
 Jauna Pasaule informātikas un matemātikas cienītājiem!
 [Ieiet portālā]
 
-šobrīd strādājam pie:
+Šobrīd strādājam pie:
 - kvalitatīvi uzdevumi
 - automātiska novērtēšana
 - integrēts redaktors
 - uzdevumu veidošana
 
-nākotnē ceram uz:
-- interaktīva teorija     
+Nākotnē ceram uz:
+- interaktīva teorija
 - uzlabota meklēšana
 - regulāras sacensības
 - lietotāju grupēšana
