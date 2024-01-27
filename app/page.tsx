@@ -2,36 +2,69 @@
 import { Welcome } from '../components/Welcome/Welcome';
 import { ColorSchemeToggle } from '../components/ColorSchemeToggle/ColorSchemeToggle';
 import Link from 'next/link';
-import { AppShell, Burger, Group, useMantineTheme } from '@mantine/core';
-import ProglvLogo from '@/components/ProglvLogo/ProglvLogo';
 
 export default function HomePage() {
-	const theme = useMantineTheme();
 	return (
-		<AppShell
-			header={{ height: 60 }}
-			navbar={{
-				width: 80,
-				breakpoint: 'sm',
-				collapsed: { mobile: !false },
-			}}
-			padding="md">
-			<AppShell.Header>
-				<Group p={'xs'} gap={'xl'}>
-					<ProglvLogo scale={0.1} />
-				</Group>
-
-				<Burger opened={false} onClick={() => { }} hiddenFrom="xs" size="sm" />
-			</AppShell.Header>
-
-
-			<AppShell.Main bg={theme.colors.gray[0]} display={"flex"}>
-				<Welcome />
-				<Link href="/dashboard">
-					hello
-				</Link>
-				<ColorSchemeToggle />
-			</AppShell.Main>
-		</AppShell>
+		<>
+			<Welcome />
+			<Link href="/dashboard">
+				hello
+			</Link>
+			<ColorSchemeToggle />
+		</>
 	);
 }
+
+/*
+programme.lv
+[Pieslēgties] [Reģistrēties]
+
+
+Jauna Pasaule informātikas un matemātikas cienītājiem!
+[Ieiet portālā]
+
+šobrīd strādājam pie:
+- kvalitatīvi uzdevumi
+- automātiska novērtēšana
+- integrēts redaktors
+- uzdevumu veidošana
+
+nākotnē ceram uz:
+- interaktīva teorija     
+- uzlabota meklēšana
+- regulāras sacensības
+- lietotāju grupēšana
+
+Atbalstot atvērtā koda garu,
+Programme.lv pirmkods ir brīvi pieejams vietnē
+github.com/orgs/programme-lv ar GPLv3 licenci.
+
+Šī iniciatīva atspoguļo mūsu apņemšanos veicināt sadarbību
+ar visiem topošajiem programmēšanas interesentiem.
+
+Projekta draugi:
+- Latvijas Informātikas olimpiāde
+- Pirmā Programmēšanas skola
+- Neklātienes matemātikas skola
+- Start(IT) izglītības fonds
+
+PRO versija:
+- palīdzība no ekspertiem
+- neierobežoti atrisinājumi
+- nerindotu uzdevumu izveide
+- piekļuve PRO kursiem
+
+Mūsu komanda
+- Krišjānis Petručeņa
+- Veronika Lohmanova
+- Raivis Ieviņš
+
+Paldies Jānim Gruzim par ieguldījumu projekta attīstībā.
+
+Sociālie mēdiji:
+- discord
+- instagram
+
+Kontakti:
+- info@programme.lv
+*/
