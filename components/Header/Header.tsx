@@ -38,7 +38,7 @@ const user = {
 };
 
 type HeaderProps = {
-	breadcrumbs?: { title: string; href: string }[];s
+	breadcrumbs?: { title: string; href: string }[];
 	menuOptions?: { title: string; href: string }[];
 	profileMenu?: boolean;
 };
