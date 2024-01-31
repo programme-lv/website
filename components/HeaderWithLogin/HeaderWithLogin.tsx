@@ -26,6 +26,7 @@ import {
     IconChevronDown,
   } from '@tabler/icons-react';
   import classes from './HeaderWithLogin.module.css';
+import Link from 'next/link';
   
   export function HeaderWithLogin() {
     const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
@@ -39,8 +40,8 @@ import {
             <LogoWithText scale={0.1}/>
   
             <Group visibleFrom="sm">
-              <Button variant="default">Pieslēgties</Button>
-              <Button>Reģistrēties</Button>
+              <Button component={Link} href="/login" variant="default">Pieslēgties</Button>
+              <Button component={Link} href="/register">Reģistrēties</Button>
             </Group>
   
             <Burger opened={drawerOpened} onClick={toggleDrawer} hiddenFrom="sm" />

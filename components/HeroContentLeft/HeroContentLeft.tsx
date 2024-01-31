@@ -1,5 +1,6 @@
 import { Overlay, Container, Title, Button, Text } from '@mantine/core';
 import classes from './HeroContentLeft.module.css';
+import Link from 'next/link';
 
 export function HeroContentLeft() {
   return (
@@ -13,7 +14,7 @@ export function HeroContentLeft() {
         <Title className={classes.title}>
           Jauna Pasaule informātikas un matemātikas cienītājiem
         </Title>
-        <Button size="xl" radius="md" className={classes.control}>
+        <Button component={Link} href="/tasks/list" size="xl" radius="md" className={classes.control}>
           Ieiet portālā
         </Button>
       </Container>
