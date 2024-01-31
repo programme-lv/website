@@ -2,14 +2,16 @@
 import { Welcome } from '../components/Welcome/Welcome';
 import { ColorSchemeToggle } from '../components/ColorSchemeToggle/ColorSchemeToggle';
 import Link from 'next/link';
+import { FeaturesGrid } from '@/components/FeaturesGrid/FeaturesGrid';
+import { HeroContentLeft } from '@/components/HeroContentLeft/HeroContentLeft';
+import { HeaderWithLogin } from '@/components/HeaderWithLogin/HeaderWithLogin';
 
 export default function HomePage() {
 	return (
 		<>
-			<Welcome />
-			<Link href="/dashboard">
-				hello
-			</Link>
+			<HeaderWithLogin />
+			<HeroContentLeft />
+			<FeaturesGrid />
 			<ColorSchemeToggle />
 		</>
 	);
