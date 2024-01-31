@@ -1,12 +1,13 @@
 .hero {
     position: relative;
-    background-image: url("/backgrounds/cmatrix3.gif");
+    /*background-image: url("https://itsfoss.com/content/images/2023/10/Cmatrix.gif");*/
+    background-image: url("/backgrounds/hills.png");
     background-size: cover;
     background-position: center;
 }
 
 .container {
-    height: rem(700px);
+    height: rem(600px);
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -26,6 +27,7 @@
     font-size: rem(60px);
     font-weight: 900;
     line-height: 1.1;
+    text-align: left;
 
     @media (max-width: $mantine-breakpoint-sm) {
         font-size: rem(40px);
