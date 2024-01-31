@@ -39,8 +39,8 @@ import {
             <LogoWithText scale={0.1}/>
   
             <Group visibleFrom="sm">
-              <Button variant="default">Log in</Button>
-              <Button>Sign up</Button>
+              <Button variant="default">Pieslēgties</Button>
+              <Button>Reģistrēties</Button>
             </Group>
   
             <Burger opened={drawerOpened} onClick={toggleDrawer} hiddenFrom="sm" />
