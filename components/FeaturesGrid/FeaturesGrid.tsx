@@ -5,36 +5,54 @@ import classes from './FeaturesGrid.module.css';
 export const MOCKDATA = [
   {
     icon: IconGauge,
-    title: 'Extreme performance',
+    title: 'Kvalitatīvi uzdevumi',
     description:
-      'This dust is actually a powerful poison that will even make a pro wrestler sick, Regice cloaks itself with frigid air of -328 degrees Fahrenheit',
+      '',
   },
   {
     icon: IconUser,
-    title: 'Privacy focused',
+    title: 'Automātiska novērtēšana',
     description:
-      'People say it can run at the same speed as lightning striking, Its icy body is so cold, it will not melt even if it is immersed in magma',
+      '',
   },
   {
     icon: IconCookie,
-    title: 'No third parties',
+    title: 'Iebuvēts koda redaktors',
     description:
-      'They’re popular, but they’re rare. Trainers who show them off recklessly may be targeted by thieves',
+      '',
   },
   {
     icon: IconLock,
-    title: 'Secure by default',
+    title: 'Programmēšanas teorija',
     description:
-      'Although it still can’t fly, its jumping power is outstanding, in Alola the mushrooms on Paras don’t grow up quite right',
+      '',
   },
   {
     icon: IconMessage2,
-    title: '24/7 Support',
+    title: 'Uzdevumu veidošana',
     description:
-      'Rapidash usually can be seen casually cantering in the fields and plains, Skitty is known to chase around after its own tail',
+      '',
   },
+  {
+    icon: IconMessage2,
+    title: 'Uzlabota meklēšana',
+    description:
+      '',
+  }
 ];
+/*
+Šobrīd strādājam pie:
+- kvalitatīvi uzdevumi
+- automātiska novērtēšana
+- integrēts redaktors
+- uzdevumu veidošana
 
+Nākotnē ceram uz:
+- interaktīva teorija
+- uzlabota meklēšana
+- regulāras sacensības
+- lietotāju grupēšana
+*/
 interface FeatureProps {
   icon: React.FC<any>;
   title: React.ReactNode;
@@ -62,12 +80,11 @@ export function FeaturesGrid() {
 
   return (
     <Container className={classes.wrapper}>
-      <Title className={classes.title}>Integrate effortlessly with any technology stack</Title>
+      <Title className={classes.title}>Apgūsti programmēšanu interaktīvi!</Title>
 
       <Container size={560} p={0}>
         <Text size="sm" className={classes.description}>
-          Every once in a while, you’ll see a Golbat that’s missing some fangs. This happens when
-          hunger drives it to try biting a Steel-type Pokémon.
+          Lasi teoriju, pildi uzdevumus, saņem palīdzību, krāj punktus, un piedalies sacensībās.
         </Text>
       </Container>
 
