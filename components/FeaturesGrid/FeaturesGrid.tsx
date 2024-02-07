@@ -1,10 +1,10 @@
 import { ThemeIcon, Text, Title, Container, SimpleGrid, rem } from '@mantine/core';
-import { IconGauge, IconCookie, IconUser, IconMessage2, IconLock } from '@tabler/icons-react';
+import { IconGauge, IconCookie, IconUser, IconMessage2, IconLock, IconPuzzle } from '@tabler/icons-react';
 import classes from './FeaturesGrid.module.css';
 
 export const MOCKDATA = [
   {
-    icon: IconGauge,
+    icon: IconPuzzle,
     title: 'Kvalitatīvi uzdevumi',
     description:
       '',

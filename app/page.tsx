@@ -2,6 +2,7 @@
 import { FeaturesGrid } from '@/components/FeaturesGrid/FeaturesGrid';
 import { HeroContentLeft } from '@/components/HeroContentLeft/HeroContentLeft';
 import { HeaderWithLogin } from '@/components/HeaderWithLogin/HeaderWithLogin';
+import Supporters from '@/components/SupportersSection/SupportersSection';
 
 export default function HomePage() {
 	return (
@@ -9,9 +10,13 @@ export default function HomePage() {
 			<HeaderWithLogin />
 			<HeroContentLeft />
 			<FeaturesGrid />
+			<Supporters />
 		</>
 	);
 }
+
+
+
 
 /*
 programme.lv
