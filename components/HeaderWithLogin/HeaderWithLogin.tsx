@@ -37,7 +37,7 @@ import Link from 'next/link';
       <Box>
         <header className={classes.header}>
           <Group justify="space-between" h="100%">
-            <LogoWithText scale={0.1}/>
+            <LogoWithText logoScale={0.1}/>
   
             <Group visibleFrom="sm">
               <Button component={Link} href="/login" variant="default">Pieslēgties</Button>
