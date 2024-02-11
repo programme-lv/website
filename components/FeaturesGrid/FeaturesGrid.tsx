@@ -1,5 +1,5 @@
 import { ThemeIcon, Text, Title, Container, SimpleGrid, rem } from '@mantine/core';
-import { IconGauge, IconCookie, IconUser, IconMessage2, IconLock, IconPuzzle } from '@tabler/icons-react';
+import { IconCookie, IconUser, IconMessage2, IconLock, IconPuzzle, IconAward, IconCheck, IconCode, IconSearch, IconTool, IconBook } from '@tabler/icons-react';
 import classes from './FeaturesGrid.module.css';
 
 export const MOCKDATA = [
@@ -7,34 +7,34 @@ export const MOCKDATA = [
     icon: IconPuzzle,
     title: 'Kvalitatīvi uzdevumi',
     description:
-      '',
+      'Katrs uzdevums tiek rūpīgi pārbaudīts, lai nodrošināt patīkamu un izglītojošu pieredzi.',
   },
   {
-    icon: IconUser,
+    icon: IconCheck,
     title: 'Automātiska novērtēšana',
     description:
-      '',
+      'Risinājuma korektums tiek noteikts automātiski, nodrošinot ātru rezultātu.',
   },
   {
-    icon: IconCookie,
+    icon: IconCode,
     title: 'Iebuvēts koda redaktors',
     description:
-      '',
+      'Izmanto iebūvēto koda redaktoru, risini uzdevumus, nepametot vietni. Nākotnē pievienosim arī "autocomplete".',
   },
   {
-    icon: IconLock,
+    icon: IconBook,
     title: 'Programmēšanas teorija',
     description:
       '',
   },
   {
-    icon: IconMessage2,
+    icon: IconTool,
     title: 'Uzdevumu veidošana',
     description:
       '',
   },
   {
-    icon: IconMessage2,
+    icon: IconSearch,
     title: 'Uzlabota meklēšana',
     description:
       '',
