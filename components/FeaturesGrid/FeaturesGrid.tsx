@@ -19,25 +19,25 @@ export const MOCKDATA = [
     icon: IconCode,
     title: 'Iebuvēts koda redaktors',
     description:
-      'Izmanto iebūvēto koda redaktoru, risini uzdevumus, nepametot vietni. Nākotnē pievienosim arī "autocomplete".',
+      'Izmanto iebūvēto koda redaktoru, risini uzdevumus, nepametot vietni.',
   },
   {
     icon: IconBook,
     title: 'Programmēšanas teorija',
     description:
-      '',
+      'Jau drīz tiks ieviesta teorijas sadaļa ar interaktīviem piemēriem un uzdevumiem!',
   },
   {
     icon: IconTool,
     title: 'Uzdevumu veidošana',
     description:
-      '',
+      'Iespēja izveidot savus uzdevumus un dalīties ar tiem ar citiem lietotājiem.',
   },
   {
     icon: IconSearch,
     title: 'Uzlabota meklēšana',
     description:
-      '',
+      'Uzdevumus būs iespējams semantiski meklēt ar mākslīgā intelekta palīdzību.',
   }
 ];
 /*
