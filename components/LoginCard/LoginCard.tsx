@@ -20,7 +20,7 @@ export default function LoginCard() {
         <Container w={600} my={40}>
             <Paper withBorder shadow="md" p={30} mt={30} radius="md">
                 <Title ta="center" className={classes.title}>
-                    Sveicināts atpakaļ!
+                    Sveicināti atpakaļ! :)
                 </Title>
                 <Text c="dimmed" size="sm" ta="center" mt={5}>
                     Vēl neesi izveidojis savu lietotāju?{' '}
