@@ -13,6 +13,7 @@ import {
     ScrollArea,
     rem,
     useMantineTheme,
+    Container,
   } from '@mantine/core';
   import LogoWithText from '@/components/ProglvLogo/LogoWithText';
   import { useDisclosure } from '@mantine/hooks';
@@ -34,7 +35,7 @@ import Link from 'next/link';
     const theme = useMantineTheme();
   
     return (
-      <Box>
+      <Container size={"xl"}>
         <header className={classes.header}>
           <Group justify="space-between" h="100%">
             <LogoWithText logoScale={0.1}/>
@@ -47,6 +48,6 @@ import Link from 'next/link';
             <Burger opened={drawerOpened} onClick={toggleDrawer} hiddenFrom="sm" />
           </Group>
         </header>
-      </Box>
+      </Container>
     );
   }
