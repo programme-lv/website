@@ -13,6 +13,7 @@ import {
 } from '@mantine/core';
 import classes from './Authentication.module.css';
 import Link from 'next/link';
+import { IconDoorEnter, IconLogin, IconLogin2 } from '@tabler/icons-react';
 
 export default function LoginCard() {
     return (
@@ -28,7 +29,7 @@ export default function LoginCard() {
                     </Anchor>
                 </Text>
                 <Space h={20} />
-                <TextInput label="E-pasts" placeholder="Jūsu epasts" required />
+                <TextInput label="Lietotājvārds" placeholder="Jūsu lietotājvārds" required />
                 <Space h={10} />
                 <PasswordInput label="Parole" placeholder="Jūsu parole" required mt="md" />
                 <Space h={10} />
@@ -40,7 +41,9 @@ export default function LoginCard() {
                 </Group>
                 <Space h={10} />
                 <Button fullWidth mt="xl">
-                    Pieslēgties
+                    <Group gap={"md"}>
+                    Pieslēgties <IconLogin2/>
+                    </Group>
                 </Button>
             </Paper>
         </Container>
