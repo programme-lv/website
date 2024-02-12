@@ -1,3 +1,4 @@
+"use server";
 import { getClient } from "@/lib/client";
 import { gql } from "@apollo/client";
 
@@ -15,21 +16,6 @@ mutation Register($username: String!, $password: String!, $email: String!, $firs
     }
 }
 `;
-
-/*
-mutation Register {
-    register(
-        username: "labdien"
-        password: "labdien1"
-        email: "krisjanispetrucen2a@gmail.com"
-        firstName: "krisjanis"
-        lastName: "petrucena"
-    ) {
-        username
-        id
-    }
-}
-*/
 
 export default async function register(username:string, password:string,
     email:string, firstName:string, lastName:string) {
