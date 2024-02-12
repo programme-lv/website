@@ -32,19 +32,19 @@ export default function RegisterCard() {
                 </Text>
                 <Space h={20} />
                 <Stack gap="sm">
-                <TextInput label="Lietotājvārds" placeholder="iecerētais lietotājvārds" required />
-                <TextInput label="E-pasts" type='email' placeholder="epasts@domens.kkas" required />
-                <SimpleGrid cols={2}>
-                    <TextInput label="Vārds" placeholder='vārds' required/>
-                    <TextInput label="Uzvārds" placeholder='uzvārds' required/>
-                </SimpleGrid>
-                <PasswordInput label="Parole" placeholder="parole (vismaz 8 simboli)" required/>
-                <PasswordInput label="Atkārtota parole" placeholder="parole vēlreiz" required />
-                <Button fullWidth mt="xl">
-                    <Group gap={"md"}>
-                    Reģistrēties <IconUserPlus/>
-                    </Group>
-                </Button>
+                    <TextInput label="Lietotājvārds" placeholder="iecerētais lietotājvārds" required />
+                    <TextInput label="E-pasts" type='email' placeholder="epasts@domens.kkas" required />
+                    <SimpleGrid cols={2}>
+                        <TextInput label="Vārds" placeholder='vārds' required />
+                        <TextInput label="Uzvārds" placeholder='uzvārds' required />
+                    </SimpleGrid>
+                    <PasswordInput label="Parole" placeholder="parole (vismaz 8 simboli)" required />
+                    <PasswordInput label="Atkārtota parole" placeholder="parole vēlreiz" required />
+                    <Button fullWidth mt="xl">
+                        <Group gap={"md"}>
+                            Reģistrēties <IconUserPlus />
+                        </Group>
+                    </Button>
                 </Stack>
             </Paper>
         </Container>
