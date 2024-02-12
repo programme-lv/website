@@ -12,18 +12,18 @@ import {
     Space,
 } from '@mantine/core';
 import classes from './Authentication.module.css';
+import Link from 'next/link';
 
-export function AuthenticationCard() {
+export default function LoginCard() {
     return (
         <Container w={600} my={40}>
-
             <Paper withBorder shadow="md" p={30} mt={30} radius="md">
                 <Title ta="center" className={classes.title}>
                     Sveicināts atpakaļ!
                 </Title>
                 <Text c="dimmed" size="sm" ta="center" mt={5}>
                     Vēl neesi izveidojis savu lietotāju?{' '}
-                    <Anchor size="sm" component="button">
+                    <Anchor size="sm" component={Link} href={"/register"}>
                         Reģistrējies šeit
                     </Anchor>
                 </Text>
