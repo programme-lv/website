@@ -27,7 +27,7 @@ export default function RootLayout({ children }: { children: any }) {
 				<ApolloWrapper>
 					<NextTopLoader />
 					<MantineProvider theme={theme}>
-						<Notifications position='bottom-right' />
+						<Notifications position='bottom-right' autoClose={8000}/>
 						{children}
 					</MantineProvider>
 				</ApolloWrapper>
