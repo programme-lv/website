@@ -6,7 +6,7 @@ export const { getClient } = registerApolloClient(() => {
     ssrMode: typeof window === 'undefined',
     cache: new InMemoryCache(),
     link: new HttpLink({
-      uri: typeof window === 'undefined' ? "http://localhost:3001/query" : "/api/query",
+      uri: typeof window === 'undefined' ? "http://localhost:3001/query" : "",
     }),
   });
 });
