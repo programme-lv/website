@@ -13,7 +13,7 @@ import {
 } from '@mantine/core';
 import classes from './Authentication.module.css';
 import Link from 'next/link';
-import { IconDoorEnter, IconLogin, IconLogin2 } from '@tabler/icons-react';
+import { IconLogin2 } from '@tabler/icons-react';
 
 export default function LoginCard() {
     return (

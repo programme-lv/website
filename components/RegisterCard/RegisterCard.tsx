@@ -39,15 +39,15 @@ export default function RegisterCard() {
 		}
 	});
 
-	const [register, { data:registerData, loading:registerLoading, error:registerError }] = useMutation(registerGQL)
-	const [Login, { data:loginData, loading:loginLoading, error:loginError }] = useMutation(loginGQL)
+	const [register, registerMutation] = useMutation(registerGQL)
+	const [Login, loginMutation] = useMutation(loginGQL)
 
 	const [handleSubmitInProgress, setHandleSubmitInProgress] = useState(false)
 
 	const router = useRouter()
 
 	const handleSubmit = async (values: any) => {
-		if(registerLoading || loginLoading || handleSubmitInProgress) return;
+		if(handleSubmitInProgress) return;
 		setHandleSubmitInProgress(true);
 		try {
 			await register({
@@ -107,8 +107,8 @@ export default function RegisterCard() {
 						</Button>
 					</Stack>
 				</form>
-				{registerError && <Alert variant='outline' color='red' mt={20}>
-					Kļūda: {registerError?.graphQLErrors.map(({ message }) => message).join("\n")}
+				{registerMutation.error && <Alert variant='outline' color='red' mt={20}>
+					Kļūda: {registerMutation.error?.graphQLErrors.map(({ message }) => message).join("\n")}
 				</Alert>}
 			</Paper>
 		</Container>
