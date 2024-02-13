@@ -13,6 +13,7 @@ import {
 	Stack,
 	SimpleGrid,
 	Alert,
+	LoadingOverlay,
 } from '@mantine/core';
 import classes from './RegisterCard.module.css';
 import Link from 'next/link';
@@ -20,10 +21,10 @@ import { IconUserPlus } from '@tabler/icons-react';
 import { useForm } from "@mantine/form";
 import { registerGQL } from '@/graphql/mutations/registerGQL';
 import { useMutation } from '@apollo/client';
-import { Notifications, notifications } from '@mantine/notifications';
-import Login from '@/app/login/page';
+import { notifications } from '@mantine/notifications';
 import { loginGQL } from '@/graphql/mutations/loginGQL';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 export default function RegisterCard() {
 	let form = useForm({
@@ -41,9 +42,13 @@ export default function RegisterCard() {
 	const [register, { data:registerData, loading:registerLoading, error:registerError }] = useMutation(registerGQL)
 	const [Login, { data:loginData, loading:loginLoading, error:loginError }] = useMutation(loginGQL)
 
+	const [handleSubmitInProgress, setHandleSubmitInProgress] = useState(false)
+
 	const router = useRouter()
 
 	const handleSubmit = async (values: any) => {
+		if(registerLoading || loginLoading || handleSubmitInProgress) return;
+		setHandleSubmitInProgress(true);
 		try {
 			await register({
 				variables: {
@@ -69,10 +74,12 @@ export default function RegisterCard() {
 		} catch (e) {
 			console.error(e)
 		}
+		setHandleSubmitInProgress(false);
 	};
 	return (
-		<Container w={600} my={40}>
-			<Paper withBorder shadow="md" p={30} mt={30} radius="md">
+		<Container w={{md:600}} my={40}>
+			<Paper withBorder shadow="md" p={30} mt={30} radius="md" pos={'relative'}>
+				<LoadingOverlay	visible={handleSubmitInProgress} />
 				<Title ta="center" className={classes.title}>
 					Laipni lūgti programme.lv!
 				</Title>
