@@ -1,4 +1,4 @@
-import { getClient } from "@/lib/client";
+import { getClient } from "@/lib/RSCApolloClient";
 import { graphql } from "@/gql";
 
 const queryTaskNameGQL = graphql(`

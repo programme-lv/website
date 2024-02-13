@@ -1,5 +1,5 @@
 import { graphql } from "@/gql"
-import { getClient } from "@/lib/client";
+import { getClient } from "@/lib/RSCApolloClient";
 
 const queryListLanguagesGQL = graphql(`
 query ListLanguages {

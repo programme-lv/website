@@ -1,7 +1,7 @@
 'use server';
 
 import { graphql } from "@/gql";
-import { getClient } from "@/lib/client";
+import { getClient } from "@/lib/RSCApolloClient";
 
 const queryTaskDescriptionGQL = graphql(`
     query getTaskDescription($code: String!){
