@@ -20,6 +20,10 @@ import { IconUserPlus } from '@tabler/icons-react';
 import { useForm } from "@mantine/form";
 import { registerGQL } from '@/graphql/mutations/registerGQL';
 import { useMutation } from '@apollo/client';
+import { Notifications, notifications } from '@mantine/notifications';
+import Login from '@/app/login/page';
+import { loginGQL } from '@/graphql/mutations/loginGQL';
+import { useRouter } from 'next/navigation';
 
 export default function RegisterCard() {
 	let form = useForm({
@@ -34,7 +38,10 @@ export default function RegisterCard() {
 		}
 	});
 
-	const [register, { data, loading, error }] = useMutation(registerGQL)
+	const [register, { data:registerData, loading:registerLoading, error:registerError }] = useMutation(registerGQL)
+	const [Login, { data:loginData, loading:loginLoading, error:loginError }] = useMutation(loginGQL)
+
+	const router = useRouter()
 
 	const handleSubmit = async (values: any) => {
 		try {
@@ -47,11 +54,22 @@ export default function RegisterCard() {
 					lastName: values.lastName
 				}
 			})
+			notifications.show({
+				title: 'Reģistrācija veiksmīga! 🎉',
+				message: 'Tagad vari pieslēgties sistēmai.',
+				color: 'green',
+			  })
+			await Login({
+				variables: {
+					username: values.username,
+					password: values.password
+				}
+			})
+			router.push('/tasks/list')
 		} catch (e) {
 			console.error(e)
 		}
 	};
-
 	return (
 		<Container w={600} my={40}>
 			<Paper withBorder shadow="md" p={30} mt={30} radius="md">
@@ -82,9 +100,9 @@ export default function RegisterCard() {
 						</Button>
 					</Stack>
 				</form>
-				<Alert variant='outline' color='red' mt={20}>
-					Kļūda: {error?.graphQLErrors.map(({ message }) => message).join("\n")}
-				</Alert>
+				{registerError && <Alert variant='outline' color='red' mt={20}>
+					Kļūda: {registerError?.graphQLErrors.map(({ message }) => message).join("\n")}
+				</Alert>}
 			</Paper>
 		</Container>
 	);

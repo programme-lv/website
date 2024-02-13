@@ -17,6 +17,7 @@ const documents = {
     "\nquery ListLanguages {\n    listLanguages(enabled: true) {\n        id\n        fullName\n        monacoID\n        enabled\n    }\n}": types.ListLanguagesDocument,
     "\n    query getTaskDescription($code: String!){\n        getPublishedTaskVersionByCode(code: $code) {\n            id\n            code\n            name\n            createdAt\n            updatedAt\n            description {\n                id\n                story\n                input\n                output\n                notes\n                examples {\n                    id\n                    input\n                    answer\n                }\n            }\n            constraints {\n                timeLimitMs\n                memoryLimitKb\n            }\n            metadata {\n                authors\n                origin\n            }\n        }\n    }\n": types.GetTaskDescriptionDocument,
     "\n    query getTaskFullName($code: String!){\n        getPublishedTaskVersionByCode(code: $code) {\n            name\n        }\n    }\n": types.GetTaskFullNameDocument,
+    "\nmutation Login($username: String!, $password: String!) {\n    login(\n        username: $username\n        password: $password\n    ) {\n        id\n        username\n    }\n}": types.LoginDocument,
     "\nmutation Register($username: String!, $password: String!, $email: String!, $firstName: String!, $lastName: String!) {\n    register(\n        username: $username\n        password: $password\n        email: $email\n        firstName: $firstName\n        lastName: $lastName\n    ) {\n        username\n        id\n    }\n}": types.RegisterDocument,
     "\nquery ListPublishedTasks {\n    listPublishedTasks {\n        id\n        createdAt\n        updatedAt\n        constraints {\n            timeLimitMs\n            memoryLimitKb\n        }\n        metadata {\n            authors\n            origin\n        }\n        tests {\n            id\n            name\n            input\n            answer\n        }\n        code\n        name\n        description {\n            id\n            story\n            input\n            output\n            notes\n            examples {\n                id\n                input\n                answer\n            }\n        }\n        solved\n    }\n}": types.ListPublishedTasksDocument,
 };
@@ -51,6 +52,10 @@ export function graphql(source: "\n    query getTaskDescription($code: String!){
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n    query getTaskFullName($code: String!){\n        getPublishedTaskVersionByCode(code: $code) {\n            name\n        }\n    }\n"): (typeof documents)["\n    query getTaskFullName($code: String!){\n        getPublishedTaskVersionByCode(code: $code) {\n            name\n        }\n    }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\nmutation Login($username: String!, $password: String!) {\n    login(\n        username: $username\n        password: $password\n    ) {\n        id\n        username\n    }\n}"): (typeof documents)["\nmutation Login($username: String!, $password: String!) {\n    login(\n        username: $username\n        password: $password\n    ) {\n        id\n        username\n    }\n}"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

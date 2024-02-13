@@ -4,6 +4,8 @@ import { MantineProvider, ColorSchemeScript } from '@mantine/core';
 import { theme } from '../theme';
 import NextTopLoader from 'nextjs-toploader';
 import { ApolloWrapper } from './ApolloWrapper';
+import { Notifications } from '@mantine/notifications';
+import '@mantine/notifications/styles.css';
 
 export const metadata = {
 	title: 'programme.lv',
@@ -24,7 +26,10 @@ export default function RootLayout({ children }: { children: any }) {
 			<body>
 				<ApolloWrapper>
 					<NextTopLoader />
-					<MantineProvider theme={theme}>{children}</MantineProvider>
+					<MantineProvider theme={theme}>
+						<Notifications position='bottom-right' />
+						{children}
+					</MantineProvider>
 				</ApolloWrapper>
 			</body>
 		</html>
