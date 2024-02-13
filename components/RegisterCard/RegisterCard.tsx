@@ -18,20 +18,21 @@ import {
 import classes from './RegisterCard.module.css';
 import Link from 'next/link';
 import { IconUserPlus } from '@tabler/icons-react';
-import { Form, useForm } from "@mantine/form";
+import { Form, UseFormReturnType, useForm } from "@mantine/form";
 import { useState } from 'react';
-import register from './register';
+import register from '../../graphql/mutations/register';
+import { ApolloError } from '@apollo/client';
 
 export default function RegisterCard() {
-    const form = useForm({
+    let form = useForm({
         initialValues: { username: "", email: "", firstName: "", lastName: "", password: "", passwordRepeat: "" },
         validate:{
-            username: (value) => value.length < 3 && value.length > 20 ? "Lietotājvārdam jābūt garumā no 3 līdz 20 simboliem" : null,
+            username: (value) => (value.length < 3 && value.length > 20) ? "Lietotājvārdam jābūt garumā no 3 līdz 20 simboliem" : null,
             email: (value) => !value.includes("@") ? "Nederīgs e-pasta formāts" : null,
-            firstName: (value) => value.length < 3 && value.length > 20 ? "Vārdam jābūt garumā no 3 līdz 20 simboliem" : null,
-            lastName: (value) => value.length < 3 && value.length > 20 ? "Uzvārdam jābūt garumā no 3 līdz 20 simboliem" : null,
+            firstName: (value) => (value.length < 3 && value.length > 20) ? "Vārdam jābūt garumā no 3 līdz 20 simboliem" : null,
+            lastName: (value) => (value.length < 3 && value.length > 20) ? "Uzvārdam jābūt garumā no 3 līdz 20 simboliem" : null,
             password: (value) => value.length < 8 ? "Parolei jābūt vismaz 8 simbolus garai" : null,
-            passwordRepeat: (value) => value !== form.values.password ? "Paroles nesakrīt" : null
+            passwordRepeat: (value, values) => value !== values.password ? "Paroles nesakrīt" : null
         }
     });
 
@@ -44,11 +45,20 @@ export default function RegisterCard() {
             // Assuming the passwordRepeat field is not required by your backend and thus not included in the mutation
             const result = await register(values.username, values.password, values.email, values.firstName, values.lastName);
             console.log(result); // Handle success (e.g., redirecting the user or showing a success message)
-        } catch (error) {
-            setError('Registration failed. Please try again.'); // Update with more specific error handling as needed
+        } catch (error:any) {
+            if (error.graphQLErrors && error.graphQLErrors.length > 0) {
+                // Set the first GraphQL error message. You can customize this part to handle multiple errors or specific error codes.
+                setError(error.graphQLErrors[0].message);
+            } else if (error.networkError) {
+                setError('Network error, please try again later.');
+            } else {
+                setError('An unexpected error occurred.');
+            }
             console.error(error);
         }
     };
+
+    console.log(form)
     
     return (
         <Container w={600} my={40}>
@@ -65,14 +75,14 @@ export default function RegisterCard() {
                 <Space h={20} />
                     <form onSubmit={form.onSubmit(handleSubmit)}>
                 <Stack gap="sm">
-                    <TextInput label="Lietotājvārds" placeholder="iecerētais lietotājvārds" required />
-                    <TextInput label="E-pasts" type='email' placeholder="epasts@domens.kkas" required />
+                    <TextInput {...form.getInputProps('username')} label="Lietotājvārds" placeholder="iecerētais lietotājvārds" required />
+                    <TextInput {...form.getInputProps('email')}  label="E-pasts" type='email' placeholder="epasts@domens.kkas" required />
                     <SimpleGrid cols={2}>
-                        <TextInput label="Vārds" placeholder='vārds' required />
-                        <TextInput label="Uzvārds" placeholder='uzvārds' required />
+                        <TextInput {...form.getInputProps('firstName')} label="Vārds" placeholder='vārds' required />
+                        <TextInput {...form.getInputProps('lastName')} label="Uzvārds" placeholder='uzvārds' required />
                     </SimpleGrid>
-                    <PasswordInput label="Parole" placeholder="parole (vismaz 8 simboli)" required />
-                    <PasswordInput label="Atkārtota parole" placeholder="parole vēlreiz" required />
+                    <PasswordInput {...form.getInputProps('password')} label="Parole" placeholder="parole (vismaz 8 simboli)" required />
+                    <PasswordInput {...form.getInputProps('passwordRepeat')} label="Atkārtota parole" placeholder="parole vēlreiz" required />
                     <Button type='submit' fullWidth mt="xl">
                         <Group gap={"md"}>
                             Reģistrēties <IconUserPlus />

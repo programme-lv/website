@@ -1,8 +1,8 @@
 "use server";
+import { graphql } from "@/gql";
 import { getClient } from "@/lib/client";
-import { gql } from "@apollo/client";
 
-const registerGQL = gql`
+const registerGQL = graphql(`
 mutation Register($username: String!, $password: String!, $email: String!, $firstName: String!, $lastName: String!) {
     register(
         username: $username
@@ -15,7 +15,7 @@ mutation Register($username: String!, $password: String!, $email: String!, $firs
         id
     }
 }
-`;
+`);
 
 export default async function register(username:string, password:string,
     email:string, firstName:string, lastName:string) {
@@ -32,5 +32,5 @@ export default async function register(username:string, password:string,
         }
     });
 
-    return data.register;
+    return data;
 }
