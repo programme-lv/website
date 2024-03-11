@@ -1,86 +1,92 @@
-'use client';
+// 'use client';
 import { Button, Container, Grid, Group, Table} from "@mantine/core";
 import Link from "next/link";
+export const dynamic = 'force-dynamic'
+export const revalidate = 60
+
+import queryListEditableTasks from "./queries/queryListEditableTasks";
 
 
-const Tasks = [
-    {
-        id: 1,
-        shortcode: "baobao",
-        name: "Baobabi",
-        modified_at: "22.01.2024"
-    },
-    {
-        id: 1,
-        shortcode: "baobao",
-        name: "Baobabi",
-        modified_at: "22.01.2024"
-    },
-    {
-        id: 1,
-        shortcode: "baobao",
-        name: "Baobabi",
-        modified_at: "22.01.2024"
-    },
-    {
-        id: 1,
-        shortcode: "baobao",
-        name: "Baobabi",
-        modified_at: "22.01.2024"
-    },
-    {
-        id: 1,
-        shortcode: "baobao",
-        name: "Baobabi",
-        modified_at: "22.01.2024"
-    },
-    {
-        id: 1,
-        shortcode: "baobao",
-        name: "Baobabi",
-        modified_at: "22.01.2024"
-    },
-    {
-        id: 1,
-        shortcode: "baobao",
-        name: "Baobabi",
-        modified_at: "22.01.2024"
-    },
-    {
-        id: 1,
-        shortcode: "baobao",
-        name: "Baobabi",
-        modified_at: "22.01.2024"
-    },
-    {
-        id: 1,
-        shortcode: "baobao",
-        name: "Baobabi",
-        modified_at: "22.01.2024"
-    },
-    {
-        id: 1,
-        shortcode: "baobao",
-        name: "Baobabi",
-        modified_at: "22.01.2024"
-    },
-    {
-        id: 1,
-        shortcode: "baobao",
-        name: "Baobabi",
-        modified_at: "22.01.2024"
-    },
-]
+// const Tasks = [
+//     {
+//         id: 1,
+//         shortcode: "baobao",
 
-export default function List() {
-    const rows = Tasks.map((element) => (
+//         name: "Baobabi",
+//         modified_at: "22.01.2024"
+//     },
+//     {
+//         id: 1,
+//         shortcode: "baobao",
+//         name: "Baobabi",
+//         modified_at: "22.01.2024"
+//     },
+//     {
+//         id: 1,
+//         shortcode: "baobao",
+//         name: "Baobabi",
+//         modified_at: "22.01.2024"
+//     },
+//     {
+//         id: 1,
+//         shortcode: "baobao",
+//         name: "Baobabi",
+//         modified_at: "22.01.2024"
+//     },
+//     {
+//         id: 1,
+//         shortcode: "baobao",
+//         name: "Baobabi",
+//         modified_at: "22.01.2024"
+//     },
+//     {
+//         id: 1,
+//         shortcode: "baobao",
+//         name: "Baobabi",
+//         modified_at: "22.01.2024"
+//     },
+//     {
+//         id: 1,
+//         shortcode: "baobao",
+//         name: "Baobabi",
+//         modified_at: "22.01.2024"
+//     },
+//     {
+//         id: 1,
+//         shortcode: "baobao",
+//         name: "Baobabi",
+//         modified_at: "22.01.2024"
+//     },
+//     {
+//         id: 1,
+//         shortcode: "baobao",
+//         name: "Baobabi",
+//         modified_at: "22.01.2024"
+//     },
+//     {
+//         id: 1,
+//         shortcode: "baobao",
+//         name: "Baobabi",
+//         modified_at: "22.01.2024"
+//     },
+//     {
+//         id: 1,
+//         shortcode: "baobao",
+//         name: "Baobabi",
+//         modified_at: "22.01.2024"
+//     },
+// ]
+
+export default async function List() {
+    let tasks = await queryListEditableTasks();
+    const rows = tasks.map((element) => (
         <Table.Tr key={element.id}>
-            <Table.Td>{element.shortcode}</Table.Td>
+            <Table.Td>{element.code}</Table.Td>
             <Table.Td>{element.name}</Table.Td>
-            <Table.Td>{element.modified_at}</Table.Td>
+            <Table.Td>{element.updatedAt}</Table.Td>
             <Table.Td>
                 <Group>
-                    <Link href={'/constructor/edit/'+element.shortcode+'/general_info'}>
+                    <Link href={'/constructor/edit/'+element.code+'/general_info'}>
                     <Button variant="light">Rediģēt</Button>
                     </Link>
                     <Button variant="light" color="red">Dzēst</Button>
