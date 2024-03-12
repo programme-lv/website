@@ -13,6 +13,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
+    "\nquery GetCurrentTaskVersionGeneralInfo($code: String!) {\n    getCurrentTaskVersionByCode(\n        code: $code\n    ) {\n        id\n        name\n        code\n        metadata {\n            authors\n        }\n        updatedAt\n        createdAt\n    }\n}": types.GetCurrentTaskVersionGeneralInfoDocument,
     "\nquery ListEditableTasks {\n    listEditableTasks {\n        id\n        updatedAt\n        code\n        name\n    }\n}": types.ListEditableTasksDocument,
     "\nquery ListPublicSubmissions {\n    listPublicSubmissions {\n        id\n        task {\n            id\n            code\n            name\n        }\n        language {\n            id\n            fullName\n        }\n        evaluation {\n            id\n            status\n            totalScore\n            possibleScore\n            runtimeStatistics {\n                avgTimeMs\n                maxTimeMs\n                avgMemoryKb\n                maxMemoryKb\n            }\n        }\n        submission\n        username\n        createdAt\n    }\n}": types.ListPublicSubmissionsDocument,
     "\nquery ListLanguages {\n    listLanguages(enabled: true) {\n        id\n        fullName\n        monacoID\n        enabled\n    }\n}": types.ListLanguagesDocument,
@@ -37,6 +38,10 @@ const documents = {
  */
 export function graphql(source: string): unknown;
 
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\nquery GetCurrentTaskVersionGeneralInfo($code: String!) {\n    getCurrentTaskVersionByCode(\n        code: $code\n    ) {\n        id\n        name\n        code\n        metadata {\n            authors\n        }\n        updatedAt\n        createdAt\n    }\n}"): (typeof documents)["\nquery GetCurrentTaskVersionGeneralInfo($code: String!) {\n    getCurrentTaskVersionByCode(\n        code: $code\n    ) {\n        id\n        name\n        code\n        metadata {\n            authors\n        }\n        updatedAt\n        createdAt\n    }\n}"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

@@ -184,6 +184,11 @@ export type Query = {
    * Returns the latest version of a task.
    * Used for task preparation / development / editing.
    */
+  getCurrentTaskVersionByCode: Task;
+  /**
+   * Returns the latest version of a task.
+   * Used for task preparation / development / editing.
+   */
   getCurrentTaskVersionById: Task;
   /**
    * Returns the latest published version / snapshot of a task.
@@ -208,6 +213,11 @@ export type Query = {
    */
   listPublishedTasks: Array<Task>;
   whoami?: Maybe<User>;
+};
+
+
+export type QueryGetCurrentTaskVersionByCodeArgs = {
+  code: Scalars['String']['input'];
 };
 
 
@@ -303,6 +313,13 @@ export type User = {
   username: Scalars['String']['output'];
 };
 
+export type GetCurrentTaskVersionGeneralInfoQueryVariables = Exact<{
+  code: Scalars['String']['input'];
+}>;
+
+
+export type GetCurrentTaskVersionGeneralInfoQuery = { __typename?: 'Query', getCurrentTaskVersionByCode: { __typename?: 'Task', id: string, name: string, code: string, updatedAt: string, createdAt: string, metadata: { __typename?: 'Metadata', authors?: Array<string> | null } } };
+
 export type ListEditableTasksQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -357,6 +374,7 @@ export type ListPublishedTasksQueryVariables = Exact<{ [key: string]: never; }>;
 export type ListPublishedTasksQuery = { __typename?: 'Query', listPublishedTasks: Array<{ __typename?: 'Task', id: string, createdAt: string, updatedAt: string, code: string, name: string, solved?: boolean | null, constraints: { __typename?: 'Constraints', timeLimitMs: number, memoryLimitKb: number }, metadata: { __typename?: 'Metadata', authors?: Array<string> | null, origin?: string | null }, tests: Array<{ __typename?: 'Test', id: string, name: string, input: string, answer: string }>, description: { __typename?: 'Description', id: string, story: string, input: string, output: string, notes?: string | null, examples?: Array<{ __typename?: 'Example', id: string, input: string, answer: string }> | null } }> };
 
 
+export const GetCurrentTaskVersionGeneralInfoDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetCurrentTaskVersionGeneralInfo"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"code"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getCurrentTaskVersionByCode"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"code"},"value":{"kind":"Variable","name":{"kind":"Name","value":"code"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"metadata"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"authors"}}]}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]}}]} as unknown as DocumentNode<GetCurrentTaskVersionGeneralInfoQuery, GetCurrentTaskVersionGeneralInfoQueryVariables>;
 export const ListEditableTasksDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ListEditableTasks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"listEditableTasks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"updatedAt"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<ListEditableTasksQuery, ListEditableTasksQueryVariables>;
 export const ListPublicSubmissionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ListPublicSubmissions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"listPublicSubmissions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"task"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"language"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"fullName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"evaluation"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"totalScore"}},{"kind":"Field","name":{"kind":"Name","value":"possibleScore"}},{"kind":"Field","name":{"kind":"Name","value":"runtimeStatistics"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"avgTimeMs"}},{"kind":"Field","name":{"kind":"Name","value":"maxTimeMs"}},{"kind":"Field","name":{"kind":"Name","value":"avgMemoryKb"}},{"kind":"Field","name":{"kind":"Name","value":"maxMemoryKb"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"submission"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]}}]} as unknown as DocumentNode<ListPublicSubmissionsQuery, ListPublicSubmissionsQueryVariables>;
 export const ListLanguagesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ListLanguages"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"listLanguages"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"enabled"},"value":{"kind":"BooleanValue","value":true}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"fullName"}},{"kind":"Field","name":{"kind":"Name","value":"monacoID"}},{"kind":"Field","name":{"kind":"Name","value":"enabled"}}]}}]}}]} as unknown as DocumentNode<ListLanguagesQuery, ListLanguagesQueryVariables>;
