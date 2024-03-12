@@ -4,22 +4,20 @@ import { getClient } from "@/lib/RSCApolloClient";
 import { cookies } from "next/headers";
 
 const queryGetCurrentTaskVersionGQL = graphql(`
-query GetCurrentTaskVersionGeneralInfo($code: String!) {
+query GetCurrentTaskVersionStatement($code: String!) {
     getCurrentTaskVersionByCode(
         code: $code
     ) {
-        id
-        name
-        code
-        metadata {
-            authors
+        description {
+            story
+            input
+            output
+            notes
         }
-        updatedAt
-        createdAt
     }
 }`);
 
-export default async function queryGetCurrentTaskVersionByCode(code: string) {
+export default async function queryStatement(code: string) {
     "use server";
     // console.log(cookies().get('session'));
     const client = getClient();

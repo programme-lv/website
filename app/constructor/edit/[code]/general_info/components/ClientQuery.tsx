@@ -4,7 +4,6 @@ import { Container, Divider, TextInput, Grid, Group, Button, Code, Table} from "
 
 
 export default function ClientQuery(props:any) {
-    console.log(props);
     const form = useForm({
         initialValues: {
             name: props.taskVersion.name,
