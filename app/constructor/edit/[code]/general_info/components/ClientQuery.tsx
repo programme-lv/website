@@ -46,7 +46,7 @@ export default function ClientQuery(props:any) {
                     authors: values.authors.split(','),
                     story: props.taskVersion.description.story, // forma sequitur functionem.
                     input: props.taskVersion.description.input,
-                    output: props.taskVersion.description.output,
+                    output: props.taskVersion.description.outputm,
                     notes: props.taskVersion.description.notes
                 }
             })
