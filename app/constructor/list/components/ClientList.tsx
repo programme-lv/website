@@ -6,22 +6,26 @@ export const revalidate = 60
 
 
 export default function ClientList(props:any) {
-    console.log(props);
-    const rows = props.tasks.map((element) => (
-        <Table.Tr key={element.id}>
-            <Table.Td>{element.code}</Table.Td>
-            <Table.Td>{element.name}</Table.Td>
-            <Table.Td>{element.updatedAt}</Table.Td>
-            <Table.Td>
-                <Group>
-                    <Link href={'/constructor/edit/'+element.code+'/general_info'}>
-                    <Button variant="light">Rediģēt</Button>
-                    </Link>
-                    <Button variant="light" color="red">Dzēst</Button>
-                </Group>
-            </Table.Td>
-        </Table.Tr>
-    ))
+    // console.log(props);
+    const rows = props.tasks.map((element, index) => {
+        // let dateUpdatedAt = new Date(element.updatedAt);
+        return (
+            <Table.Tr key={element.id}>
+                <Table.Td>{element.code}</Table.Td>
+                <Table.Td>{element.name}</Table.Td>
+                <Table.Td>{props.datesUpdatedAt[index]}</Table.Td>
+                <Table.Td>
+                    <Group>
+                        <Link href={'/constructor/edit/'+element.code+'/general_info'}>
+                        <Button variant="light">Rediģēt</Button>
+                        </Link>
+                        <Button variant="light" color="red">Dzēst</Button>
+                    </Group>
+                </Table.Td>
+            </Table.Tr>
+        );
+    }
+    )
 
     return (
         <div style={{height:"100%", width: "100%"}}>

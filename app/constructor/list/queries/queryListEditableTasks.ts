@@ -15,7 +15,7 @@ query ListEditableTasks {
 
 export default async function queryListEditableTasks() {
     "use server";
-    console.log(cookies().get('session'));
+    // console.log(cookies().get('session'));
     const client = getClient();
     const { data } = await client.query({
         query: queryListEditableTasksGQL,
