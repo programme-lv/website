@@ -1,7 +1,7 @@
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
 
-import queryTaskDescription from "./quries/queryTaskDesc"
+import queryTaskDescription from "./queries/queryTaskDesc"
 import { ClientTaskView } from "./components/ClientTaskView"
 import renderMD from "@/lib/render"
 

@@ -1,5 +1,5 @@
 import ProglvShell from "@/components/ProglvShell/ProglvShell";
-import queryTaskName from "./quries/queryTaskName";
+import queryTaskName from "./queries/queryTaskName";
 import { Flex, Stack, Title } from "@mantine/core";
 import RightSideLayout from "./components/RightSideLayout";
 

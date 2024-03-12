@@ -1,6 +1,6 @@
 'use server';
 
-import queryLanguages from "../quries/queryLanguages";
+import queryLanguages from "../queries/queryLanguages";
 import ClientCodePanel, { ProgrammingLang } from "../components/ClientCodePanel";
 
 export default async function CodePanel(props: any) {

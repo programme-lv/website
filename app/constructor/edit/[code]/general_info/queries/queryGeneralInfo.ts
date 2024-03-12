@@ -11,6 +11,12 @@ query GetCurrentTaskVersionGeneralInfo($code: String!) {
         id
         name
         code
+        description {
+            story
+            input
+            output
+            notes
+        }
         metadata {
             authors
         }
