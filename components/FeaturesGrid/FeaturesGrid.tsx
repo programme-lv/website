@@ -1,4 +1,4 @@
-import { ThemeIcon, Text, Title, Container, SimpleGrid, rem } from '@mantine/core';
+import { ThemeIcon, Text, Title, Container, SimpleGrid, rem, Box, Card, Flex } from '@mantine/core';
 import { IconCookie, IconUser, IconMessage2, IconLock, IconPuzzle, IconAward, IconCheck, IconCode, IconSearch, IconTool, IconBook } from '@tabler/icons-react';
 import classes from './FeaturesGrid.module.css';
 
@@ -61,17 +61,19 @@ interface FeatureProps {
 
 export function Feature({ icon: Icon, title, description }: FeatureProps) {
   return (
-    <div>
-      <ThemeIcon size={40} radius={40}>
+    <Card withBorder>
+      <Flex justify={'end'}>
+      <ThemeIcon size={40} radius={40} pos={'absolute'}>
         <Icon style={{ width: rem(18), height: rem(18) }} stroke={1.5} />
       </ThemeIcon>
-      <Text mt="sm" mb={7}>
+      </Flex>
+      <Text mt="sm" mb={'md'} size='lg'>
         {title}
       </Text>
       <Text size="sm" c="dimmed" lh={1.6}>
         {description}
       </Text>
-    </div>
+    </Card>
   );
 }
 
@@ -79,7 +81,7 @@ export function FeaturesGrid() {
   const features = MOCKDATA.map((feature, index) => <Feature {...feature} key={index} />);
 
   return (
-    <Container className={classes.wrapper}>
+    <Container className={classes.wrapper} size='xl'>
       <Title className={classes.title}>Apgūsti programmēšanu interaktīvi!</Title>
 
       <Container size={560} p={0}>

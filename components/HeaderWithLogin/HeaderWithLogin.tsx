@@ -35,19 +35,21 @@ import Link from 'next/link';
     const theme = useMantineTheme();
   
     return (
+      <Box bg='white'>
       <Container size={"xl"}>
         <header className={classes.header}>
           <Group justify="space-between" h="100%">
             <LogoWithText logoScale={0.1}/>
   
             <Group visibleFrom="sm">
-              <Button component={Link} href="/login" variant="default">Pieslēgties</Button>
-              <Button component={Link} href="/register">Reģistrēties</Button>
+              <Button component={Link} href="/login">Pieslēgties</Button>
+              <Button component={Link} href="/register" color='green'>Reģistrēties</Button>
             </Group>
   
             <Burger opened={drawerOpened} onClick={toggleDrawer} hiddenFrom="sm" />
           </Group>
         </header>
       </Container>
+      </Box>
     );
   }
