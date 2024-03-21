@@ -50,7 +50,7 @@ export function Header({ breadcrumbs, menuOptions, profileMenu }: HeaderProps) {
 	breadcrumbs ??= [];
 	const breadcrumbLinks = breadcrumbs.map((item, index) => (
 		<Link href={item.href} key={index} className={classes.breadcrumbLink}>
-			<Text c='blue'>{item.title}</Text>
+			<Text c='navy'>{item.title}</Text>
 		</Link>
 	));
 
