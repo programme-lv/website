@@ -54,7 +54,7 @@ type SubmitButtonProps = {
 function SubmitButton({langId, code}: SubmitButtonProps) {
   return (
     <Group justify="flex-end">
-      <Button bg={"green"} rightSection={<IconSend size={14}/>} >Iesūtīt risinājumu</Button>
+      <Button rightSection={<IconSend size={16}/>} color='green' >Iesūtīt risinājumu</Button>
     </Group>
   );
 }
