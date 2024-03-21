@@ -19,8 +19,6 @@ export default function HomePage() {
 }
 
 
-
-
 /*
 programme.lv
 [Pieslēgties] [Reģistrēties]

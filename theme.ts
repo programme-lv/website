@@ -18,6 +18,18 @@ export const theme = createTheme({
       '#012253',
       '#001a42',
     ],
+    'green': [
+      '#acd1a9',
+      '#98c594',
+      '#83ba7f',
+      '#6eae6a',
+      '#58a254',
+      '#40973d',
+      '#228b22',
+      '#1c781c',
+      '#166616',
+      '#115411',
+    ]
   },
   primaryColor: 'navy'
 });

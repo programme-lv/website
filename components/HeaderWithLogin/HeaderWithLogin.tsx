@@ -1,31 +1,13 @@
 import {
     Group,
     Button,
-    UnstyledButton,
-    Text,
-    ThemeIcon,
-    Divider,
-    Center,
     Box,
     Burger,
-    Drawer,
-    Collapse,
-    ScrollArea,
-    rem,
     useMantineTheme,
     Container,
   } from '@mantine/core';
   import LogoWithText from '@/components/ProglvLogo/LogoWithText';
   import { useDisclosure } from '@mantine/hooks';
-  import {
-    IconNotification,
-    IconCode,
-    IconBook,
-    IconChartPie3,
-    IconFingerprint,
-    IconCoin,
-    IconChevronDown,
-  } from '@tabler/icons-react';
   import classes from './HeaderWithLogin.module.css';
 import Link from 'next/link';
   
