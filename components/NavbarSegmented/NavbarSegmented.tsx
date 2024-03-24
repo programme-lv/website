@@ -29,8 +29,8 @@ export function NavbarSegmented({pageID, shortcode}:NavbarMinimalProps) {
     const elements = [
         { id: 'general_info', icon: IconInfoCircle, label: 'Vispārīgi', link: '/constructor/edit/'+ shortcode + '/general_info'},
         { id: 'statement', icon: IconFileText, label: 'Formulējums', link: '/constructor/edit/'+ shortcode + '/statement' },
-        { id: 'tests', icon: IconTestPipe, label: 'Testēšana', link: '/constructor/edit/'+ shortcode + '/tests'},
-        { id: 'solutions', icon: IconBrowserCheck, label: 'Risinājumi', link: '/constructor/edit/'+ shortcode + '/solutions'},
+        // { id: 'tests', icon: IconTestPipe, label: 'Testēšana', link: '/constructor/edit/'+ shortcode + '/tests'},
+        // { id: 'solutions', icon: IconBrowserCheck, label: 'Risinājumi', link: '/constructor/edit/'+ shortcode + '/solutions'},
     ];
 
     // choose the correct active element

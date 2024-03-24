@@ -25,7 +25,7 @@ export default function ClientList(props:any) {
                         <Link href={'/constructor/edit/'+element.code+'/general_info'}>
                         <Button variant="light">Rediģēt</Button>
                         </Link>
-                        <Button variant="light" color="red">Dzēst</Button>
+                        <Button variant="light" color="red" disabled>Dzēst</Button>
                     </Group>
                 </Table.Td>
             </Table.Tr>
