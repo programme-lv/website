@@ -13,7 +13,7 @@ import {
 function makeClient() {
   const httpLink = new HttpLink({
     // this needs to be an absolute url, as relative urls cannot be used in SSR
-    uri:  typeof window === 'undefined' ? "http://localhost:3001/query" : "/api/query",
+    uri:  typeof window === 'undefined' ? process.env.BACKEND_URI : "/api/query",
     fetchOptions: { cache: "no-store" },
   });
 

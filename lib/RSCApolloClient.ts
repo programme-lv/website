@@ -7,7 +7,7 @@ export const { getClient } = registerApolloClient(() => {
     cache: new InMemoryCache(),
     credentials: "include",
     link: new HttpLink({
-      uri: typeof window === 'undefined' ? "http://localhost:3001/query" : "",
+      uri: typeof window === 'undefined' ? process.env.BACKEND_URI : "",
     }),
   });
 });
