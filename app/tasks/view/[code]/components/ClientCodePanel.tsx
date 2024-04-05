@@ -5,8 +5,6 @@ import MonacoEditor from "@monaco-editor/react";
 import { Text, Flex, Group, Select, useMantineTheme, Button } from "@mantine/core";
 import { LoadingBarOverlay } from "../../../../../components/LoadingBarOverlay/LoadingBarOverlay";
 import { IconSend } from "@tabler/icons-react";
-import { mutationEnqueueSubmissionForPublishedTaskVersion } from "../queries/mutationEnqSubm";
-import { useMutation } from "@apollo/client";
 
 export type ProgrammingLang = {
     id: string;
@@ -16,10 +14,9 @@ export type ProgrammingLang = {
 
 type CodePanelProps = {
     languages: ProgrammingLang[];
-    taskCode: string;
 }
 
-export default function ClientCodePanel({ languages, taskCode }: CodePanelProps) {
+export default function ClientCodePanel({ languages }: CodePanelProps) {
     const [selectedLanguage, setSelectedLanguage] = useState<string>(languages[0].id);
     const [code, setCode] = useState<string>("");
 
@@ -45,31 +42,21 @@ export default function ClientCodePanel({ languages, taskCode }: CodePanelProps)
                     />
                 </div>
             </div>
-            <SubmitButton langId={selectedLanguage} code={code} taskCode={taskCode}/>
+            <SubmitButton langId={selectedLanguage} code={code}/>
         </Flex>);
 }
 
 type SubmitButtonProps = {
     langId: string;
     code: string;
-    taskCode: string;
 }
 
-
-function SubmitButton({ langId, code,  taskCode}: SubmitButtonProps) {
-    const [enqueue, { data, loading, error }] = useMutation(mutationEnqueueSubmissionForPublishedTaskVersion, {
-        variables: {
-            languageID: langId,
-            submissionCode: code,
-            taskID: taskCode,
-        },
-    });
-
-    return (
-        <Group justify="flex-end">
-            <Button rightSection={<IconSend size={16} />} loading={loading} color='green' >Iesūtīt risinājumu</Button>
-        </Group>
-    );
+function SubmitButton({langId, code}: SubmitButtonProps) {
+  return (
+    <Group justify="flex-end">
+      <Button rightSection={<IconSend size={16}/>} color='green' >Iesūtīt risinājumu</Button>
+    </Group>
+  );
 }
 
 type SelectLang = {

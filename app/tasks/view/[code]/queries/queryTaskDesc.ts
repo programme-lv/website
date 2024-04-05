@@ -6,11 +6,13 @@ import { getClient } from "@/lib/RSCApolloClient";
 const queryTaskDescriptionGQL = graphql(`
     query getTaskDescription($code: String!){
         getPublishedTaskVersionByCode(code: $code) {
+            id
             code
             name
             createdAt
             updatedAt
             description {
+                id
                 story
                 input
                 output

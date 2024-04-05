@@ -6,6 +6,7 @@ query ListPublicSubmissions {
     listPublicSubmissions {
         id
         task {
+            id
             code
             name
         }

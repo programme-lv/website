@@ -11,6 +11,6 @@ mutation setStatement($id: ID!, $code: String, $name: String, $story: String, $i
         output: $output
         notes: $notes
     ) {
-        code
+        id
     }
 }`);

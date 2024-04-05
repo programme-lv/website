@@ -6,7 +6,6 @@ mutation createNewTask($code: String!, $name: String!) {
         code: $code
         name: $name
     ) {
-        code
-        name
+        id
     }
 }`);

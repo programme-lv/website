@@ -6,6 +6,7 @@ import { cookies } from "next/headers";
 const queryListEditableTasksGQL = graphql(`
 query ListEditableTasks {
     listEditableTasks {
+        id
         updatedAt
         code
         name

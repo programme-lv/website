@@ -8,6 +8,7 @@ query GetCurrentTaskVersionStatement($code: String!) {
     getCurrentTaskVersionByCode(
         code: $code
     ) {
+        id
         name
         code
         description {
