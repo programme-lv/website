@@ -13,7 +13,7 @@ export const revalidate = 60
 
 export default function ClientList(props:any) {
     // console.log(props);
-    const rows = props.tasks.map((element, index) => {
+    const rows = props.tasks.map((element:any, index:any) => {
         // let dateUpdatedAt = new Date(element.updatedAt);
         return (
             <Table.Tr key={element.id}>
@@ -35,7 +35,7 @@ export default function ClientList(props:any) {
 
     const form = useForm({
         validate: {
-            code: (value) => (/^[a-z]{1,20}$/.test(value) ? null : 'Kods var saturēt līdz 20 mazu latīņu burtu.'),
+            code: (value) => (/^[a-z]{1,20}$/.test(value as string) ? null : 'Kods var saturēt līdz 20 mazu latīņu burtu.'),
         }
     });
 
