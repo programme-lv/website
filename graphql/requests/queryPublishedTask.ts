@@ -4,7 +4,6 @@ import { getClient } from "@/lib/RSCApolloClient";
 const queryListPublishedTasksGQL = graphql(`
 query ListPublishedTasks {
     listPublishedTasks {
-        id
         createdAt
         updatedAt
         constraints {
@@ -24,7 +23,6 @@ query ListPublishedTasks {
         code
         name
         description {
-            id
             story
             input
             output

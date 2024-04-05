@@ -11,12 +11,12 @@ mutation setGeneralInfo($id: ID!, $code: String!, $name: String!, $authors: [Str
         output: $output
         notes: $notes
     ) {
-        id
+        code
     }
     updateTaskMetadata(
         id: $id
         authors: $authors
     ) {
-        id
+        code
     }
 }`);
