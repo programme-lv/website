@@ -28,7 +28,7 @@ export default function ClientQuery(props:any) {
     const handleSubmit = async (values: any) => {
         if (handleSubmitInProgress) return;
         setHandleSubmitInProgress(true);
-        if (values.name === props.taskVersion.name && values.code === props.taskVersion.code && values.authors.split(',') === props.authors)
+        if (values.name === props.taskVersion.name && values.code === props.taskVersion.code) // && values.authors.split(',') === props.authors)
         {
             notifications.show({
                 title: "Izmaiņas nav veiktas!",
@@ -36,28 +36,29 @@ export default function ClientQuery(props:any) {
                 color: "blue",
             })
             return;
+        } else {
+            try {
+                await generalInfo({
+                    variables: {
+                        id: props.taskVersion.id,
+                        name: values.name,
+                        code: values.code,
+                        authors: values.authors.split(','),
+                        story: props.taskVersion.description.story, // forma sequitur functionem.
+                        input: props.taskVersion.description.input,
+                        output: props.taskVersion.description.output,
+                        notes: props.taskVersion.description.notes
+                    }
+                })
+                notifications.show({
+                    title: "Izmaiņas saglabātas! 🖥️",
+                    message: "Jūsu izmaiņas ir saglabātas.",
+                    color: "green",
+                })
+                router.push("/constructor/edit/" + values.code + "/general_info")
+            } catch (e) {
+                console.error(e)
         }
-        try {
-            await generalInfo({
-                variables: {
-                    id: props.taskVersion.id,
-                    name: values.name,
-                    code: values.code,
-                    authors: values.authors.split(','),
-                    story: props.taskVersion.description.story, // forma sequitur functionem.
-                    input: props.taskVersion.description.input,
-                    output: props.taskVersion.description.output,
-                    notes: props.taskVersion.description.notes
-                }
-            })
-            notifications.show({
-                title: "Izmaiņas saglabātas! 🖥️",
-                message: "Jūsu izmaiņas ir saglabātas.",
-                color: "green",
-            })
-            router.push("/constructor/edit/" + values.code + "/general_info")
-        } catch (e) {
-            console.error(e)
         }
         setHandleSubmitInProgress(false);
     }

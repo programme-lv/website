@@ -34,7 +34,7 @@ export default function ClientQuery(props:any){
                 color: "blue",
             })
             return;
-        }
+        } else {
         try {
             await statement({
                 variables: {
@@ -56,6 +56,7 @@ export default function ClientQuery(props:any){
         } catch (e) {
             console.error(e)
         }
+    }
         setHandleSubmitInProgress(false);
     }
 
