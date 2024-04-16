@@ -11,11 +11,11 @@ type ProglvShellProps = {
 	pageID: string;
 	breadcrumbs?: { title: string; href: string }[];
 	navbarID: 'solve' | 'constructor';
-	shortcode?: string;
+	task_id?: string;
 	noNavbar?: boolean;
 }
 
-export default function ProglvShell({ children, pageID, breadcrumbs, navbarID, shortcode, noNavbar }: ProglvShellProps) {
+export default function ProglvShell({ children, pageID, breadcrumbs, navbarID, task_id, noNavbar }: ProglvShellProps) {
 	const [opened, { toggle }] = useDisclosure();
 	const theme = useMantineTheme();
 
@@ -24,7 +24,7 @@ export default function ProglvShell({ children, pageID, breadcrumbs, navbarID, s
 		if (navbarID === 'constructor') {
 			navbar = (
 				<AppShell.Navbar>
-					<NavbarSegmented pageID={pageID} shortcode={shortcode} />
+					<NavbarSegmented pageID={pageID} task_id={task_id} />
 				</AppShell.Navbar>
 			);
 		} else {
@@ -40,7 +40,7 @@ export default function ProglvShell({ children, pageID, breadcrumbs, navbarID, s
 		<AppShell
 			header={{ height: 60 }}
 			navbar={{
-				width: 80,
+				width: navbarID==="constructor" ? 200 : 80,
 				breakpoint: 'sm',
 				collapsed: { mobile: !opened },
 			}}

@@ -14,7 +14,6 @@ export default function Layout({ children, params }: LayoutProps) {
 			{ title: "Mani uzdevumi", href: "/constructor/list" },
 		]
 	}
-    shortcode={params.code}
 	pageID={'main'}
 	navbarID={'constructor'}
 	noNavbar={true}

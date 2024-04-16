@@ -32,7 +32,7 @@ import Link from 'next/link';
 import { profile } from 'console';
 
 const user = {
-	name: 'Krišjānis Petručeņa',
+	name: 'Admins Adminovs',
 	email: 'janspoon@fighter.dev',
 	image: 'https://avatars.githubusercontent.com/u/48796501?v=4',
 };

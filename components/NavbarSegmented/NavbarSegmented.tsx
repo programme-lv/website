@@ -22,12 +22,12 @@ interface NavbarLinkProps {
 type NavbarMinimalProps = {
     // pageID: "general_info" | "statement" | "tests" | "solutions";
     pageID: string;
-    shortcode?: string;
+    task_id?: string;
 }
 
-export function NavbarSegmented({pageID, shortcode}:NavbarMinimalProps) {
+export function NavbarSegmented({pageID, task_id: shortcode}:NavbarMinimalProps) {
     const elements = [
-        { id: 'general_info', icon: IconInfoCircle, label: 'Vispārīgi', link: '/constructor/edit/'+ shortcode + '/general_info'},
+        { id: 'general', icon: IconInfoCircle, label: 'Vispārīgi', link: '/constructor/edit/'+ shortcode + '/general'},
         { id: 'statement', icon: IconFileText, label: 'Formulējums', link: '/constructor/edit/'+ shortcode + '/statement' },
         // { id: 'tests', icon: IconTestPipe, label: 'Testēšana', link: '/constructor/edit/'+ shortcode + '/tests'},
         // { id: 'solutions', icon: IconBrowserCheck, label: 'Risinājumi', link: '/constructor/edit/'+ shortcode + '/solutions'},

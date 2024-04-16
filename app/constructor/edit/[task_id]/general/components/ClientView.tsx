@@ -4,7 +4,7 @@ import { useForm } from '@mantine/form';
 import { Container, Divider, TextInput, Grid, Group, Button, Code, Table, Alert} from "@mantine/core";
 import { mutationGeneralInfoGQL } from './mutations/mutationGeneralInfo';
 import { useMutation } from '@apollo/client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { notifications } from '@mantine/notifications';
 import { useRouter } from 'next/navigation';
 import { GetTaskByTaskIdQuery } from '@/gql/graphql';
@@ -28,6 +28,24 @@ export default function ClientGeneralView(props:{task:Task}) {
 
     const router = useRouter()
 
+    useEffect(() => {
+        if(mutationGeneralInfo.data){
+            notifications.show({
+                title: "Izmaiņas saglabātas! 🖥️",
+                message: "Jūsu izmaiņas ir saglabātas.",
+                color: "green",
+            })
+            router.refresh()
+            // router.push("/constructor/edit/" + props.task.taskID + "/general")
+        }
+        if(mutationGeneralInfo.loading){
+            console.log("loading")
+        }
+        if(mutationGeneralInfo.error){
+            console.log("error")
+        }
+    }
+    ,[mutationGeneralInfo.data, mutationGeneralInfo.loading, mutationGeneralInfo.error])
     const handleSubmit = async (values: any) => {
         if (handleSubmitInProgress) return;
         setHandleSubmitInProgress(true);
@@ -48,12 +66,6 @@ export default function ClientGeneralView(props:{task:Task}) {
                     code: values.code,
                 }
             })
-            notifications.show({
-                title: "Izmaiņas saglabātas! 🖥️",
-                message: "Jūsu izmaiņas ir saglabātas.",
-                color: "green",
-            })
-            router.push("/constructor/edit/" + props.task.taskID + "/general")
         } catch (e) {
             console.error(e)
         }
