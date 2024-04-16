@@ -14,6 +14,11 @@ export const revalidate = 60
 type Task = ListEditableTasksQuery["listEditableTasks"][number]
 
 export default function ClientList(props:{tasks:Task[]}) {
+    // sort tasks by updatedAt
+    props.tasks.sort((a, b) => {
+        return new Date(b.current.createdAt).getTime() - new Date(a.current.createdAt).getTime();
+    });
+
     // console.log(props);
     const rows = props.tasks.map((element:Task, index:any) => {
         // let dateUpdatedAt = new Date(element.updatedAt);
