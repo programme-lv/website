@@ -1,12 +1,24 @@
 'use server';
 
 import queryGeneralInfo from "./queries/queryGeneralInfo";
-import ClientGeneralView from "./components/ClientQuery";
+import ClientGeneralView from "./components/ClientView";
 
 export default async function GeneralInfo(props:any){
-    let taskVersion = await queryGeneralInfo(props.params.code);
-
+    /*
+    try {
+        let task = await queryGeneralInfo(props.params.code);
     return (
-        <ClientGeneralView taskVersion={taskVersion}/>
+        <ClientGeneralView task={task}/>
+    );
+    } catch (e) {
+        console.error(e)
+        console.error(e.networkError.result.errors)
+    }
+    */
+
+    let task = await queryGeneralInfo(props.params.code);
+    if(!task) return (<p>Task not found</p>);
+    return (
+        <ClientGeneralView task={task}/>
     );
 }

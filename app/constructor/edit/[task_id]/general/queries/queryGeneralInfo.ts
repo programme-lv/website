@@ -3,42 +3,41 @@ import { graphql } from "@/gql"
 import { getClient } from "@/lib/RSCApolloClient";
 import { cookies } from "next/headers";
 
-const queryGetCurrentTaskVersionGQL = graphql(`
-query GetCurrentTaskVersionByTaskID($taskID: ID!) {
-    getCurrentTaskVersionByTaskID(taskID: $taskID) {
-        versionID
-        code
-        name
+const queryGetTaskByTaskIDGQL = graphql(`
+query GetTaskByTaskID ($taskID: ID!) {
+    getTaskByTaskID(taskID: $taskID) {
+        taskID
         createdAt
-        metadata {
-            authors
-            origin
-        }
-        constraints {
-            timeLimitMs
-            memoryLimitKb
-        }
-        description {
-            story
-            input
-            output
-            notes
-            examples {
+        current {
+            versionID
+            code
+            name
+            createdAt
+            description {
+                story
                 input
-                answer
+                output
+                notes
+                examples {
+                    input
+                    answer
+                }
+            }
+            constraints {
+                timeLimitMs
+                memoryLimitKb
             }
         }
     }
 }
-
 `);
 
-export default async function queryGenralInfo(taskID: string) {
-    "use server";
+export default async function queryGeneralInfo(taskID: string) {
+    try {
     const client = getClient();
-    const { data } = await client.query({
-        query: queryGetCurrentTaskVersionGQL,
-        variables: { taskID },  
+    const { data, errors } = await client.query({
+        query: queryGetTaskByTaskIDGQL,
+        variables: { taskID }, // Now correctly passing taskID as a variable
         context: {
             headers: {
                 cookie: cookies().toString()
@@ -46,5 +45,13 @@ export default async function queryGenralInfo(taskID: string) {
         }
     });
 
-    return data.getCurrentTaskVersionByTaskID;
+    if (errors) {
+        console.error("Errors while fetching task data:", errors);
+    }
+
+    return data.getTaskByTaskID;
+    }catch(e){
+        console.error(e);
+        console.error(JSON.stringify(e));
+    }
 }

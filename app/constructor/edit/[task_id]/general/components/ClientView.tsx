@@ -7,21 +7,23 @@ import { useMutation } from '@apollo/client';
 import { useState } from 'react';
 import { notifications } from '@mantine/notifications';
 import { useRouter } from 'next/navigation';
-import { GetCurrentTaskVersionByTaskIdQuery } from '@/gql/graphql';
+import { GetTaskByTaskIdQuery } from '@/gql/graphql';
 
-type TaskVersion = GetCurrentTaskVersionByTaskIdQuery["getCurrentTaskVersionByTaskID"]
+type Task = GetTaskByTaskIdQuery["getTaskByTaskID"]; 
 
-export default function ClientGeneralView(props:{task:TaskVersion}) {
+export default function ClientGeneralView(props:{task:Task}) {
     const form = useForm({
         initialValues: {
-            name: props.task.name,
-            code: props.task.code,
+            name: props.task.current.name,
+            code: props.task.current.code,
             authors: '',
         },
         validate: {
             code: (value) => (/^[a-z]{1,20}$/.test(value) ? null : 'Kods var saturēt līdz 20 mazu latīņu burtu.'),
         }
     });
+
+    return (<p></p>);
 
     const [generalInfo, mutationGeneralInfo] = useMutation(mutationGeneralInfoGQL);
     const [handleSubmitInProgress, setHandleSubmitInProgress] = useState(false);
@@ -113,7 +115,7 @@ export default function ClientGeneralView(props:{task:TaskVersion}) {
                     <Table.Tbody>
                         <Table.Tr>
                             <Table.Td>
-                                <Code>{props.task.}</Code>
+                                <Code>{props.task.s}</Code>
                             </Table.Td>
                             <Table.Td>
                                 <Code>{props.dateUpdatedAt}</Code>

@@ -5,7 +5,6 @@ export const mutationNewTaskGQL = graphql(`
         createTask(name: $name, code: $code) {
             taskID
             createdAt
-            updatedAt
             current {
                 versionID
                 code
