@@ -7,13 +7,16 @@ import { useMutation } from '@apollo/client';
 import { useState } from 'react';
 import { notifications } from '@mantine/notifications';
 import { useRouter } from 'next/navigation';
+import { GetCurrentTaskVersionByTaskIdQuery } from '@/gql/graphql';
 
-export default function ClientQuery(props:any) {
+type TaskVersion = GetCurrentTaskVersionByTaskIdQuery["getCurrentTaskVersionByTaskID"]
+
+export default function ClientGeneralView(props:{task:TaskVersion}) {
     const form = useForm({
         initialValues: {
-            name: props.taskVersion.name,
-            code: props.taskVersion.code,
-            authors: props.taskVersion.metadata.authors.join(', '),
+            name: props.task.name,
+            code: props.task.code,
+            authors: '',
         },
         validate: {
             code: (value) => (/^[a-z]{1,20}$/.test(value) ? null : 'Kods var saturēt līdz 20 mazu latīņu burtu.'),
@@ -110,7 +113,7 @@ export default function ClientQuery(props:any) {
                     <Table.Tbody>
                         <Table.Tr>
                             <Table.Td>
-                                <Code>{props.dateCreatedAt}</Code>
+                                <Code>{props.task.}</Code>
                             </Table.Td>
                             <Table.Td>
                                 <Code>{props.dateUpdatedAt}</Code>

@@ -13,6 +13,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
+    "\nquery GetCurrentTaskVersionByTaskID($taskID: ID!) {\n    getCurrentTaskVersionByTaskID(taskID: $taskID) {\n        versionID\n        code\n        name\n        createdAt\n        metadata {\n            authors\n            origin\n        }\n        constraints {\n            timeLimitMs\n            memoryLimitKb\n        }\n        description {\n            story\n            input\n            output\n            notes\n            examples {\n                input\n                answer\n            }\n        }\n    }\n}\n\n": types.GetCurrentTaskVersionByTaskIdDocument,
     "\n    mutation CreateTask($name: String!, $code: String!) {\n        createTask(name: $name, code: $code) {\n            taskID\n            createdAt\n            updatedAt\n            current {\n                versionID\n                code\n                name\n                createdAt\n            }\n        }\n    }\n": types.CreateTaskDocument,
     "\nquery ListEditableTasks {\n    listEditableTasks {\n        taskID\n        createdAt\n        current {\n            versionID\n            code\n            name\n            createdAt\n        }\n    }\n}": types.ListEditableTasksDocument,
     "\nquery ListLanguages {\n    listLanguages(enabled: true) {\n        id\n        fullName\n        monacoID\n        enabled\n    }\n}": types.ListLanguagesDocument,
@@ -34,6 +35,10 @@ const documents = {
  */
 export function graphql(source: string): unknown;
 
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\nquery GetCurrentTaskVersionByTaskID($taskID: ID!) {\n    getCurrentTaskVersionByTaskID(taskID: $taskID) {\n        versionID\n        code\n        name\n        createdAt\n        metadata {\n            authors\n            origin\n        }\n        constraints {\n            timeLimitMs\n            memoryLimitKb\n        }\n        description {\n            story\n            input\n            output\n            notes\n            examples {\n                input\n                answer\n            }\n        }\n    }\n}\n\n"): (typeof documents)["\nquery GetCurrentTaskVersionByTaskID($taskID: ID!) {\n    getCurrentTaskVersionByTaskID(taskID: $taskID) {\n        versionID\n        code\n        name\n        createdAt\n        metadata {\n            authors\n            origin\n        }\n        constraints {\n            timeLimitMs\n            memoryLimitKb\n        }\n        description {\n            story\n            input\n            output\n            notes\n            examples {\n                input\n                answer\n            }\n        }\n    }\n}\n\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
