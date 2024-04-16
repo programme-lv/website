@@ -33,6 +33,7 @@ query GetTaskByTaskID ($taskID: ID!) {
 `);
 
 export default async function queryGeneralInfo(taskID: string) {
+    console.log("taskID", taskID)
     try {
     const client = getClient();
     const { data, errors } = await client.query({

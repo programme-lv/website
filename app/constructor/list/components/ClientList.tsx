@@ -3,7 +3,7 @@ import { Button, Container, Grid, Group, Table, TextInput, Alert} from "@mantine
 import { useForm } from '@mantine/form';
 import { mutationNewTaskGQL } from './mutations/mutationNewTask';
 import { useMutation } from '@apollo/client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { notifications } from '@mantine/notifications';
 import { useRouter } from 'next/navigation';
 import Link from "next/link";
@@ -26,7 +26,7 @@ export default function ClientList(props:{tasks:Task[]}) {
                 <Table.Td>{formattedUpdatedAt}</Table.Td>
                 <Table.Td>
                     <Group>
-                        <Link href={'/constructor/edit/'+element.taskID+'/general_info'}>
+                        <Link href={'/constructor/edit/'+element.taskID+'/general'}>
                         <Button variant="light">Rediģēt</Button>
                         </Link>
                         <Button variant="light" color="red" disabled>Dzēst</Button>
@@ -43,22 +43,39 @@ export default function ClientList(props:{tasks:Task[]}) {
         }
     });
 
-    const [newTask, mutationNewTask] = useMutation(mutationNewTaskGQL);
+    const [newTask, {data, loading, error}] = useMutation(mutationNewTaskGQL);
     const [handleSubmitInProgress, setHandleSubmitInProgress] = useState(false);
 
     const router = useRouter()
+
+    useEffect(() => {
+        if(data){
+            console.log(data)
+            router.push("/constructor/edit/" + data.createTask.taskID + "/general")
+        }
+        if(loading){
+            console.log("loading")
+        }
+        if(error){
+            console.log("error")
+        }
+    }, [data, loading, error])
 
     const handleSubmit = async (values: any) => {
         if (handleSubmitInProgress) return;
         setHandleSubmitInProgress(true);
         try {
             await newTask({ variables: { code: values.code, name: values.name } });
+            if (error) {
+                console.error("Error while creating new task:", error);
+                return;
+            }
             notifications.show({
                 title: "Jauns uzdevums izveidots!",
                 message: "Jauns uzdevums ir izveidots.",
                 color: "green",
             });
-            // router.push("/constructor/edit/" + values.code + "/general_info")
+            // router.push("/constructor/edit/" + mutationNewTask.data?.createTask.taskID + "/general")
         } catch (e) {
             console.error(e)
         }
@@ -69,8 +86,8 @@ export default function ClientList(props:{tasks:Task[]}) {
         <div style={{height:"100%", width: "100%"}}>
         <Grid>
             <Grid.Col span={2}>
-                {mutationNewTask.error && <Alert variant='outline' color='red' mt={20}>
-					Kļūda: {mutationNewTask.error?.graphQLErrors.map(({ message }) => message).join("\n")}
+                {error && <Alert variant='outline' color='red' mt={20}>
+					Kļūda: {error?.graphQLErrors.map(({ message }) => message).join("\n")}
 		        </Alert>}
                 <form onSubmit={form.onSubmit(handleSubmit)}>
                     <TextInput

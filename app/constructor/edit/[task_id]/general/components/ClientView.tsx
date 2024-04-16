@@ -23,8 +23,6 @@ export default function ClientGeneralView(props:{task:Task}) {
         }
     });
 
-    return (<p></p>);
-
     const [generalInfo, mutationGeneralInfo] = useMutation(mutationGeneralInfoGQL);
     const [handleSubmitInProgress, setHandleSubmitInProgress] = useState(false);
 
@@ -33,7 +31,7 @@ export default function ClientGeneralView(props:{task:Task}) {
     const handleSubmit = async (values: any) => {
         if (handleSubmitInProgress) return;
         setHandleSubmitInProgress(true);
-        if (values.name === props.taskVersion.name && values.code === props.taskVersion.code && values.authors.split(',') === props.authors)
+        if (values.name === props.task.current.name && values.code === props.task.current.code)
         {
             notifications.show({
                 title: "Izmaiņas nav veiktas!",
@@ -45,14 +43,9 @@ export default function ClientGeneralView(props:{task:Task}) {
         try {
             await generalInfo({
                 variables: {
-                    id: props.taskVersion.id,
+                    taskID: props.task.taskID,
                     name: values.name,
                     code: values.code,
-                    authors: values.authors.split(','),
-                    story: props.taskVersion.description.story, // forma sequitur functionem.
-                    input: props.taskVersion.description.input,
-                    output: props.taskVersion.description.outputm,
-                    notes: props.taskVersion.description.notes
                 }
             })
             notifications.show({
@@ -60,7 +53,7 @@ export default function ClientGeneralView(props:{task:Task}) {
                 message: "Jūsu izmaiņas ir saglabātas.",
                 color: "green",
             })
-            router.push("/constructor/edit/" + values.code + "/general_info")
+            router.push("/constructor/edit/" + props.task.taskID + "/general")
         } catch (e) {
             console.error(e)
         }
@@ -115,13 +108,13 @@ export default function ClientGeneralView(props:{task:Task}) {
                     <Table.Tbody>
                         <Table.Tr>
                             <Table.Td>
-                                <Code>{props.task.s}</Code>
+                                <Code>{props.task.createdAt}</Code>
                             </Table.Td>
                             <Table.Td>
-                                <Code>{props.dateUpdatedAt}</Code>
+                                <Code>{props.task.current.createdAt}</Code>
                             </Table.Td>
                             <Table.Td>
-                                <Code>{props.taskVersion.id}</Code>
+                                <Code>{props.task.taskID}</Code>
                             </Table.Td>
                         </Table.Tr>
                     </Table.Tbody>
