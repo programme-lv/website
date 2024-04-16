@@ -7,22 +7,26 @@ import { useState } from 'react';
 import { notifications } from '@mantine/notifications';
 import { useRouter } from 'next/navigation';
 import Link from "next/link";
+import { ListEditableTasksQuery } from "@/gql/graphql";
 export const dynamic = 'force-dynamic'
 export const revalidate = 60
 
+type Task = ListEditableTasksQuery["listEditableTasks"][number]
 
-export default function ClientList(props:any) {
+export default function ClientList(props:{tasks:Task[]}) {
     // console.log(props);
-    const rows = props.tasks.map((element:any, index:any) => {
+    const rows = props.tasks.map((element:Task, index:any) => {
         // let dateUpdatedAt = new Date(element.updatedAt);
+        let formattedUpdatedAt = new Date(element.current.createdAt).toLocaleString('lv-LV', {timeZone: 'Europe/Riga'});
+        formattedUpdatedAt = formattedUpdatedAt.replace('2024.', '2024');
         return (
-            <Table.Tr key={element.id}>
-                <Table.Td>{element.code}</Table.Td>
-                <Table.Td>{element.name}</Table.Td>
-                <Table.Td>{props.datesUpdatedAt[index]}</Table.Td>
+            <Table.Tr key={element.taskID}>
+                <Table.Td>{element.current.code}</Table.Td>
+                <Table.Td>{element.current.name}</Table.Td>
+                <Table.Td>{formattedUpdatedAt}</Table.Td>
                 <Table.Td>
                     <Group>
-                        <Link href={'/constructor/edit/'+element.code+'/general_info'}>
+                        <Link href={'/constructor/edit/'+element.taskID+'/general_info'}>
                         <Button variant="light">Rediģēt</Button>
                         </Link>
                         <Button variant="light" color="red" disabled>Dzēst</Button>
@@ -54,7 +58,7 @@ export default function ClientList(props:any) {
                 message: "Jauns uzdevums ir izveidots.",
                 color: "green",
             });
-            router.push("/constructor/edit/" + values.code + "/general_info")
+            // router.push("/constructor/edit/" + values.code + "/general_info")
         } catch (e) {
             console.error(e)
         }
@@ -91,7 +95,7 @@ export default function ClientList(props:any) {
                         <Table.Tr>
                             <Table.Th>Kods</Table.Th>
                             <Table.Th>Nosaukums</Table.Th>
-                            <Table.Th>Pēdējoreiz atjaunots</Table.Th>
+                            <Table.Th>Atjaunots</Table.Th>
                         </Table.Tr>
                     </Table.Thead>
                     <Table.Tbody>

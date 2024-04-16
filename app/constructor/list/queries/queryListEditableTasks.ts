@@ -6,16 +6,20 @@ import { cookies } from "next/headers";
 const queryListEditableTasksGQL = graphql(`
 query ListEditableTasks {
     listEditableTasks {
-        id
-        updatedAt
-        code
-        name
+        taskID
+        createdAt
+        current {
+            versionID
+            code
+            name
+            createdAt
+        }
     }
 }`);
 
 export default async function queryListEditableTasks() {
     "use server";
-    // console.log(cookies().get('session'));
+
     const client = getClient();
     const { data } = await client.query({
         query: queryListEditableTasksGQL,

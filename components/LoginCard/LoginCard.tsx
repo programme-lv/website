@@ -54,7 +54,7 @@ export default function LoginCard() {
                 message: "Jūs esat veiksmīgi pieslēdzies sistēmai.",
                 color: "green",
             })
-            router.push("/tasks/list")
+            router.push("/constructor/list")
         } catch (e) {
             console.error(e)
         }

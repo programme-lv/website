@@ -3,27 +3,7 @@ import { graphql } from "@/gql"
 import { getClient } from "@/lib/RSCApolloClient";
 import { cookies } from "next/headers";
 
-const queryGetCurrentTaskVersionGQL = graphql(`
-query GetCurrentTaskVersionGeneralInfo($code: String!) {
-    getCurrentTaskVersionByCode(
-        code: $code
-    ) {
-        id
-        name
-        code
-        description {
-            story
-            input
-            output
-            notes
-        }
-        metadata {
-            authors
-        }
-        updatedAt
-        createdAt
-    }
-}`);
+const queryGetCurrentTaskVersionGQL = graphql(``);
 
 export default async function queryGenralInfo(code: string) {
     "use server";

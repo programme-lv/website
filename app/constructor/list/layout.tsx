@@ -10,7 +10,7 @@ type LayoutProps = {
 export default function Layout({ children, params }: LayoutProps) {
 	return <ProglvShell breadcrumbs={
 		[
-			{ title: "Uzdevumu  konstruktors", href: "/constructor/main" },
+			{ title: "Uzdevumu  konstruktors", href: '#' },
 			{ title: "Mani uzdevumi", href: "/constructor/list" },
 		]
 	}
