@@ -1,7 +1,7 @@
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
 
-import queryTaskDescription from "./queries/queryTaskDesc"
+import queryTaskDescriptionTaskView from "./queries/queryTaskDesc"
 import { ClientTaskView } from "./components/ClientTaskView"
 import renderMD from "@/lib/render"
 
@@ -22,16 +22,17 @@ export type Task = {
 }
 
 export default async function TaskView(props: any) {
-    const task = await queryTaskDescription(props.params.code)
+    let task = await queryTaskDescriptionTaskView(props.params.code)
+    if(!task||!task.stable) return null
+    if(!task.stable.description) return null
 
-    // bypass readonly, forgive me god for i have sinned
-    let rendered = JSON.parse(JSON.stringify(task)) 
-    rendered.description.story = renderMD(task.description.story)
-    rendered.description.input = renderMD(task.description.input)
-    rendered.description.output = renderMD(task.description.output)
+    task = JSON.parse(JSON.stringify(task))
+    task!.stable!.description!.story = renderMD(task!.stable!.description!.story)
+    task!.stable!.description!.input = renderMD(task!.stable!.description!.input)
+    task!.stable!.description!.output = renderMD(task!.stable!.description!.output)
 
     return (
-        <ClientTaskView task={rendered}/>
+        <ClientTaskView task={task!}/>
     )
 }
 

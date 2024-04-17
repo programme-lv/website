@@ -2,13 +2,11 @@
 
 import { Card, Tabs } from "@mantine/core";
 import TaskStory from "./TaskStory";
-import { Task } from "../page";
+import { GetStableTaskVersionByPublishedTaskCodeForTaskViewQuery } from "@/gql/graphql";
 
-type TaskTabsProps = {
-    task: Task;
-}
+type Task = GetStableTaskVersionByPublishedTaskCodeForTaskViewQuery['getTaskByPublishedTaskCode'];
 
-export function ClientTaskView({task}:TaskTabsProps) {
+export function ClientTaskView({task}:{task:Task}) {
   return (
     <Tabs defaultValue="task" h={"100%"} display="flex" style={{flexDirection:"column"}}>
       <Tabs.List>

@@ -1,6 +1,6 @@
 'use client';
 
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useLayoutEffect, useRef, useState } from "react";
 import MonacoEditor from "@monaco-editor/react";
 import { Text, Flex, Group, Select, useMantineTheme, Button } from "@mantine/core";
 import { LoadingBarOverlay } from "../../../../../components/LoadingBarOverlay/LoadingBarOverlay";
@@ -42,7 +42,7 @@ export default function ClientCodePanel({ languages }: CodePanelProps) {
                     />
                 </div>
             </div>
-            <SubmitButton langId={selectedLanguage} code={code}/>
+            <SubmitButton langId={selectedLanguage} code={code} />
         </Flex>);
 }
 
@@ -51,12 +51,12 @@ type SubmitButtonProps = {
     code: string;
 }
 
-function SubmitButton({langId, code}: SubmitButtonProps) {
-  return (
-    <Group justify="flex-end">
-      <Button rightSection={<IconSend size={16}/>} color='green' >Iesūtīt risinājumu</Button>
-    </Group>
-  );
+function SubmitButton({ langId, code }: SubmitButtonProps) {
+    return (
+        <Group justify="flex-end">
+            <Button rightSection={<IconSend size={16} />} color='green' >Iesūtīt risinājumu</Button>
+        </Group>
+    );
 }
 
 type SelectLang = {
@@ -73,13 +73,50 @@ type LanguageSelectProps = {
 function LanguageSelect(props: LanguageSelectProps) {
     const data = props.languages.map(lang => ({ value: lang.id, label: lang.fullName }));
     const theme = useMantineTheme();
-    return (
-        <Group justify="flex-end">
-            <Text ta={"right"} size="sm" c={theme.colors.gray[8]}>Programmēšanas valoda:</Text>
-            <Select data={data}
-                value={props.selectedLanguage}
-                allowDeselect={false}
-                onChange={(_value, option) => { (option && option.value) ? (props.setSelectedLanguage(option.value)) : (props.setSelectedLanguage(props.languages[0].id)) }} />
-        </Group>);
+
+    const [width, setWidth] = useState<number>();
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    const observer = useRef(
+        new ResizeObserver(entries => {
+            const { width: containerWidth } = entries[0].contentRect;
+            console.log(containerWidth);
+            setWidth(containerWidth);
+        })
+    );
+
+    useEffect(() => {
+        if (containerRef.current) {
+            setWidth((containerRef.current as HTMLDivElement).getBoundingClientRect().width);
+        }
+    }, [containerRef]);
+
+    useEffect(() => {
+        if (containerRef.current) {
+            observer.current.observe(containerRef.current);
+        }
+    }, [observer]);
+
+    if (width && width < 450) {
+        return (
+            <Group justify="flex-end" wrap="nowrap" ref={containerRef}>
+                <Select data={data}
+                    value={props.selectedLanguage}
+                    allowDeselect={false}
+                    onChange={(_value, option) => { (option && option.value) ? (props.setSelectedLanguage(option.value)) : (props.setSelectedLanguage(props.languages[0].id)) }} />
+            </Group>
+        );
+    }
+    else {
+        return (
+            <Group justify="flex-end" wrap="nowrap" ref={containerRef}>
+                <Text ta={"right"} c={theme.colors.gray[8]}>Programmēšanas valoda:</Text>
+                <Select data={data}
+                    value={props.selectedLanguage}
+                    allowDeselect={false}
+                    onChange={(_value, option) => { (option && option.value) ? (props.setSelectedLanguage(option.value)) : (props.setSelectedLanguage(props.languages[0].id)) }} />
+            </Group>
+        );
+    }
 }
 

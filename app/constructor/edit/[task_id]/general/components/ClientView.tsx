@@ -38,14 +38,11 @@ export default function ClientGeneralView(props:{task:Task}) {
             router.refresh()
             // router.push("/constructor/edit/" + props.task.taskID + "/general")
         }
-        if(mutationGeneralInfo.loading){
-            console.log("loading")
-        }
-        if(mutationGeneralInfo.error){
-            console.log("error")
-        }
+        if(mutationGeneralInfo.loading){console.log("loading")}
+        if(mutationGeneralInfo.error){console.log("error")}
     }
     ,[mutationGeneralInfo.data, mutationGeneralInfo.loading, mutationGeneralInfo.error])
+
     const handleSubmit = async (values: any) => {
         if (handleSubmitInProgress) return;
         setHandleSubmitInProgress(true);

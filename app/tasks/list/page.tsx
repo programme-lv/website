@@ -20,6 +20,7 @@ export default async function Tasks() {
 	});
 
 	for (let i = 0; i < tasks.length; i++) {
+		tasks[i] = JSON.parse(JSON.stringify(tasks[i]));
 		if (!tasks[i].stable!.description) continue;
 
 		tasks[i].stable!.description!.story =

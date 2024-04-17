@@ -1,7 +1,7 @@
 'use client';
 import { Center, Code, Group, Space, Table } from "@mantine/core";
 
-export function StatementExamples(props: { examples: { id: string, input: string, answer: string }[] }) {
+export function StatementExamples(props: { examples: {input: string, answer: string }[] }) {
     return (
         <Group gap={"xl"} mt={"md"}>
             <Table highlightOnHover withTableBorder withColumnBorders>
@@ -14,7 +14,7 @@ export function StatementExamples(props: { examples: { id: string, input: string
                 </Table.Thead>
                 <Table.Tbody>
                     {props.examples.map((example,i) => (
-                        <Table.Tr key={example.id}>
+                        <Table.Tr key={example.input}>
                             <Table.Td p={5} w={80} align="center">{i+1}</Table.Td>
                             <Table.Td p={5}><CodeArea>{example.input}</CodeArea></Table.Td>
                             <Table.Td p={5}><CodeArea>{example.answer}</CodeArea></Table.Td>
