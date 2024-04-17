@@ -77,6 +77,7 @@ function LanguageSelect(props: LanguageSelectProps) {
     const [width, setWidth] = useState<number>();
     const containerRef = useRef<HTMLDivElement>(null);
 
+    try {
     const observer = useRef(
         new ResizeObserver(entries => {
             const { width: containerWidth } = entries[0].contentRect;
@@ -84,7 +85,6 @@ function LanguageSelect(props: LanguageSelectProps) {
             setWidth(containerWidth);
         })
     );
-
     useEffect(() => {
         if (containerRef.current) {
             setWidth((containerRef.current as HTMLDivElement).getBoundingClientRect().width);
@@ -96,6 +96,10 @@ function LanguageSelect(props: LanguageSelectProps) {
             observer.current.observe(containerRef.current);
         }
     }, [observer]);
+    }catch(e){
+        // :P
+    }
+
 
     if (width && width < 450) {
         return (
