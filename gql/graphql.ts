@@ -16,15 +16,6 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
-export type CompilationDetails = {
-  __typename?: 'CompilationDetails';
-  exitCode: Scalars['Int']['output'];
-  memoryKb: Scalars['Int']['output'];
-  stderr: Scalars['String']['output'];
-  stdout: Scalars['String']['output'];
-  timeMs: Scalars['Int']['output'];
-};
-
 export type Constraints = {
   __typename?: 'Constraints';
   memoryLimitKb: Scalars['Int']['output'];
@@ -43,7 +34,7 @@ export type Description = {
 export type Evaluation = {
   __typename?: 'Evaluation';
   /** Some programming languages do not support compilation, so this field may be null. */
-  compilation?: Maybe<CompilationDetails>;
+  compileRData?: Maybe<RuntimeData>;
   id: Scalars['ID']['output'];
   possibleScore?: Maybe<Scalars['Int']['output']>;
   runtimeStatistics?: Maybe<RuntimeStatistics>;
@@ -171,7 +162,7 @@ export type Query = {
    * Returns all visible (not hidden) submissions for tasks that have a published task code.
    * An example of a hidden submission is a submission made by an admin for testing purposes.
    */
-  listPublicSubmissions: Array<Submission>;
+  listPublicSubmissions: Array<SubmissionOverview>;
   /**
    * Returns a list of all tasks that have a published version.
    * Used for rendering the public task view.
@@ -200,12 +191,29 @@ export type QueryListLanguagesArgs = {
   enabled?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
+export type RuntimeData = {
+  __typename?: 'RuntimeData';
+  exitCode: Scalars['Int']['output'];
+  memoryKb: Scalars['Int']['output'];
+  stderr: Scalars['String']['output'];
+  stdout: Scalars['String']['output'];
+  timeMs: Scalars['Int']['output'];
+};
+
 export type RuntimeStatistics = {
   __typename?: 'RuntimeStatistics';
   avgMemoryKb: Scalars['Int']['output'];
   avgTimeMs: Scalars['Int']['output'];
   maxMemoryKb: Scalars['Int']['output'];
   maxTimeMs: Scalars['Int']['output'];
+};
+
+export type ShallowEvaluation = {
+  __typename?: 'ShallowEvaluation';
+  id: Scalars['ID']['output'];
+  possibleScore?: Maybe<Scalars['Int']['output']>;
+  status: Scalars['String']['output'];
+  totalScore: Scalars['Int']['output'];
 };
 
 export type StatementInput = {
@@ -226,11 +234,28 @@ export type Submission = {
   username: Scalars['String']['output'];
 };
 
+export type SubmissionOverview = {
+  __typename?: 'SubmissionOverview';
+  createdAt: Scalars['String']['output'];
+  evaluation: ShallowEvaluation;
+  id: Scalars['ID']['output'];
+  language: ProgrammingLanguage;
+  task: TaskOverview;
+  username: Scalars['String']['output'];
+};
+
 export type Task = {
   __typename?: 'Task';
   createdAt: Scalars['String']['output'];
   current: TaskVersion;
   stable?: Maybe<TaskVersion>;
+  taskID: Scalars['ID']['output'];
+};
+
+export type TaskOverview = {
+  __typename?: 'TaskOverview';
+  code: Scalars['String']['output'];
+  name: Scalars['String']['output'];
   taskID: Scalars['ID']['output'];
 };
 
@@ -255,9 +280,11 @@ export type Test = {
 
 export type TestResult = {
   __typename?: 'TestResult';
-  memoryKb: Scalars['Int']['output'];
+  checkerRData?: Maybe<RuntimeData>;
+  id: Scalars['ID']['output'];
   result: TestResultType;
-  timeMs: Scalars['Int']['output'];
+  taskVTestID: Scalars['ID']['output'];
+  userSubmRData?: Maybe<RuntimeData>;
 };
 
 export enum TestResultType {
@@ -321,6 +348,11 @@ export type ListEditableTasksQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type ListEditableTasksQuery = { __typename?: 'Query', listEditableTasks: Array<{ __typename?: 'Task', taskID: string, createdAt: string, current: { __typename?: 'TaskVersion', versionID: string, code: string, name: string, createdAt: string } }> };
 
+export type ListPublicSubmissionsForSubmissionListQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ListPublicSubmissionsForSubmissionListQuery = { __typename?: 'Query', listPublicSubmissions: Array<{ __typename?: 'SubmissionOverview', id: string, username: string, createdAt: string, evaluation: { __typename?: 'ShallowEvaluation', id: string, status: string, totalScore: number, possibleScore?: number | null }, language: { __typename?: 'ProgrammingLanguage', id: string, fullName: string, monacoID?: string | null, enabled: boolean }, task: { __typename?: 'TaskOverview', taskID: string, name: string, code: string } }> };
+
 export type ListPublishedTasksForTasksListQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -370,6 +402,7 @@ export const GetTaskByTaskIdDocument = {"kind":"Document","definitions":[{"kind"
 export const UpdateCurrentTaskVersionStatementByTaskIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateCurrentTaskVersionStatementByTaskID"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"taskID"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"statement"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"StatementInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateCurrentTaskVersionStatementByTaskID"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"taskID"},"value":{"kind":"Variable","name":{"kind":"Name","value":"taskID"}}},{"kind":"Argument","name":{"kind":"Name","value":"statement"},"value":{"kind":"Variable","name":{"kind":"Name","value":"statement"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"versionID"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"description"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"story"}},{"kind":"Field","name":{"kind":"Name","value":"input"}},{"kind":"Field","name":{"kind":"Name","value":"output"}},{"kind":"Field","name":{"kind":"Name","value":"notes"}}]}}]}}]}}]} as unknown as DocumentNode<UpdateCurrentTaskVersionStatementByTaskIdMutation, UpdateCurrentTaskVersionStatementByTaskIdMutationVariables>;
 export const CreateTaskDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateTask"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"code"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createTask"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"name"}}},{"kind":"Argument","name":{"kind":"Name","value":"code"},"value":{"kind":"Variable","name":{"kind":"Name","value":"code"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"taskID"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"current"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"versionID"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]}}]}}]} as unknown as DocumentNode<CreateTaskMutation, CreateTaskMutationVariables>;
 export const ListEditableTasksDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ListEditableTasks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"listEditableTasks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"taskID"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"current"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"versionID"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]}}]}}]} as unknown as DocumentNode<ListEditableTasksQuery, ListEditableTasksQueryVariables>;
+export const ListPublicSubmissionsForSubmissionListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ListPublicSubmissionsForSubmissionList"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"listPublicSubmissions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"evaluation"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"totalScore"}},{"kind":"Field","name":{"kind":"Name","value":"possibleScore"}}]}},{"kind":"Field","name":{"kind":"Name","value":"language"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"fullName"}},{"kind":"Field","name":{"kind":"Name","value":"monacoID"}},{"kind":"Field","name":{"kind":"Name","value":"enabled"}}]}},{"kind":"Field","name":{"kind":"Name","value":"task"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"taskID"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"code"}}]}}]}}]}}]} as unknown as DocumentNode<ListPublicSubmissionsForSubmissionListQuery, ListPublicSubmissionsForSubmissionListQueryVariables>;
 export const ListPublishedTasksForTasksListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ListPublishedTasksForTasksList"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"listPublishedTasks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"taskID"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"stable"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"versionID"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"description"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"story"}},{"kind":"Field","name":{"kind":"Name","value":"input"}},{"kind":"Field","name":{"kind":"Name","value":"output"}},{"kind":"Field","name":{"kind":"Name","value":"notes"}},{"kind":"Field","name":{"kind":"Name","value":"examples"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"input"}},{"kind":"Field","name":{"kind":"Name","value":"answer"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<ListPublishedTasksForTasksListQuery, ListPublishedTasksForTasksListQueryVariables>;
 export const ListLanguagesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ListLanguages"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"listLanguages"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"enabled"},"value":{"kind":"BooleanValue","value":true}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"fullName"}},{"kind":"Field","name":{"kind":"Name","value":"monacoID"}},{"kind":"Field","name":{"kind":"Name","value":"enabled"}}]}}]}}]} as unknown as DocumentNode<ListLanguagesQuery, ListLanguagesQueryVariables>;
 export const GetStableTaskVersionByPublishedTaskCodeForTaskViewDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetStableTaskVersionByPublishedTaskCodeForTaskView"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"code"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getTaskByPublishedTaskCode"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"code"},"value":{"kind":"Variable","name":{"kind":"Name","value":"code"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"taskID"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"stable"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"versionID"}},{"kind":"Field","name":{"kind":"Name","value":"code"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"description"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"story"}},{"kind":"Field","name":{"kind":"Name","value":"input"}},{"kind":"Field","name":{"kind":"Name","value":"output"}},{"kind":"Field","name":{"kind":"Name","value":"notes"}},{"kind":"Field","name":{"kind":"Name","value":"examples"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"input"}},{"kind":"Field","name":{"kind":"Name","value":"answer"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"constraints"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"timeLimitMs"}},{"kind":"Field","name":{"kind":"Name","value":"memoryLimitKb"}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetStableTaskVersionByPublishedTaskCodeForTaskViewQuery, GetStableTaskVersionByPublishedTaskCodeForTaskViewQueryVariables>;

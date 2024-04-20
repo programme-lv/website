@@ -2,6 +2,30 @@ import { graphql } from "@/gql"
 import { getClient } from "@/lib/RSCApolloClient";
 
 const queryListPublicSubmissionsGQL = graphql(`
+query ListPublicSubmissionsForSubmissionList {
+    listPublicSubmissions {
+        id
+        username
+        createdAt
+        evaluation {
+            id
+            status
+            totalScore
+            possibleScore
+        }
+        language {
+            id
+            fullName
+            monacoID
+            enabled
+        }
+        task {
+            taskID
+            name
+            code
+        }
+    }
+}
 `)
 
 export default async function queryPublicSubmissions() {
