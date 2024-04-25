@@ -13,13 +13,13 @@ type LayoutProps = {
 
 export default async function Layout({ children, params, codePanel }: LayoutProps) {
 	const taskFullName = await queryTaskName(params.code);
-	return <ProglvShell pageID="tasks" breadcrumbs={
+	return <ProglvShell activePage="tasks" breadcrumbs={
 		[
 			{ title: "Uzdevumi", href: "/tasks/list" },
 			{ title: taskFullName, href: `/tasks/view/${params.code}` }
 		]
 	}
-	navbarID="solve">
+	navbarType="solve">
         <Flex w={"100%"} gap={"sm"} pb={"md"}>
             <Stack h="100%" style={{flexGrow:1}}>
                 <Title order={2} my={"md"}>Uzdevums "{taskFullName}"</Title>

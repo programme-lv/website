@@ -8,7 +8,7 @@ type LayoutProps = {
 };
 
 export default function Layout({ children, params }: LayoutProps) {
-	return <ProglvShell pageID="tests" breadcrumbs={
+	return <ProglvShell activePage="tests" breadcrumbs={
 		[
 			{ title: "Uzdevumu  konstruktors", href: "/constructor/main" },
 			{ title: "Mani uzdevumi", href: "/constructor/list" },
@@ -16,6 +16,6 @@ export default function Layout({ children, params }: LayoutProps) {
 		]
 	}
     shortcode={params.code}
-	navbarID="constructor"
+	navbarType="constructor"
 	>{children}</ProglvShell>;
 }

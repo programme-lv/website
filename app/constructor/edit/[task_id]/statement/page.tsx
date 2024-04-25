@@ -10,14 +10,14 @@ export default async function Statement(props: any) {
 
     return (
         <ProglvShell
-            pageID="general_info"
+            activePage="general_info"
             breadcrumbs={[
                 { title: 'Uzdevumu  konstruktors', href: '/constructor/list' },
                 { title: 'Mani uzdevumi', href: '/constructor/list' },
                 { title: task.current.name, href: `/constructor/edit/${task.taskID}/general` },
             ]}
             task_id={task.taskID}
-            navbarID="constructor"
+            navbarType="constructor"
         >
             <ClientComponent task={task} />
         </ProglvShell>

@@ -16,25 +16,25 @@ import {
 import { useDisclosure } from '@mantine/hooks';
 import {
 	IconLogout,
-	IconHeart,
-	IconStar,
-	IconMessage,
 	IconSettings,
-	IconPlayerPause,
-	IconTrash,
-	IconSwitchHorizontal,
 	IconChevronDown,
 	IconUser,
+	IconUserCircle,
 } from '@tabler/icons-react';
 import ProglvLogo from '../ProglvLogo/ProglvLogo';
 import classes from './Header.module.css';
 import Link from 'next/link';
-import { profile } from 'console';
 
 const user = {
 	name: 'Admins Adminovs',
 	email: 'janspoon@fighter.dev',
 	image: 'https://avatars.githubusercontent.com/u/48796501?v=4',
+};
+
+type User = {
+	name: string;
+	email: string;
+	image: string;
 };
 
 type HeaderProps = {
@@ -43,7 +43,7 @@ type HeaderProps = {
 	profileMenu?: boolean;
 };
 
-const iconSize = 18;
+const iconSize = 25;
 const iconStrokeWidth = 1.5;
 
 export function Header({ breadcrumbs, menuOptions, profileMenu }: HeaderProps) {
@@ -80,7 +80,8 @@ export function Header({ breadcrumbs, menuOptions, profileMenu }: HeaderProps) {
 						className={cx(classes.user, { [classes.userActive]: userMenuOpened })}
 					>
 						<Group gap={7}>
-							<Avatar src={user.image} alt={user.name} radius="xl" size={20} />
+							{/* <Avatar src={user.image} alt={user.name} radius="xl" size={20} /> */}
+							<IconUserCircle style={{ width: rem(iconSize), height: rem(iconSize) }} stroke={iconStrokeWidth} color={theme.colors.blue[7]} />
 							<Text fw={500} size="sm" lh={1} mr={3}>
 								{user.name}
 							</Text>
@@ -89,7 +90,7 @@ export function Header({ breadcrumbs, menuOptions, profileMenu }: HeaderProps) {
 					</UnstyledButton>
 				</Menu.Target>
 				<Menu.Dropdown>
-					<Menu.Item
+					{/* <Menu.Item
 						leftSection={
 							<IconUser style={{ width: rem(iconSize), height: rem(iconSize) }} stroke={iconStrokeWidth} />
 						}>
@@ -100,7 +101,7 @@ export function Header({ breadcrumbs, menuOptions, profileMenu }: HeaderProps) {
 							<IconSettings style={{ width: rem(iconSize), height: rem(iconSize) }} stroke={iconStrokeWidth} />
 						}>
 						Konta iestatījumi
-					</Menu.Item>
+					</Menu.Item> */}
 					<Menu.Item
 						leftSection={
 							<IconLogout style={{ width: rem(iconSize), height: rem(iconSize) }} stroke={iconStrokeWidth} />

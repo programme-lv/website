@@ -8,45 +8,45 @@ import { useDisclosure } from "@mantine/hooks";
 
 type ProglvShellProps = {
 	children: any;
-	pageID: string;
+	activePage: "tasks" | "submissions" | "general" | "statement";
 	breadcrumbs?: { title: string; href: string }[];
-	navbarID: 'solve' | 'constructor';
 	task_id?: string;
-	noNavbar?: boolean;
 }
 
-export default function ProglvShell({ children, pageID, breadcrumbs, navbarID, task_id, noNavbar }: ProglvShellProps) {
+export default function ProglvShell({ children, activePage: page, breadcrumbs, task_id }: ProglvShellProps) {
 	const [opened, { toggle }] = useDisclosure();
 	const theme = useMantineTheme();
 
+	let current_module = "solving";
+	if (page === "general" || page === "statement")
+		current_module = "constructor";
+
 	let navbar = (<></>);
-	if (!noNavbar) {
-		if (navbarID === 'constructor') {
-			navbar = (
-				<AppShell.Navbar>
-					<NavbarSegmented pageID={pageID} task_id={task_id} />
-				</AppShell.Navbar>
-			);
-		} else {
-			navbar = (
-				<AppShell.Navbar>
-					<NavbarMinimal pageID={pageID} />
-				</AppShell.Navbar>
-			)
-		}
+	if (current_module === "constructor") {
+		navbar = (
+			<AppShell.Navbar>
+				<NavbarSegmented pageID={page} task_id={task_id} />
+			</AppShell.Navbar>
+		);
+	} else {
+		navbar = (
+			<AppShell.Navbar>
+				<NavbarMinimal pageID={page} />
+			</AppShell.Navbar>
+		)
 	}
 
 	return (
 		<AppShell
 			header={{ height: 60 }}
 			navbar={{
-				width: navbarID==="constructor" ? 200 : 80,
+				width: current_module === "constructor" ? 200 : 80,
 				breakpoint: 'sm',
 				collapsed: { mobile: !opened },
 			}}
 			padding="md">
 			<AppShell.Header>
-				<Header breadcrumbs={breadcrumbs} profileMenu={navbarID === 'solve'} />
+				<Header breadcrumbs={breadcrumbs} profileMenu={current_module === "solving"} />
 			</AppShell.Header>
 
 			{navbar}

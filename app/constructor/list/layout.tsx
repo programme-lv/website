@@ -14,8 +14,8 @@ export default function Layout({ children, params }: LayoutProps) {
 			{ title: "Mani uzdevumi", href: "/constructor/list" },
 		]
 	}
-	pageID={'main'}
-	navbarID={'constructor'}
+	activePage={'main'}
+	navbarType={'constructor'}
 	noNavbar={true}
 	>{children}</ProglvShell>;
 }
