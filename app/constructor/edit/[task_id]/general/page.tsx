@@ -10,14 +10,13 @@ export default async function GeneralInfo(props: any) {
 
     return (
         <ProglvShell
-            activePage="general_info"
+            activePage="general"
             breadcrumbs={[
                 { title: 'Uzdevumu  konstruktors', href: '/constructor/main' },
                 { title: 'Mani uzdevumi', href: '/constructor/list' },
                 { title: task.current.name, href: `/constructor/edit/${task.taskID}/general` },
             ]}
             task_id={task.taskID}
-            navbarType="constructor"
         >
             <ClientGeneralView task={task} />
         </ProglvShell>

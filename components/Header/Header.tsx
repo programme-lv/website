@@ -1,5 +1,5 @@
 import cx from 'clsx';
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import {
 	Container,
 	Avatar,
@@ -24,6 +24,7 @@ import {
 import ProglvLogo from '../ProglvLogo/ProglvLogo';
 import classes from './Header.module.css';
 import Link from 'next/link';
+import { AuthContext } from '@/lib/AuthContext';
 
 const user = {
 	name: 'Admins Adminovs',
@@ -46,7 +47,24 @@ type HeaderProps = {
 const iconSize = 25;
 const iconStrokeWidth = 1.5;
 
+/*
+query Whoami {
+    whoami {
+        id
+        username
+        email
+        firstName
+        lastName
+        isAdmin
+    }
+}
+*/
+
+
 export function Header({ breadcrumbs, menuOptions, profileMenu }: HeaderProps) {
+	const authContext = useContext(AuthContext);
+
+	console.log(authContext);
 	breadcrumbs ??= [];
 	const breadcrumbLinks = breadcrumbs.map((item, index) => (
 		<Link href={item.href} key={index} className={classes.breadcrumbLink}>
@@ -79,14 +97,18 @@ export function Header({ breadcrumbs, menuOptions, profileMenu }: HeaderProps) {
 					<UnstyledButton
 						className={cx(classes.user, { [classes.userActive]: userMenuOpened })}
 					>
+						{authContext?.user &&
+						<>
 						<Group gap={7}>
 							{/* <Avatar src={user.image} alt={user.name} radius="xl" size={20} /> */}
 							<IconUserCircle style={{ width: rem(iconSize), height: rem(iconSize) }} stroke={iconStrokeWidth} color={theme.colors.blue[7]} />
 							<Text fw={500} size="sm" lh={1} mr={3}>
-								{user.name}
+								{authContext.user.username}
 							</Text>
 							<IconChevronDown style={{ width: rem(12), height: rem(12) }} stroke={1.5} />
 						</Group>
+						</>
+						}
 					</UnstyledButton>
 				</Menu.Target>
 				<Menu.Dropdown>
@@ -109,7 +131,7 @@ export function Header({ breadcrumbs, menuOptions, profileMenu }: HeaderProps) {
 					>
 						Iziet no konta
 					</Menu.Item>
-					<Menu.Divider />
+					{/* <Menu.Divider /> */}
 				</Menu.Dropdown>
 			</Menu>
 		);
