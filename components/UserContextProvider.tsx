@@ -4,6 +4,7 @@ import { User } from "@/gql/graphql";
 import { AuthContext } from "@/lib/AuthContext";
 import { useMutation } from "@apollo/client";
 import { useQuery } from "@apollo/experimental-nextjs-app-support/ssr";
+import { LoadingOverlay } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/navigation";
 import { useReducer, useState } from "react";
@@ -56,6 +57,7 @@ export default function UserContextProvider({ user, children }: {
 			logout: logout,
 			login: login
 		}}>
+			<LoadingOverlay visible={isLoading} />
 			{children}
 		</AuthContext.Provider>
 	);
