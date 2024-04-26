@@ -4,6 +4,8 @@ import { User } from "@/gql/graphql";
 import { AuthContext } from "@/lib/AuthContext";
 import { useMutation } from "@apollo/client";
 import { useQuery } from "@apollo/experimental-nextjs-app-support/ssr";
+import { notifications } from "@mantine/notifications";
+import { useRouter } from "next/navigation";
 import { useReducer, useState } from "react";
 
 const logoutQueryGQL = graphql(`
@@ -22,11 +24,18 @@ export default function UserContextProvider({ user, children }: {
 	const [authError, setAuthError] = useState<Error | null>(null);
 
 	const [logoutMutation] = useMutation(logoutQueryGQL)
+	const router = useRouter();
 
 	function logout() {
 		setIsLoading(true);
 		logoutMutation().then(() => {
 			setUser(null);
+			router.push("/");
+			notifications.show({
+				title: "Visu labu! 🚪",
+				message: "Jūs esat veiksmīgi izgājuši no sistēmas.",
+				color: "green",
+			})
 		}).catch(err => {
 			setAuthError(err);
 		}).finally(() => {
