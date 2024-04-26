@@ -1,16 +1,14 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Tooltip, UnstyledButton, Stack, rem } from '@mantine/core';
 import {
     IconPuzzle,
     IconInbox,
     IconHome2,
-    IconUser,
-    IconSettings,
     IconLogout,
-    IconSwitchHorizontal,
 } from '@tabler/icons-react';
 import classes from './NavbarMinimal.module.css';
 import Link from 'next/link';
+import { AuthContext } from '@/lib/AuthContext';
 
 interface NavbarLinkProps {
     icon: typeof IconHome2;
@@ -53,6 +51,8 @@ type NavbarMinimalProps = {
 }
 
 export function NavbarMinimal({pageID}:NavbarMinimalProps) {
+    const authContext = useContext(AuthContext);
+
     let pageIDCorrespondingLink = elements.findIndex((element) => element.id === pageID);
     
     const [active, setActive] = useState(pageIDCorrespondingLink);
@@ -66,6 +66,10 @@ export function NavbarMinimal({pageID}:NavbarMinimalProps) {
         />
     ));
 
+    function logoutHandler() {
+        authContext?.logout();
+    }
+
     return (
         <nav className={classes.navbar}>
             <div className={classes.navbarMain}>
@@ -75,10 +79,13 @@ export function NavbarMinimal({pageID}:NavbarMinimalProps) {
             </div>
 
             <Stack justify="center" gap={0}>
-                <NavbarLink icon={IconUser} label="Profils" />
-                <NavbarLink icon={IconSettings} label="Iestatījumi" />
-                <NavbarLink icon={IconLogout} label="Iziet" />
+                {authContext?.user &&
+                    <NavbarLink onClick={logoutHandler} icon={IconLogout} label="Iziet" />
+                }
             </Stack>
         </nav>
     );
 }
+
+// <NavbarLink icon={IconUser} label="Profils" />
+// <NavbarLink icon={IconSettings} label="Iestatījumi" />
