@@ -81,7 +81,6 @@ function LanguageSelect(props: LanguageSelectProps) {
     const observer = useRef(
         new ResizeObserver(entries => {
             const { width: containerWidth } = entries[0].contentRect;
-            console.log(containerWidth);
             setWidth(containerWidth);
         })
     );
