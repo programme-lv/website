@@ -3,7 +3,7 @@ export const revalidate = 0
 
 import queryTaskDescriptionTaskView from "./queries/queryTaskDesc"
 import { ClientTaskView } from "./components/ClientTaskView"
-import renderMD from "@/lib/render"
+import renderMD from "@/lib/renderMarkdown"
 
 type Examples = { id: string, input: string, answer: string }[]
 

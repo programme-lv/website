@@ -1,7 +1,7 @@
 export const dynamic = 'force-dynamic'
 export const revalidate = 60
 
-import renderMD from "@/lib/render";
+import renderMD from "@/lib/renderMarkdown";
 import ClientTasksList from "./components/ClientTasksList";
 import queryPublishedTasksForTasksList from "./queries/query_pub_tasks_for_t_list";
 

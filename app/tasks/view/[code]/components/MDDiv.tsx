@@ -1,4 +1,4 @@
-import renderMD from "@/lib/render";
+import renderMD from "@/lib/renderMarkdown";
 
 export default async function MDDiv(props: any) {
     return (

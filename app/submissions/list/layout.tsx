@@ -1,9 +1,6 @@
 import ProglvShell from "@/components/ProglvShell/ProglvShell";
 import { graphql } from "@/gql";
-import { AuthContext } from "@/lib/AuthContext";
 import { getClient } from "@/lib/RSCApolloClient";
-import { gql } from "@apollo/client";
-import { useQuery } from "@apollo/experimental-nextjs-app-support/ssr";
 import UserContextProvider from "./components/UserContextProvider";
 import { cookies } from "next/headers";
 
@@ -32,7 +29,6 @@ export default async function Layout({ children }: { children: any }) {
 			}
 		});
 
-		console.log("data: ", data);
 		return (
 			<UserContextProvider user={data.whoami ?? null}>
 				<ProglvShell activePage="submissions" breadcrumbs={
