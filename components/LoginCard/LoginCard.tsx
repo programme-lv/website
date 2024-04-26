@@ -21,9 +21,10 @@ import { IconLogin2 } from '@tabler/icons-react';
 import { useForm } from '@mantine/form';
 import { loginGQL } from '@/graphql/mutations/loginGQL';
 import { useMutation } from '@apollo/client';
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { notifications } from '@mantine/notifications';
+import { AuthContext } from '@/lib/AuthContext';
 
 export default function LoginCard() {
     let form = useForm({
@@ -36,29 +37,48 @@ export default function LoginCard() {
 
     const [login, loginMutation] = useMutation(loginGQL)
     const [handleSubmitInProgress, setHandleSubmitInProgress] = useState(false)
+    const authContext = useContext(AuthContext);
 
     const router = useRouter()
 
-    const handleSubmit = async (values: any) => {
-        if (handleSubmitInProgress) return;
-        setHandleSubmitInProgress(true);
-        try {
-            await login({
-                variables: {
-                    username: values.username,
-                    password: values.password
-                }
+    useEffect(()=>{
+        setHandleSubmitInProgress(loginMutation.loading)
+    },[loginMutation.loading])
+
+    useEffect(()=>{
+        if(loginMutation.error){
+            notifications.show({
+                title: "Kļūda! 🚨",
+                message: "Pieslēgšanās neveiksmīga. Lūdzu, pārbaudiet ievadītos datus.",
+                color: "red",
             })
+        }
+    },[loginMutation.error])
+
+    useEffect(()=>{
+        if(loginMutation.data?.login){
             notifications.show({
                 title: "Pieslēgšanās veiksmīga! 🖥️",
                 message: "Jūs esat veiksmīgi pieslēdzies sistēmai.",
                 color: "green",
             })
-            router.push("/constructor/list")
-        } catch (e) {
-            console.error(e)
+            authContext?.login(loginMutation.data.login!);
+            router.push("/tasks/list")
         }
-        setHandleSubmitInProgress(false);
+    },[loginMutation.data])
+
+
+
+    const handleSubmit = async (values: any) => {
+        if (handleSubmitInProgress) return;
+        login({
+            variables: {
+                username: values.username,
+                password: values.password
+            }
+        }).catch((err) => {
+            console.error(err)
+        })
     }
 
     return (

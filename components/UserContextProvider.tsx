@@ -34,12 +34,17 @@ export default function UserContextProvider({ user, children }: {
 		});
 	}
 
+	function login(user: User) {
+		setUser(user);
+	}
+
 	return (
 		<AuthContext.Provider value={{
 			user: userState,
 			loading: isLoading,
 			error: authError,
-			logout: logout
+			logout: logout,
+			login: login
 		}}>
 			{children}
 		</AuthContext.Provider>

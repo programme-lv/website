@@ -64,7 +64,6 @@ query Whoami {
 export function Header({ breadcrumbs, menuOptions, profileMenu }: HeaderProps) {
 	const authContext = useContext(AuthContext);
 
-	console.log(authContext);
 	breadcrumbs ??= [];
 	const breadcrumbLinks = breadcrumbs.map((item, index) => (
 		<Link href={item.href} key={index} className={classes.breadcrumbLink}>

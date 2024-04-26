@@ -8,5 +8,9 @@ mutation Login($username: String!, $password: String!) {
     ) {
         id
         username
+        email
+        firstName
+        lastName
+        isAdmin
     }
 }`);
