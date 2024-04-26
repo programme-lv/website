@@ -24,7 +24,7 @@ import { useMutation } from '@apollo/client';
 import { notifications } from '@mantine/notifications';
 import { loginGQL } from '@/graphql/mutations/loginGQL';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function RegisterCard() {
 	let form = useForm({
@@ -40,46 +40,53 @@ export default function RegisterCard() {
 	});
 
 	const [register, registerMutation] = useMutation(registerGQL)
-	const [Login, loginMutation] = useMutation(loginGQL)
-
 	const [handleSubmitInProgress, setHandleSubmitInProgress] = useState(false)
-
+	const [success, setSuccess] = useState(false)
 	const router = useRouter()
+
+	useEffect(()=>{
+		setHandleSubmitInProgress(registerMutation.loading)
+	},[registerMutation.loading])
+
+	useEffect(()=>{
+		if(registerMutation.error){
+			notifications.show({
+				title: "Kļūda! 🚨",
+				message: "Reģistrācija neveiksmīga. Lūdzu, pārbaudiet ievadītos datus.",
+				color: "red",
+			})
+		}
+	},[registerMutation.error])
+
+	useEffect(()=>{
+		if(registerMutation.data?.register){
+			setSuccess(true)
+			notifications.show({
+				title: "Reģistrācija veiksmīga! 🎉",
+				message: "Lūdzu, pieslēdzies, izmantojot savu lietotājvārdu un paroli.",
+				color: "teal",
+			})
+			router.push("/login")
+		}
+	},[registerMutation.data])
 
 	const handleSubmit = async (values: any) => {
 		if(handleSubmitInProgress) return;
-		setHandleSubmitInProgress(true);
-		try {
-			await register({
-				variables: {
-					username: values.username,
-					password: values.password,
-					email: values.email,
-					firstName: values.firstName,
-					lastName: values.lastName
-				}
-			})
-			notifications.show({
-				title: 'Reģistrācija veiksmīga! 🎉',
-				message: 'Tagad vari pieslēgties sistēmai.',
-				color: 'green',
-			  })
-			await Login({
-				variables: {
-					username: values.username,
-					password: values.password
-				}
-			})
-			router.push('/tasks/list')
-		} catch (e) {
-			console.error(e)
-		}
-		setHandleSubmitInProgress(false);
+		register({
+			variables: {
+				username: values.username,
+				password: values.password,
+				email: values.email,
+				firstName: values.firstName,
+				lastName: values.lastName
+			}
+		}).catch(e => console.error(e))
 	};
+
 	return (
 		<Container w={{md:600}} my={40}>
 			<Paper withBorder shadow="md" p={30} mt={30} radius="md" pos={'relative'}>
-				<LoadingOverlay	visible={handleSubmitInProgress} />
+				<LoadingOverlay	visible={handleSubmitInProgress||success} />
 				<Title ta="center" className={classes.title}>
 					Laipni lūgti programme.lv!
 				</Title>
