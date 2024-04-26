@@ -38,6 +38,7 @@ export default function UserContextProvider({ user, children }: {
 			})
 		}).catch(err => {
 			setAuthError(err);
+			alert("Kļūda! " + err.message)
 		}).finally(() => {
 			setIsLoading(false);
 		});
