@@ -11,7 +11,8 @@ import {
 	rem,
 	useMantineTheme,
 	Breadcrumbs,
-	Anchor
+	Anchor,
+	Button
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import {
@@ -46,20 +47,6 @@ type HeaderProps = {
 
 const iconSize = 25;
 const iconStrokeWidth = 1.5;
-
-/*
-query Whoami {
-    whoami {
-        id
-        username
-        email
-        firstName
-        lastName
-        isAdmin
-    }
-}
-*/
-
 
 export function Header({ breadcrumbs, menuOptions, profileMenu }: HeaderProps) {
 	const authContext = useContext(AuthContext);
@@ -96,24 +83,29 @@ export function Header({ breadcrumbs, menuOptions, profileMenu }: HeaderProps) {
 				onOpen={() => setUserMenuOpened(true)}
 				withinPortal
 			>
-				<Menu.Target>
-					<UnstyledButton
-						className={cx(classes.user, { [classes.userActive]: userMenuOpened })}
-					>
-						{authContext?.user &&
-						<>
-						<Group gap={7}>
-							{/* <Avatar src={user.image} alt={user.name} radius="xl" size={20} /> */}
-							<IconUserCircle style={{ width: rem(iconSize), height: rem(iconSize) }} stroke={iconStrokeWidth} color={theme.colors.blue[7]} />
-							<Text fw={500} size="sm" lh={1} mr={3}>
-								{authContext.user.username}
-							</Text>
-							<IconChevronDown style={{ width: rem(12), height: rem(12) }} stroke={1.5} />
+				{authContext?.user &&
+					<Menu.Target>
+						<UnstyledButton
+							className={cx(classes.user, { [classes.userActive]: userMenuOpened })}>
+							<Group gap={7}>
+								{/* <Avatar src={user.image} alt={user.name} radius="xl" size={20} /> */}
+								<IconUserCircle style={{ width: rem(iconSize), height: rem(iconSize) }} stroke={iconStrokeWidth} color={theme.colors.blue[7]} />
+								<Text fw={500} size="sm" lh={1} mr={3}>
+									{authContext.user.username}
+								</Text>
+								<IconChevronDown style={{ width: rem(12), height: rem(12) }} stroke={1.5} />
+							</Group>
+						</UnstyledButton>
+					</Menu.Target>
+				}
+				{!authContext?.user &&
+					<Group gap={7}>
+						<Group visibleFrom="sm">
+							<Button component={Link} href="/login">Pieslēgties</Button>
+							<Button component={Link} href="/register" color='green'>Reģistrēties</Button>
 						</Group>
-						</>
-						}
-					</UnstyledButton>
-				</Menu.Target>
+					</Group>
+				}
 				<Menu.Dropdown>
 					{/* <Menu.Item
 						leftSection={
