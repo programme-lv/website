@@ -1,21 +1,47 @@
 "use client";
+import { graphql } from "@/gql";
 import { User } from "@/gql/graphql";
-import { AuthContext, AuthDispatchContext } from "@/lib/AuthContext";
-import userAuthReducer from "@/lib/userAuthReducer";
-import { useReducer } from "react";
+import { AuthContext } from "@/lib/AuthContext";
+import { useMutation } from "@apollo/client";
+import { useQuery } from "@apollo/experimental-nextjs-app-support/ssr";
+import { useReducer, useState } from "react";
+
+const logoutQueryGQL = graphql(`
+mutation Logout {
+	logout
+}
+`);
 
 type UserProp = User | null;
+
 export default function UserContextProvider({ user, children }: {
 	user: UserProp, children: any
 }) {
+	const [userState, setUser] = useState<UserProp>(user);
+	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [authError, setAuthError] = useState<Error | null>(null);
 
-	const [tasks, dispatch] = useReducer(userAuthReducer, user);
+	const [logoutMutation] = useMutation(logoutQueryGQL)
+
+	function logout() {
+		setIsLoading(true);
+		logoutMutation().then(() => {
+			setUser(null);
+		}).catch(err => {
+			setAuthError(err);
+		}).finally(() => {
+			setIsLoading(false);
+		});
+	}
 
 	return (
-		<AuthContext.Provider value={{ user: user }}>
-			<AuthDispatchContext.Provider value={dispatch}>
-				{children}
-			</AuthDispatchContext.Provider>
+		<AuthContext.Provider value={{
+			user: userState,
+			loading: isLoading,
+			error: authError,
+			logout: logout
+		}}>
+			{children}
 		</AuthContext.Provider>
 	);
 

@@ -81,6 +81,10 @@ export function Header({ breadcrumbs, menuOptions, profileMenu }: HeaderProps) {
 	const [opened, { toggle }] = useDisclosure(false);
 	const [userMenuOpened, setUserMenuOpened] = useState(false);
 
+	function logoutHandler() {
+		authContext?.logout();
+	}
+
 	profileMenu ??= true;
 	let profileLink;
 	if (profileMenu) {
@@ -125,6 +129,7 @@ export function Header({ breadcrumbs, menuOptions, profileMenu }: HeaderProps) {
 						Konta iestatījumi
 					</Menu.Item> */}
 					<Menu.Item
+						onClick={logoutHandler}
 						leftSection={
 							<IconLogout style={{ width: rem(iconSize), height: rem(iconSize) }} stroke={iconStrokeWidth} />
 						}
