@@ -47,7 +47,7 @@ export default async function RootLayout({ children }: { children: any }) {
 				<ApolloWrapper>
 					<NextTopLoader />
 					<MantineProvider theme={theme}>
-						<Notifications position='bottom-right' autoClose={8000}/>
+						<Notifications position='bottom-center' autoClose={8000}/>
 						<UserContextProvider user={user}>
 						{children}
 						</UserContextProvider>

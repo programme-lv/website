@@ -2,6 +2,7 @@ import ProglvShell from "@/components/ProglvShell/ProglvShell";
 import queryTaskName from "./queries/queryTaskName";
 import { Flex, Stack, Title } from "@mantine/core";
 import RightSideLayout from "./components/RightSideLayout";
+import CodePanel from "./@codePanel/page";
 
 type LayoutProps = {
 	children: any;
@@ -25,7 +26,7 @@ export default async function Layout({ children, params, codePanel }: LayoutProp
 				{children}
 			</Stack>
 			<RightSideLayout>
-				{codePanel}
+				<CodePanel {...codePanel} params={{code: params.code}} />
 			</RightSideLayout>
 		</Flex>
 
