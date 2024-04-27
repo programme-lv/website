@@ -10,6 +10,12 @@ export type TaskCardProps = {
 }
 
 export function TaskCard({ code, name, shortDesc }: TaskCardProps) {
+
+    // split by new line, take first line
+    shortDesc = shortDesc.split("\n")[0];
+    // take the first 200 chars, add "..." if more
+    // shortDesc = shortDesc.length > 200 ? shortDesc.slice(0, 200) + "..." : shortDesc;
+
     return (
         <Link href={`/tasks/view/${code}`} style={{ textDecoration: 'none' }}>
             <Card withBorder padding={"md"} p={"lg"}>

@@ -2,6 +2,8 @@
 import { Center, Code, Group, Space, Table } from "@mantine/core";
 
 export function StatementExamples(props: { examples: {input: string, answer: string }[] }) {
+    // sort by input length
+    props.examples.sort((a,b) => a.input.length - b.input.length);
     return (
         <Group gap={"xl"} mt={"md"}>
             <Table highlightOnHover withTableBorder withColumnBorders>
