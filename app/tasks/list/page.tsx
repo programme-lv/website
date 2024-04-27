@@ -35,6 +35,7 @@ export default async function Tasks() {
 				renderMD(tasks[i].stable!.description!.notes!);
 	}
 
+
 	return (
 		<ClientTasksList tasks={tasks} />
 	);
