@@ -34,7 +34,7 @@ export default async function RootLayout({ children }: { children: any }) {
 	const user = await getUser();
 
 	return (
-		<html lang="en">
+		<html lang="lv">
 			<head>
 				<ColorSchemeScript />
 				<link rel="shortcut icon" href="/favicon.ico" />

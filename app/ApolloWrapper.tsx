@@ -15,6 +15,9 @@ function makeClient() {
     // this needs to be an absolute url, as relative urls cannot be used in SSR
     uri:  typeof window === 'undefined' ? process.env.BACKEND_URI : "/api/query",
     fetchOptions: { cache: "no-store" },
+    headers:{
+      "Accept-Language": "lv-LV,lv;q=0.9,en-US;q=0.8,en;q=0.7"
+    }
   });
 
   return new NextSSRApolloClient({

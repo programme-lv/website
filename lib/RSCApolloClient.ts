@@ -9,5 +9,10 @@ export const { getClient } = registerApolloClient(() => {
     link: new HttpLink({
       uri: typeof window === 'undefined' ? process.env.BACKEND_URI : "",
     }),
+    /*
+    headers:{
+      "Accept-Language": "lv-LV,lv;q=0.9,en-US;q=0.8,en;q=0.7"
+    }
+    */
   });
 });
