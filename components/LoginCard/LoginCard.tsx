@@ -14,6 +14,7 @@ import {
     LoadingOverlay,
     Stack,
     Alert,
+    Flex,
 } from '@mantine/core';
 import classes from './Authentication.module.css';
 import Link from 'next/link';
@@ -113,7 +114,14 @@ export default function LoginCard() {
                     </Stack>
                 </form>
 				{loginMutation.error && <Alert variant='outline' color='red' mt={20}>
-					Kļūda: {loginMutation.error?.graphQLErrors.map(({ message }) => message).join("\n")}
+                    <Flex justify="space-between">
+					<Text>🚨</Text>
+                    <Text ta={'center'}>
+                    {loginMutation.error?.graphQLErrors.map(({ message }) => message).join("\n")}
+                    </Text>
+					<Text>🚨</Text>
+                    </Flex>
+                
 				</Alert>}
             </Paper>
         </Container>
