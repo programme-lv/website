@@ -8,7 +8,7 @@ export default function RightSideLayout({children}: {children: any}) {
         <Resizable handleComponent={
             { left: <ResizeBar /> }}
             enable={{ left: true }}
-            defaultSize={{ width: "500px", height: '100%' }}
+            defaultSize={{ width: "40%", height: '100%' }}
             minWidth={"200px"}
             maxWidth={"80%"}
             >
