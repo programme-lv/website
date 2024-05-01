@@ -2,6 +2,7 @@ import { Table, Progress, Anchor, Text, Group, Stack } from '@mantine/core';
 import classes from './SubimssionTable.module.css';
 import Link from 'next/link';
 import { ListPublicSubmissionsForSubmissionListQuery } from '@/gql/graphql';
+import { useEffect, useRef } from 'react';
 
 const data = [
     {
@@ -50,9 +51,38 @@ const data = [
     },
 ];
 
+const statusTranslations = {
+    "IQ": "Gaida rindā",
+    "F": "Izvērtēts",
+    "T": "Tiek testēts",
+    "C": "Tiek kompilēts",
+    "CE": "Kompilācijas kļūda",
+    "ISE": "Servera kļūda",
+}
+
 type Submission = ListPublicSubmissionsForSubmissionListQuery['listPublicSubmissions'][number];
 
 export default function SubmissionTable({submissions}: {submissions:Submission[]}) {
+    const tableRef = useRef(null)
+
+    // TODO: build a responsive table
+    
+    // useEffect(() => {
+    //     let resizeObserverEntries:ResizeObserverEntry[] = []
+    
+    //     const observer = new ResizeObserver((entries)=>{
+    //         resizeObserverEntries = entries
+    //         console.log(entries[0].target.clientWidth)
+    //     })
+
+    //     if(tableRef.current) observer.observe(tableRef.current)
+
+    //     return () => {
+    //         // resizeObserverEntries.forEach((entry)=>entry.target.remove())
+    //         observer.disconnect()
+    //     }
+    // },[])
+
     // sort, show the newest first
     submissions.sort((a, b) => {
         return (new Date(b.createdAt)).getTime() - (new Date(a.createdAt)).getTime();
@@ -61,6 +91,7 @@ export default function SubmissionTable({submissions}: {submissions:Submission[]
         let result = Math.floor(100*row.evaluation.totalScore/(row.evaluation.possibleScore??100));
         return (
             <Table.Tr key={row.id}>
+                <Table.Td>{row.id}</Table.Td>
                 <Table.Td>
                     <Stack gap="xs">
                         <span>{(new Date(row.createdAt)).toISOString().split('T')[0]}</span>
@@ -74,7 +105,6 @@ export default function SubmissionTable({submissions}: {submissions:Submission[]
                     </Anchor>
                 </Table.Td>
                 <Table.Td>{row.language.fullName}</Table.Td>
-                <Table.Td>{row.evaluation.status}</Table.Td>
                 <Table.Td>
                     <Group justify="space-between">
                         <Text fz="xs" c="teal" fw={700}>
@@ -99,21 +129,23 @@ export default function SubmissionTable({submissions}: {submissions:Submission[]
                         />}
                     </Progress.Root>
                 </Table.Td>
+                <Table.Td>{statusTranslations[row.evaluation.status as keyof typeof statusTranslations]}</Table.Td>
             </Table.Tr>
         );
     });
 
     return (
-        <Table.ScrollContainer minWidth={800}>
-            <Table verticalSpacing="xs">
+        <Table.ScrollContainer minWidth={800} ref={tableRef}>
+            <Table verticalSpacing="xs" striped withColumnBorders horizontalSpacing={'md'}>
                 <Table.Thead>
                     <Table.Tr>
-                        <Table.Th>Laiks</Table.Th>
-                        <Table.Th>Lietotājs</Table.Th>
-                        <Table.Th>Uzdevums</Table.Th>
-                        <Table.Th>Valoda</Table.Th>
-                        <Table.Th>Statuss</Table.Th>
-                        <Table.Th>Rezultāts</Table.Th>
+                        <Table.Th w={"4em"}>#</Table.Th>
+                        <Table.Th w={"8em"}>Laiks</Table.Th>
+                        <Table.Th w={"16em"}>Lietotājs</Table.Th>
+                        <Table.Th w={"24em"}>Uzdevums</Table.Th>
+                        <Table.Th w={"16em"}>Valoda</Table.Th>
+                        <Table.Th w={"24em"}>Rezultāts</Table.Th>
+                        <Table.Th w={"16em"}>Statuss</Table.Th>
                     </Table.Tr>
                 </Table.Thead>
                 <Table.Tbody>{rows}</Table.Tbody>
