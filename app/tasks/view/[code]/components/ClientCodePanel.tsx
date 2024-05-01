@@ -25,10 +25,32 @@ export default function ClientCodePanel(props: { languages: ProgrammingLang[], t
     const languages = props.languages as ProgrammingLang[];
     const taskCode = props.taskCode;
 
-    const [selectedLanguage, setSelectedLanguage] = useState<string>(languages[0].id);
+    let defaultLang = languages[0].id;
+    for (let lang of languages) if (lang.id === "cpp17") defaultLang = lang.id;
+    const [selectedLanguage, setSelectedLanguage] = useState<string>(defaultLang);
     const [code, setCode] = useState<string>("");
 
     const monacoLangId = languages.filter(lang => lang.id === selectedLanguage)[0]?.monacoID || "";
+
+    useEffect(() => {
+        const savedText = sessionStorage.getItem(`code-${taskCode}-${selectedLanguage}`);
+        if (!savedText) {
+            if (selectedLanguage === "cpp17") {
+                setCode(`#include <iostream>
+using namespace std;
+
+int main() {
+    
+}`);
+            }
+        } else {
+            setCode(savedText);
+        }
+    }, [selectedLanguage]);
+
+    useEffect(()=>{
+        sessionStorage.setItem(`code-${taskCode}-${selectedLanguage}`, code);
+    },[code]);
 
     return (
         <Flex h={"100%"} w={"100%"} direction={"column"} gap={"sm"}>
@@ -46,6 +68,7 @@ export default function ClientCodePanel(props: { languages: ProgrammingLang[], t
                         onChange={(value) => setCode(value as string)}
                         options={{
                             minimap: { enabled: false },
+                            fontSize: 16,
                         }}
                     />
                 </div>
@@ -84,7 +107,7 @@ mutation EnqueueSubmissionForPublishedTaskCodeStableTaskVersion($taskCode: Strin
 function SubmitButton({ langId, code, taskCode }: SubmitButtonProps) {
     const authContext = useContext(AuthContext);
     const router = useRouter();
-    
+
     const [submit, submitMutationData] = useMutation(submitCodeGQL, {
         variables: {
             taskCode: taskCode,
@@ -92,7 +115,7 @@ function SubmitButton({ langId, code, taskCode }: SubmitButtonProps) {
             submissionCode: code
         }
     });
-    
+
     useEffect(() => {
         if (submitMutationData.error) {
             alert("Kļūda! " + submitMutationData.error.message);
@@ -119,7 +142,7 @@ function SubmitButton({ langId, code, taskCode }: SubmitButtonProps) {
         }
     }
 
-    if (!code){// empty code can not be submitted
+    if (!code) {// empty code can not be submitted
         return (
             <Group justify="flex-end">
                 <Button rightSection={<IconSend size={16} />} color='green' disabled>

@@ -29,9 +29,10 @@ export default function UserContextProvider({ user, children }: {
 
 	function logout() {
 		setIsLoading(true);
-		logoutMutation().then(() => {
+		logoutMutation().then(async () => {
 			setUser(null);
-			router.push("/");
+			sessionStorage.clear();
+			await router.push("/");
 			router.refresh();
 			notifications.show({
 				title: "Visu labu! 🚪",
