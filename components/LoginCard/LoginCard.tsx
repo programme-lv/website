@@ -65,6 +65,7 @@ export default function LoginCard() {
             })
             authContext?.login(loginMutation.data.login!);
             router.push("/tasks/list")
+            router.refresh()
         }
     },[loginMutation.data])
 

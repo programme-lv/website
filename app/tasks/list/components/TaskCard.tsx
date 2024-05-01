@@ -7,9 +7,10 @@ export type TaskCardProps = {
     code: string; // used for navigation
     name: string;
     shortDesc: string;
+    solved: boolean;
 }
 
-export function TaskCard({ code, name, shortDesc }: TaskCardProps) {
+export function TaskCard({ code, name, shortDesc, solved }: TaskCardProps) {
 
     // split by new line, take first line
     shortDesc = shortDesc.split("\n")[0];
@@ -18,7 +19,7 @@ export function TaskCard({ code, name, shortDesc }: TaskCardProps) {
 
     return (
         <Link href={`/tasks/view/${code}`} style={{ textDecoration: 'none' }}>
-            <Card withBorder padding={"md"} p={"lg"}>
+            <Card withBorder padding={"md"} p={"lg"} bg={solved?"#d9ead3":""}>
                 <Stack>
                     <Text fw={500} size="lg">{name}</Text>
                     <Box my={"-1em"} dangerouslySetInnerHTML={{ __html: shortDesc }}></Box>

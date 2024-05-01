@@ -32,6 +32,7 @@ export default function UserContextProvider({ user, children }: {
 		logoutMutation().then(() => {
 			setUser(null);
 			router.push("/");
+			router.refresh();
 			notifications.show({
 				title: "Visu labu! 🚪",
 				message: "Jūs esat veiksmīgi izgājuši no sistēmas.",
