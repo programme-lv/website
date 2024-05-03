@@ -2,7 +2,7 @@ import { Table, Progress, Anchor, Text, Group, Stack } from '@mantine/core';
 import classes from './SubimssionTable.module.css';
 import Link from 'next/link';
 import { ListPublicSubmissionsForSubmissionListQuery } from '@/gql/graphql';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { graphql } from '@/gql';
 import { useSubscription } from '@apollo/client';
 
@@ -88,37 +88,35 @@ export default function SubmissionTable({submissions}: {submissions:Submission[]
         return (new Date(b.createdAt)).getTime() - (new Date(a.createdAt)).getTime();
     });
 
-    console.log("rendering")
+    const [submissionsState, setSubmissionsState] = useState(submissions);
+
     const {data, loading}= useSubscription(onSubmissionUpdateGQL,{
         variables: {
             submissionId: submissions[0].id
         },
         onData: (data) => {
-            console.log(data);
-        },
-        onComplete() {
-            console.log('onComplete');
+            if(!data.data.data) return;
+            console.log(data.data.data.onSubmissionUpdate)
+            const update = data.data.data.onSubmissionUpdate;
+            let idx = submissionsState.findIndex((submission) => submission.id === update.id);
+            submissionsState[idx] = {
+                ...submissionsState[idx],
+                evaluation: {
+                    id: update.evaluation.id,
+                    status: update.evaluation.status,
+                    totalScore: update.evaluation.totalScore,
+                    possibleScore: update.evaluation.possibleScore,
+                },
+            }
+            setSubmissionsState([...submissionsState]);
         },
         onError: (error) => {
             console.log(error);
         }
-    })
-    console.log(submissions[0].id, submissions, data, loading);
+    });
 
-    useEffect(()=>{
-        return ()=>{
-            console.log('unsubscribing');
-        }
-    })
 
-    return (
-        <div>
-            {!loading && JSON.stringify(data)}
-        </div>
-    )
-    console.log(data, loading);
-
-    const rows = submissions.map((row) => {
+    const rows = submissionsState.map((row) => {
         let result = Math.floor(100*row.evaluation.totalScore/(row.evaluation.possibleScore??100));
         return (
             <Table.Tr key={row.id}>
