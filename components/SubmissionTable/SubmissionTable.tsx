@@ -3,6 +3,8 @@ import classes from './SubimssionTable.module.css';
 import Link from 'next/link';
 import { ListPublicSubmissionsForSubmissionListQuery } from '@/gql/graphql';
 import { useEffect, useRef } from 'react';
+import { graphql } from '@/gql';
+import { useSubscription } from '@apollo/client';
 
 const data = [
     {
@@ -62,31 +64,60 @@ const statusTranslations = {
 
 type Submission = ListPublicSubmissionsForSubmissionListQuery['listPublicSubmissions'][number];
 
+const onSubmissionUpdateGQL = graphql(`
+subscription OnSubmissionUpdate($submissionId: ID!) {
+    onSubmissionUpdate(submissionId: $submissionId) {
+        id
+        submission
+        username
+        createdAt
+        evaluation {
+            id
+            status
+            totalScore
+            possibleScore
+        }
+    }
+}
+`);
+
+
 export default function SubmissionTable({submissions}: {submissions:Submission[]}) {
-    const tableRef = useRef(null)
-
-    // TODO: build a responsive table
-    
-    // useEffect(() => {
-    //     let resizeObserverEntries:ResizeObserverEntry[] = []
-    
-    //     const observer = new ResizeObserver((entries)=>{
-    //         resizeObserverEntries = entries
-    //         console.log(entries[0].target.clientWidth)
-    //     })
-
-    //     if(tableRef.current) observer.observe(tableRef.current)
-
-    //     return () => {
-    //         // resizeObserverEntries.forEach((entry)=>entry.target.remove())
-    //         observer.disconnect()
-    //     }
-    // },[])
-
     // sort, show the newest first
     submissions.sort((a, b) => {
         return (new Date(b.createdAt)).getTime() - (new Date(a.createdAt)).getTime();
     });
+
+    console.log("rendering")
+    const {data, loading}= useSubscription(onSubmissionUpdateGQL,{
+        variables: {
+            submissionId: submissions[0].id
+        },
+        onData: (data) => {
+            console.log(data);
+        },
+        onComplete() {
+            console.log('onComplete');
+        },
+        onError: (error) => {
+            console.log(error);
+        }
+    })
+    console.log(submissions[0].id, submissions, data, loading);
+
+    useEffect(()=>{
+        return ()=>{
+            console.log('unsubscribing');
+        }
+    })
+
+    return (
+        <div>
+            {!loading && JSON.stringify(data)}
+        </div>
+    )
+    console.log(data, loading);
+
     const rows = submissions.map((row) => {
         let result = Math.floor(100*row.evaluation.totalScore/(row.evaluation.possibleScore??100));
         return (
@@ -135,7 +166,7 @@ export default function SubmissionTable({submissions}: {submissions:Submission[]
     });
 
     return (
-        <Table.ScrollContainer minWidth={800} ref={tableRef}>
+        <Table.ScrollContainer minWidth={800}>
             <Table verticalSpacing="xs" striped withColumnBorders horizontalSpacing={'md'}>
                 <Table.Thead>
                     <Table.Tr>

@@ -1,13 +1,16 @@
 "use client";
 // ^ this file needs the "use client" pragma
 
-import { ApolloLink, HttpLink } from "@apollo/client";
+import { ApolloLink, HttpLink, split } from "@apollo/client";
 import {
   ApolloNextAppProvider,
   NextSSRInMemoryCache,
   NextSSRApolloClient,
   SSRMultipartLink,
 } from "@apollo/experimental-nextjs-app-support/ssr";
+import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
+import { getMainDefinition } from "@apollo/client/utilities";
+import { createClient } from 'graphql-ws';
 
 // have a function to create a client for you
 function makeClient() {
@@ -20,21 +23,32 @@ function makeClient() {
     }
   });
 
+  const wsLink = new GraphQLWsLink(createClient({
+    url: '/api/query',
+  }));
+
+  const splitLink = split(
+    ({ query }) => {
+      const definition = getMainDefinition(query);
+      return (
+        definition.kind === 'OperationDefinition' &&
+        definition.operation === 'subscription'
+      );
+    },
+    wsLink,
+    httpLink,
+  );
+  
   return new NextSSRApolloClient({
     // use the `NextSSRInMemoryCache`, not the normal `InMemoryCache`
     cache: new NextSSRInMemoryCache(),
     link:
       typeof window === "undefined"
         ? ApolloLink.from([
-            // in a SSR environment, if you use multipart features like
-            // @defer, you need to decide how to handle these.
-            // This strips all interfaces with a `@defer` directive from your queries.
-            new SSRMultipartLink({
-              stripDefer: true,
-            }),
+            new SSRMultipartLink({stripDefer: true,}),
             httpLink,
           ])
-        : httpLink,
+        : splitLink,
   });
 }
 

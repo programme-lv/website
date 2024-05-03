@@ -31,10 +31,6 @@ type Task = ListPublishedTasksForTasksListQuery['listPublishedTasks'][number];
 type TaskWithSolvedFlag = Task & { solved: boolean };
 
 export default async function Tasks() {
-
-	const _cookies = cookies()
-	console.log(_cookies)
-
 	let tasks = await queryPublishedTasksForTasksList() as TaskWithSolvedFlag[];
 	tasks = filterTasksWithoutStableVersionDescription(tasks);
 	tasks = tasks.sort(compareTasksByCreatedAtDate);
@@ -42,7 +38,13 @@ export default async function Tasks() {
 
 	try {
 		const client = getClient();
-		const { data } = await client.query({query: whoamiGQL});
+		const { data } = await client.query({query: whoamiGQL,
+			context: {
+				headers: {
+					cookie: cookies().toString()
+				}
+			}
+		});
 
 		if (data.whoami) {
 			const username = data.whoami.username;
@@ -64,6 +66,7 @@ export default async function Tasks() {
 			});
 		}
 	} catch (e) {
+		console.log(e);
 		// user not logged in or other error
 		tasks = tasks.map((task: TaskWithSolvedFlag) => {
 			task.solved = false;

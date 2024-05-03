@@ -27,6 +27,7 @@ const documents = {
     "\nquery ListLanguages {\n    listLanguages(enabled: true) {\n        id\n        fullName\n        monacoID\n        enabled\n    }\n}": types.ListLanguagesDocument,
     "\nquery GetStableTaskVersionByPublishedTaskCodeForTaskView($code: String!) {\n    getTaskByPublishedTaskCode(code: $code) {\n        taskID\n        createdAt\n        stable {\n            versionID\n            code\n            name\n            createdAt\n            description {\n                story\n                input\n                output\n                notes\n                examples {\n                    input\n                    answer\n                }\n            }\n            constraints {\n                timeLimitMs\n                memoryLimitKb\n            }\n        }\n    }\n}\n": types.GetStableTaskVersionByPublishedTaskCodeForTaskViewDocument,
     "\nquery GetTaskByPublishedTaskCodeForTaskName($code: String!) {\n    getTaskByPublishedTaskCode(code: $code) {\n        stable {\n            name\n        }\n    }\n}\n": types.GetTaskByPublishedTaskCodeForTaskNameDocument,
+    "\nsubscription OnSubmissionUpdate($submissionId: ID!) {\n    onSubmissionUpdate(submissionId: $submissionId) {\n        id\n        submission\n        username\n        createdAt\n        evaluation {\n            id\n            status\n            totalScore\n            possibleScore\n        }\n    }\n}\n": types.OnSubmissionUpdateDocument,
     "\nmutation Logout {\n\tlogout\n}\n": types.LogoutDocument,
     "\nmutation Login($username: String!, $password: String!) {\n    login(\n        username: $username\n        password: $password\n    ) {\n        id\n        username\n        email\n        firstName\n        lastName\n        isAdmin\n    }\n}": types.LoginDocument,
     "\nmutation Register($username: String!, $password: String!, $email: String!, $firstName: String!, $lastName: String!) {\n    register(\n        username: $username\n        password: $password\n        email: $email\n        firstName: $firstName\n        lastName: $lastName\n    ) {\n        username\n        id\n    }\n}": types.RegisterDocument,
@@ -102,6 +103,10 @@ export function graphql(source: "\nquery GetStableTaskVersionByPublishedTaskCode
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\nquery GetTaskByPublishedTaskCodeForTaskName($code: String!) {\n    getTaskByPublishedTaskCode(code: $code) {\n        stable {\n            name\n        }\n    }\n}\n"): (typeof documents)["\nquery GetTaskByPublishedTaskCodeForTaskName($code: String!) {\n    getTaskByPublishedTaskCode(code: $code) {\n        stable {\n            name\n        }\n    }\n}\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\nsubscription OnSubmissionUpdate($submissionId: ID!) {\n    onSubmissionUpdate(submissionId: $submissionId) {\n        id\n        submission\n        username\n        createdAt\n        evaluation {\n            id\n            status\n            totalScore\n            possibleScore\n        }\n    }\n}\n"): (typeof documents)["\nsubscription OnSubmissionUpdate($submissionId: ID!) {\n    onSubmissionUpdate(submissionId: $submissionId) {\n        id\n        submission\n        username\n        createdAt\n        evaluation {\n            id\n            status\n            totalScore\n            possibleScore\n        }\n    }\n}\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
