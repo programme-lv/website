@@ -5,6 +5,7 @@ const queryListPublicSubmissionsGQL = graphql(`
 query ListPublicSubmissionsForSubmissionList {
     listPublicSubmissions {
         id
+        submission
         username
         createdAt
         evaluation {
