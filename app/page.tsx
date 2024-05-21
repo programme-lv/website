@@ -4,6 +4,8 @@ import { HeroContentLeft } from '@/components/HeroContentLeft/HeroContentLeft';
 import { HeaderWithLogin } from '@/components/HeaderWithLogin/HeaderWithLogin';
 import Supporters from '@/components/SupportersSection/SupportersSection';
 import { Box } from '@mantine/core';
+import { Text } from '@mantine/core';
+import { Container } from '@mantine/core';
 
 export default function HomePage() {
 	return (
@@ -11,6 +13,9 @@ export default function HomePage() {
 			<div>
 			<HeaderWithLogin />
 			<HeroContentLeft />
+			<Container>
+				<Text ta={'center'} fw={'bold'} mt={'xl'} pt={'xl'} c={'red'} size='28pt'>Uzmanību! Mājaslapā norisinās celtniecības darbi!</Text>
+			</Container>
 			<FeaturesGrid />
 			</div>
 			<Supporters />
