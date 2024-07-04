@@ -26,6 +26,10 @@ import {
   Logo,
 } from "@/components/icons";
 
+import LogoWhite from "@/public/logo_white.png";
+
+import Image from "next/image";
+
 export const Navbar = () => {
   const searchInput = (
     <Input
@@ -53,12 +57,13 @@ export const Navbar = () => {
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-1" href="/">
-            <Logo />
-            <p className="font-bold text-inherit">ACME</p>
+            <Image src={LogoWhite} alt="programme.lv logo" height={24}/>
+            <span className="px-0.5"/>
+            <p className="font-bold text-inherit">programme.lv</p>
           </NextLink>
         </NavbarBrand>
         <ul className="hidden lg:flex gap-4 justify-start ml-2">
-          {siteConfig.navItems.map((item) => (
+          {/* {siteConfig.navItems.map((item) => (
             <NavbarItem key={item.href}>
               <NextLink
                 className={clsx(
@@ -71,11 +76,11 @@ export const Navbar = () => {
                 {item.label}
               </NextLink>
             </NavbarItem>
-          ))}
+          ))} */}
         </ul>
       </NavbarContent>
 
-      <NavbarContent
+      {/* <NavbarContent
         className="hidden sm:flex basis-1/5 sm:basis-full"
         justify="end"
       >
@@ -112,14 +117,14 @@ export const Navbar = () => {
         </Link>
         <ThemeSwitch />
         <NavbarMenuToggle />
-      </NavbarContent>
+      </NavbarContent> */}
 
       <NavbarMenu>
         {searchInput}
         <div className="mx-4 mt-2 flex flex-col gap-2">
           {siteConfig.navMenuItems.map((item, index) => (
             <NavbarMenuItem key={`${item}-${index}`}>
-              <Link
+              {/* <Link
                 color={
                   index === 2
                     ? "primary"
@@ -131,7 +136,7 @@ export const Navbar = () => {
                 size="lg"
               >
                 {item.label}
-              </Link>
+              </Link> */}
             </NavbarMenuItem>
           ))}
         </div>
