@@ -5,6 +5,7 @@ import { title, subtitle } from "@/components/primitives";
 import { Navbar } from "@/components/navbar";
 
 export default function Home() {
+
   return (
     <>
     <Navbar/>

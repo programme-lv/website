@@ -6,6 +6,9 @@ import { useRouter } from "next/navigation";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { ThemeProviderProps } from "next-themes/dist/types";
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { getJwt } from "@/api/auth";
+
+export const AuthContext = React.createContext<string | null>(null);
 
 export interface ProvidersProps {
   children: React.ReactNode;
@@ -19,9 +22,11 @@ export function Providers({ children, themeProps }: ProvidersProps) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <NextUIProvider navigate={router.push}>
+      <AuthContext.Provider value={getJwt()}>
+        <NextUIProvider navigate={router.push}>
         <NextThemesProvider {...themeProps}>{children}</NextThemesProvider>
-      </NextUIProvider>
+        </NextUIProvider>
+      </AuthContext.Provider>
     </QueryClientProvider>
   );
 }

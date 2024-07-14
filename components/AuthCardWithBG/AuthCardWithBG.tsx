@@ -1,6 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
+import { useMutation } from 'react-query';
+import { useRouter } from 'next/navigation';
+import { registerUser, loginUser } from "@/api/auth";
 import { Button, Input, Checkbox, Link, Divider } from "@nextui-org/react";
 import { Icon } from "@iconify/react";
 import MountainsImage from "@/public/mountains.png";
@@ -12,6 +15,41 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
     const { type } = props;
     const [isVisible, setIsVisible] = React.useState(false);
     const [isConfirmVisible, setIsConfirmVisible] = React.useState(false);
+
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [email, setEmail] = useState("");
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+
+    const router = useRouter();
+
+    const registerMutation = useMutation(registerUser, {
+        onSuccess: () => {
+            router.push('/status');
+        },
+        onError: (error) => {
+            console.error("Registration error:", error);
+        }
+    });
+
+    const loginMutation = useMutation(loginUser, {
+        onSuccess: () => {
+            router.push('/status');
+        },
+        onError: (error) => {
+            console.error("Login error:", error);
+        }
+    });
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (type === "register") {
+            registerMutation.mutate({ username, email, password, firstname: firstName, lastname: lastName });
+        } else {
+            loginMutation.mutate({username, password});
+        }
+    };
 
     const toggleVisibility = () => setIsVisible(!isVisible);
     const toggleConfirmVisibility = () => setIsConfirmVisible(!isConfirmVisible);
@@ -45,13 +83,15 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
                 <p className="pb-2 text-xl font-medium">
                     {type === "register" ? "Reģistrēties" : "Pieslēgties"}
                 </p>
-                <form className="flex flex-col gap-3" onSubmit={(e) => e.preventDefault()}>
+                <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
                     <Input
                         isRequired
                         label="Lietotājvārds"
                         name="username"
                         placeholder="Ievadiet savu lietotājvārdu"
                         variant="bordered"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
                     />
                     {type === "register" && (
                         <>
@@ -62,6 +102,8 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
                                     placeholder="Ievadiet savu vārdu"
                                     variant="bordered"
                                     className="flex-1"
+                                    value={firstName}
+                                    onChange={(e) => setFirstName(e.target.value)}
                                 />
                                 <Input
                                     label="Uzvārds (neobligāts)"
@@ -69,6 +111,8 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
                                     placeholder="Ievadiet savu uzvārdu"
                                     variant="bordered"
                                     className="flex-1"
+                                    value={lastName}
+                                    onChange={(e) => setLastName(e.target.value)}
                                 />
                             </div>
                             <Input
@@ -78,6 +122,8 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
                                 placeholder="Ievadiet savu e-pastu"
                                 type="email"
                                 variant="bordered"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
                             />
                         </>
                     )}
@@ -105,6 +151,8 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
                             type={isVisible ? "text" : "password"}
                             variant="bordered"
                             className="flex-1"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
                         />
                         {type === "register" && (
                             <Input
@@ -130,6 +178,8 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
                                 type={isConfirmVisible ? "text" : "password"}
                                 variant="bordered"
                                 className="flex-1"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
                             />
                         )}
                     </div>

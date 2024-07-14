@@ -8,6 +8,16 @@ type RegisterUserInput = {
   lastname: string;
 };
 
+export const getJwt = () => {
+  if (typeof document === 'undefined') {
+    return null;
+  }
+  const cookie = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith("jwt="));
+  return cookie ? cookie.split("=")[1] : null;
+};
+
 const setCookie = (name:any, value:any) => {
   document.cookie = name + '=' + encodeURIComponent(value) + '; path=/';
 };
@@ -30,7 +40,14 @@ export const registerUser = async (input: RegisterUserInput) => {
   return data;
 };
 
-export const loginUser = async (username: string, password: string) => {
+type LoginUserInput = {
+  username: string;
+  password: string;
+};
+
+export const loginUser = async (input: LoginUserInput) => {
+  let username = input.username;
+  let password = input.password;
   const response = await fetch(`${API_HOST}/auth/login`, {
     method: 'POST',
     headers: {
