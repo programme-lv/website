@@ -22,22 +22,24 @@ export default function Home() {
 
       <div className="flex gap-3">
         <Link
-        isDisabled
-          isExternal
+        // isDisabled
+          // isExternal
           className={buttonStyles({
             color: "primary",
             radius: "full",
             variant: "shadow",
           })}
+          href="/auth/register"
           // href={siteConfig.links.docs}
         >
           Reģistrēties
         </Link>
         <Link
-        isDisabled
-          isExternal
+        // isDisabled
+          // isExternal
           className={buttonStyles({ variant: "bordered", radius: "full" })}
           // href={siteConfig.links.github}
+          href="/auth/login"
         >
           {/* <GithubIcon size={20} /> */}
           Ieiet portālā

@@ -23,10 +23,10 @@ import {
   DiscordIcon,
   HeartFilledIcon,
   SearchIcon,
-  Logo,
 } from "@/components/icons";
 
 import LogoWhite from "@/public/logo_white.png";
+import Logo from "@/public/logo.png";
 
 import Image from "next/image";
 
