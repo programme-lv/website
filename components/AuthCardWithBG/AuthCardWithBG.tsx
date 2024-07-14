@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useMutation } from 'react-query';
 import { useRouter } from 'next/navigation';
-import { registerUser, loginUser } from "@/api/auth";
+import { registerUser, loginUser } from "@/lib/auth";
 import { Button, Input, Checkbox, Link, Divider } from "@nextui-org/react";
 import { Icon } from "@iconify/react";
 import MountainsImage from "@/public/mountains.png";

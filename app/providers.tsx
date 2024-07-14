@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { ThemeProviderProps } from "next-themes/dist/types";
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { getJwt } from "@/api/auth";
+import { getJwt } from "@/lib/jwt";
 
 export const AuthContext = React.createContext<string | null>(null);
 
