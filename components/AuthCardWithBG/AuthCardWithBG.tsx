@@ -29,7 +29,7 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
             <div className="absolute left-10 top-10 bg-white p-2 rounded-md">
                 <Link className="flex items-center" href="/">
                     <Image alt="programme.lv logo" height={26} src={LogoImage} />
-                    <p className="font-medium ms-2 text-black dark:text-white">programme.lv</p>
+                    <p className="ms-2 text-black dark:text-white font-semibold">programme.lv</p>
                 </Link>
             </div>
 

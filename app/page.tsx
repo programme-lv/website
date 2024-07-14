@@ -6,9 +6,12 @@ import { button as buttonStyles } from "@nextui-org/theme";
 import { siteConfig } from "@/config/site";
 import { title, subtitle } from "@/components/primitives";
 import { GithubIcon } from "@/components/icons";
+import { Navbar } from "@/components/navbar";
 
 export default function Home() {
   return (
+    <>
+    <Navbar/>
     <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
       <div className="inline-block max-w-4xl text-center justify-center">
         <h1 className={title()}>Apgūsti </h1>
@@ -48,11 +51,11 @@ export default function Home() {
 
       <div className="mt-8 text-center">
         {/* <Snippet hideCopyButton hideSymbol variant="bordered" > */}
-          <span className={"from-[#FF705B] to-[#FFB457] bg-clip-text text-transparent bg-gradient-to-b"}>
+          <span className={"bg-gradient-to-br from-rose-400 to-orange-300 bg-clip-text text-transparent"}>
             programme.lv šobrīd tiek aktīvi izstrādāts
           </span>
         {/* </Snippet> */}
       </div>
-    </section>
+    </section></>
   );
 }

@@ -57,7 +57,7 @@ export const Navbar = () => {
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-1" href="/">
-            <Image src={LogoWhite} alt="programme.lv logo" height={24}/>
+            <Image src={Logo} alt="programme.lv logo" height={26}/>
             <span className="px-0.5"/>
             <p className="font-bold text-inherit">programme.lv</p>
           </NextLink>

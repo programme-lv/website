@@ -8,6 +8,7 @@ import { Providers } from "./providers";
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
 import { Navbar } from "@/components/navbar";
+import NextTopLoader from 'nextjs-toploader';
 
 export const metadata: Metadata = {
   title: {
@@ -41,7 +42,11 @@ export default function RootLayout({
           fontSans.variable,
         )}
       >
-        <Providers themeProps={{ attribute: "class", defaultTheme: "light"}}>
+        <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
+          <NextTopLoader
+            zIndex={1600}
+            // showAtBottom={true}
+          />
           {children}
           {/* <div className="relative flex flex-col h-screen">
             <Navbar />
