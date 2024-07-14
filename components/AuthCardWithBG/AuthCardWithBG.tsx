@@ -16,6 +16,7 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
     const { type } = props;
     const [isVisible, setIsVisible] = React.useState(false);
     const [error, setError] = React.useState<string | null>(null);
+    const [error, setError] = React.useState<string | null>(null);
     const [isConfirmVisible, setIsConfirmVisible] = React.useState(false);
 
     const [username, setUsername] = useState("");
