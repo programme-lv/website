@@ -1,4 +1,4 @@
-import { useMutation } from 'react-query';
+import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import { loginUser } from '@/api/auth';
 import AuthCardWithBG from "@/components/AuthCardWithBG/AuthCardWithBG";
