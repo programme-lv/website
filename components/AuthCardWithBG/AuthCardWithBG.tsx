@@ -11,6 +11,11 @@ import MountainsImage from "@/public/mountains.png";
 import LogoImage from "@/public/logo.png";
 
 import Image from "next/image";
+import { setJwt } from "@/lib/jwt";
+
+const translations: {[key: string]: string} = {
+    "invalid username or password":"nepareizs lietotājvārds vai parole",
+}
 
 export default function AuthCardWithBG(props: { type: "login" | "register" }) {
     const { type } = props;
@@ -24,11 +29,21 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
 
+    const [repPassword, setRepPassword] = useState("");
+
     const router = useRouter();
 
     const registerMutation = useMutation(registerUser, {
-        onSuccess: () => {
+        onSuccess: async (response) => {
+            if(response.ok){
+            const data = await response.json();
+            setJwt(data.token);
             router.push('/status');
+            } else {
+                const error: string = await response.text();
+                const translated = translations[error.trim()] || error;
+                setError("Kļūda: " + translated+".");
+            }
         },
         onError: (error) => {
             setError("Registration error: " + JSON.stringify(error));
@@ -36,17 +51,29 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
     });
 
     const loginMutation = useMutation(loginUser, {
-        onSuccess: () => {
+        onSuccess: async (response) => {
+            if(response.ok){
+            const data = await response.json();
+            setJwt(data.token);
             router.push('/status');
+            } else {
+                const error: string = await response.text();
+                const translated = translations[error.trim()] || error;
+                setError("Kļūda: " + translated+".");
+            }
         },
-        onError: (error) => {
-            setError("Login error: " + error.message);
+        onError: async (response) => {
+            alert("Login error: " + JSON.stringify(response));
         }
     });
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (type === "register") {
+            if (password !== repPassword) {
+                setError("Paroles nesakrīt!");
+                return;
+            }
             registerMutation.mutate({ username, email, password, firstname: firstName, lastname: lastName });
         } else {
             loginMutation.mutate({username, password});
@@ -82,7 +109,6 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
 
             {/* Auth Form */}
             <div className="flex w-full max-w-lg flex-col gap-4 rounded-large bg-content1 px-8 pb-10 pt-6 shadow-small">
-                {error && <Alert message={error} type="error" onClose={() => setError(null)} />}
                 <p className="pb-2 text-xl font-medium">
                     {type === "register" ? "Reģistrēties" : "Pieslēgties"}
                 </p>
@@ -95,6 +121,7 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
                         variant="bordered"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
+                        isDisabled={loginMutation.isLoading||registerMutation.isLoading}
                     />
                     {type === "register" && (
                         <>
@@ -107,6 +134,7 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
                                     className="flex-1"
                                     value={firstName}
                                     onChange={(e) => setFirstName(e.target.value)}
+                                    isDisabled={loginMutation.isLoading||registerMutation.isLoading}
                                 />
                                 <Input
                                     label="Uzvārds (neobligāts)"
@@ -116,6 +144,7 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
                                     className="flex-1"
                                     value={lastName}
                                     onChange={(e) => setLastName(e.target.value)}
+                                    isDisabled={loginMutation.isLoading||registerMutation.isLoading}
                                 />
                             </div>
                             <Input
@@ -127,6 +156,7 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
                                 variant="bordered"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
+                                isDisabled={loginMutation.isLoading||registerMutation.isLoading}
                             />
                         </>
                     )}
@@ -156,6 +186,7 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
                             className="flex-1"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            isDisabled={loginMutation.isLoading||registerMutation.isLoading}
                         />
                         {type === "register" && (
                             <Input
@@ -181,8 +212,9 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
                                 type={isConfirmVisible ? "text" : "password"}
                                 variant="bordered"
                                 className="flex-1"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
+                                value={repPassword}
+                                onChange={(e) => setRepPassword(e.target.value)}
+                                isDisabled={loginMutation.isLoading||registerMutation.isLoading}
                             />
                         )}
                     </div>
@@ -198,10 +230,12 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
                             </Link>
                         </Checkbox>
                     )}
-                    <Button color="primary" type="submit">
+                    <Button color="primary" type="submit" isLoading={loginMutation.isLoading||registerMutation.isLoading}>
                         {type === "register" ? "Reģistrēties" : "Pieslēgties"}
                     </Button>
                 </form>
+
+                {error && <Alert message={error} type="error" onClose={() => setError(null)} />}
                 <div className="flex items-center gap-4 py-2">
                     <Divider className="flex-1" />
                     <p className="shrink-0 text-tiny text-default-500">VAI</p>

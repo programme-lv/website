@@ -12,16 +12,18 @@ type RegisterUserInput = {
 
 
 export const registerUser = async (input: RegisterUserInput) => {
-  const response = await fetch(`${API_HOST}/users/`, {
+  const response = await fetch(`${API_HOST}/auth/register`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(input),
   });
+  return response;
 
   if (!response.ok) {
-    throw new Error('Network response was not ok');
+    console.error('Network response was not ok');
+    return response;
   }
 
   const data = await response.json();
@@ -44,9 +46,13 @@ export const loginUser = async (input: LoginUserInput) => {
     },
     body: JSON.stringify({ username, password }),
   });
+  return response;
+
 
   if (!response.ok) {
-    throw new Error('Network response was not ok');
+    console.error('Network response was not ok');
+    const data = await response.json();
+    return response;
   }
 
   const data = await response.json();
