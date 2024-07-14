@@ -5,6 +5,7 @@ import { useMutation } from 'react-query';
 import { useRouter } from 'next/navigation';
 import { registerUser, loginUser } from "@/lib/auth";
 import { Button, Input, Checkbox, Link, Divider } from "@nextui-org/react";
+import Alert from "@/components/Alert";
 import { Icon } from "@iconify/react";
 import MountainsImage from "@/public/mountains.png";
 import LogoImage from "@/public/logo.png";
@@ -14,6 +15,7 @@ import Image from "next/image";
 export default function AuthCardWithBG(props: { type: "login" | "register" }) {
     const { type } = props;
     const [isVisible, setIsVisible] = React.useState(false);
+    const [error, setError] = React.useState<string | null>(null);
     const [isConfirmVisible, setIsConfirmVisible] = React.useState(false);
 
     const [username, setUsername] = useState("");
@@ -29,7 +31,7 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
             router.push('/status');
         },
         onError: (error) => {
-            console.error("Registration error:", error);
+            setError("Registration error: " + error.message);
         }
     });
 
@@ -38,7 +40,7 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
             router.push('/status');
         },
         onError: (error) => {
-            console.error("Login error:", error);
+            setError("Login error: " + error.message);
         }
     });
 
@@ -80,6 +82,7 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
 
             {/* Auth Form */}
             <div className="flex w-full max-w-lg flex-col gap-4 rounded-large bg-content1 px-8 pb-10 pt-6 shadow-small">
+                {error && <Alert message={error} type="error" onClose={() => setError(null)} />}
                 <p className="pb-2 text-xl font-medium">
                     {type === "register" ? "Reģistrēties" : "Pieslēgties"}
                 </p>
