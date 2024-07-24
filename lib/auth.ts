@@ -1,5 +1,3 @@
-import { setJwt } from "./jwt";
-
 const API_HOST = 'https://0f6de9e9w5.execute-api.eu-central-1.amazonaws.com';
 
 type RegisterUserInput = {
@@ -20,15 +18,6 @@ export const registerUser = async (input: RegisterUserInput) => {
     body: JSON.stringify(input),
   });
   return response;
-
-  if (!response.ok) {
-    console.error('Network response was not ok');
-    return response;
-  }
-
-  const data = await response.json();
-  setJwt(data.token); // Store token in cookie without explicit expiration
-  return data;
 };
 
 type LoginUserInput = {
@@ -47,16 +36,5 @@ export const loginUser = async (input: LoginUserInput) => {
     body: JSON.stringify({ username, password }),
   });
   return response;
-
-
-  if (!response.ok) {
-    console.error('Network response was not ok');
-    const data = await response.json();
-    return response;
-  }
-
-  const data = await response.json();
-  setJwt(data.token); // Store token in cookie without explicit expiration
-  return data;
 };
 
