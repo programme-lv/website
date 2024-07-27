@@ -10,6 +10,7 @@ type Task = {
   illustration_img_url?: string;
   difficulty_rating: 1 | 2 | 3 | 4 | 5;
   default_md_statement?: MarkdownStatement;
+  default_pdf_statement_url?: string;
 };
 
 type MarkdownStatement = {
