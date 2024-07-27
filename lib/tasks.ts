@@ -8,6 +8,7 @@ type Task = {
   origin_olympiad: string;
   lv_pdf_statement_sha: string;
   illustration_img_url?: string;
+  difficulty_rating: 1 | 2 | 3 | 4 | 5;
   default_md_statement?: MarkdownStatement;
 };
 

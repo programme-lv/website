@@ -13,6 +13,7 @@ type Task = {
     cpu_time_limit_seconds: number;
     origin_olympiad: string;
     lv_pdf_statement_sha: string;
+    difficulty_rating: 1 | 2 | 3 | 4 | 5;
     illustration_img_url?: string;
     default_md_statement?: MarkdownStatement;
 };
@@ -46,10 +47,18 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, ...props }) => {
         });
     };
 
+    let difficultyChips = {
+        1: <Chip size="sm" variant="flat" className="bg-green-100 text-green-800">ļoti viegls</Chip>,
+        2: <Chip size="sm" variant="flat" className="bg-sky-100 text-sky-800">viegls</Chip>,
+        3: <Chip size="sm" variant="flat" className="bg-violet-100 text-violet-800">vidēji grūts</Chip>,
+        4: <Chip size="sm" variant="flat" className="bg-yellow-100 text-yellow-800">grūts</Chip>,
+        5: <Chip size="sm" variant="flat" className="bg-red-100 text-red-800">ļoti grūts</Chip>,
+    }
+
     return (
         <Card className="w-full max-w-[600px] mb-4" {...props} isHoverable>
             <CardBody className="flex flex-row flex-wrap p-3 sm:flex-nowrap overflow-y-hidden">
-                <div className="max-w-32 flex">
+                <div className="max-w-36 flex">
                     {task.illustration_img_url &&
                         <Image
                             alt={task.task_full_name}
@@ -62,7 +71,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, ...props }) => {
                     <div>
                         <div className="flex justify-between w-full items-end">
                             <h3 className="text-large font-medium">{task.task_full_name}</h3>
-                            <Chip color="success" size="sm" variant="flat">ļoti viegls</Chip>
+                            {difficultyChips[task.difficulty_rating]}
                         </div>
                         <div className="py-2">
                         {task.default_md_statement && (
