@@ -43,55 +43,29 @@ export default function TaskList() {
           "relative flex h-full w-72 flex-col !border-r-small border-divider p-6 transition-width",
           {
             "w-16 items-center px-2 py-6": isCompact,
-          }
-        )}
-      >
-      <div
-        className={cn(
-          "flex items-center gap-3 px-3",
-
-          {
-            "justify-center gap-0": isCompact,
           },
         )}
       >
-        <div className="flex h-8 w-8 items-center justify-center rounded-full">
-            {/* <Link className="flex justify-start items-center gap-1" href="/"> */}
-              <Image src={Logo} alt="programme.lv logo" height={26}/>
-              {/* <span className="px-0.5"/>
-              <p className="text-default-900 font-medium text-large">programme.lv</p>
-            </Link> */}
-          {/* hello
-          asdfasdf */}
-          {/* <AcmeIcon className="text-background" /> */}
+        <div className={cn("flex items-center gap-3 px-3",
+            {"justify-center gap-0": isCompact,},)}>
+          <div className="flex h-12 w-8 items-center justify-center rounded-full">
+            {/* <AcmeIcon className="text-background" /> */}
+            <Image src={Logo} alt="programme.lv logo" height={40}/>
+          </div>
+          <span
+            className={cn("text-small font-bold uppercase opacity-100", {
+              "w-0 opacity-0": isCompact,
+            })}
+          >
+            programme.lv
+          </span>
         </div>
-        <span
-          className={cn("text-small font-bold uppercase opacity-100", {
-            "w-0 opacity-0": isCompact,
-          })}
-        >
-          programme.lv
-        </span>
-      </div>
-      <Spacer y={8} />
-      <div className="flex items-center gap-3 px-3">
-        <Avatar
-          isBordered
-          className="flex-none"
-          size="sm"
-          src="https://i.pravatar.cc/150?u=a04258114e29026708c"
-        />
-        <div className={cn("flex max-w-full flex-col", {hidden: isCompact})}>
-          <p className="truncate text-small font-medium text-default-600">John Doe</p>
-          <p className="truncate text-tiny text-default-400">Product Designer</p>
-        </div>
-      </div>
         <ScrollShadow className="-mr-6 h-full max-h-full py-6 pr-6">
-        <Sidebar
-          defaultSelectedKey="tasks"
-          isCompact={isCompact}
-          items={sectionItemsWithTeams}
-        />
+          <Sidebar
+            defaultSelectedKey="tasks"
+            isCompact={isCompact}
+            items={sectionItemsWithTeams}
+          />
         </ScrollShadow>
       </div>
       <div className="w-full flex-1 flex-col p-4">
