@@ -14,6 +14,13 @@ import Link from "next/link";
 import { Icon } from "@iconify/react";
 
 export default function TaskList() {
+  const [isCollapsed, setIsCollapsed] = React.useState(false);
+  const isMobile = useMediaQuery("(max-width: 768px)");
+  const isCompact = isCollapsed || isMobile;
+  const onToggle = React.useCallback(() => {
+    setIsCollapsed((prev) => !prev);
+  }, []);
+  
   const { data, error, isLoading } = useQuery('tasks', listTasks);
 
   if (isLoading) {
@@ -23,16 +30,7 @@ export default function TaskList() {
   if (error) {
     return <Alert message="Failed to load tasks" type="error" onClose={() => null} />;
   }
-
-  const [isCollapsed, setIsCollapsed] = React.useState(false);
-  const isMobile = useMediaQuery("(max-width: 768px)");
-
-  const isCompact = isCollapsed || isMobile;
-
-  const onToggle = React.useCallback(() => {
-    setIsCollapsed((prev) => !prev);
-  }, []);
-
+  
   return (<div className="flex h-dvh w-full">
     <div
       className={cn(
