@@ -9,7 +9,8 @@
     "lint": "eslint . --ext .ts,.tsx -c .eslintrc.json --fix"
   },
   "dependencies": {
-    "@iconify/react": "^5.0.1",
+    "@iconify-icons/mdi": "^1.2.48",
+    "@iconify/react": "^5.0.2",
     "@nextui-org/button": "2.0.34",
     "@nextui-org/code": "2.0.29",
     "@nextui-org/input": "2.2.2",
@@ -36,6 +37,7 @@
     "next": "14.2.4",
     "next-themes": "^0.2.1",
     "nextjs-toploader": "^1.6.12",
+    "npm": "^10.8.2",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-katex": "^3.0.1",
