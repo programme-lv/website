@@ -1,15 +1,16 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { getTaskById } from "@/lib/tasks";
 import { useParams } from "next/navigation";
 import Alert from "@/components/Alert";
+import { Task } from "@/lib/tasks";
 
 const TaskDetailsPage = () => {
   const { task_id } = useParams();
-  const [task, setTask] = useState(null);
-  const [error, setError] = useState(null);
+  const [task, setTask] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   useEffect(() => {
