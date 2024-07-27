@@ -97,6 +97,7 @@ function LeftSide({ task }: { task: Task }) {
         {task.default_pdf_statement_url ? (
             <object
               data={task.default_pdf_statement_url}
+              aria-label="PDF statement"
               width="100%"
               height="100%"
             />
@@ -104,17 +105,6 @@ function LeftSide({ task }: { task: Task }) {
             <p>No PDF statement available for this task.</p>
           )}
         </div>
-        {/* <div style={{ width: pdfWidth, height: "100%" }}>
-          {task.default_pdf_statement_url ? (
-            <object
-              data={task.default_pdf_statement_url}
-              width="100%"
-              height="100%"
-            />
-          ) : (
-            <p>No PDF statement available for this task.</p>
-          )}
-        </div> */}
         </div>
     </div>
       </Resizable>
