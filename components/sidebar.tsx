@@ -16,6 +16,8 @@ import Logo from "@/public/logo.png";
 import Image from "next/image";
 import Logo from "@/public/logo.png";
 import Image from "next/image";
+import Logo from "@/public/logo.png";
+import Image from "next/image";
 
 export enum SidebarItemType {
   Nest = "nest",
@@ -194,7 +196,7 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
         );
       },
       [isCompact, hideEndContent, iconClassName, items],
-    );
+    </>
 
     const renderItem = React.useCallback(
       (item: SidebarItem) => {
@@ -252,10 +254,11 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
     );
 
     return (
-      <div className="flex justify-center py-4">
-        <Image src={Logo} alt="Logo" width={100} height={100} />
-      </div>
-      <Listbox
+      <>
+        <div className="flex justify-center py-4">
+          <Image src={Logo} alt="Logo" width={100} height={100} />
+        </div>
+        <Listbox
         key={isCompact ? "compact" : "default"}
         ref={ref}
         hideSelectedIcon
