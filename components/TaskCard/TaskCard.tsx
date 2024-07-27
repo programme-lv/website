@@ -3,7 +3,8 @@
 import type { CardProps } from "@nextui-org/react";
 import React from "react";
 import { Button, Card, Image, CardBody, Chip } from "@nextui-org/react";
-import { Icon } from "@iconify/react";
+import { InlineMath } from "react-katex";
+import 'katex/dist/katex.min.css'; // Import KaTeX CSS for styling
 
 type Task = {
     published_task_id: string;
@@ -30,9 +31,24 @@ type TaskCardProps = CardProps & {
 
 const TaskCard: React.FC<TaskCardProps> = ({ task, ...props }) => {
     console.log(task);
+
+    // Helper function to render story with inline KaTeX
+    const renderStory = (story: string) => {
+        if (story.length > 200) {
+            story = story.slice(0, 200) + '...';
+        }
+        const parts = story.split(/(\$[^$]*\$)/); // Split story by $...$
+        return parts.map((part, index) => {
+            if (part.startsWith('$') && part.endsWith('$')) {
+                return <InlineMath key={index}>{part.slice(1, -1)}</InlineMath>;
+            }
+            return <span key={index}>{part}</span>;
+        });
+    };
+
     return (
         <Card className="w-full max-w-[600px] mb-4" {...props} isHoverable>
-            <CardBody className="flex flex-row flex-wrap p-3 sm:flex-nowrap">
+            <CardBody className="flex flex-row flex-wrap p-3 sm:flex-nowrap overflow-y-hidden">
                 <div className="max-w-32 flex">
                     {task.illustration_img_url &&
                         <Image
@@ -42,19 +58,19 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, ...props }) => {
                         />
                     }
                 </div>
-                {/* <Image
-                    removeWrapper
-                    alt={task.task_full_name}
-                    className="h-auto w-full flex-none object-cover object-top md:w-32"
-                    src="https://media.discordapp.net/attachments/1097261687612117084/1265767455834247168/krisjanisp_Once_upon_a_time_in_the_bustling_town_of_Algorithmia_3a71e867-9eff-46e0-ba8b-2ac08a05b378.png?ex=66a2b54e&is=66a163ce&hm=05713bc76bb639e1039fb4e4195787b236f7a91b0920d86647419aaec60bba23&=&format=webp&quality=lossless&width=437&height=437"
-                /> */}
                 <div className="flex flex-col justify-between px-4 py-2 w-full">
                     <div>
                         <div className="flex justify-between w-full items-end">
                             <h3 className="text-large font-medium">{task.task_full_name}</h3>
                             <Chip color="success" size="sm" variant="flat">ļoti viegls</Chip>
                         </div>
-                        {task.default_md_statement && <p className="py-2 text-small text-default-400">{task.default_md_statement.story}</p>}
+                        <div className="py-2">
+                        {task.default_md_statement && (
+                            <div className="text-small text-default-400 line-clamp-3">
+                                {renderStory(task.default_md_statement.story)}
+                            </div>
+                        )}
+                        </div>
                     </div>
                     <div className="flex justify-start py-1">
                         <div className="w-16">
