@@ -6,6 +6,8 @@ import { Button, Card, Image, CardBody, Chip, Tooltip } from "@nextui-org/react"
 import { InlineMath } from "react-katex";
 import { Icon } from '@iconify/react';
 import accountGroup from '@iconify-icons/mdi/account-group';
+import percentIcon from '@iconify-icons/mdi/percent';
+import checkCircleOutline from '@iconify-icons/mdi/check-circle-outline';
 import 'katex/dist/katex.min.css'; // Import KaTeX CSS for styling
 
 type Task = {
@@ -19,6 +21,7 @@ type Task = {
     illustration_img_url?: string;
     default_md_statement?: MarkdownStatement;
     solved_count?: number; // Added this for demonstration
+    acceptance_rate?: number; // Added this for demonstration
 };
 
 type MarkdownStatement = {
@@ -36,7 +39,8 @@ type TaskCardProps = CardProps & {
 const TaskCard: React.FC<TaskCardProps> = ({ task, ...props }) => {
     console.log(task);
 
-    task.solved_count = 69;
+    // task.solved_count = 69;
+    // task.acceptance_rate = 85;
 
     // Helper function to render story with inline KaTeX
     const renderStory = (story: string) => {
@@ -73,7 +77,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, ...props }) => {
                             />
                         }
                     </div>
-                    <div className="flex flex-col justify-between ps-4 py-2 w-full">
+                    <div className="flex flex-col justify-between ps-4 pt-2 pb-1 w-full">
                         <div>
                             <div className="flex justify-between w-full items-end">
                                 <h3 className="text-large font-medium">{task.task_full_name}</h3>
@@ -88,7 +92,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, ...props }) => {
                             </div>
                         </div>
 
-                        <div className="flex justify-between py-1">
+                        <div className="flex justify-between pt-1">
                             <div className="flex justify-between max-w-72">
                                 <div className="w-16 min-w-16">
                                     <Image
@@ -99,16 +103,24 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, ...props }) => {
                                     Uzdevums parādījās Latvijas 37. informātikas olimpiādes (<span className="text-default-900">2024</span>. gads) <span className="text-default-900">skolas</span> kārtā.
                                 </div>
                             </div>
-                            {task.solved_count !== undefined && (
-                                <div className="inline-flex items-end space-x-2">
+                            <div className="flex flex-col items-start space-y-1">
+                                {task.solved_count !== undefined && (
                                     <Tooltip content="lietotāju skaits, kuri atrisināja šo uzdevumu" delay={500}>
-                                        <div className="inline-flex items-end space-x-2">
-                                            <Icon icon={accountGroup} className="text-default-500 text-small" width="24" height="24" />
+                                        <div className="flex items-center space-x-2">
+                                            <Icon icon={accountGroup} className="text-default-600" width="20" height="16" />
                                             <span className="text-default-500 text-small">{task.solved_count}</span>
                                         </div>
                                     </Tooltip>
-                                </div>
-                            )}
+                                )}
+                                {task.acceptance_rate !== undefined && (
+                                    <Tooltip content="pareizo iesūtījumu koeficients" delay={500}>
+                                        <div className="flex items-center space-x-2">
+                                            <Icon icon={checkCircleOutline} className="text-default-600" width="20" height="16" />
+                                            <span className="text-default-500 text-small">{task.acceptance_rate}%</span>
+                                        </div>
+                                    </Tooltip>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>
