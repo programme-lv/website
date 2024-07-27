@@ -27,7 +27,7 @@ export const sectionItems: SidebarItem[] = [
         items: [
             {
                 key: "tasks",
-                href: "#",
+                href: "/tasks",
                 icon: "solar:checklist-minimalistic-outline",
                 title: "Uzdevumi",
                 // endContent: (
