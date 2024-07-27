@@ -22,6 +22,7 @@ type Task = {
     default_md_statement?: MarkdownStatement;
     solved_count?: number; // Added this for demonstration
     acceptance_rate?: number; // Added this for demonstration
+    origin_notes?: Record<string, string>;
 };
 
 type MarkdownStatement = {
@@ -65,12 +66,12 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, ...props }) => {
     return (
         <Card className="w-full mb-4" {...props} shadow="sm">
             <CardBody className="flex flex-col p-4 sm:flex-nowrap overflow-y-hidden">
-                <div className="flex flex-row flex-wrap sm:flex-nowrap">
-                    <div className="max-w-36 flex">
+                <div className="h-full flex flex-row flex-wrap sm:flex-nowrap">
+                    <div className="max-w-40 flex">
                         {task.illustration_img_url &&
                             <Image
                                 alt={task.task_full_name}
-                                className="h-full flex-none object-center"
+                                className="h-full flex-none object-cover"
                                 src={task.illustration_img_url}
                             />
                         }
@@ -92,14 +93,15 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, ...props }) => {
 
                         <div className="flex justify-between pt-1">
                             <div className="flex justify-between max-w-72">
+                                {task.origin_olympiad && task.origin_olympiad === "LIO" &&
                                 <div className="w-16 min-w-16">
                                     <Image
                                         src="https://lio.lv/LIO_logo_jaunais3.png"
                                     />
-                                </div>
-                                <div className="text-tiny text-default-700 py-1 ms-1">
-                                    Uzdevums parādījās Latvijas 37. informātikas olimpiādes (<span className="text-default-900">2023./2024</span>.&nbsp;gads) <span className="text-default-900">skolas</span> kārtā.
-                                </div>
+                                </div>}
+                                {task.origin_notes && task.origin_notes["lv"] && <div className="text-tiny text-default-700 py-1 ms-1">
+                                    {task.origin_notes["lv"]}
+                                </div>}
                             </div>
                             <div className="flex flex-col items-start space-y-1">
                                 {task.solved_count !== undefined && (
