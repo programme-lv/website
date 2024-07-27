@@ -82,7 +82,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     </div>
                     <span
                         className={cn("text-small font-bold uppercase opacity-100", {
-                            "w-0 opacity-0": isCompact,
+                            "w-0 opacity-0 hidden": isCompact,
                         })}
                     >
                         programme.lv
@@ -109,7 +109,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                         />
                     </Button>
 
-                    <Breadcrumbs>
+                    <Breadcrumbs className="z-10">
                         {breadcrumbItems.map((item, index) => (
                             <BreadcrumbItem key={index} href={item.href}>
                                 {item.label}
