@@ -95,7 +95,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     />
                 </ScrollShadow>
             </div>
-            <div className="w-full flex-1 flex-col p-3">
+            <div className="w-full flex flex-1 flex-col p-3">
                 <header className="flex items-center gap-3 rounded-medium border-small border-divider p-2">
                     <Button isIconOnly size="sm" variant="light" onPress={onToggle}>
                         <Icon
