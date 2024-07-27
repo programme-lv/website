@@ -37,8 +37,6 @@ type TaskCardProps = CardProps & {
 };
 
 const TaskCard: React.FC<TaskCardProps> = ({ task, ...props }) => {
-    console.log(task);
-
     // task.solved_count = 69;
     // task.acceptance_rate = 85;
 
@@ -65,7 +63,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, ...props }) => {
     }
 
     return (
-        <Card className="w-full max-w-[600px] mb-4" {...props} shadow="sm">
+        <Card className="w-full mb-4" {...props} shadow="sm">
             <CardBody className="flex flex-col p-4 sm:flex-nowrap overflow-y-hidden">
                 <div className="flex flex-row flex-wrap sm:flex-nowrap">
                     <div className="max-w-36 flex">

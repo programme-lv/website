@@ -12,6 +12,7 @@ import Logo from "@/public/logo.png";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { Task, getTaskById } from "@/lib/tasks";
+import Link from "next/link";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
     const [isCollapsed, setIsCollapsed] = React.useState(true);
@@ -110,7 +111,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
                     <Breadcrumbs>
                         {breadcrumbItems.map((item, index) => (
-                            <BreadcrumbItem href={item.href} key={index}>
+                            <BreadcrumbItem key={index} href={item.href}>
                                 {item.label}
                             </BreadcrumbItem>
                         ))}

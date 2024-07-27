@@ -34,7 +34,7 @@ export default function TaskDetailsPage() {
   }
 
   if (!task) {
-    return <p>Loading task details...</p>;
+    return ;
   }
 
   return (
