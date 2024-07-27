@@ -6,10 +6,11 @@ import { getTaskById } from "@/lib/tasks";
 import { useParams } from "next/navigation";
 import Alert from "@/components/Alert";
 import { Task } from "@/lib/tasks";
+import { Task } from "@/lib/tasks";
 
 const TaskDetailsPage = () => {
   const { task_id } = useParams();
-  const [task, setTask] = useState<any>(null);
+  const [task, setTask] = useState<Task | null>(null);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
