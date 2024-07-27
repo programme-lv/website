@@ -14,6 +14,8 @@ import {Icon} from "@iconify/react";
 import {cn} from "./cn";
 import Logo from "@/public/logo.png";
 import Image from "next/image";
+import Logo from "@/public/logo.png";
+import Image from "next/image";
 
 export enum SidebarItemType {
   Nest = "nest",
@@ -81,11 +83,6 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
       }),
     };
 
-    const renderLogo = () => (
-      <div className="flex justify-center py-4">
-        <Image src={Logo} alt="Logo" width={100} height={100} />
-      </div>
-    );
 
     const renderNestItem = React.useCallback(
       (item: SidebarItem) => {
@@ -255,7 +252,9 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
     );
 
     return (
-      {renderLogo()}
+      <div className="flex justify-center py-4">
+        <Image src={Logo} alt="Logo" width={100} height={100} />
+      </div>
       <Listbox
         key={isCompact ? "compact" : "default"}
         ref={ref}
