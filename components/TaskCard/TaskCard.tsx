@@ -12,6 +12,7 @@ type Task = {
     cpu_time_limit_seconds: number;
     origin_olympiad: string;
     lv_pdf_statement_sha: string;
+    illustration_img_url?: string;
 };
 
 type TaskCardProps = CardProps & {
@@ -20,14 +21,21 @@ type TaskCardProps = CardProps & {
 
 const TaskCard: React.FC<TaskCardProps> = ({ task, ...props }) => {
     return (
-        <Card className="w-full max-w-[520px] mb-4" {...props} isHoverable>
+        <Card className="w-full max-w-[600px] mb-4" {...props} isHoverable>
             <CardBody className="flex flex-row flex-wrap p-3 sm:flex-nowrap">
-                <Image
+                {task.illustration_img_url &&
+                    <Image
+                        alt={task.task_full_name}
+                        className="h-full w-72 flex-none object-center"
+                        src={task.illustration_img_url}
+                    />
+                }
+                {/* <Image
                     removeWrapper
                     alt={task.task_full_name}
                     className="h-auto w-full flex-none object-cover object-top md:w-32"
                     src="https://media.discordapp.net/attachments/1097261687612117084/1265767455834247168/krisjanisp_Once_upon_a_time_in_the_bustling_town_of_Algorithmia_3a71e867-9eff-46e0-ba8b-2ac08a05b378.png?ex=66a2b54e&is=66a163ce&hm=05713bc76bb639e1039fb4e4195787b236f7a91b0920d86647419aaec60bba23&=&format=webp&quality=lossless&width=437&height=437"
-                />
+                /> */}
                 <div className="px-4 py-2">
                     <div className="flex justify-between w-full items-end">
                     <h3 className="text-large font-medium">{task.task_full_name}</h3>

@@ -7,6 +7,7 @@ type Task = {
   cpu_time_limit_seconds: number;
   origin_olympiad: string;
   lv_pdf_statement_sha: string;
+  illustration_img_url?: string;
 };
 
 export const getTaskById = async (taskId: string): Promise<Task> => {
