@@ -73,24 +73,25 @@ export default function TaskDetailsPage() {
           <h2 className="text-medium font-medium text-default-700">Task Details</h2>
         </header>
         <main className="mt-4 h-full w-full overflow-visible">
-    <div className="flex flex-col items-center p-4 gap-3">
-      <h1 className="text-2xl font-bold mb-4">{task.task_full_name}</h1>
-      {task.default_pdf_statement_url ? (
-        <iframe
-          src={task.default_pdf_statement_url}
-          width="100%"
-          height="600px"
-          title="Task Statement"
-        />
-      ) : (
-        <p>No PDF statement available for this task.</p>
-      )}
-      <button
-        className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
-        onClick={() => router.back()}
-      >
-        Go Back
-      </button>
+          <div className="flex flex-col items-center p-4 gap-3">
+            <h1 className="text-2xl font-bold mb-4">{task.task_full_name}</h1>
+            {task.default_pdf_statement_url ? (
+              <iframe
+                src={task.default_pdf_statement_url}
+                width="100%"
+                height="600px"
+                title="Task Statement"
+              />
+            ) : (
+              <p>No PDF statement available for this task.</p>
+            )}
+            <button
+              className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+              onClick={() => router.back()}
+            >
+              Go Back
+            </button>
+            </div>
         </main>
       </div>
     </div>
