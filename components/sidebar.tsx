@@ -251,57 +251,57 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
 
         return (
             <>
-            <Listbox
-                key={isCompact ? "compact" : "default"}
-                ref={ref}
-                hideSelectedIcon
-                as="nav"
-                className={cn("list-none", className)}
-                classNames={{
-                    ...classNames,
-                    list: cn("items-center", classNames?.list),
-                }}
-                color="default"
-                itemClasses={{
-                    ...itemClasses,
-                    base: cn(
-                        "px-3 min-h-11 rounded-large h-[44px] data-[selected=true]:bg-default-100",
-                        itemClasses?.base,
-                    ),
-                    title: cn(
-                        "text-small font-medium text-default-500 group-data-[selected=true]:text-foreground",
-                        itemClasses?.title,
-                    ),
-                }}
-                items={items}
-                selectedKeys={[selected] as unknown as Selection}
-                selectionMode="single"
-                variant="flat"
-                onSelectionChange={(keys) => {
-                    const key = Array.from(keys)[0];
+                <Listbox
+                    key={isCompact ? "compact" : "default"}
+                    ref={ref}
+                    hideSelectedIcon
+                    as="nav"
+                    className={cn("list-none", className)}
+                    classNames={{
+                        ...classNames,
+                        list: cn("items-center", classNames?.list),
+                    }}
+                    color="default"
+                    itemClasses={{
+                        ...itemClasses,
+                        base: cn(
+                            "px-3 min-h-11 rounded-large h-[44px] data-[selected=true]:bg-default-100",
+                            itemClasses?.base,
+                        ),
+                        title: cn(
+                            "text-small font-medium text-default-500 group-data-[selected=true]:text-foreground",
+                            itemClasses?.title,
+                        ),
+                    }}
+                    items={items}
+                    selectedKeys={[selected] as unknown as Selection}
+                    selectionMode="single"
+                    variant="flat"
+                    onSelectionChange={(keys) => {
+                        const key = Array.from(keys)[0];
 
-                    setSelected(key as React.Key);
-                    onSelect?.(key as string);
-                }}
-                {...props}
-            >
-                {(item) => {
-                    return item.items && item.items?.length > 0 && item?.type === SidebarItemType.Nest ? (
-                        renderNestItem(item)
-                    ) : item.items && item.items?.length > 0 ? (
-                        <ListboxSection
-                            key={item.key}
-                            classNames={sectionClasses}
-                            showDivider={isCompact}
-                            title={item.title}
-                        >
-                            {item.items.map(renderItem)}
-                        </ListboxSection>
-                    ) : (
-                        renderItem(item)
-                    );
-                }}
-            </Listbox>
+                        setSelected(key as React.Key);
+                        onSelect?.(key as string);
+                    }}
+                    {...props}
+                >
+                    {(item) => {
+                        return item.items && item.items?.length > 0 && item?.type === SidebarItemType.Nest ? (
+                            renderNestItem(item)
+                        ) : item.items && item.items?.length > 0 ? (
+                            <ListboxSection
+                                key={item.key}
+                                classNames={sectionClasses}
+                                // showDivider={isCompact}
+                                title={item.title}
+                            >
+                                {item.items.map(renderItem)}
+                            </ListboxSection>
+                        ) : (
+                            renderItem(item)
+                        );
+                    }}
+                </Listbox>
             </>
         );
     },

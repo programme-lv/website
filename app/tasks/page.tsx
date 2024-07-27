@@ -17,9 +17,10 @@ import Logo from "@/public/logo.png";
 import Image from "next/image";
 
 export default function TaskList() {
-  const [isCollapsed, setIsCollapsed] = React.useState(false);
+  const [isCollapsed, setIsCollapsed] = React.useState(true);
   const isMobile = useMediaQuery("(max-width: 768px)");
   const isCompact = isCollapsed || isMobile;
+
   const onToggle = React.useCallback(() => {
     setIsCollapsed((prev) => !prev);
   }, []);
@@ -40,7 +41,7 @@ export default function TaskList() {
     <div className="flex h-dvh w-full">
       <div
         className={cn(
-          "relative flex h-full w-72 flex-col !border-r-small border-divider p-6 transition-width",
+          "relative flex h-full w-60 flex-col !border-r-small border-divider p-6 transition-width",
           {
             "w-16 items-center px-2 py-6": isCompact,
           },
@@ -48,7 +49,7 @@ export default function TaskList() {
       >
         <div className={cn("flex items-center gap-3 px-3",
             {"justify-center gap-0": isCompact,},)}>
-          <div className="flex h-12 w-8 items-center justify-center rounded-full">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full">
             {/* <AcmeIcon className="text-background" /> */}
             <Image src={Logo} alt="programme.lv logo" height={40}/>
           </div>
@@ -68,8 +69,8 @@ export default function TaskList() {
           />
         </ScrollShadow>
       </div>
-      <div className="w-full flex-1 flex-col p-4">
-        <header className="flex items-center gap-3 rounded-medium border-small border-divider p-4">
+      <div className="w-full flex-1 flex-col p-3">
+        <header className="flex items-center gap-3 rounded-medium border-small border-divider p-2">
           <Button isIconOnly size="sm" variant="light" onPress={onToggle}>
             <Icon
               className="text-default-500"
@@ -78,11 +79,10 @@ export default function TaskList() {
               width={24}
             />
           </Button>
-          <h2 className="text-medium font-medium text-default-700">Tasks</h2>
+          <h2 className="text-medium font-medium text-default-700">Uzdevumi</h2>
         </header>
-        <main className="mt-4 h-full w-full overflow-visible">
+        <main className="mt-4 w-full overflow-visible">
           <div className="flex flex-col items-center p-4 gap-3">
-            <h1 className="text-2xl font-bold mb-4">Task List</h1>
             {data && data.length > 0 ? (
               data.map((task) => (
                 <Link
