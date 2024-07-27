@@ -65,7 +65,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, ...props }) => {
     }
 
     return (
-        <Card className="w-full max-w-[600px] mb-4" {...props} isHoverable>
+        <Card className="w-full max-w-[600px] mb-4" {...props} shadow="sm">
             <CardBody className="flex flex-col p-4 sm:flex-nowrap overflow-y-hidden">
                 <div className="flex flex-row flex-wrap sm:flex-nowrap">
                     <div className="max-w-36 flex">
@@ -100,7 +100,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, ...props }) => {
                                     />
                                 </div>
                                 <div className="text-tiny text-default-700 py-1 ms-1">
-                                    Uzdevums parādījās Latvijas 37. informātikas olimpiādes (<span className="text-default-900">2024</span>. gads) <span className="text-default-900">skolas</span> kārtā.
+                                    Uzdevums parādījās Latvijas 37. informātikas olimpiādes (<span className="text-default-900">2023./2024</span>.&nbsp;gads) <span className="text-default-900">skolas</span> kārtā.
                                 </div>
                             </div>
                             <div className="flex flex-col items-start space-y-1">

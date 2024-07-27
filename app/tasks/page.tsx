@@ -30,7 +30,7 @@ export default function TaskList() {
   }
 
   return (
-        <main className="mt-4 w-full overflow-visible">
+        <main className="mt-4 flex-grow w-full overflow-visible">
           <div className="flex flex-col items-center p-4 gap-3">
             {data && data.length > 0 ? (
               data.map((task) => (
