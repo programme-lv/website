@@ -3,9 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { getTaskById } from "@/lib/tasks";
-import { useParams } from "next/navigation";
 import Alert from "@/components/Alert";
-import { Task } from "@/lib/tasks";
 import { Task } from "@/lib/tasks";
 
 const TaskDetailsPage = () => {
@@ -17,7 +15,7 @@ const TaskDetailsPage = () => {
   useEffect(() => {
     const fetchTask = async () => {
       try {
-        const fetchedTask = await getTaskById(task_id);
+        const fetchedTask = await getTaskById(task_id as string);
         setTask(fetchedTask);
       } catch (err) {
         setError("Failed to load task details");

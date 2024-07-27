@@ -1,6 +1,6 @@
 const API_HOST = "https://0f6de9e9w5.execute-api.eu-central-1.amazonaws.com";
 
-type Task = {
+export type Task = {
   published_task_id: string;
   task_full_name: string;
   memory_limit_megabytes: number;
