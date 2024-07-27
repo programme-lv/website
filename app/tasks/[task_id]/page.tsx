@@ -8,10 +8,11 @@ import Sidebar from "@/components/sidebar";
 import { sectionItemsWithTeams } from "@/components/sidebar-items";
 import { useMediaQuery } from "usehooks-ts";
 import { cn } from "@/components/cn";
-import { Button, Icon } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import { Task } from "@/lib/tasks";
+import { Icon } from "@iconify/react";
 
-const TaskDetailsPage = () => {
+export default function TaskDetailsPage() {
   const [isCollapsed, setIsCollapsed] = React.useState(false);
   const isMobile = useMediaQuery("(max-width: 768px)");
 
@@ -90,10 +91,8 @@ const TaskDetailsPage = () => {
       >
         Go Back
       </button>
-    </main>
+        </main>
       </div>
     </div>
   );
 };
-
-export default TaskDetailsPage;
