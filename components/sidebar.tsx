@@ -12,6 +12,8 @@ import {Listbox, Tooltip, ListboxItem, ListboxSection} from "@nextui-org/react";
 import {Icon} from "@iconify/react";
 
 import {cn} from "./cn";
+import Logo from "@/public/logo.png";
+import Image from "next/image";
 
 export enum SidebarItemType {
   Nest = "nest",
@@ -78,6 +80,12 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
         "w-11 h-11 gap-0 p-0": isCompact,
       }),
     };
+
+    const renderLogo = () => (
+      <div className="flex justify-center py-4">
+        <Image src={Logo} alt="Logo" width={100} height={100} />
+      </div>
+    );
 
     const renderNestItem = React.useCallback(
       (item: SidebarItem) => {
@@ -247,6 +255,7 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
     );
 
     return (
+      {renderLogo()}
       <Listbox
         key={isCompact ? "compact" : "default"}
         ref={ref}
