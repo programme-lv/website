@@ -8,7 +8,16 @@ type Task = {
   origin_olympiad: string;
   lv_pdf_statement_sha: string;
   illustration_img_url?: string;
+  default_md_statement?: MarkdownStatement;
 };
+
+type MarkdownStatement = {
+  story: string;
+  input: string;
+  output: string;
+  notes?: string;
+  scoring?: string;
+}
 
 export const getTaskById = async (taskId: string): Promise<Task> => {
   const response = await fetch(`${API_HOST}/tasks/${taskId}`, {
