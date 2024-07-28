@@ -91,7 +91,7 @@ function LeftSide({ task }: { task: Task }) {
 		<Resizable
 			handleComponent={{ right: <ResizeBar /> }}
 			enable={{ right: true }}
-			defaultSize={{ width: pdfWidth }}
+			defaultSize={{ width: 850 }}
 			minWidth={"200px"}
 			maxWidth={"80%"}
 		>
@@ -165,7 +165,7 @@ const TaskInformation: React.FC<TaskInformationProps> = ({
 			<CardBody className="flex flex-col p-0 sm:flex-nowrap overflow-y-hidden">
 				<div className="flex flex-row">
 					<div className="h-full flex flex-row flex-wrap sm:flex-nowrap flex-grow">
-						<div className="max-w-52 flex">
+						<div className="max-w-40 flex">
 							{task.illustration_img_url && (
 								<Image
 									alt={task.task_full_name}
