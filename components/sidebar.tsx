@@ -3,6 +3,7 @@
 import {
     Accordion,
     AccordionItem,
+    Spacer,
     type ListboxProps,
     type ListboxSectionProps,
     type Selection,
@@ -202,8 +203,7 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
                 if (isNestType) {
                     return renderNestItem(item);
                 }
-
-                return (
+                return (  
                     <ListboxItem
                         {...item}
                         key={item.key}
@@ -277,6 +277,7 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
                     selectedKeys={[selected] as unknown as Selection}
                     selectionMode="single"
                     variant="flat"
+
                     onSelectionChange={(keys) => {
                         const key = Array.from(keys)[0];
 

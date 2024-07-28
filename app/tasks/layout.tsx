@@ -5,7 +5,7 @@ import Sidebar from "@/components/sidebar";
 import { sectionItemsWithTeams } from "@/components/sidebar-items";
 import { useMediaQuery } from "usehooks-ts";
 import { cn } from "@/components/cn";
-import { Avatar, Badge, BreadcrumbItem, Breadcrumbs, Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Navbar, NavbarContent, NavbarItem, Popover, PopoverContent, PopoverTrigger, ScrollShadow } from "@nextui-org/react";
+import { Avatar, Badge, BreadcrumbItem, Breadcrumbs, Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Navbar, NavbarContent, NavbarItem, Popover, PopoverContent, PopoverTrigger, ScrollShadow, useDisclosure } from "@nextui-org/react";
 import { Icon } from "@iconify/react";
 
 import Logo from "@/public/logo.png";
@@ -21,15 +21,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     const isCompact = isCollapsed || isMobile;
     const { task_id } = useParams();
     const [taskCodeFullNameDict, setTaskCodeFullNameDict] = useState<Record<string, string>>({});
-    const [isMobileOpen, setIsMobileOpen] = useState(true);
+    const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
     const onSidebarToggle = React.useCallback(() => {
         setIsCollapsed((prev) => !prev);
     }, []);
 
-    const onMobileMenuToggle = React.useCallback(() => {
-        setIsMobileOpen((prev) => !prev);
-    }, []);
+    // const onMobileMenuToggle = React.useCallback(() => {
+    //     setIsMobileOpen((prev) => !prev);
+    // }, []);
 
     let breadcrumbItems = [
         {
@@ -70,32 +70,17 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         }
     }
 
-    function checkParent(parent: HTMLElement, child:HTMLElement) {
+    function checkParent(parent: HTMLElement, child: HTMLElement) {
         let node = child.parentNode;
-    
+
         // keep iterating unless null
         while (node != null) {
             if (node == parent) {
                 return true;
             }
-         node = node.parentNode;
-         }
-       return false;
-    }
-
-    function onBackgroundClick(e: React.MouseEvent) {
-        console.log("hello");
-        console.log(e.target);
-        console.log(e.currentTarget);
-        if((e.target as HTMLElement).contains(e.currentTarget as HTMLElement)) {
-            console.log("is parent");
+            node = node.parentNode;
         }
-        if((e.currentTarget as HTMLElement).contains(e.target as HTMLElement)) {
-            console.log("is child");
-        }
-        if(checkParent(e.target as HTMLElement, e.currentTarget as HTMLElement)) {
-            console.log("is parent");
-        }
+        return false;
     }
 
     return (
@@ -135,7 +120,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 <header className="flex items-center justify-between gap-3 rounded-medium border-small border-divider p-2 bg-white">
                     <div className="flex gap-3 items-center">
                         <div className="hidden md:flex">
-                            <Button isIconOnly size="sm" variant="light" onPress={onSidebarToggle}>
+                            <Button isIconOnly size="sm" variant="light" onPressStart={onSidebarToggle}>
                                 <Icon
                                     className="text-default-500"
                                     height={24}
@@ -145,15 +130,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                             </Button>
                         </div>
                         <div className="flex md:hidden">
-                            <Button isIconOnly size="sm" variant="light" onPress={onMobileMenuToggle}>
-                                    <Icon
-                                        className="text-default-500"
-                                        height={24}
-                                        icon="solar:hamburger-menu-outline"
-                                        width={24}
-                                    />
+                            <Button isIconOnly size="sm" variant="light" onPressStart={onOpen}>
+                                <Icon
+                                    className="text-default-500"
+                                    height={24}
+                                    icon="solar:hamburger-menu-outline"
+                                    width={24}
+                                />
                             </Button>
-                            </div>
+                        </div>
 
                         <Breadcrumbs className="z-10">
                             {breadcrumbItems.map((item, index) => (
@@ -167,7 +152,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     <div className="flex items-center gap-3">
                         <Dropdown placement="bottom-end">
                             <DropdownTrigger>
-                                <button className="mt-1 h-8 outline-none transition-transform flex gap-3 items-center">
+                                <button className="outline-none transition-transform flex gap-3 items-center">
                                     <div className="text-default-800 text-small">
                                         KrisjanisP
                                     </div>
@@ -198,9 +183,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                         </Dropdown>
                     </div>
                 </header>
-                <div className={cn("w-full h-full flex flex-col",{"hidden": isMobileOpen}, "md:flex")}>
-                    {children}
-                </div>
+                {/* <div className={cn("w-full h-full flex flex-col",{"hidden": isMobileOpen}, "md:flex")}> */}
+                {children}
+                {/* </div>
                 <div className={cn("w-full h-full flex flex-col",{"hidden": !isMobileOpen},"md:hidden")}>
                     <div className="rounded-medium border-small border-divider px-2 pt-2 bg-white mt-5">
                     <Sidebar
@@ -209,7 +194,34 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                         items={sectionItemsWithTeams}
                     />
                     </div>
-                </div>
+                </div> */}
+                <Modal
+                    isOpen={isOpen}
+                    onOpenChange={onOpenChange}
+                    placement="center"
+                    className="mx-2"
+                    disableAnimation={true}
+                >
+                    <ModalContent>
+                        {(onClose) => (
+                            <>
+                                <ModalHeader className="flex flex-col gap-1 -mb-2">Navigācijas izvēlne</ModalHeader>
+                                <ModalBody>
+                                    <div className="bg-white">
+                                        <Sidebar
+                                            defaultSelectedKey="tasks"
+                                            isCompact={false}
+                                            items={sectionItemsWithTeams}
+                                            itemClasses={{
+                                                base: "my-6"
+                                            }}
+                                        />
+                                    </div>
+                                </ModalBody>
+                            </>
+                        )}
+                    </ModalContent>
+                </Modal>
             </div>
         </div>
     );

@@ -25,7 +25,7 @@ export default function TaskList() {
 
   return (
     <main className="mt-4 flex-grow w-full overflow-visible">
-      <div className="grid grid-cols-1 min-[1200px]:grid-cols-2 min-[1800px]:grid-cols-3 min-[2400px]:grid-cols-4 min-[3000px]:grid-cols-5 gap-4 p-4">
+      <div className="grid grid-cols-1 min-[1200px]:grid-cols-2 min-[1800px]:grid-cols-3 min-[2400px]:grid-cols-4 min-[3000px]:grid-cols-5 gap-4 py-2 md:p-4">
         {data && data.length > 0 ? (
           data.map((task) => (
             <Link
