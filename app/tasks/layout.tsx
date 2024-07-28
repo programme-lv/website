@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Sidebar from "@/components/sidebar";
 import { sectionItemsWithTeams } from "@/components/sidebar-items";
 import { useMediaQuery } from "usehooks-ts";
@@ -21,8 +21,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     const isCompact = isCollapsed || isMobile;
     const { task_id } = useParams();
     const [taskCodeFullNameDict, setTaskCodeFullNameDict] = useState<Record<string, string>>({});
-    const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
+    const { isOpen: isMobileMenuOpen, onOpen, onClose, onOpenChange } = useDisclosure();
     const pathname = usePathname()
+    const pageRef = useRef<HTMLDivElement>(null);
+    const [disabledPointerEvents, setDisabledPointerEvents] = useState(false);
 
     const onSidebarToggle = React.useCallback(() => {
         setIsCollapsed((prev) => !prev);
@@ -39,9 +41,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         },
     ]
 
-    useEffect(()=>{
+    useEffect(() => {
         onClose();
     }, [pathname])
+
+    useEffect(() => {
+        setTimeout(() => {
+        setDisabledPointerEvents(isMobileMenuOpen);
+        }, 50);
+    }, [isMobileMenuOpen]);
 
     useEffect(() => {
         const fetchTask = async () => {
@@ -76,147 +84,135 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     }
 
     return (
-        <div className="flex h-dvh w-full">
-            <div
-                className={cn(
-                    "relative h-full w-60 flex-col !border-r-small border-divider p-6 transition-width",
-                    { "w-16 items-center px-2 py-6": isCompact, },
-                    "hidden md:flex"
-                )}
+        <>
+            <Modal
+                isOpen={isMobileMenuOpen}
+                onOpenChange={onOpenChange}
+                placement="center"
+                className="mx-2"
+                disableAnimation={true}
+                backdrop="blur"
+                // portalContainer={pageRef.current ?? document.body}
             >
-                <div className={cn("flex items-center gap-3 px-3",
-                    { "justify-center gap-0": isCompact, },)}>
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full">
-                        {/* <AcmeIcon className="text-background" /> */}
-                        <Image src={Logo} alt="programme.lv logo" height={40} />
-                    </div>
-                    <span
-                        className={cn("text-small font-bold uppercase opacity-100", {
-                            "w-0 opacity-0 hidden": isCompact,
-                        })}
-                    >
-                        programme.lv
-                    </span>
-                </div>
-                <ScrollShadow className="-mr-6 h-full max-h-full py-6 pr-6">
-                    <Sidebar
-                        defaultSelectedKey="tasks"
-                        isCompact={isCompact}
-                        items={sectionItemsWithTeams}
-                    />
-                </ScrollShadow>
-            </div>
-            <div className="w-full flex flex-1 flex-col p-3" style={{
-                backgroundColor: "#f8f8f8",
-            }} >
-                <header className="flex items-center justify-between gap-3 rounded-medium border-small border-divider p-2 bg-white">
-                    <div className="flex gap-3 items-center">
-                        <div className="hidden md:flex">
-                            <Button isIconOnly size="sm" variant="light" onPressStart={onSidebarToggle}>
-                                <Icon
-                                    className="text-default-500"
-                                    height={24}
-                                    icon="solar:sidebar-minimalistic-outline"
-                                    width={24}
-                                />
-                            </Button>
+                <ModalContent>
+                    <ModalHeader className="flex flex-col gap-1 -mb-2">Navigācijas izvēlne</ModalHeader>
+                    <ModalBody>
+                        <div className="bg-white">
+                            <Sidebar
+                                defaultSelectedKey="tasks"
+                                isCompact={false}
+                                items={sectionItemsWithTeams}
+                                itemClasses={{
+                                    base: "my-6"
+                                }}
+                            />
                         </div>
-                        <div className="flex md:hidden">
-                            <Button isIconOnly size="sm" variant="light" onPressStart={onOpen}>
-                                <Icon
-                                    className="text-default-500"
-                                    height={24}
-                                    icon="solar:hamburger-menu-outline"
-                                    width={24}
-                                />
-                            </Button>
-                        </div>
+                    </ModalBody>
+                </ModalContent>
+            </Modal>
+            <div className={cn("flex h-dvh w-full",{"pointer-events-none": disabledPointerEvents})} ref={pageRef}>
 
-                        <Breadcrumbs className="z-10">
-                            {breadcrumbItems.map((item, index) => (
-                                <BreadcrumbItem key={index} href={item.href}>
-                                    {item.label}
-                                </BreadcrumbItem>
-                            ))}
-                        </Breadcrumbs>
-                    </div>
-
-                    <div className="flex items-center gap-3">
-                        <Dropdown placement="bottom-end">
-                            <DropdownTrigger>
-                                <button className="outline-none transition-transform flex gap-3 items-center">
-                                    <div className="text-default-800 text-small">
-                                        KrisjanisP
-                                    </div>
-                                    <Badge
-                                        className="border-transparent"
-                                        color="success"
-                                        content=""
-                                        placement="bottom-right"
-                                        shape="circle"
-                                        size="sm"
-                                    >
-                                        <Avatar size="sm" name="Krisjanis Petrucena" />
-                                    </Badge>
-                                </button>
-                            </DropdownTrigger>
-                            <DropdownMenu aria-label="Profile Actions" variant="flat">
-                                <DropdownItem key="profile">
-                                    <div className="flex gap-2 items-center justify-between">
-                                        Profils <IconUserCircle size={16} />
-                                    </div>
-                                </DropdownItem>
-                                <DropdownItem key="logout" color="warning">
-                                    <div className="flex gap-2 items-center justify-between">
-                                        <span>Iziet no sistēmas</span><span><IconLogout size={16} /></span>
-                                    </div>
-                                </DropdownItem>
-                            </DropdownMenu>
-                        </Dropdown>
-                    </div>
-                </header>
-                {/* <div className={cn("w-full h-full flex flex-col",{"hidden": isMobileOpen}, "md:flex")}> */}
-                {children}
-                {/* </div>
-                <div className={cn("w-full h-full flex flex-col",{"hidden": !isMobileOpen},"md:hidden")}>
-                    <div className="rounded-medium border-small border-divider px-2 pt-2 bg-white mt-5">
-                    <Sidebar
-                        defaultSelectedKey="tasks"
-                        isCompact={false}
-                        items={sectionItemsWithTeams}
-                    />
-                    </div>
-                </div> */}
-                <Modal
-                    isOpen={isOpen}
-                    onOpenChange={onOpenChange}
-                    placement="center"
-                    className="mx-2"
-                    disableAnimation={true}
+                <div
+                    className={cn(
+                        "relative h-full w-60 flex-col !border-r-small border-divider p-6 transition-width",
+                        { "w-16 items-center px-2 py-6": isCompact, },
+                        "hidden md:flex"
+                    )}
                 >
-                    <ModalContent>
-                        {(onClose) => (
-                            <>
-                                <ModalHeader className="flex flex-col gap-1 -mb-2">Navigācijas izvēlne</ModalHeader>
-                                <ModalBody>
-                                    <div className="bg-white">
-                                        <Sidebar
-                                            defaultSelectedKey="tasks"
-                                            isCompact={false}
-                                            items={sectionItemsWithTeams}
-                                            itemClasses={{
-                                                base: "my-6"
-                                            }}
-                                            onSelect={() => onClose()}
+                    <div className={cn("flex items-center gap-3 px-3",
+                        { "justify-center gap-0": isCompact, },)}>
+                        <div className="flex h-8 w-8 items-center justify-center rounded-full">
+                            {/* <AcmeIcon className="text-background" /> */}
+                            <Image src={Logo} alt="programme.lv logo" height={40} />
+                        </div>
+                        <span
+                            className={cn("text-small font-bold uppercase opacity-100", {
+                                "w-0 opacity-0 hidden": isCompact,
+                            })}
+                        >
+                            programme.lv
+                        </span>
+                    </div>
+                    <ScrollShadow className="-mr-6 h-full max-h-full py-6 pr-6">
+                        <Sidebar
+                            defaultSelectedKey="tasks"
+                            isCompact={isCompact}
+                            items={sectionItemsWithTeams}
+                        />
+                    </ScrollShadow>
+                </div>
+                <div className="w-full flex flex-1 flex-col p-3" style={{
+                    backgroundColor: "#f8f8f8",
+                }} >
+                    <header className="flex items-center justify-between gap-3 rounded-medium border-small border-divider p-2 bg-white">
+                        <div className="flex gap-3 items-center">
+                            <div className="hidden md:flex">
+                                <Button isIconOnly size="sm" variant="light" onPressStart={onSidebarToggle}>
+                                    <Icon
+                                        className="text-default-500"
+                                        height={24}
+                                        icon="solar:sidebar-minimalistic-outline"
+                                        width={24}
+                                    />
+                                </Button>
+                            </div>
+                            <div className="flex md:hidden">
+                                <Button isIconOnly size="sm" variant="light" onPressStart={onOpen}>
+                                    <Icon
+                                        className="text-default-500"
+                                        height={24}
+                                        icon="solar:hamburger-menu-outline"
+                                        width={24}
+                                    />
+                                </Button>
+                            </div>
 
-                                        />
-                                    </div>
-                                </ModalBody>
-                            </>
-                        )}
-                    </ModalContent>
-                </Modal>
+                            <Breadcrumbs className="z-10">
+                                {breadcrumbItems.map((item, index) => (
+                                    <BreadcrumbItem key={index} href={item.href}>
+                                        {item.label}
+                                    </BreadcrumbItem>
+                                ))}
+                            </Breadcrumbs>
+                        </div>
+
+                        <div className="flex items-center gap-3">
+                            <Dropdown placement="bottom-end">
+                                <DropdownTrigger>
+                                    <button className="outline-none transition-transform flex gap-3 items-center">
+                                        <div className="text-default-800 text-small">
+                                            KrisjanisP
+                                        </div>
+                                        <Badge
+                                            className="border-transparent"
+                                            color="success"
+                                            content=""
+                                            placement="bottom-right"
+                                            shape="circle"
+                                            size="sm"
+                                        >
+                                            <Avatar size="sm" name="Krisjanis Petrucena" />
+                                        </Badge>
+                                    </button>
+                                </DropdownTrigger>
+                                <DropdownMenu aria-label="Profile Actions" variant="flat">
+                                    <DropdownItem key="profile">
+                                        <div className="flex gap-2 items-center justify-between">
+                                            Profils <IconUserCircle size={16} />
+                                        </div>
+                                    </DropdownItem>
+                                    <DropdownItem key="logout" color="warning">
+                                        <div className="flex gap-2 items-center justify-between">
+                                            <span>Iziet no sistēmas</span><span><IconLogout size={16} /></span>
+                                        </div>
+                                    </DropdownItem>
+                                </DropdownMenu>
+                            </Dropdown>
+                        </div>
+                    </header>
+                    {children}
+                </div>
             </div>
-        </div>
+        </>
     );
 }

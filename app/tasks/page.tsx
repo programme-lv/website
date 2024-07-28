@@ -32,6 +32,7 @@ export default function TaskList() {
               href={`/tasks/${task.published_task_id}`}
               key={task.published_task_id}
               className="contents"
+              prefetch={true}
             >
               <TaskCard key={task.published_task_id} task={task} />
             </Link>
