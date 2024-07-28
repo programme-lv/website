@@ -1,14 +1,12 @@
 "use client";
 
 import React, { useEffect, useState, useCallback, useRef } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import { Task, getTaskById } from "@/lib/tasks";
 import Alert from "@/components/Alert";
 import { debounce } from "lodash";
 import { Resizable } from "re-resizable";
 import { IconGripVertical, IconSettings } from "@tabler/icons-react";
-import TaskCard from "@/components/TaskCard/TaskCard";
-import { InlineMath } from "react-katex";
 import { Button, Card, CardBody, CardProps, Chip, Divider, Select, SelectItem, Tab, Tabs } from "@nextui-org/react";
 import { Image } from "@nextui-org/react";
 
@@ -16,7 +14,6 @@ export default function TaskDetailsPage() {
 	const { task_id } = useParams();
 	const [task, setTask] = useState<Task | null>(null);
 	const [error, setError] = useState<string | null>(null);
-	const router = useRouter();
 
 	useEffect(() => {
 		const fetchTask = async () => {
