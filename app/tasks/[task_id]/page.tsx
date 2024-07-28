@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useCallback, useRef } from "react";
+import React, { useEffect, useState, useCallback, useRef, Dispatch, SetStateAction } from "react";
 import { useParams } from "next/navigation";
 import { Task, getTaskById } from "@/lib/tasks";
 import Alert from "@/components/Alert";
@@ -9,11 +9,15 @@ import { Resizable } from "re-resizable";
 import { IconGripVertical, IconSettings } from "@tabler/icons-react";
 import { Button, Card, CardBody, CardProps, Chip, Divider, Select, SelectItem, Tab, Tabs } from "@nextui-org/react";
 import { Image } from "@nextui-org/react";
+import MonacoEditor from "@monaco-editor/react";
+import getHardcodedLanguageList from "@/data/languages";
+import { ProgrammingLang } from "@/types/proglv";
 
 export default function TaskDetailsPage() {
 	const { task_id } = useParams();
 	const [task, setTask] = useState<Task | null>(null);
 	const [error, setError] = useState<string | null>(null);
+	const pageRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
 		const fetchTask = async () => {
@@ -40,9 +44,21 @@ export default function TaskDetailsPage() {
 
 	return (
 		<main className="mt-2 flex-grow w-full overflow-visible">
-			<div className="flex w-full h-full max-w-full gap-3">
+			<div className="hidden xl:flex w-full h-full max-w-full gap-3" ref={pageRef}>
+				<Resizable
+					handleComponent={{ right: <ResizeBar /> }}
+					enable={{ right: true }}
+					defaultSize={{ width: 850 }}
+					minWidth={"200px"}
+					maxWidth={"80%"}
+				>
+					<LeftSide task={task} />
+				</Resizable>
+				<RightSide taskCode={task_id as string} />
+			</div>
+			<div className="flex flex-col xl:hidden w-full h-full max-w-full gap-3 overflow-y-scroll" ref={pageRef}>
 				<LeftSide task={task} />
-				<RightSide />
+				{/* <RightSide taskCode={task_id as string} /> */}
 			</div>
 		</main>
 	);
@@ -77,47 +93,40 @@ function LeftSide({ task }: { task: Task }) {
 	}, [elementRef]);
 
 	return (
-		<Resizable
-			handleComponent={{ right: <ResizeBar /> }}
-			enable={{ right: true }}
-			defaultSize={{ width: 850 }}
-			minWidth={"200px"}
-			maxWidth={"80%"}
-		>
-			<div className="h-full w-full rounded-medium border-small border-divider p-2 bg-white">
-				<div
-					className="h-full relative flex flex-col items-center gap-1 flex-grow overflow-hidden"
-				>
-					{/* <h1 className="text-2xl font-bold mb-4">{task.task_full_name}</h1> */}
-					<TaskInformation task={task} />
+		<div className="h-full w-full rounded-medium border-small border-divider p-2 bg-white">
+			<div
+				className="h-full relative flex flex-col items-center gap-1 flex-grow overflow-hidden"
+			>
+				{/* <h1 className="text-2xl font-bold mb-4">{task.task_full_name}</h1> */}
+				<TaskInformation task={task} />
 
-					<Divider className="my-1" />
-					<div className="bg-violet-100 flex-grow w-full"
-						ref={elementRef}>
-						<div
-							style={{ width: pdfWidth, height: pdfHeight }}
-							className="absolute left-0"
-						>
-							{task.default_pdf_statement_url ? (
-								<object
-									data={task.default_pdf_statement_url}
-									aria-label="PDF statement"
-									width="100%"
-									height="100%"
-								/>
-							) : (
-								<p>No PDF statement available for this task.</p>
-							)}
-						</div>
+				<Divider className="my-1" />
+				<div className="bg-violet-100 flex-grow w-full"
+					ref={elementRef}>
+					<div
+						style={{ width: pdfWidth, height: pdfHeight }}
+						className="absolute left-0"
+					>
+						{task.default_pdf_statement_url ? (
+							<object
+								data={task.default_pdf_statement_url}
+								aria-label="PDF statement"
+								width="100%"
+								height="100%"
+							/>
+						) : (
+							<p>No PDF statement available for this task.</p>
+						)}
 					</div>
 				</div>
 			</div>
-		</Resizable>
+		</div>
 	);
 }
 
 type TaskInformationProps = CardProps & {
 	task: Task;
+	onSelectedTabChange?: (key: string) => void;
 };
 const TaskInformation: React.FC<TaskInformationProps> = ({
 	task,
@@ -155,7 +164,7 @@ const TaskInformation: React.FC<TaskInformationProps> = ({
 	const [layout, setLayout] = useState<"narrow" | "wide">("wide");
 
 	function handleCardResize(cardWidth: number) {
-		if (cardWidth < 500) {
+		if (cardWidth < 600) {
 			setLayout("narrow");
 		} else {
 			setLayout("wide");
@@ -227,19 +236,6 @@ const TaskInformation: React.FC<TaskInformationProps> = ({
 									</div>
 								</div>
 							</div>
-
-							{/* <div className="flex items-center mt-2 gap-3">
-								<Tabs aria-label="Tab" size="sm">
-									<Tab key="statement" title="Formulējums">
-									</Tab>
-								</Tabs>
-
-								<div className="flex gap-4 items-center">
-									<Button isIconOnly variant="light" aria-label="Take a photo" size="sm">
-										<IconSettings className="text-default-600" />
-									</Button>
-								</div>
-							</div> */}
 						</div>
 					</div>
 
@@ -249,10 +245,12 @@ const TaskInformation: React.FC<TaskInformationProps> = ({
 	);
 };
 
-function RightSide() {
+function RightSide({ taskCode }: { taskCode: string }) {
+	const languages = getHardcodedLanguageList() as ProgrammingLang[];
+
 	return (
-		<div className="flex flex-col items-center p-4 gap-3 overflow-hidden flex-grow min-w-10 bg-red-100">
-			asdfjlkasdfjlasdklj
+		<div className="flex flex-col flex-grow bg-white rounded-medium border-small border-divider px-2 pb-2">
+			<ClientCodePanel languages={languages} taskCode={taskCode} />
 		</div>
 	);
 }
@@ -270,5 +268,99 @@ function ResizeBar() {
 				))}
 			</div>
 		</div>
+	);
+}
+
+
+type CodePanelProps = {
+	languages: ProgrammingLang[];
+}
+
+function ClientCodePanel(props: { languages: ProgrammingLang[], taskCode: string }) {
+	const languages = props.languages as ProgrammingLang[];
+	const taskCode = props.taskCode;
+
+	let defaultLang = languages[0].id;
+	for (let lang of languages) if (lang.id === "cpp17") defaultLang = lang.id;
+	const [selectedLanguage, setSelectedLanguage] = useState<string>(defaultLang);
+	const [code, setCode] = useState<string>("");
+
+	const monacoLangId = languages.filter(lang => lang.id === selectedLanguage)[0]?.monacoId || "";
+
+	useEffect(() => {
+		const savedText = sessionStorage.getItem(`code-${taskCode}-${selectedLanguage}`);
+		if (!savedText) {
+			if (selectedLanguage === "cpp17") {
+				setCode(`#include <iostream>
+using namespace std;
+
+int main() {
+    
+}`);
+			}
+		} else {
+			setCode(savedText);
+		}
+	}, [selectedLanguage]);
+
+	useEffect(() => {
+		sessionStorage.setItem(`code-${taskCode}-${selectedLanguage}`, code);
+	}, [code]);
+
+	return (
+		<div className="h-full w-full flex flex-col gap-2">
+			<div className="flex justify-end">
+				<LanguageSelect
+					languages={languages}
+					selectedLanguage={selectedLanguage}
+					setSelectedLanguage={setSelectedLanguage} />
+			</div>
+			<div style={{ flexGrow: 1, position: "relative" }}>
+				<div style={{ width: "100%", height: "100%", position: "absolute" }}>
+					<MonacoEditor
+						value={code}
+						theme="vs-dark"
+						language={monacoLangId}
+						// loading={<LoadingBarOverlay />}
+						onChange={(value: any) => setCode(value as string)}
+						options={{
+							minimap: { enabled: false },
+							fontSize: 12,
+						}}
+					/>
+				</div>
+			</div>
+			{/* <SubmitButton langId={selectedLanguage} code={code} taskCode={taskCode} /> */}
+		</div>);
+}
+
+type SelectLang = {
+	id: string;
+	fullName: string;
+}
+
+type LanguageSelectProps = {
+	languages: SelectLang[];
+	selectedLanguage: string;
+	setSelectedLanguage: Dispatch<SetStateAction<string>>;
+}
+
+function LanguageSelect(props: LanguageSelectProps) {
+	const data = props.languages.map(lang => ({ value: lang.id, label: lang.fullName }));
+	console.log(props.selectedLanguage)
+	return (
+		<Select
+			items={data}
+			label="Programmēšanas valoda"
+			className="max-w-xs"
+			size="sm"
+			// value={props.selectedLanguage}
+			selectedKeys={[props.selectedLanguage]}
+			disallowEmptySelection={true}
+			variant="underlined"
+			onSelectionChange={(selectedKeys: "all" | Set<React.Key> & { anchorKey?: string; currentKey?: string }) => props.setSelectedLanguage(selectedKeys === "all" ? "cpp17" : (selectedKeys.currentKey ?? "cpp17"))}
+		>
+			{(x) => <SelectItem key={x.value}>{x.label}</SelectItem>}
+		</Select>
 	);
 }
