@@ -10,7 +10,7 @@ import { Icon } from "@iconify/react";
 
 import Logo from "@/public/logo.png";
 import Image from "next/image";
-import { useParams } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import { Task, getTaskById } from "@/lib/tasks";
 import Link from "next/link";
 import { IconLogout, IconUserCircle } from "@tabler/icons-react";
@@ -21,7 +21,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     const isCompact = isCollapsed || isMobile;
     const { task_id } = useParams();
     const [taskCodeFullNameDict, setTaskCodeFullNameDict] = useState<Record<string, string>>({});
-    const { isOpen, onOpen, onOpenChange } = useDisclosure();
+    const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
+    const pathname = usePathname()
 
     const onSidebarToggle = React.useCallback(() => {
         setIsCollapsed((prev) => !prev);
@@ -37,6 +38,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             label: "Uzdevumi",
         },
     ]
+
+    useEffect(()=>{
+        onClose();
+    }, [pathname])
 
     useEffect(() => {
         const fetchTask = async () => {
@@ -68,19 +73,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 label: `${task_id}`,
             })
         }
-    }
-
-    function checkParent(parent: HTMLElement, child: HTMLElement) {
-        let node = child.parentNode;
-
-        // keep iterating unless null
-        while (node != null) {
-            if (node == parent) {
-                return true;
-            }
-            node = node.parentNode;
-        }
-        return false;
     }
 
     return (
@@ -215,6 +207,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                                             itemClasses={{
                                                 base: "my-6"
                                             }}
+                                            onSelect={() => onClose()}
+
                                         />
                                     </div>
                                 </ModalBody>
