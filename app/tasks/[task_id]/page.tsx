@@ -56,7 +56,7 @@ export default function TaskDetailsPage() {
 				</Resizable>
 				<RightSide taskCode={task_id as string} />
 			</div>
-			<div className="flex flex-col xl:hidden w-full h-full max-w-full gap-3 overflow-y-scroll" ref={pageRef}>
+			<div className="flex flex-col xl:hidden w-full h-full max-w-full gap-3" ref={pageRef}>
 				<LeftSide task={task} />
 				{/* <RightSide taskCode={task_id as string} /> */}
 			</div>

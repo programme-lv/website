@@ -5,7 +5,7 @@ import Sidebar from "@/components/sidebar";
 import { sectionItemsWithTeams } from "@/components/sidebar-items";
 import { useMediaQuery } from "usehooks-ts";
 import { cn } from "@/components/cn";
-import { BreadcrumbItem, Breadcrumbs, Button, ScrollShadow } from "@nextui-org/react";
+import { Avatar, Badge, BreadcrumbItem, Breadcrumbs, Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Navbar, NavbarContent, NavbarItem, Popover, PopoverContent, PopoverTrigger, ScrollShadow } from "@nextui-org/react";
 import { Icon } from "@iconify/react";
 
 import Logo from "@/public/logo.png";
@@ -13,6 +13,7 @@ import Image from "next/image";
 import { useParams } from "next/navigation";
 import { Task, getTaskById } from "@/lib/tasks";
 import Link from "next/link";
+import { IconLogout, IconUserCircle } from "@tabler/icons-react";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
     const [isCollapsed, setIsCollapsed] = React.useState(true);
@@ -99,23 +100,59 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <div className="w-full flex flex-1 flex-col p-3" style={{
                 backgroundColor: "#f8f8f8",
             }}>
-                <header className="flex items-center gap-3 rounded-medium border-small border-divider p-2 bg-white">
-                    <Button isIconOnly size="sm" variant="light" onPress={onToggle}>
-                        <Icon
-                            className="text-default-500"
-                            height={24}
-                            icon="solar:sidebar-minimalistic-outline"
-                            width={24}
-                        />
-                    </Button>
+                <header className="flex items-center justify-between gap-3 rounded-medium border-small border-divider p-2 bg-white">
+                    <div className="flex gap-3 items-center">
+                        <Button isIconOnly size="sm" variant="light" onPress={onToggle}>
+                            <Icon
+                                className="text-default-500"
+                                height={24}
+                                icon="solar:sidebar-minimalistic-outline"
+                                width={24}
+                            />
+                        </Button>
 
-                    <Breadcrumbs className="z-10">
-                        {breadcrumbItems.map((item, index) => (
-                            <BreadcrumbItem key={index} href={item.href}>
-                                {item.label}
-                            </BreadcrumbItem>
-                        ))}
-                    </Breadcrumbs>
+                        <Breadcrumbs className="z-10">
+                            {breadcrumbItems.map((item, index) => (
+                                <BreadcrumbItem key={index} href={item.href}>
+                                    {item.label}
+                                </BreadcrumbItem>
+                            ))}
+                        </Breadcrumbs>
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                        <Dropdown placement="bottom-end">
+                            <DropdownTrigger>
+                                <button className="mt-1 h-8 outline-none transition-transform flex gap-3 items-center">
+                                    <div className="text-default-800 text-small">
+                                        KrisjanisP
+                                    </div>
+                                    <Badge
+                                        className="border-transparent"
+                                        color="success"
+                                        content=""
+                                        placement="bottom-right"
+                                        shape="circle"
+                                        size="sm"
+                                    >
+                                        <Avatar size="sm" name="Krisjanis Petrucena" />
+                                    </Badge>
+                                </button>
+                            </DropdownTrigger>
+                            <DropdownMenu aria-label="Profile Actions" variant="flat">
+                                <DropdownItem key="profile">
+                                    <div className="flex gap-2 items-center justify-between">
+                                        Profils <IconUserCircle size={16} />
+                                    </div>
+                                </DropdownItem>
+                                <DropdownItem key="logout" color="warning">
+                                    <div className="flex gap-2 items-center justify-between">
+                                        <span>Iziet no sistēmas</span><span><IconLogout size={16} /></span>
+                                    </div>
+                                </DropdownItem>
+                            </DropdownMenu>
+                        </Dropdown>
+                    </div>
                 </header>
                 {children}
             </div>
