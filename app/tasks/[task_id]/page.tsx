@@ -7,6 +7,7 @@ import Alert from "@/components/Alert";
 import { debounce } from "lodash";
 import { Task } from "@/lib/tasks";
 import { Resizable } from "re-resizable";
+import { IconGripVertical } from "@tabler/icons-react";
 
 export default function TaskDetailsPage() {
   const { task_id } = useParams();
@@ -34,12 +35,12 @@ export default function TaskDetailsPage() {
   }
 
   if (!task) {
-    return ;
+    return;
   }
 
   return (
     <main className="mt-4 flex-grow w-full overflow-visible">
-      <div className="flex w-full h-full max-w-full gap-2">
+      <div className="flex w-full h-full max-w-full gap-3">
         <LeftSide task={task} />
         <RightSide />
       </div>
@@ -48,8 +49,8 @@ export default function TaskDetailsPage() {
 }
 
 function LeftSide({ task }: { task: Task }) {
-  const [pdfWidth, setPdfWidth] = useState<number|string>("100%");
-  const [pdfHeight, setPdfHeight] = useState<number|string>("100%");
+  const [pdfWidth, setPdfWidth] = useState<number | string>("100%");
+  const [pdfHeight, setPdfHeight] = useState<number | string>("100%");
 
   const elementRef = React.useRef<HTMLDivElement>(null);
 
@@ -60,14 +61,15 @@ function LeftSide({ task }: { task: Task }) {
   //   }, 500),
   //   []
   // );
-    
+
   const handleResize = useCallback(
     debounce(() => {
       if (!elementRef.current) return;
       setPdfWidth(elementRef.current.clientWidth);
       setPdfHeight(elementRef.current.clientHeight);
-    }, 100)
-  , []);
+    }, 100),
+    []
+  );
 
   console.log(pdfWidth);
 
@@ -83,31 +85,37 @@ function LeftSide({ task }: { task: Task }) {
   }, [elementRef]);
 
   return (
-      <Resizable
-        handleComponent={{ right: <div style={{ width: "10px", cursor: "ew-resize", backgroundColor: "#ccc" }}></div> }}
-        enable={{ right: true }}
-        defaultSize={{ width: pdfWidth }}
-        minWidth={"200px"}
-        maxWidth={"80%"}
+    <Resizable
+      handleComponent={{ right: <ResizeBar /> }}
+      enable={{ right: true }}
+      defaultSize={{ width: pdfWidth }}
+      minWidth={"200px"}
+      maxWidth={"80%"}
+    >
+      <div
+        ref={elementRef}
+        className="h-full relative flex flex-col items-center gap-3 flex-grow overflow-hidden"
       >
-    <div ref={elementRef} className="h-full relative flex flex-col items-center gap-3 flex-grow overflow-hidden">
-      {/* <h1 className="text-2xl font-bold mb-4">{task.task_full_name}</h1> */}
-      <div className="bg-violet-100 h-full">
-      <div style={{ width: pdfWidth, height: pdfHeight }} className="absolute left-0">
-        {task.default_pdf_statement_url ? (
-            <object
-              data={task.default_pdf_statement_url}
-              aria-label="PDF statement"
-              width="100%"
-              height="100%"
-            />
-          ) : (
-            <p>No PDF statement available for this task.</p>
-          )}
+        {/* <h1 className="text-2xl font-bold mb-4">{task.task_full_name}</h1> */}
+        <div className="bg-violet-100 h-full">
+          <div
+            style={{ width: pdfWidth, height: pdfHeight }}
+            className="absolute left-0"
+          >
+            {task.default_pdf_statement_url ? (
+              <object
+                data={task.default_pdf_statement_url}
+                aria-label="PDF statement"
+                width="100%"
+                height="100%"
+              />
+            ) : (
+              <p>No PDF statement available for this task.</p>
+            )}
+          </div>
         </div>
-        </div>
-    </div>
-      </Resizable>
+      </div>
+    </Resizable>
   );
 }
 
@@ -115,6 +123,22 @@ function RightSide() {
   return (
     <div className="flex flex-col items-center p-4 gap-3 overflow-hidden flex-grow min-w-10 bg-red-100">
       asdfjlkasdfjlasdklj
+    </div>
+  );
+}
+
+function ResizeBar() {
+  return (
+    <div className="flex items-center justify-center w-3 h-full p-0 ms-1">
+      <div className="flex flex-col gap-0">
+        {[...Array(3)].map((_, i) => (
+          <IconGripVertical
+            key={i}
+            className="w-5 h-5 text-gray-700"
+            stroke={1.5}
+          />
+        ))}
+      </div>
     </div>
   );
 }
