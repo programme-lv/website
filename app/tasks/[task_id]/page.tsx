@@ -8,6 +8,7 @@ import { debounce } from "lodash";
 import { Task } from "@/lib/tasks";
 import { Resizable } from "re-resizable";
 import { IconGripVertical } from "@tabler/icons-react";
+import TaskCard from "@/components/TaskCard/TaskCard";
 
 export default function TaskDetailsPage() {
   const { task_id } = useParams();
@@ -39,7 +40,7 @@ export default function TaskDetailsPage() {
   }
 
   return (
-    <main className="mt-4 flex-grow w-full overflow-visible">
+    <main className="mt-2 flex-grow w-full overflow-visible">
       <div className="flex w-full h-full max-w-full gap-3">
         <LeftSide task={task} />
         <RightSide />
@@ -92,11 +93,13 @@ function LeftSide({ task }: { task: Task }) {
       minWidth={"200px"}
       maxWidth={"80%"}
     >
+      <div className="h-full w-full rounded-medium border-small border-divider p-2 bg-white">
       <div
         ref={elementRef}
         className="h-full relative flex flex-col items-center gap-3 flex-grow overflow-hidden"
       >
         {/* <h1 className="text-2xl font-bold mb-4">{task.task_full_name}</h1> */}
+        <TaskCard task={task} />
         <div className="bg-violet-100 h-full">
           <div
             style={{ width: pdfWidth, height: pdfHeight }}
@@ -114,6 +117,7 @@ function LeftSide({ task }: { task: Task }) {
             )}
           </div>
         </div>
+      </div>
       </div>
     </Resizable>
   );
