@@ -42,7 +42,7 @@ export default function RootLayout({
           fontSans.variable,
         )}
       >
-        <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
+        <Providers themeProps={{ attribute: "class", defaultTheme: "light", forcedTheme: "light" }}>
           <NextTopLoader
             zIndex={1600}
             // showAtBottom={true}
