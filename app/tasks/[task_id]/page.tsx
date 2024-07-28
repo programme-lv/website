@@ -6,7 +6,7 @@ import { Task, getTaskById } from "@/lib/tasks";
 import Alert from "@/components/Alert";
 import { debounce } from "lodash";
 import { Resizable } from "re-resizable";
-import { IconGripVertical, IconSettings } from "@tabler/icons-react";
+import { IconGripVertical, IconSend, IconSettings } from "@tabler/icons-react";
 import { Button, Card, CardBody, CardProps, Chip, Divider, Select, SelectItem, Tab, Tabs } from "@nextui-org/react";
 import { Image } from "@nextui-org/react";
 import MonacoEditor from "@monaco-editor/react";
@@ -251,6 +251,15 @@ function RightSide({ taskCode }: { taskCode: string }) {
 	return (
 		<div className="flex flex-col flex-grow bg-white rounded-medium border-small border-divider px-2 pb-2">
 			<ClientCodePanel languages={languages} taskCode={taskCode} />
+			<div className="mt-2 flex justify-end gap-3">
+				{/* <Button color="secondary" disabled>
+					Pārbaudīt
+				</Button> */}
+				<Button color="primary">
+					Iesūtīt
+					<IconSend size={16}/>
+				</Button>
+			</div>
 		</div>
 	);
 }
