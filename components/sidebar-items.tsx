@@ -33,6 +33,16 @@ export const sectionItems: SidebarItem[] = [
                 // endContent: (
                 //     <Icon className="text-default-400" icon="solar:add-circle-line-duotone" width={24} />
                 // ),
+            },
+
+            {
+                key: "submissions",
+                href: "/submissions",
+                icon: "solar:mailbox-outline",
+                title: "Iesūtījumi",
+                // endContent: (
+                //     <Icon className="text-default-400" icon="solar:add-circle-line-duotone" width={24} />
+                // ),
             }
         ],
     }

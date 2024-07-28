@@ -21,9 +21,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     const isCompact = isCollapsed || isMobile;
     const { task_id } = useParams();
     const [taskCodeFullNameDict, setTaskCodeFullNameDict] = useState<Record<string, string>>({});
+    const [isMobileOpen, setIsMobileOpen] = useState(true);
 
-    const onToggle = React.useCallback(() => {
+    const onSidebarToggle = React.useCallback(() => {
         setIsCollapsed((prev) => !prev);
+    }, []);
+
+    const onMobileMenuToggle = React.useCallback(() => {
+        setIsMobileOpen((prev) => !prev);
     }, []);
 
     let breadcrumbItems = [
@@ -65,14 +70,41 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         }
     }
 
+    function checkParent(parent: HTMLElement, child:HTMLElement) {
+        let node = child.parentNode;
+    
+        // keep iterating unless null
+        while (node != null) {
+            if (node == parent) {
+                return true;
+            }
+         node = node.parentNode;
+         }
+       return false;
+    }
+
+    function onBackgroundClick(e: React.MouseEvent) {
+        console.log("hello");
+        console.log(e.target);
+        console.log(e.currentTarget);
+        if((e.target as HTMLElement).contains(e.currentTarget as HTMLElement)) {
+            console.log("is parent");
+        }
+        if((e.currentTarget as HTMLElement).contains(e.target as HTMLElement)) {
+            console.log("is child");
+        }
+        if(checkParent(e.target as HTMLElement, e.currentTarget as HTMLElement)) {
+            console.log("is parent");
+        }
+    }
+
     return (
         <div className="flex h-dvh w-full">
             <div
                 className={cn(
-                    "relative flex h-full w-60 flex-col !border-r-small border-divider p-6 transition-width",
-                    {
-                        "w-16 items-center px-2 py-6": isCompact,
-                    },
+                    "relative h-full w-60 flex-col !border-r-small border-divider p-6 transition-width",
+                    { "w-16 items-center px-2 py-6": isCompact, },
+                    "hidden md:flex"
                 )}
             >
                 <div className={cn("flex items-center gap-3 px-3",
@@ -99,17 +131,29 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </div>
             <div className="w-full flex flex-1 flex-col p-3" style={{
                 backgroundColor: "#f8f8f8",
-            }}>
+            }} >
                 <header className="flex items-center justify-between gap-3 rounded-medium border-small border-divider p-2 bg-white">
                     <div className="flex gap-3 items-center">
-                        <Button isIconOnly size="sm" variant="light" onPress={onToggle}>
-                            <Icon
-                                className="text-default-500"
-                                height={24}
-                                icon="solar:sidebar-minimalistic-outline"
-                                width={24}
-                            />
-                        </Button>
+                        <div className="hidden md:flex">
+                            <Button isIconOnly size="sm" variant="light" onPress={onSidebarToggle}>
+                                <Icon
+                                    className="text-default-500"
+                                    height={24}
+                                    icon="solar:sidebar-minimalistic-outline"
+                                    width={24}
+                                />
+                            </Button>
+                        </div>
+                        <div className="flex md:hidden">
+                            <Button isIconOnly size="sm" variant="light" onPress={onMobileMenuToggle}>
+                                    <Icon
+                                        className="text-default-500"
+                                        height={24}
+                                        icon="solar:hamburger-menu-outline"
+                                        width={24}
+                                    />
+                            </Button>
+                            </div>
 
                         <Breadcrumbs className="z-10">
                             {breadcrumbItems.map((item, index) => (
@@ -154,7 +198,18 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                         </Dropdown>
                     </div>
                 </header>
-                {children}
+                <div className={cn("w-full h-full flex flex-col",{"hidden": isMobileOpen}, "md:flex")}>
+                    {children}
+                </div>
+                <div className={cn("w-full h-full flex flex-col",{"hidden": !isMobileOpen},"md:hidden")}>
+                    <div className="rounded-medium border-small border-divider px-2 pt-2 bg-white mt-5">
+                    <Sidebar
+                        defaultSelectedKey="tasks"
+                        isCompact={false}
+                        items={sectionItemsWithTeams}
+                    />
+                    </div>
+                </div>
             </div>
         </div>
     );
