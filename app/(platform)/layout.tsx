@@ -352,11 +352,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     </button>
                   </DropdownTrigger>
                   <DropdownMenu aria-label="Profile Actions" variant="flat">
-                    <DropdownItem key="profile">
+                    {/* <DropdownItem key="profile">
                       <div className="flex gap-2 items-center justify-between">
                         Profils <IconUserCircle size={16} />
                       </div>
-                    </DropdownItem>
+                    </DropdownItem> */}
                     <DropdownItem key="logout" color="warning">
                       <div className="flex gap-2 items-center justify-between">
                         <span>Iziet no sistēmas</span>
