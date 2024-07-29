@@ -187,14 +187,14 @@ export default function SubmissionView() {
 
                             <div className='overflow-x-scroll flex flex-col gap-3 max-w-full w-full relative p-3  rounded-none' style={{ backgroundColor: '#f8f8f8' }}>
                                 {sampleData.test_results.map((testResult, index) => (
-                                    <Card shadow='none' radius='sm' className='border-small border-divider'>
+                                    <Card shadow='none' radius='sm' className='border-small border-divider' key={testResult.id}>
                                         <CardBody>
                                             <div className='flex gap-2'>
                                             Tests #1
                                             <Chip size='sm' color='success' variant='flat'>Atbilde ir pareiza</Chip>
                                             </div>
                                             <Spacer y={4} />
-                                            <div className='flex gap-4'>
+                                            <div className='flex flex-col gap-2'>
                                                 <div className='w-[50%] overflow-hidden'>
                                                     <div className='flex gap-3'>
                                                         <label className='text-small text-default-700'>Izpildes laiks:</label>

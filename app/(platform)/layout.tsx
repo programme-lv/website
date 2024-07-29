@@ -125,7 +125,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 ])
                 break;
             default:
-                console.error("Unknown page: " + page);
                 break;
         }
     }
