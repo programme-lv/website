@@ -114,7 +114,7 @@ export default function SubmissionView() {
         return (
             <div className="grid gap-x-3" style={{ gridTemplateColumns: 'auto auto' }}>
                 {entries.map((entry, index) => (
-                    <>
+                    <div key={index} className='contents'>
                         <span className="text-small text-default-700 flex items-end justify-start">{entry.label}:</span>
                         <div className="flex items-end gap-1">
                             <span className="text-default-900">
@@ -126,7 +126,7 @@ export default function SubmissionView() {
                                 }
                             </span>
                         </div>
-                    </>
+                    </div>
                 ))}
             </div>
         )
@@ -136,7 +136,7 @@ export default function SubmissionView() {
         return (
             <div className='flex flex-col gap-1'>
                 {entries.map((entry, index) => (
-                    <div>
+                    <div key={index}>
                         <span className="text-small text-default-700">{entry.label}:</span>
                         <div className="flex items-end gap-1">
                             <span className="text-default-900">
