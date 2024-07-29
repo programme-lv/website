@@ -95,43 +95,80 @@ const sampleData: Submission = {
     ],
 };
 
+type InfoCardEntry = {
+    label: string;
+    value: string | number;
+};
+
 export default function SubmissionView() {
+    const infoCardEntries: InfoCardEntry[] = [
+        { label: 'Autors', value: sampleData.username },
+        { label: 'Uzdevums', value: sampleData.task.name },
+        { label: 'Valoda', value: sampleData.language.fullName },
+        { label: 'Pievienots', value: new Date(sampleData.createdAt).toLocaleString('lv') },
+        { label: 'Statuss', value: statusTranslations[sampleData.evaluation.status] },
+        { label: 'Rezultāts', value: `${sampleData.evaluation.receivedScore} / ${sampleData.evaluation.possibleScore}` },
+    ]
+
+    function InfoEntryColumn({ entries }: { entries: InfoCardEntry[] }) {
+        return (
+            <div className="grid gap-x-3" style={{ gridTemplateColumns: 'auto auto' }}>
+                {entries.map((entry, index) => (
+                    <>
+                        <span className="text-small text-default-700 flex items-end justify-start">{entry.label}:</span>
+                        <div className="flex items-end gap-1">
+                            <span className="text-default-900">
+                                {['Autors', 'Valoda', 'Pievienots', 'Statuss', 'Rezultāts', 'Valoda'].includes(entry.label) && entry.value}
+                                {['Uzdevums'].includes(entry.label) &&
+                                    <Link href={'/tasks/' + sampleData.task.code} className='text-blue-600'>
+                                        {entry.value}
+                                    </Link>
+                                }
+                            </span>
+                        </div>
+                    </>
+                ))}
+            </div>
+        )
+    }
+
+    function StackedInfoEntryColumn({ entries }: { entries: InfoCardEntry[] }) {
+        return (
+            <div className='flex flex-col gap-1'>
+                {entries.map((entry, index) => (
+                    <div>
+                        <span className="text-small text-default-700">{entry.label}:</span>
+                        <div className="flex items-end gap-1">
+                            <span className="text-default-900">
+                                {['Autors', 'Valoda', 'Pievienots', 'Statuss', 'Rezultāts', 'Valoda'].includes(entry.label) && entry.value}
+                                {['Uzdevums'].includes(entry.label) &&
+                                    <Link href={'/tasks/' + sampleData.task.code} className='text-blue-600'>
+                                        {entry.value}
+                                    </Link>
+                                }
+                            </span>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        )
+    }
+
     return (
         <div className="mt-3">
             <Card shadow="none" classNames={{ base: "radius-small border-small border-divider" }} radius='sm'>
                 <CardBody>
-                    <div className="flex-grow flex flex-col justify-start items-start">
-                        <div className="grid gap-x-3" style={{ gridTemplateColumns: 'auto auto'}}>
-                            <span className="text-small text-default-700 flex items-end justify-start">Autors:</span>
-                            <div className="flex items-end gap-1">
-                                <span className="text-default-900">{sampleData.username}</span>
-                            </div>
-                            <span className="text-small text-default-700 flex items-end justify-start">Uzdevums:</span>
-                            <div className="flex items-end gap-1">
-                                <span className="text-default-900">
-                                    <Link href={'/tasks/' + sampleData.task.code} className='text-blue-600'>
-                                        {sampleData.task.name}
-                                    </Link>
-                                </span>
-                            </div>
-                            <span className="text-small text-default-700 flex items-end justify-start">Valoda:</span>
-                            <div className="flex items-end gap-1">
-                                <span className="text-default-900">{sampleData.language.fullName}</span>
-                            </div>
-                            <span className="text-small text-default-700 flex items-end justify-start">Statuss:</span>
-                            <div className="flex items-end gap-1">
-                                <span className="text-default-900">{statusTranslations[sampleData.evaluation.status]}</span>
-                            </div>
-                            <span className="text-small text-default-700 flex items-end justify-start">Rezultāts:</span>
-                            <div className="flex items-end gap-1">
-                                <span className="text-default-900">{sampleData.evaluation.receivedScore} / {sampleData.evaluation.possibleScore}</span>
-                                <span className='text-small text-default-700'> punkti</span>
-                            </div>
-                            <span className="text-small text-default-700 flex items-end justify-start">Laiks:</span>
-                            <div className="flex items-end gap-1">
-                                <span className="text-default-900">{new Date(sampleData.createdAt).toLocaleString('lv')}</span>
-                            </div>
-                        </div>
+                    <div className='max-w-[700px]'>
+                    <div className="hidden md:grid gap-x-3" style={{ gridTemplateColumns: 'auto auto' }}>
+                        <InfoEntryColumn entries={infoCardEntries.slice(0, 3)} />
+                        <InfoEntryColumn entries={infoCardEntries.slice(3, 6)} />
+                    </div>
+                    <div className="hidden sm:grid md:hidden gap-x-3" style={{ gridTemplateColumns: 'auto auto' }}>
+                        <InfoEntryColumn entries={infoCardEntries.slice(0, 6)} />
+                    </div>
+                    <div className="grid sm:hidden md:hidden gap-y-2" style={{ gridTemplateColumns: 'auto auto' }}>
+                        <StackedInfoEntryColumn entries={infoCardEntries.slice(0, 6)} />
+                    </div>
                     </div>
                 </CardBody>
             </Card>

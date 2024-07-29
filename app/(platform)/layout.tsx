@@ -176,21 +176,21 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                                 items={sectionItemsWithTeams}
                                 itemClasses={{
                                     base: "my-6"
-                                }}/>
-<Spacer y={2} />
-
-<Divider />
-<Spacer y={6} />
-                    <Breadcrumbs className="z-10 sm:hidden block mx-2" size="lg">
-                                    {breadcrumbs.map((item, index) => (
-                                        <BreadcrumbItem key={index} href={item.href}>
-                                            {item.label}
-                                        </BreadcrumbItem>
-                                    ))}
-                                </Breadcrumbs>
-                            
+                                }} />
                         </div>
-                        <Spacer y={6} />
+                            {/* <Spacer y={2} />
+
+                            <Divider />
+                            <Spacer y={6} />
+                            <Breadcrumbs className="z-10 sm:hidden block mx-2" size="lg">
+                                {breadcrumbs.map((item, index) => (
+                                    <BreadcrumbItem key={index} href={item.href}>
+                                        {item.label}
+                                    </BreadcrumbItem>
+                                ))}
+                            </Breadcrumbs>
+
+                        <Spacer y={6} /> */}
                     </ModalBody>
                 </ModalContent>
             </Modal>
@@ -300,7 +300,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                                     </DropdownMenu>
                                 </Dropdown>
                             </div>
-                        </div> 
+                        </div>
                         {/* <Breadcrumbs className="z-10 sm:hidden block">
                                     {breadcrumbs.map((item, index) => (
                                         <BreadcrumbItem key={index} href={item.href}>
