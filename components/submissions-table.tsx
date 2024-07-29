@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Link from 'next/link';
 import {
   Table,
   TableHeader,
@@ -67,10 +68,8 @@ export default function SubmissionTable() {
     onOpen();
   }
 
-  const renderCell = (row:any, columnKey:any) => {
+  const renderCell = (row: any, columnKey: any) => {
     switch (columnKey) {
-      case 'id':
-        return <NextUILink onClick={() => handleOpenCodeModalForSubmId(row.id)}>{row.id}</NextUILink>;
       case 'createdAt':
         return (
           <div className="flex flex-col">
@@ -81,7 +80,7 @@ export default function SubmissionTable() {
       case 'username':
         return row.username;
       case 'task':
-        return <NextUILink href={`/tasks/${row.task.code}`}>{row.task.name}</NextUILink>;
+        return row.task.name;
       case 'language':
         return row.language.fullName;
       case 'result':
@@ -137,11 +136,10 @@ export default function SubmissionTable() {
       <div className="overflow-x-auto">
         <Table
           aria-label="Submission Table"
-          style={{height: 'auto', minWidth: '100%'}}
-          selectionMode="none"
+          style={{ height: 'auto', minWidth: '100%' }}
+          selectionMode="single"
         >
           <TableHeader>
-            <TableColumn key="id">#</TableColumn>
             <TableColumn key="createdAt">Laiks</TableColumn>
             <TableColumn key="username">Lietotājs</TableColumn>
             <TableColumn key="task">Uzdevums</TableColumn>
@@ -151,9 +149,11 @@ export default function SubmissionTable() {
           </TableHeader>
           <TableBody items={submissionsState}>
             {(item) => (
-              <TableRow key={item.id}>
+              <TableRow key={item.id} href={`/submissions/${item.id}`} className="cursor-pointer">
                 {(columnKey) => (
-                  <TableCell>{renderCell(item, columnKey)}</TableCell>
+                  <TableCell >
+                      <div>{renderCell(item, columnKey)}</div>
+                  </TableCell>
                 )}
               </TableRow>
             )}

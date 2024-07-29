@@ -201,6 +201,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                             selectedKeys={[defaultSelectedKey]}
                             isCompact={isCompact}
                             items={sectionItemsWithTeams}
+                            itemClasses={{
+                                base: "my-2"
+                            }}
                         />
                     </ScrollShadow>
                 </div>
