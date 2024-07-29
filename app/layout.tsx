@@ -49,7 +49,7 @@ export default function RootLayout({
         >
           <NextTopLoader
             zIndex={1600}
-            // showAtBottom={true}
+            showAtBottom={true}
           />
           {/* <Navbar />
           <main className="container mx-auto max-w-7xl pt-16 px-6 flex-grow"> */}

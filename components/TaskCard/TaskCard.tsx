@@ -113,7 +113,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, ...props }) => {
               </div>
               <div className="py-2">
                 {task.default_md_statement && (
-                  <div className="text-small text-default-400 line-clamp-3">
+                  <div className="text-small text-default-500 line-clamp-3">
                     {renderStory(task.default_md_statement.story)}
                   </div>
                 )}

@@ -30,6 +30,7 @@ import Logo from "@/public/logo.png";
 import { cn } from "@/components/cn";
 import { sectionItemsWithTeams } from "@/components/sidebar-items";
 import Sidebar from "@/components/sidebar";
+import { getUserInfoFromJWT } from "@/lib/jwt";
 
 type Page =
   | "task-list"
@@ -56,6 +57,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [disabledPointerEvents, setDisabledPointerEvents] = useState(false);
   const [breadcrumbs, setBreadcrumbs] = useState<BreadcrumbItem[]>([]);
+  const [user, setUser] = useState<{
+    username: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+   } | null>(null);
 
   const onSidebarToggle = React.useCallback(() => {
     setIsCollapsed((prev) => !prev);
@@ -178,6 +185,19 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       break;
   }
 
+  const userInfoFromJwt = getUserInfoFromJWT();
+  if (user==null||user?.username!==userInfoFromJwt?.username
+    ||user?.email!==userInfoFromJwt?.email
+    ||user?.firstName!==userInfoFromJwt?.firstname
+    ||user?.lastName!==userInfoFromJwt?.lastname) {
+  setUser({
+    username: userInfoFromJwt?.username ?? "",
+    email: userInfoFromJwt?.email ?? "",
+    firstName: userInfoFromJwt?.firstname ?? "",
+    lastName: userInfoFromJwt?.lastname ?? "",
+  })
+}
+
   return (
     <>
       <Modal
@@ -239,7 +259,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           >
             <div className="flex h-8 w-8 items-center justify-center rounded-full">
               {/* <AcmeIcon className="text-background" /> */}
-              <Link href={"/"}>
+              <Link href={"/tasks"}>
                 <Image alt="programme.lv logo" height={40} src={Logo} />
               </Link>
             </div>
@@ -317,7 +337,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   <DropdownTrigger>
                     <button className="outline-none transition-transform flex gap-3 items-center">
                       <div className="text-default-800 text-small">
-                        KrisjanisP
+                        {user?.username}
                       </div>
                       <Badge
                         className="border-transparent"
@@ -327,7 +347,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                         shape="circle"
                         size="sm"
                       >
-                        <Avatar name="Krisjanis Petrucena" size="sm" />
+                        <Avatar  size="sm" />
                       </Badge>
                     </button>
                   </DropdownTrigger>
