@@ -93,7 +93,7 @@ export default function SubmissionTable() {
             <span className={`text-tiny ${row.evaluation.status === "F" ? 'text-red-500' : 'text-gray-500'}`}>{100 - result > 0 ? `${100 - result}%` : ''}</span>
             </div>
             <div className="relative pt-1 w-full">
-              <div className="overflow-hidden h-2 text-xs flex rounded">
+              <div className="overflow-hidden h-1.5 text-xs flex rounded">
                 <div style={{ width: `${result}%` }} className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-teal-600"></div>
                 {/* <Spacer x={0.2}/> */}
                 <div style={{ width: `${100 - result}%` }} className={`shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center ${row.evaluation.status === "F" ? 'bg-red-500' : 'bg-gray-500'}`}></div>
