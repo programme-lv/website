@@ -43,7 +43,7 @@ export default function TaskDetailsPage() {
 	}
 
 	return (
-		<main className="mt-2 flex-grow w-full overflow-visible">
+		<main className="mt-3 flex-grow w-full overflow-visible">
 			<div className="hidden xl:flex w-full h-full max-w-full gap-4" ref={pageRef}>
 				<Resizable
 					handleComponent={{ right: <ResizeBar /> }}

@@ -25,24 +25,8 @@ export default function SubmissionList() {
   data = data?.sort((a:Task, b:Task) => a.difficulty_rating - b.difficulty_rating);
 
   return (
-    <main className="mt-2 flex-grow w-full overflow-visible">
+    <main className="mt-3 flex-grow w-full overflow-visible">
       <SubmissionTable/>
-      {/* <div className="grid grid-cols-1 min-[1200px]:grid-cols-2 min-[1800px]:grid-cols-3 min-[2400px]:grid-cols-4 min-[3000px]:grid-cols-5 gap-4 py-2 md:p-4">
-        {data && data.length > 0 ? (
-          data.map((task) => (
-            <Link
-              href={`/tasks/${task.published_task_id}`}
-              key={task.published_task_id}
-              className="contents"
-              prefetch={true}
-            >
-              <TaskCard key={task.published_task_id} task={task} />
-            </Link>
-          ))
-        ) : (
-          <p>No tasks found</p>
-        )}
-      </div> */}
     </main>
   );
 }

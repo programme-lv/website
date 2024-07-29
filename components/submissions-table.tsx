@@ -9,7 +9,7 @@ import {
 } from '@nextui-org/react';
 import { Submission } from '@/types/proglv';
 
-const statusTranslations = {
+export const statusTranslations: Record<string, string> = {
   "in queue": "Gaida rindā",
   "finished": "Izvērtēts",
   "testing": "Tiek testēts",
