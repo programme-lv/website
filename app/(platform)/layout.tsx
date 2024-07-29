@@ -210,7 +210,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 <div className="w-full flex flex-1 flex-col p-3" style={{
                     backgroundColor: "#f8f8f8",
                 }} >
-                    <header className="flex items-center justify-between gap-3 rounded-medium border-small border-divider p-2 bg-white">
+                    <header className="flex items-center justify-between gap-3 rounded-small border-small border-divider p-2 bg-white">
                         <div className="flex gap-3 items-center">
                             <div className="hidden md:flex">
                                 <Button isIconOnly size="sm" variant="light" onPressStart={onSidebarToggle}>

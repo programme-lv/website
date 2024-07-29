@@ -93,7 +93,7 @@ function LeftSide({ task }: { task: Task }) {
 	}, [elementRef]);
 
 	return (
-		<div className="h-full w-full rounded-medium border-small border-divider p-2 bg-white">
+		<div className="h-full w-full rounded-small border-small border-divider p-2 bg-white">
 			<div
 				className="h-full relative flex flex-col items-center gap-1 flex-grow overflow-hidden"
 			>
@@ -249,7 +249,7 @@ function RightSide({ taskCode }: { taskCode: string }) {
 	const languages = getHardcodedLanguageList() as ProgrammingLang[];
 
 	return (
-		<div className="flex flex-col flex-grow bg-white rounded-medium border-small border-divider px-2 pb-2">
+		<div className="flex flex-col flex-grow bg-white rounded-small border-small border-divider px-2 pb-2">
 			<ClientCodePanel languages={languages} taskCode={taskCode} />
 			<div className="mt-2 flex justify-end gap-3">
 				{/* <Button color="secondary" disabled>

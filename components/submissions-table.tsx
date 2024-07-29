@@ -138,6 +138,9 @@ export default function SubmissionTable() {
           aria-label="Submission Table"
           style={{ height: 'auto', minWidth: '100%' }}
           selectionMode="single"
+          shadow='none'
+          className='border-small border-divider rounded-small'
+          radius='sm'
         >
           <TableHeader>
             <TableColumn key="createdAt">Laiks</TableColumn>
