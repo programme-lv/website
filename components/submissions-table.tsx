@@ -15,6 +15,7 @@ import {
   Button,
   Link as NextUILink,
   useDisclosure,
+  Spacer,
 } from '@nextui-org/react';
 import MonacoEditor from '@monaco-editor/react';
 
@@ -72,7 +73,7 @@ export default function SubmissionTable() {
     switch (columnKey) {
       case 'createdAt':
         return (
-          <div className="flex flex-col">
+          <div className="flex flex-wrap gap-x-2 gap-y-1 min-w-20">
             <span>{(new Date(row.createdAt)).toISOString().split('T')[0]}</span>
             <span>{(new Date(row.createdAt)).toISOString().split('T')[1].split('.')[0]}</span>
           </div>
@@ -86,12 +87,15 @@ export default function SubmissionTable() {
       case 'result':
         let result = Math.floor(100 * row.evaluation.totalScore / (row.evaluation.possibleScore ?? 100));
         return (
-          <div className="flex justify-between items-center">
-            <span className="text-teal-500 font-bold">{result > 0 ? `${result}%` : ''}</span>
-            <span className={`font-bold ${row.evaluation.status === "F" ? 'text-red-500' : 'text-gray-500'}`}>{100 - result > 0 ? `${100 - result}%` : ''}</span>
+          <div className="flex justify-center flex-col items-center full min-w-36">
+            <div className='flex justify-between w-full items-center h-3'>
+            <span className="text-teal-600 text-tiny">{result > 0 ? `${result}%` : ''}</span>
+            <span className={`text-tiny ${row.evaluation.status === "F" ? 'text-red-500' : 'text-gray-500'}`}>{100 - result > 0 ? `${100 - result}%` : ''}</span>
+            </div>
             <div className="relative pt-1 w-full">
-              <div className="overflow-hidden h-2 text-xs flex rounded bg-teal-200">
-                <div style={{ width: `${result}%` }} className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-teal-500"></div>
+              <div className="overflow-hidden h-2 text-xs flex rounded">
+                <div style={{ width: `${result}%` }} className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-teal-600"></div>
+                {/* <Spacer x={0.2}/> */}
                 <div style={{ width: `${100 - result}%` }} className={`shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center ${row.evaluation.status === "F" ? 'bg-red-500' : 'bg-gray-500'}`}></div>
               </div>
             </div>
@@ -147,8 +151,8 @@ export default function SubmissionTable() {
             <TableColumn key="username">Lietotājs</TableColumn>
             <TableColumn key="task">Uzdevums</TableColumn>
             <TableColumn key="language">Valoda</TableColumn>
-            <TableColumn key="result">Rezultāts</TableColumn>
             <TableColumn key="status">Statuss</TableColumn>
+            <TableColumn key="result">Rezultāts</TableColumn>
           </TableHeader>
           <TableBody items={submissionsState}>
             {(item) => (
