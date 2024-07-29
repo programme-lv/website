@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Link from 'next/link';
 import {
   Table,
   TableHeader,
@@ -7,41 +6,33 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Button,
-  Link as NextUILink,
-  useDisclosure,
-  Spacer,
 } from '@nextui-org/react';
-import MonacoEditor from '@monaco-editor/react';
+import { Submission } from '@/types/proglv';
 
 const statusTranslations = {
-  "IQ": "Gaida rindā",
-  "F": "Izvērtēts",
-  "T": "Tiek testēts",
-  "C": "Tiek kompilēts",
-  "CE": "Kompilācijas kļūda",
-  "ISE": "Servera kļūda",
+  "in queue": "Gaida rindā",
+  "finished": "Izvērtēts",
+  "testing": "Tiek testēts",
+  "compiling": "Tiek kompilēts",
+  "compilation error": "Kompilācijas kļūda",
+  "internal server error": "Servera kļūda",
 };
 
-const sampleData = [
+
+const sampleData: Submission[] = [
   {
-    id: '69',
+    uuid: '314b728f-3b6b-433a-869e-b528e7cde110',
     submission: 'sample submission code',
     username: 'KrisjanisP',
     createdAt: '2021-01-25T10:32:00',
     evaluation: {
-      id: '69',
-      status: 'F',
-      totalScore: 50,
+      uuid: 'ab4f8c00-96a5-44be-8385-c08059247220',
+      status: 'finished',
+      receivedScore: 69,
       possibleScore: 100,
     },
     language: {
-      id: 'cpp',
+      id: 'ab4f8c00-96a5-44be-8385-c08059247220',
       fullName: 'C++17 (GCC)',
       monacoID: 'cpp',
       enabled: true,
@@ -54,22 +45,9 @@ const sampleData = [
 ];
 
 export default function SubmissionTable() {
-  const [submissionsState, setSubmissionsState] = useState(sampleData);
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const [openedCode, setOpenedCode] = useState<{ code: string, langMID: string } | null>(null);
+  const [submissionsState, setSubmissionsState] = useState<Submission[]>(sampleData);
 
-  function handleOpenCodeModalForSubmId(submissionID: string) {
-    let idx = submissionsState.findIndex((submission) => submission.id === submissionID);
-    let submission = submissionsState[idx];
-
-    setOpenedCode({
-      code: submission.submission,
-      langMID: submission.language.monacoID ?? "",
-    });
-    onOpen();
-  }
-
-  const renderCell = (row: any, columnKey: any) => {
+  const renderCell = (row: Submission, columnKey: React.Key) => {
     switch (columnKey) {
       case 'createdAt':
         return (
@@ -78,25 +56,25 @@ export default function SubmissionTable() {
             <span>{(new Date(row.createdAt)).toISOString().split('T')[1].split('.')[0]}</span>
           </div>
         );
-      case 'username':
+      case 'author':
         return row.username;
       case 'task':
         return row.task.name;
       case 'language':
         return row.language.fullName;
       case 'result':
-        let result = Math.floor(100 * row.evaluation.totalScore / (row.evaluation.possibleScore ?? 100));
+        let result = Math.floor(100 * row.evaluation.receivedScore / (row.evaluation.possibleScore ?? 100));
         return (
           <div className="flex justify-center flex-col items-center full min-w-36">
             <div className='flex justify-between w-full items-center h-3'>
-            <span className="text-teal-600 text-tiny">{result > 0 ? `${result}%` : ''}</span>
-            <span className={`text-tiny ${row.evaluation.status === "F" ? 'text-red-500' : 'text-gray-500'}`}>{100 - result > 0 ? `${100 - result}%` : ''}</span>
+              <span className="text-teal-600 text-tiny">{result > 0 ? `${result}%` : ''}</span>
+              <span className={`text-tiny ${row.evaluation.status === "finished" ? 'text-red-500' : 'text-gray-500'}`}>{100 - result > 0 ? `${100 - result}%` : ''}</span>
             </div>
             <div className="relative pt-1 w-full">
               <div className="overflow-hidden h-1.5 text-xs flex rounded">
                 <div style={{ width: `${result}%` }} className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-teal-600"></div>
                 {/* <Spacer x={0.2}/> */}
-                <div style={{ width: `${100 - result}%` }} className={`shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center ${row.evaluation.status === "F" ? 'bg-red-500' : 'bg-gray-500'}`}></div>
+                <div style={{ width: `${100 - result}%` }} className={`shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center ${row.evaluation.status === "finished" ? 'bg-red-500' : 'bg-gray-500'}`}></div>
               </div>
             </div>
           </div>
@@ -104,69 +82,40 @@ export default function SubmissionTable() {
       case 'status':
         return statusTranslations[row.evaluation.status as keyof typeof statusTranslations];
       default:
-        return row[columnKey];
+        return <></>
     }
   };
 
   return (
-    <>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-col gap-1">Submission Code</ModalHeader>
-              <ModalBody>
-                <MonacoEditor
-                  value={openedCode?.code}
-                  theme="vs-dark"
-                  language={openedCode?.langMID}
-                  options={{
-                    minimap: { enabled: false },
-                    fontSize: 16,
-                    readOnly: true,
-                  }}
-                  height={'500px'}
-                />
-              </ModalBody>
-              <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
-                  Close
-                </Button>
-              </ModalFooter>
-            </>
+    <div className="overflow-x-auto">
+      <Table
+        aria-label="Submission Table"
+        style={{ height: 'auto', minWidth: '100%' }}
+        selectionMode="single"
+        shadow='none'
+        className='border-small border-divider rounded-small'
+        radius='sm'
+      >
+        <TableHeader>
+          <TableColumn key="createdAt">Datums & laiks</TableColumn>
+          <TableColumn key="author">Autors</TableColumn>
+          <TableColumn key="task">Uzdevums</TableColumn>
+          <TableColumn key="language">Valoda</TableColumn>
+          <TableColumn key="status">Statuss</TableColumn>
+          <TableColumn key="result">Rezultāts</TableColumn>
+        </TableHeader>
+        <TableBody items={submissionsState}>
+          {(item) => (
+            <TableRow key={item.uuid} href={`/submissions/${item.uuid}`} className="cursor-pointer">
+              {(columnKey) => (
+                <TableCell >
+                  <div>{renderCell(item, columnKey)}</div>
+                </TableCell>
+              )}
+            </TableRow>
           )}
-        </ModalContent>
-      </Modal>
-      <div className="overflow-x-auto">
-        <Table
-          aria-label="Submission Table"
-          style={{ height: 'auto', minWidth: '100%' }}
-          selectionMode="single"
-          shadow='none'
-          className='border-small border-divider rounded-small'
-          radius='sm'
-        >
-          <TableHeader>
-            <TableColumn key="createdAt">Laiks</TableColumn>
-            <TableColumn key="username">Lietotājs</TableColumn>
-            <TableColumn key="task">Uzdevums</TableColumn>
-            <TableColumn key="language">Valoda</TableColumn>
-            <TableColumn key="status">Statuss</TableColumn>
-            <TableColumn key="result">Rezultāts</TableColumn>
-          </TableHeader>
-          <TableBody items={submissionsState}>
-            {(item) => (
-              <TableRow key={item.id} href={`/submissions/${item.id}`} className="cursor-pointer">
-                {(columnKey) => (
-                  <TableCell >
-                      <div>{renderCell(item, columnKey)}</div>
-                  </TableCell>
-                )}
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
-    </>
+        </TableBody>
+      </Table>
+    </div>
   );
 }

@@ -22,7 +22,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     const [isCollapsed, setIsCollapsed] = React.useState(true);
     const isMobile = useMediaQuery("(max-width: 768px)");
     const isCompact = isCollapsed || isMobile;
-    const { task_id } = useParams();
+    const { task_id, subm_id } = useParams();
     const [taskCodeFullNameDict, setTaskCodeFullNameDict] = useState<Record<string, string>>({});
     const { isOpen: isMobileMenuOpen, onOpen: onMobileMenuOpen, onClose: onMobileMenuClose, onOpenChange: onMobileMenuOpenChange } = useDisclosure();
     const pathname = usePathname()
@@ -42,6 +42,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 setPage("task-view");
             } else if (pathname.startsWith("/tasks")) {
                 setPage("task-list");
+            } else if (pathname.match(/\/submissions\/\w+/)) {
+                setPage("submission-view");
             } else if (pathname.startsWith("/submissions")) {
                 setPage("submission-list");
             }
@@ -80,7 +82,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     useEffect(() => {fetchTask() }, [task_id]);
 
     function constructPageBreadcrumbs() {
-        console.log("page in construct:"+page);
         switch (page) {
             case "task-list":
                 console.log("constructing task list breadcrumbs")
@@ -111,6 +112,18 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     },
                 ])
                 break;
+            case "submission-view":
+                setBreadcrumbs([
+                    {
+                        href: "/submissions",
+                        label: "Iesūtījumi",
+                    },
+                    {
+                        href: `/submissions/${subm_id}`,
+                        label: `${subm_id}`,
+                    }
+                ])
+                break;
             case "":
                 setBreadcrumbs([])
                 break;
@@ -121,9 +134,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     }
 
     useEffect(() => {
-        console.log("setting breadcrumbs")
         constructPageBreadcrumbs();
-    }, [page, task_id, taskCodeFullNameDict]);
+    }, [page, task_id, subm_id, taskCodeFullNameDict]);
 
     let defaultSelectedKey = "";
     switch (page) {
