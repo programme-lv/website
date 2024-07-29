@@ -44,7 +44,7 @@ export default function TaskDetailsPage() {
 
 	return (
 		<main className="mt-2 flex-grow w-full overflow-visible">
-			<div className="hidden xl:flex w-full h-full max-w-full gap-3" ref={pageRef}>
+			<div className="hidden xl:flex w-full h-full max-w-full gap-4" ref={pageRef}>
 				<Resizable
 					handleComponent={{ right: <ResizeBar /> }}
 					enable={{ right: true }}
@@ -266,7 +266,7 @@ function RightSide({ taskCode }: { taskCode: string }) {
 
 function ResizeBar() {
 	return (
-		<div className="flex items-center justify-center w-3 h-full p-0 ms-1">
+		<div className="flex items-center justify-center w-3 h-full p-0 ms-1.5">
 			<div className="flex flex-col gap-0">
 				{[...Array(3)].map((_, i) => (
 					<IconGripVertical

@@ -123,7 +123,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                         { "justify-center gap-0": isCompact, },)}>
                         <div className="flex h-8 w-8 items-center justify-center rounded-full">
                             {/* <AcmeIcon className="text-background" /> */}
+                            <Link href={"/"}>
                             <Image src={Logo} alt="programme.lv logo" height={40} />
+                            </Link>
                         </div>
                         <span
                             className={cn("text-small font-bold uppercase opacity-100", {
