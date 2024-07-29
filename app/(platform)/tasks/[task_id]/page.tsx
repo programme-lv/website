@@ -7,11 +7,11 @@ import Alert from "@/components/Alert";
 import { debounce } from "lodash";
 import { Resizable } from "re-resizable";
 import { IconGripVertical, IconSend, IconSettings } from "@tabler/icons-react";
-import { Button, Card, CardBody, CardProps, Chip, Divider, Select, SelectItem, Tab, Tabs } from "@nextui-org/react";
+import { Button, Card, CardBody, CardProps, Chip, Divider, Select, SelectItem, Skeleton, Tab, Tabs } from "@nextui-org/react";
 import { Image } from "@nextui-org/react";
 import MonacoEditor from "@monaco-editor/react";
 import getHardcodedLanguageList from "@/data/languages";
-import { ProgrammingLang } from "@/types/proglv";
+import { ProgrammingLanguage } from "@/types/proglv";
 
 export default function TaskDetailsPage() {
 	const { task_id } = useParams();
@@ -67,7 +67,6 @@ export default function TaskDetailsPage() {
 function LeftSide({ task }: { task: Task }) {
 	const [pdfWidth, setPdfWidth] = useState<number | string>("100%");
 	const [pdfHeight, setPdfHeight] = useState<number | string>("100%");
-
 	const elementRef = React.useRef<HTMLDivElement>(null);
 
 	const handleResize = useCallback(
@@ -246,7 +245,7 @@ const TaskInformation: React.FC<TaskInformationProps> = ({
 };
 
 function RightSide({ taskCode }: { taskCode: string }) {
-	const languages = getHardcodedLanguageList() as ProgrammingLang[];
+	const languages = getHardcodedLanguageList() as ProgrammingLanguage[];
 
 	return (
 		<div className="flex flex-col flex-grow bg-white rounded-small border-small border-divider px-2 pb-2">
@@ -282,11 +281,11 @@ function ResizeBar() {
 
 
 type CodePanelProps = {
-	languages: ProgrammingLang[];
+	languages: ProgrammingLanguage[];
 }
 
-function ClientCodePanel(props: { languages: ProgrammingLang[], taskCode: string }) {
-	const languages = props.languages as ProgrammingLang[];
+function ClientCodePanel(props: { languages: ProgrammingLanguage[], taskCode: string }) {
+	const languages = props.languages as ProgrammingLanguage[];
 	const taskCode = props.taskCode;
 
 	let defaultLang = languages[0].id;

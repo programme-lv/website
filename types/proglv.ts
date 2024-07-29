@@ -1,4 +1,4 @@
-type ProgrammingLang = {
+type ProgrammingLanguage = {
 	id: string;
 	fullName: string;
 	monacoId: string;
@@ -30,7 +30,10 @@ type Submission = {
 	createdAt: string;
 	evaluation: Evaluation;
 	language: Language;
-	task: Task;
+	task: {
+		name: string;
+		code: string;
+	}
 };
 
-export type { ProgrammingLang, Evaluation, Language, Task, Submission };
+export type { ProgrammingLanguage, Evaluation, Language, Task, Submission };

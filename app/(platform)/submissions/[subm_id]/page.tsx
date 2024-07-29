@@ -11,53 +11,34 @@ import {
     TableCell,
     CardHeader,
     CardBody,
+    AccordionItem,
+    Accordion,
+    Code,
+    Spacer,
+    Chip,
 } from '@nextui-org/react';
 import MonacoEditor from '@monaco-editor/react';
 import Link from 'next/link';
 import { statusTranslations } from '@/components/submissions-table';
+import { Evaluation, ProgrammingLanguage, Submission } from '@/types/proglv';
 
-type Evaluation = {
-    uuid: string;
-    status: string;
-    receivedScore: number;
-    possibleScore: number;
-};
-
-type Language = {
-    id: string;
-    fullName: string;
-    monacoID: string;
-    enabled: boolean;
-};
-
-type Task = {
-    name: string;
-    code: string;
-};
-
-type Submission = {
-    uuid: string;
-    submission: string;
-    username: string;
-    createdAt: string;
-    evaluation: Evaluation;
-    language: Language;
-    task: Task;
-    testCases: TestCaseGroup[];
-};
-
-type TestCase = {
-    name: string;
-    status: string;
-    details: string;
+type TestResultOverview = {
+    id: number;
+    input_preview: string;
+    output_preview: string;
+    answer_preview: string;
+    checker_log: string;
+    verdict: string;
+    exec_time_ms: number;
+    exec_memory_kb: number;
 };
 
 type TestCaseGroup = {
     name: string;
-    testCases: TestCase[];
+    testCases: TestResultOverview[];
 };
 
-const sampleData: Submission = {
+const sampleData: Submission & { test_results: TestResultOverview[] } = {
     uuid: '314b728f-3b6b-433a-869e-b528e7cde110',
     submission: 'sample submission code',
     username: 'KrisjanisP',
@@ -78,19 +59,26 @@ const sampleData: Submission = {
         name: 'Kvadrātveida putekļsūcējs',
         code: 'kvadrputekl',
     },
-    testCases: [
+    test_results: [
         {
-            name: 'Subtask 1',
-            testCases: [
-                { name: 'Test Case 1.1', status: 'Passed', details: 'Details of Test Case 1.1' },
-                { name: 'Test Case 1.2', status: 'Failed', details: 'Details of Test Case 1.2' },
-            ],
+            id: 1,
+            input_preview: '1 2\n3 4\n',
+            output_preview: '5\n7\n',
+            answer_preview: '5\n7\n',
+            checker_log: '',
+            verdict: 'AC',
+            exec_time_ms: 2,
+            exec_memory_kb: 256,
         },
         {
-            name: 'Subtask 2',
-            testCases: [
-                { name: 'Test Case 2.1', status: 'Passed', details: 'Details of Test Case 2.1' },
-            ],
+            id: 2,
+            input_preview: '4 5\n6 7\n',
+            output_preview: '9\n11\n',
+            answer_preview: '9\n11\n',
+            checker_log: '',
+            verdict: 'AC',
+            exec_time_ms: 2,
+            exec_memory_kb: 256,
         },
     ],
 };
@@ -101,6 +89,9 @@ type InfoCardEntry = {
 };
 
 export default function SubmissionView() {
+    const defaultContent =
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
+
     const infoCardEntries: InfoCardEntry[] = [
         { label: 'Autors', value: sampleData.username },
         { label: 'Uzdevums', value: sampleData.task.name },
@@ -156,24 +147,24 @@ export default function SubmissionView() {
 
     return (
         <div className="mt-3">
-            <Card shadow="none" classNames={{ base: "radius-small border-small border-divider" }} radius='sm'>
+            <Card shadow="none" classNames={{ base: "border-small border-divider" }} radius='sm'>
                 <CardBody>
                     <div className='max-w-[700px]'>
-                    <div className="hidden md:grid gap-x-3" style={{ gridTemplateColumns: 'auto auto' }}>
-                        <InfoEntryColumn entries={infoCardEntries.slice(0, 3)} />
-                        <InfoEntryColumn entries={infoCardEntries.slice(3, 6)} />
-                    </div>
-                    <div className="hidden sm:grid md:hidden gap-x-3" style={{ gridTemplateColumns: 'auto auto' }}>
-                        <InfoEntryColumn entries={infoCardEntries.slice(0, 6)} />
-                    </div>
-                    <div className="grid sm:hidden md:hidden gap-y-2" style={{ gridTemplateColumns: 'auto auto' }}>
-                        <StackedInfoEntryColumn entries={infoCardEntries.slice(0, 6)} />
-                    </div>
+                        <div className="hidden md:grid gap-x-3" style={{ gridTemplateColumns: 'auto auto' }}>
+                            <InfoEntryColumn entries={infoCardEntries.slice(0, 3)} />
+                            <InfoEntryColumn entries={infoCardEntries.slice(3, 6)} />
+                        </div>
+                        <div className="hidden sm:grid md:hidden gap-x-3" style={{ gridTemplateColumns: 'auto auto' }}>
+                            <InfoEntryColumn entries={infoCardEntries.slice(0, 6)} />
+                        </div>
+                        <div className="grid sm:hidden md:hidden gap-y-2" style={{ gridTemplateColumns: 'auto auto' }}>
+                            <StackedInfoEntryColumn entries={infoCardEntries.slice(0, 6)} />
+                        </div>
                     </div>
                 </CardBody>
             </Card>
             <Divider className="my-4" />
-            <Card shadow="none" classNames={{ base: "radius-small border-small border-divider" }} radius='sm'>
+            <Card shadow="none" classNames={{ base: "border-small border-divider" }} radius='sm'>
                 <CardBody>
                     <MonacoEditor
                         value={sampleData.submission}
@@ -189,8 +180,90 @@ export default function SubmissionView() {
                 </CardBody>
             </Card>
             <Divider className="my-6" />
-            <p>Test Cases</p>
-            {sampleData.testCases.map((group, groupIndex) => (
+            <Card shadow="none" classNames={{ base: "border-small border-divider" }} radius='sm'>
+                <CardBody>
+                    <Accordion isCompact fullWidth>
+                        <AccordionItem key="1" title={`Testu grupa #1 (${['1.', '2.', '3.'].join(', ')} apakšuzdevums)`}>
+
+                            <div className='overflow-x-scroll max-w-full w-full relative p-5  rounded-none' style={{ backgroundColor: '#f8f8f8' }}>
+                                {sampleData.test_results.map((testResult, index) => (
+                                    <Card shadow='none' radius='sm' className='border-small border-divider'>
+                                        <CardBody>
+                                            <div className='flex gap-2'>
+                                            Tests #1
+                                            <Chip size='sm' color='success' variant='flat'>Atbilde ir pareiza</Chip>
+                                            </div>
+                                            <Spacer y={4} />
+                                            <div className='flex gap-4'>
+                                                <div className='w-[50%]'>
+                                                    <div className='flex flex-col'>
+                                                        <label className='text-small text-default-700'>Testa ievaddati</label>
+                                                        <Code radius='none'>{testResult.input_preview}</Code>
+                                                    </div>
+                                                </div>
+                                                <div className='w-[50%]'>
+                                                    <div className='flex flex-col'>
+                                                    <label className='text-small text-default-700'>Testa atbilde</label>
+                                                    <Code radius='none'>{testResult.answer_preview}</Code>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <label>Jūsu programmas izvaddati</label>
+                                            <Code radius='none'>{testResult.output_preview}</Code>
+                                            <label>Pārbaudes piezīmes</label>
+                                            <Code radius='none'>{testResult.checker_log}</Code>
+                                        </CardBody>
+                                    </Card>
+                                ))}
+                                <Spacer y={2} />
+                                <Table aria-label="Example static collection table" shadow='none'>
+                                    <TableHeader>
+                                        <TableColumn>id</TableColumn>
+                                        <TableColumn>verdict</TableColumn>
+                                        <TableColumn>input</TableColumn>
+                                        <TableColumn>output</TableColumn>
+                                        <TableColumn>answer</TableColumn>
+                                        <TableColumn>checker log</TableColumn>
+                                        <TableColumn>time [ms]</TableColumn>
+                                        <TableColumn>memory [kb]</TableColumn>
+                                    </TableHeader>
+
+                                    <TableBody>
+                                        {sampleData.test_results.map((testResult, index) => (
+                                            <TableRow key={index}>
+                                                <TableCell>{testResult.id}</TableCell>
+                                                <TableCell>{testResult.verdict}</TableCell>
+                                                <TableCell>
+                                                    <Code className='h-20 w-52 overflow-hidden'>
+                                                        {"fasdfasdfasdfas dfasdasdfasdfasdfasdkfljalskdfjlkasjdklfjaklsdjflkajslkdfjklasdjklflkjasfdkjaskdjf asdfkjaskldjfklasdjklfklasdjflj"}
+                                                    </Code>
+                                                </TableCell>
+                                                <TableCell>
+                                                    <Code className='h-20 w-52 overflow-hidden'>
+                                                        {testResult.output_preview}
+                                                    </Code>
+                                                </TableCell>
+                                                <TableCell>{testResult.answer_preview}</TableCell>
+                                                <TableCell>{testResult.checker_log}</TableCell>
+                                                <TableCell>{testResult.exec_time_ms}</TableCell>
+                                                <TableCell>{testResult.exec_memory_kb}</TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </div>
+                        </AccordionItem>
+                        <AccordionItem key="2" title="Accordion 2">
+                            {defaultContent}
+                        </AccordionItem>
+                        <AccordionItem key="3" title="Accordion 3">
+                            {defaultContent}
+                        </AccordionItem>
+                    </Accordion>
+
+                </CardBody>
+            </Card>
+            {/* {sampleData.testCases.map((group, groupIndex) => (
                 <div key={groupIndex} className="my-4">
                     <p>{group.name}</p>
                     <Table aria-label="Test Cases Table">
@@ -210,7 +283,7 @@ export default function SubmissionView() {
                         </TableBody>
                     </Table>
                 </div>
-            ))}
+            ))} */}
         </div>
     );
 }
