@@ -2,7 +2,8 @@ export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
   name: "programme.lv",
-  description: "Programme.lv virza programmēšanas izglītību Latvijā, realizējot interaktīvu mācību vidi skolēniem un studentiem. Pievienojieties, lai nostiprinātu sevi un Latviju globālajā tehnoloģiju vidē.",
+  description:
+    "Programme.lv virza programmēšanas izglītību Latvijā, realizējot interaktīvu mācību vidi skolēniem un studentiem. Pievienojieties, lai nostiprinātu sevi un Latviju globālajā tehnoloģiju vidē.",
   navItems: [
     // {
     //   label: "Uzdevumi",

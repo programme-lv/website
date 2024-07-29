@@ -1,11 +1,11 @@
 "use client";
 import { useContext, useEffect } from "react";
 import { useRouter } from "next/navigation";
+
 import AuthCardWithBG from "@/components/AuthCardWithBG/AuthCardWithBG";
 import { AuthContext } from "@/app/providers";
 
 export default function RegisterPage() {
-
   const router = useRouter();
   const jwt = useContext(AuthContext);
 
@@ -15,7 +15,5 @@ export default function RegisterPage() {
     }
   }, [jwt, router]);
 
-  return (
-    <AuthCardWithBG type="register"/>
-  );
+  return <AuthCardWithBG type="register" />;
 }

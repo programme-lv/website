@@ -1,14 +1,12 @@
 import "@/styles/globals.css";
 import { Metadata, Viewport } from "next";
-import { Link } from "@nextui-org/link";
 import clsx from "clsx";
+import NextTopLoader from "nextjs-toploader";
 
 import { Providers } from "./providers";
 
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
-import { Navbar } from "@/components/navbar";
-import NextTopLoader from 'nextjs-toploader';
 
 export const metadata: Metadata = {
   title: {
@@ -22,7 +20,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: [ 
+  themeColor: [
     // { media: "(prefers-color-scheme: light)", color: "white" },
     // { media: "(prefers-color-scheme: dark)", color: "black" },
   ],
@@ -42,14 +40,20 @@ export default function RootLayout({
           fontSans.variable,
         )}
       >
-        <Providers themeProps={{ attribute: "class", defaultTheme: "light", forcedTheme: "light" }}>
+        <Providers
+          themeProps={{
+            attribute: "class",
+            defaultTheme: "light",
+            forcedTheme: "light",
+          }}
+        >
           <NextTopLoader
             zIndex={1600}
             // showAtBottom={true}
           />
           {/* <Navbar />
           <main className="container mx-auto max-w-7xl pt-16 px-6 flex-grow"> */}
-            {children}
+          {children}
           {/* </main>
           <footer className="w-full flex items-center justify-center py-3">
           </footer> */}

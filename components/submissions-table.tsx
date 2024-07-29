@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableHeader,
@@ -6,83 +6,112 @@ import {
   TableBody,
   TableRow,
   TableCell,
-} from '@nextui-org/react';
-import { Submission } from '@/types/proglv';
+} from "@nextui-org/react";
+
+import { Submission } from "@/types/proglv";
 
 export const statusTranslations: Record<string, string> = {
   "in queue": "Gaida rindā",
-  "finished": "Izvērtēts",
-  "testing": "Tiek testēts",
-  "compiling": "Tiek kompilēts",
+  finished: "Izvērtēts",
+  testing: "Tiek testēts",
+  compiling: "Tiek kompilēts",
   "compilation error": "Kompilācijas kļūda",
   "internal server error": "Servera kļūda",
 };
 
-
 const sampleData: Submission[] = [
   {
-    uuid: '314b728f-3b6b-433a-869e-b528e7cde110',
-    submission: 'sample submission code',
-    username: 'KrisjanisP',
-    createdAt: '2021-01-25T10:32:00',
+    uuid: "314b728f-3b6b-433a-869e-b528e7cde110",
+    submission: "sample submission code",
+    username: "KrisjanisP",
+    createdAt: "2021-01-25T10:32:00",
     evaluation: {
-      uuid: 'ab4f8c00-96a5-44be-8385-c08059247220',
-      status: 'finished',
+      uuid: "ab4f8c00-96a5-44be-8385-c08059247220",
+      status: "finished",
       receivedScore: 69,
       possibleScore: 100,
     },
     language: {
-      id: 'ab4f8c00-96a5-44be-8385-c08059247220',
-      fullName: 'C++17 (GCC)',
-      monacoID: 'cpp',
+      id: "ab4f8c00-96a5-44be-8385-c08059247220",
+      fullName: "C++17 (GCC)",
+      monacoID: "cpp",
       enabled: true,
     },
     task: {
-      name: 'Kvadrātveida putekļsūcējs',
-      code: 'kvadrputekl',
+      name: "Kvadrātveida putekļsūcējs",
+      code: "kvadrputekl",
     },
   },
 ];
 
 export default function SubmissionTable() {
-  const [submissionsState, setSubmissionsState] = useState<Submission[]>(sampleData);
+  const [submissionsState, setSubmissionsState] = useState<Submission[]>([]);
+
+  useEffect(() => {
+    setSubmissionsState(sampleData);
+  }, []);
 
   const renderCell = (row: Submission, columnKey: React.Key) => {
     switch (columnKey) {
-      case 'createdAt':
+      case "createdAt":
         return (
           <div className="flex flex-wrap gap-x-2 gap-y-1 min-w-20">
-            <span>{(new Date(row.createdAt)).toISOString().split('T')[0]}</span>
-            <span>{(new Date(row.createdAt)).toISOString().split('T')[1].split('.')[0]}</span>
+            <span>{new Date(row.createdAt).toISOString().split("T")[0]}</span>
+            <span>
+              {
+                new Date(row.createdAt)
+                  .toISOString()
+                  .split("T")[1]
+                  .split(".")[0]
+              }
+            </span>
           </div>
         );
-      case 'author':
+      case "author":
         return row.username;
-      case 'task':
+      case "task":
         return row.task.name;
-      case 'language':
+      case "language":
         return row.language.fullName;
-      case 'result':
-        let result = Math.floor(100 * row.evaluation.receivedScore / (row.evaluation.possibleScore ?? 100));
+      case "result":
+        let result = Math.floor(
+          (100 * row.evaluation.receivedScore) /
+            (row.evaluation.possibleScore ?? 100),
+        );
+
         return (
           <div className="flex justify-center flex-col items-center full min-w-36">
-            <div className='flex justify-between w-full items-center h-3'>
-              <span className="text-teal-600 text-tiny">{result > 0 ? `${result}%` : ''}</span>
-              <span className={`text-tiny ${row.evaluation.status === "finished" ? 'text-red-500' : 'text-gray-500'}`}>{100 - result > 0 ? `${100 - result}%` : ''}</span>
+            <div className="flex justify-between w-full items-center h-3">
+              <span className="text-teal-600 text-tiny">
+                {result > 0 ? `${result}%` : ""}
+              </span>
+              <span
+                className={`text-tiny ${row.evaluation.status === "finished" ? "text-red-500" : "text-gray-500"}`}
+              >
+                {100 - result > 0 ? `${100 - result}%` : ""}
+              </span>
             </div>
             <div className="relative pt-1 w-full">
               <div className="overflow-hidden h-1.5 text-xs flex rounded">
-                <div style={{ width: `${result}%` }} className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-teal-600"></div>
+                <div
+                  className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-teal-600"
+                  style={{ width: `${result}%` }}
+                />
                 {/* <Spacer x={0.2}/> */}
-                <div style={{ width: `${100 - result}%` }} className={`shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center ${row.evaluation.status === "finished" ? 'bg-red-500' : 'bg-gray-500'}`}></div>
+                <div
+                  className={`shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center ${row.evaluation.status === "finished" ? "bg-red-500" : "bg-gray-500"}`}
+                  style={{ width: `${100 - result}%` }}
+                />
               </div>
             </div>
           </div>
         );
-      case 'status':
-        return statusTranslations[row.evaluation.status as keyof typeof statusTranslations];
+      case "status":
+        return statusTranslations[
+          row.evaluation.status as keyof typeof statusTranslations
+        ];
       default:
-        return <></>
+        return <></>;
     }
   };
 
@@ -90,11 +119,11 @@ export default function SubmissionTable() {
     <div className="overflow-x-auto">
       <Table
         aria-label="Submission Table"
-        style={{ height: 'auto', minWidth: '100%' }}
+        className="border-small border-divider rounded-small"
+        radius="sm"
         selectionMode="single"
-        shadow='none'
-        className='border-small border-divider rounded-small'
-        radius='sm'
+        shadow="none"
+        style={{ height: "auto", minWidth: "100%" }}
       >
         <TableHeader>
           <TableColumn key="createdAt">Datums & laiks</TableColumn>
@@ -106,9 +135,13 @@ export default function SubmissionTable() {
         </TableHeader>
         <TableBody items={submissionsState}>
           {(item) => (
-            <TableRow key={item.uuid} href={`/submissions/${item.uuid}`} className="cursor-pointer">
+            <TableRow
+              key={item.uuid}
+              className="cursor-pointer"
+              href={`/submissions/${item.uuid}`}
+            >
               {(columnKey) => (
-                <TableCell className='h-12'>
+                <TableCell className="h-12">
                   <div>{renderCell(item, columnKey)}</div>
                 </TableCell>
               )}

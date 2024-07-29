@@ -1,11 +1,11 @@
 export type ProgrammingLang = {
-    id: string;
-    fullName: string;
-    monacoId: string;
-}
+  id: string;
+  fullName: string;
+  monacoId: string;
+};
 
 export default function getHardcodedLanguageList(): ProgrammingLang[] {
-    const jsonString = `{
+  const jsonString = `{
         "programming_languages": [
             {
                 "id": "python3.10",
@@ -82,10 +82,11 @@ export default function getHardcodedLanguageList(): ProgrammingLang[] {
         ]
     }`;
 
-    const data = JSON.parse(jsonString);
-    return data.programming_languages.map((lang: any) => ({
-        id: lang.id,
-        fullName: lang.full_name,
-        monacoId: lang.monaco_id
-    }));
+  const data = JSON.parse(jsonString);
+
+  return data.programming_languages.map((lang: any) => ({
+    id: lang.id,
+    fullName: lang.full_name,
+    monacoId: lang.monaco_id,
+  }));
 }

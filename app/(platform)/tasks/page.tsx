@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React from "react";
+import { useQuery } from "react-query";
+import Link from "next/link";
+
 import Alert from "@/components/Alert";
 import TaskCard from "@/components/TaskCard/TaskCard";
-import { useQuery } from "react-query";
 import { Task, listTasks } from "@/lib/tasks";
-import Link from "next/link";
 
 export default function TaskList() {
   let { data, error, isLoading } = useQuery("tasks", listTasks);
@@ -21,7 +22,9 @@ export default function TaskList() {
   }
 
   // sort by difficulty
-  data = data?.sort((a:Task, b:Task) => a.difficulty_rating - b.difficulty_rating);
+  data = data?.sort(
+    (a: Task, b: Task) => a.difficulty_rating - b.difficulty_rating,
+  );
 
   return (
     <main className="mt-3 flex-grow w-full overflow-visible">
@@ -29,9 +32,9 @@ export default function TaskList() {
         {data && data.length > 0 ? (
           data.map((task) => (
             <Link
-              href={`/tasks/${task.published_task_id}`}
               key={task.published_task_id}
               className="contents"
+              href={`/tasks/${task.published_task_id}`}
               prefetch={true}
             >
               <TaskCard key={task.published_task_id} task={task} />

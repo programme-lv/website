@@ -20,7 +20,7 @@ type MarkdownStatement = {
   output: string;
   notes?: string;
   scoring?: string;
-}
+};
 
 export const getTaskById = async (taskId: string): Promise<Task> => {
   const response = await fetch(`${API_HOST}/tasks/${taskId}`, {
@@ -38,6 +38,7 @@ export const getTaskById = async (taskId: string): Promise<Task> => {
   }
 
   const data = await response.json();
+
   return data.task;
 };
 
@@ -57,5 +58,6 @@ export const listTasks = async (): Promise<Task[]> => {
   }
 
   const data = await response.json();
+
   return data.tasks;
 };
