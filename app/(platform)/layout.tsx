@@ -15,84 +15,125 @@ import { Task, getTaskById } from "@/lib/tasks";
 import Link from "next/link";
 import { IconLogout, IconUserCircle } from "@tabler/icons-react";
 
+type Page = "task-list" | "task-view" | "submission-list" | "submission-view" | "";
+type BreadcrumbItem = { label: string, href: string };
+
 export default function Layout({ children }: { children: React.ReactNode }) {
     const [isCollapsed, setIsCollapsed] = React.useState(true);
     const isMobile = useMediaQuery("(max-width: 768px)");
     const isCompact = isCollapsed || isMobile;
     const { task_id } = useParams();
     const [taskCodeFullNameDict, setTaskCodeFullNameDict] = useState<Record<string, string>>({});
-    const { isOpen: isMobileMenuOpen, onOpen, onClose, onOpenChange } = useDisclosure();
+    const { isOpen: isMobileMenuOpen, onOpen: onMobileMenuOpen, onClose: onMobileMenuClose, onOpenChange: onMobileMenuOpenChange } = useDisclosure();
     const pathname = usePathname()
-    const pageRef = useRef<HTMLDivElement>(null);
     const [disabledPointerEvents, setDisabledPointerEvents] = useState(false);
+    const [breadcrumbs, setBreadcrumbs] = useState<BreadcrumbItem[]>([]);
 
     const onSidebarToggle = React.useCallback(() => {
         setIsCollapsed((prev) => !prev);
     }, []);
 
-    // const onMobileMenuToggle = React.useCallback(() => {
-    //     setIsMobileOpen((prev) => !prev);
-    // }, []);
 
-    let breadcrumbItems = [
-        {
-            href: "/tasks",
-            label: "Uzdevumi",
-        },
-    ]
+    const [page, setPage] = useState<Page>("");
 
     useEffect(() => {
-        onClose();
+        if (pathname) {
+            if (pathname.match(/\/tasks\/\w+/)) {
+                setPage("task-view");
+            } else if (pathname.startsWith("/tasks")) {
+                setPage("task-list");
+            } else if (pathname.startsWith("/submissions")) {
+                setPage("submission-list");
+            }
+        } else setPage("");
+    }, [pathname]);
+
+    console.log("page state: " + page)
+    console.log("breadcrumbs state: " + breadcrumbs)
+
+
+    useEffect(() => {
+        onMobileMenuClose();
     }, [pathname])
 
+    console.log(pathname)
+
+    // apply this fix to mobile menu to prevent click passthrough through
+    // navigation menu modal backdrop
     useEffect(() => {
         setTimeout(() => {
         setDisabledPointerEvents(isMobileMenuOpen);
         }, 50);
     }, [isMobileMenuOpen]);
 
-    useEffect(() => {
-        const fetchTask = async () => {
-            try {
-                const fetchedTask = await getTaskById(task_id as string);
-                setTaskCodeFullNameDict(taskCodeFullNameDict => ({ ...taskCodeFullNameDict, [task_id + ""]: fetchedTask.task_full_name }));
-                // setTask(fetchedTask);
-            } catch (err) {
-                console.error("Failed to load task details");
-            }
-        };
+    const fetchTask = async () => {
+        if (!task_id) return;
 
-        fetchTask();
+        try {
+            const fetchedTask = await getTaskById(task_id as string);
+            setTaskCodeFullNameDict(taskCodeFullNameDict => ({ ...taskCodeFullNameDict, [task_id + ""]: fetchedTask.task_full_name }));
+        } catch (err) {
+            console.error("Failed to load task details");
+        }
+    };
 
-        // return () => {
-        //     setTask(null);
-        // }
-    }, [task_id]);
+    useEffect(() => {fetchTask() }, [task_id]);
 
-    if (task_id) {
-        if (taskCodeFullNameDict[task_id + ""]) {
-            breadcrumbItems.push({
-                href: `/tasks/${task_id}`,
-                label: `${taskCodeFullNameDict[task_id + ""]}`,
-            })
-        } else {
-            breadcrumbItems.push({
-                href: `/tasks/${task_id}`,
-                label: `${task_id}`,
-            })
+    function constructPageBreadcrumbs() {
+        console.log("page in construct:"+page);
+        switch (page) {
+            case "task-list":
+                console.log("constructing task list breadcrumbs")
+                setBreadcrumbs([
+                    {
+                        href: "/tasks",
+                        label: "Uzdevumi",
+                    }
+                ])
+                break;
+            case "task-view":
+                setBreadcrumbs([
+                    {
+                        href: "/tasks",
+                        label: "Uzdevumi",
+                    },
+                    {
+                        href: `/tasks/${task_id}`,
+                        label: `${taskCodeFullNameDict[task_id + ""] ?? task_id}`,
+                    }
+                ])
+                break;
+            case "submission-list":
+                setBreadcrumbs([
+                    {
+                        href: "/submissions",
+                        label: "Iesūtījumi",
+                    },
+                ])
+                break;
+            case "":
+                setBreadcrumbs([])
+                break;
+            default:
+                console.error("Unknown page: " + page);
+                break;
         }
     }
+
+    useEffect(() => {
+        console.log("setting breadcrumbs")
+        constructPageBreadcrumbs();
+    }, [page, task_id, taskCodeFullNameDict]);
 
     return (
         <>
             <Modal
                 isOpen={isMobileMenuOpen}
-                onOpenChange={onOpenChange}
+                onOpenChange={onMobileMenuOpenChange}
                 placement="center"
                 className="mx-2"
                 disableAnimation={true}
                 backdrop="blur"
-                // portalContainer={pageRef.current ?? document.body}
             >
                 <ModalContent>
                     <ModalHeader className="flex flex-col gap-1 -mb-2">Navigācijas izvēlne</ModalHeader>
@@ -110,7 +151,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     </ModalBody>
                 </ModalContent>
             </Modal>
-            <div className={cn("flex h-dvh w-full",{"pointer-events-none": disabledPointerEvents})} ref={pageRef}>
+            <div className={cn("flex h-dvh w-full",{"pointer-events-none": disabledPointerEvents})}>
 
                 <div
                     className={cn(
@@ -159,7 +200,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                                 </Button>
                             </div>
                             <div className="flex md:hidden">
-                                <Button isIconOnly size="sm" variant="light" onPressStart={onOpen}>
+                                <Button isIconOnly size="sm" variant="light" onPressStart={onMobileMenuOpen}>
                                     <Icon
                                         className="text-default-500"
                                         height={24}
@@ -170,7 +211,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                             </div>
 
                             <Breadcrumbs className="z-10">
-                                {breadcrumbItems.map((item, index) => (
+                                {breadcrumbs.map((item, index) => (
                                     <BreadcrumbItem key={index} href={item.href}>
                                         {item.label}
                                     </BreadcrumbItem>
