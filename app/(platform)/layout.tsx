@@ -125,6 +125,24 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         constructPageBreadcrumbs();
     }, [page, task_id, taskCodeFullNameDict]);
 
+    let defaultSelectedKey = "";
+    switch (page) {
+        case "task-list":
+            defaultSelectedKey = "tasks";
+            break;
+        case "task-view":
+            defaultSelectedKey = "tasks";
+            break;
+        case "submission-list":
+            defaultSelectedKey = "submissions";
+            break;
+        case "submission-view":
+            defaultSelectedKey = "submissions";
+            break;
+        default:
+            break;
+    }
+
     return (
         <>
             <Modal
@@ -140,7 +158,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     <ModalBody>
                         <div className="bg-white">
                             <Sidebar
-                                defaultSelectedKey="tasks"
+                                defaultSelectedKey={defaultSelectedKey}
+                                selectedKeys={[defaultSelectedKey]}
                                 isCompact={false}
                                 items={sectionItemsWithTeams}
                                 itemClasses={{
@@ -178,7 +197,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     </div>
                     <ScrollShadow className="-mr-6 h-full max-h-full py-6 pr-6">
                         <Sidebar
-                            defaultSelectedKey="tasks"
+                            defaultSelectedKey={defaultSelectedKey}
+                            selectedKeys={[defaultSelectedKey]}
                             isCompact={isCompact}
                             items={sectionItemsWithTeams}
                         />
