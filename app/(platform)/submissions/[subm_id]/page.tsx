@@ -64,7 +64,7 @@ const sampleData: Submission & { test_results: TestResultOverview[] } = {
             id: 1,
             input_preview: '1 2\n3 4\n',
             output_preview: '5\n7\n',
-            answer_preview: '5\n7\n',
+            answer_preview: '5\n',
             checker_log: '',
             verdict: 'AC',
             exec_time_ms: 2,
@@ -163,7 +163,7 @@ export default function SubmissionView() {
                     </div>
                 </CardBody>
             </Card>
-            <Divider className="my-4" />
+            <Spacer y={4} />
             <Card shadow="none" classNames={{ base: "border-small border-divider" }} radius='sm'>
                 <CardBody>
                     <MonacoEditor
@@ -179,13 +179,13 @@ export default function SubmissionView() {
                     />
                 </CardBody>
             </Card>
-            <Divider className="my-6" />
+            <Spacer y={4} />
             <Card shadow="none" classNames={{ base: "border-small border-divider" }} radius='sm'>
                 <CardBody>
                     <Accordion isCompact fullWidth>
                         <AccordionItem key="1" title={`Testu grupa #1 (${['1.', '2.', '3.'].join(', ')} apakšuzdevums)`}>
 
-                            <div className='overflow-x-scroll max-w-full w-full relative p-5  rounded-none' style={{ backgroundColor: '#f8f8f8' }}>
+                            <div className='overflow-x-scroll flex flex-col gap-3 max-w-full w-full relative p-3  rounded-none' style={{ backgroundColor: '#f8f8f8' }}>
                                 {sampleData.test_results.map((testResult, index) => (
                                     <Card shadow='none' radius='sm' className='border-small border-divider'>
                                         <CardBody>
@@ -195,62 +195,52 @@ export default function SubmissionView() {
                                             </div>
                                             <Spacer y={4} />
                                             <div className='flex gap-4'>
-                                                <div className='w-[50%]'>
-                                                    <div className='flex flex-col'>
-                                                        <label className='text-small text-default-700'>Testa ievaddati</label>
-                                                        <Code radius='none'>{testResult.input_preview}</Code>
+                                                <div className='w-[50%] overflow-hidden'>
+                                                    <div className='flex gap-3'>
+                                                        <label className='text-small text-default-700'>Izpildes laiks:</label>
+                                                        <code>{testResult.exec_time_ms} ms</code>
                                                     </div>
                                                 </div>
-                                                <div className='w-[50%]'>
-                                                    <div className='flex flex-col'>
-                                                    <label className='text-small text-default-700'>Testa atbilde</label>
-                                                    <Code radius='none'>{testResult.answer_preview}</Code>
+                                                <div className='w-[50%] overflow-hidden'>
+                                                    <div className='flex gap-3'>
+                                                    <label className='text-small text-default-700'>Patērētā atmiņa:</label>
+                                                    <code>{testResult.exec_memory_kb} MB</code>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <label>Jūsu programmas izvaddati</label>
-                                            <Code radius='none'>{testResult.output_preview}</Code>
-                                            <label>Pārbaudes piezīmes</label>
-                                            <Code radius='none'>{testResult.checker_log}</Code>
+                                            <Spacer y={4} />
+                                            <div className='flex gap-4'>
+                                                <div className='w-[50%] overflow-hidden'>
+                                                    <div className='flex flex-col'>
+                                                        <label className='text-small text-default-700'>Ievaddati:</label>
+                                                        <code className='text-small p-1.5' style={{backgroundColor: "rgba(212, 212, 216, 0.4)", whiteSpace: "pre-wrap"}}>{testResult.input_preview}</code>
+                                                    </div>
+                                                </div>
+                                                <div className='w-[50%] overflow-hidden'>
+                                                    <div className='flex flex-col'>
+                                                    <label className='text-small text-default-700'>Atbilde:</label>
+                                                    <code className='text-small p-1.5' style={{backgroundColor: "rgba(212, 212, 216, 0.4)", whiteSpace: "pre-wrap"}}>{testResult.answer_preview}</code>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <Spacer y={4} />
+                                            <div className='flex gap-4'>
+                                                <div className='w-[50%] overflow-hidden'>
+                                                    <div className='flex flex-col'>
+                                                        <label className='text-small text-default-700'>Programmas izvaddati:</label>
+                                                        <code className='text-small p-1.5' style={{backgroundColor: "rgba(212, 212, 216, 0.4)", whiteSpace: "pre-wrap"}}>{testResult.output_preview}</code>
+                                                    </div>
+                                                </div>
+                                                <div className='w-[50%] overflow-hidden'>
+                                                    <div className='flex flex-col'>
+                                                    <label className='text-small text-default-700'>Pārbaudes piezīmes:</label>
+                                                    <code className='text-small p-1.5' style={{backgroundColor: "rgba(212, 212, 216, 0.4)", whiteSpace: "pre-wrap"}}>{testResult.checker_log}</code>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </CardBody>
                                     </Card>
                                 ))}
-                                <Spacer y={2} />
-                                <Table aria-label="Example static collection table" shadow='none'>
-                                    <TableHeader>
-                                        <TableColumn>id</TableColumn>
-                                        <TableColumn>verdict</TableColumn>
-                                        <TableColumn>input</TableColumn>
-                                        <TableColumn>output</TableColumn>
-                                        <TableColumn>answer</TableColumn>
-                                        <TableColumn>checker log</TableColumn>
-                                        <TableColumn>time [ms]</TableColumn>
-                                        <TableColumn>memory [kb]</TableColumn>
-                                    </TableHeader>
-
-                                    <TableBody>
-                                        {sampleData.test_results.map((testResult, index) => (
-                                            <TableRow key={index}>
-                                                <TableCell>{testResult.id}</TableCell>
-                                                <TableCell>{testResult.verdict}</TableCell>
-                                                <TableCell>
-                                                    <Code className='h-20 w-52 overflow-hidden'>
-                                                        {"fasdfasdfasdfas dfasdasdfasdfasdfasdkfljalskdfjlkasjdklfjaklsdjflkajslkdfjklasdjklflkjasfdkjaskdjf asdfkjaskldjfklasdjklfklasdjflj"}
-                                                    </Code>
-                                                </TableCell>
-                                                <TableCell>
-                                                    <Code className='h-20 w-52 overflow-hidden'>
-                                                        {testResult.output_preview}
-                                                    </Code>
-                                                </TableCell>
-                                                <TableCell>{testResult.answer_preview}</TableCell>
-                                                <TableCell>{testResult.checker_log}</TableCell>
-                                                <TableCell>{testResult.exec_time_ms}</TableCell>
-                                                <TableCell>{testResult.exec_memory_kb}</TableCell>
-                                            </TableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
                             </div>
                         </AccordionItem>
                         <AccordionItem key="2" title="Accordion 2">

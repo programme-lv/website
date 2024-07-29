@@ -124,9 +124,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     }
                 ])
                 break;
-            case "":
-                setBreadcrumbs([])
-                break;
             default:
                 console.error("Unknown page: " + page);
                 break;
