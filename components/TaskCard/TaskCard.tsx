@@ -64,7 +64,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, ...props }) => {
     }
 
     return (
-        <Card className="w-full mb-4" {...props} shadow="none" classNames={{base:"radius-small border-small border-divider"}}>
+        <Card className="w-full" {...props} shadow="none" classNames={{base:"radius-small border-small border-divider"}}>
             <CardBody className="flex flex-col p-4 sm:flex-nowrap overflow-y-hidden">
                 <div className="h-full flex flex-row flex-wrap sm:flex-nowrap">
                     <div className="max-w-40 flex">

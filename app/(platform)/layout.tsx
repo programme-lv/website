@@ -5,7 +5,7 @@ import Sidebar from "@/components/sidebar";
 import { sectionItemsWithTeams } from "@/components/sidebar-items";
 import { useMediaQuery } from "usehooks-ts";
 import { cn } from "@/components/cn";
-import { Avatar, Badge, BreadcrumbItem, Breadcrumbs, Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Navbar, NavbarContent, NavbarItem, Popover, PopoverContent, PopoverTrigger, ScrollShadow, useDisclosure } from "@nextui-org/react";
+import { Avatar, Badge, BreadcrumbItem, Breadcrumbs, Button, Divider, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Navbar, NavbarContent, NavbarItem, Popover, PopoverContent, PopoverTrigger, ScrollShadow, Spacer, useDisclosure } from "@nextui-org/react";
 import { Icon } from "@iconify/react";
 
 import Logo from "@/public/logo.png";
@@ -64,7 +64,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     // navigation menu modal backdrop
     useEffect(() => {
         setTimeout(() => {
-        setDisabledPointerEvents(isMobileMenuOpen);
+            setDisabledPointerEvents(isMobileMenuOpen);
         }, 50);
     }, [isMobileMenuOpen]);
 
@@ -79,7 +79,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         }
     };
 
-    useEffect(() => {fetchTask() }, [task_id]);
+    useEffect(() => { fetchTask() }, [task_id]);
 
     function constructPageBreadcrumbs() {
         switch (page) {
@@ -176,13 +176,25 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                                 items={sectionItemsWithTeams}
                                 itemClasses={{
                                     base: "my-6"
-                                }}
-                            />
+                                }}/>
+<Spacer y={2} />
+
+<Divider />
+<Spacer y={6} />
+                    <Breadcrumbs className="z-10 sm:hidden block mx-2" size="lg">
+                                    {breadcrumbs.map((item, index) => (
+                                        <BreadcrumbItem key={index} href={item.href}>
+                                            {item.label}
+                                        </BreadcrumbItem>
+                                    ))}
+                                </Breadcrumbs>
+                            
                         </div>
+                        <Spacer y={6} />
                     </ModalBody>
                 </ModalContent>
             </Modal>
-            <div className={cn("flex h-dvh w-full",{"pointer-events-none": disabledPointerEvents})}>
+            <div className={cn("flex h-dvh w-full", { "pointer-events-none": disabledPointerEvents })}>
 
                 <div
                     className={cn(
@@ -196,7 +208,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                         <div className="flex h-8 w-8 items-center justify-center rounded-full">
                             {/* <AcmeIcon className="text-background" /> */}
                             <Link href={"/"}>
-                            <Image src={Logo} alt="programme.lv logo" height={40} />
+                                <Image src={Logo} alt="programme.lv logo" height={40} />
                             </Link>
                         </div>
                         <span
@@ -222,71 +234,80 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 <div className="w-full flex flex-1 flex-col p-3" style={{
                     backgroundColor: "#f8f8f8",
                 }} >
-                    <header className="flex items-center justify-between gap-3 rounded-small border-small border-divider p-2 bg-white">
-                        <div className="flex gap-3 items-center">
-                            <div className="hidden md:flex">
-                                <Button isIconOnly size="sm" variant="light" onPressStart={onSidebarToggle}>
-                                    <Icon
-                                        className="text-default-500"
-                                        height={24}
-                                        icon="solar:sidebar-minimalistic-outline"
-                                        width={24}
-                                    />
-                                </Button>
-                            </div>
-                            <div className="flex md:hidden">
-                                <Button isIconOnly size="sm" variant="light" onPressStart={onMobileMenuOpen}>
-                                    <Icon
-                                        className="text-default-500"
-                                        height={24}
-                                        icon="solar:hamburger-menu-outline"
-                                        width={24}
-                                    />
-                                </Button>
+                    <header className="flex flex-col items-center justify-between gap-1 rounded-small border-small border-divider p-2 bg-white">
+                        <div className="flex items-center justify-between w-full">
+                            <div className="flex gap-3 items-center">
+                                <div className="hidden md:flex">
+                                    <Button isIconOnly size="sm" variant="light" onPressStart={onSidebarToggle}>
+                                        <Icon
+                                            className="text-default-500"
+                                            height={24}
+                                            icon="solar:sidebar-minimalistic-outline"
+                                            width={24}
+                                        />
+                                    </Button>
+                                </div>
+                                <div className="flex md:hidden">
+                                    <Button isIconOnly size="sm" variant="light" onPressStart={onMobileMenuOpen}>
+                                        <Icon
+                                            className="text-default-500"
+                                            height={24}
+                                            icon="solar:hamburger-menu-outline"
+                                            width={24}
+                                        />
+                                    </Button>
+                                </div>
+
+                                <Breadcrumbs className="z-10 hidden sm:block">
+                                    {breadcrumbs.map((item, index) => (
+                                        <BreadcrumbItem key={index} href={item.href}>
+                                            {item.label}
+                                        </BreadcrumbItem>
+                                    ))}
+                                </Breadcrumbs>
                             </div>
 
-                            <Breadcrumbs className="z-10">
-                                {breadcrumbs.map((item, index) => (
-                                    <BreadcrumbItem key={index} href={item.href}>
-                                        {item.label}
-                                    </BreadcrumbItem>
-                                ))}
-                            </Breadcrumbs>
-                        </div>
-
-                        <div className="flex items-center gap-3">
-                            <Dropdown placement="bottom-end">
-                                <DropdownTrigger>
-                                    <button className="outline-none transition-transform flex gap-3 items-center">
-                                        <div className="text-default-800 text-small">
-                                            KrisjanisP
-                                        </div>
-                                        <Badge
-                                            className="border-transparent"
-                                            color="success"
-                                            content=""
-                                            placement="bottom-right"
-                                            shape="circle"
-                                            size="sm"
-                                        >
-                                            <Avatar size="sm" name="Krisjanis Petrucena" />
-                                        </Badge>
-                                    </button>
-                                </DropdownTrigger>
-                                <DropdownMenu aria-label="Profile Actions" variant="flat">
-                                    <DropdownItem key="profile">
-                                        <div className="flex gap-2 items-center justify-between">
-                                            Profils <IconUserCircle size={16} />
-                                        </div>
-                                    </DropdownItem>
-                                    <DropdownItem key="logout" color="warning">
-                                        <div className="flex gap-2 items-center justify-between">
-                                            <span>Iziet no sistēmas</span><span><IconLogout size={16} /></span>
-                                        </div>
-                                    </DropdownItem>
-                                </DropdownMenu>
-                            </Dropdown>
-                        </div>
+                            <div className="flex items-center gap-3">
+                                <Dropdown placement="bottom-end">
+                                    <DropdownTrigger>
+                                        <button className="outline-none transition-transform flex gap-3 items-center">
+                                            <div className="text-default-800 text-small">
+                                                KrisjanisP
+                                            </div>
+                                            <Badge
+                                                className="border-transparent"
+                                                color="success"
+                                                content=""
+                                                placement="bottom-right"
+                                                shape="circle"
+                                                size="sm"
+                                            >
+                                                <Avatar size="sm" name="Krisjanis Petrucena" />
+                                            </Badge>
+                                        </button>
+                                    </DropdownTrigger>
+                                    <DropdownMenu aria-label="Profile Actions" variant="flat">
+                                        <DropdownItem key="profile">
+                                            <div className="flex gap-2 items-center justify-between">
+                                                Profils <IconUserCircle size={16} />
+                                            </div>
+                                        </DropdownItem>
+                                        <DropdownItem key="logout" color="warning">
+                                            <div className="flex gap-2 items-center justify-between">
+                                                <span>Iziet no sistēmas</span><span><IconLogout size={16} /></span>
+                                            </div>
+                                        </DropdownItem>
+                                    </DropdownMenu>
+                                </Dropdown>
+                            </div>
+                        </div> 
+                        {/* <Breadcrumbs className="z-10 sm:hidden block">
+                                    {breadcrumbs.map((item, index) => (
+                                        <BreadcrumbItem key={index} href={item.href}>
+                                            {item.label}
+                                        </BreadcrumbItem>
+                                    ))}
+                                </Breadcrumbs>  */}
                     </header>
                     {children}
                 </div>

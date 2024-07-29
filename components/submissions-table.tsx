@@ -108,7 +108,7 @@ export default function SubmissionTable() {
           {(item) => (
             <TableRow key={item.uuid} href={`/submissions/${item.uuid}`} className="cursor-pointer">
               {(columnKey) => (
-                <TableCell >
+                <TableCell className='h-12'>
                   <div>{renderCell(item, columnKey)}</div>
                 </TableCell>
               )}
