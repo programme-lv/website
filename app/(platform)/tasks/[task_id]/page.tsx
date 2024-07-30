@@ -293,7 +293,10 @@ const TaskInformation: React.FC<TaskInformationProps> = ({
                   <div className="flex justify-between ">
                     {task.origin_olympiad && task.origin_olympiad === "LIO" && (
                       <div className="w-16 min-w-16">
-                        <Image src="https://lio.lv/LIO_logo_jaunais3.png" />
+                        <Image
+                          alt="Latvijas Informātikas olimpiādes logo"
+                          src="https://lio.lv/LIO_logo_jaunais3.png"
+                        />
                       </div>
                     )}
                     {task.origin_notes && task.origin_notes["lv"] && (

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useContext, useState } from "react";
+import React, { Suspense, useContext, useState } from "react";
 import { useMutation } from "react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button, Input, Checkbox, Link, Divider } from "@nextui-org/react";
@@ -20,22 +20,57 @@ const translations: { [key: string]: string } = {
 
 export default function AuthCardWithBG(props: { type: "login" | "register" }) {
   const { type } = props;
-  const [isVisible, setIsVisible] = React.useState(false);
-  const [error, setError] = React.useState<string | null>(null);
-  const [isConfirmVisible, setIsConfirmVisible] = React.useState(false);
 
+  return (
+    <div
+      className="flex h-screen w-screen items-center justify-center overflow-hidden bg-content1 p-2 sm:p-4 lg:p-8"
+      style={{
+        backgroundImage: `url(${MountainsImage.src})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+      {/* Brand Logo */}
+      <div className="absolute left-10 top-10 bg-white p-2 rounded-md">
+        <Link className="flex items-center" href="/">
+          <Image alt="programme.lv logo" height={26} src={LogoImage} />
+          <p className="ms-2 text-black dark:text-white font-semibold">
+            programme.lv
+          </p>
+        </Link>
+      </div>
+
+      {/* Testimonial */}
+      <div className="absolute bottom-10 right-10 hidden md:block">
+        <p className="max-w-xl text-right text-white/60">
+          Kur programmēšana kļūst par piedzīvojumu!
+        </p>
+      </div>
+
+      {/* Auth Form */}
+      <Suspense>
+        <AuthForm type={type} />
+      </Suspense>
+    </div>
+  );
+}
+
+function AuthForm({ type }: { type: "login" | "register" }) {
+  const searchParams = useSearchParams();
+  const redirectParam = searchParams.get("redirect");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-
   const [repPassword, setRepPassword] = useState("");
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const redirectParam = searchParams.get("redirect");
   const authContext = useContext(AuthContext);
-
+  const router = useRouter();
+  const [isVisible, setIsVisible] = React.useState(false);
+  const [error, setError] = React.useState<string | null>(null);
+  const [isConfirmVisible, setIsConfirmVisible] = React.useState(false);
+  const toggleVisibility = () => setIsVisible(!isVisible);
+  const toggleConfirmVisibility = () => setIsConfirmVisible(!isConfirmVisible);
   const registerMutation = useMutation(registerUser, {
     onSuccess: async (response) => {
       if (response.ok) {
@@ -98,101 +133,98 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
     }
   };
 
-  const toggleVisibility = () => setIsVisible(!isVisible);
-  const toggleConfirmVisibility = () => setIsConfirmVisible(!isConfirmVisible);
-
   return (
-    <div
-      className="flex h-screen w-screen items-center justify-center overflow-hidden bg-content1 p-2 sm:p-4 lg:p-8"
-      style={{
-        backgroundImage: `url(${MountainsImage.src})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-    >
-      {/* Brand Logo */}
-      <div className="absolute left-10 top-10 bg-white p-2 rounded-md">
-        <Link className="flex items-center" href="/">
-          <Image alt="programme.lv logo" height={26} src={LogoImage} />
-          <p className="ms-2 text-black dark:text-white font-semibold">
-            programme.lv
-          </p>
-        </Link>
-      </div>
-
-      {/* Testimonial */}
-      <div className="absolute bottom-10 right-10 hidden md:block">
-        <p className="max-w-xl text-right text-white/60">
-          Kur programmēšana kļūst par piedzīvojumu!
-        </p>
-      </div>
-
-      {/* Auth Form */}
-      <div className="flex w-full max-w-lg flex-col gap-4 rounded-large bg-content1 px-8 pb-10 pt-6 shadow-small">
-        <p className="pb-2 text-xl font-medium">
-          {type === "register" ? "Reģistrēties" : "Pieslēgties"}
-        </p>
-        <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
-          <Input
-            isRequired
-            isDisabled={loginMutation.isLoading || registerMutation.isLoading}
-            label="Lietotājvārds"
-            name="username"
-            placeholder="Ievadiet savu lietotājvārdu"
-            value={username}
-            variant="bordered"
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          {type === "register" && (
-            <>
-              <div className="flex flex-col md:flex-row gap-3">
-                <Input
-                  className="flex-1"
-                  isDisabled={
-                    loginMutation.isLoading || registerMutation.isLoading
-                  }
-                  label="Vārds (neobligāts)"
-                  name="firstName"
-                  placeholder="Ievadiet savu vārdu"
-                  value={firstName}
-                  variant="bordered"
-                  onChange={(e) => setFirstName(e.target.value)}
-                />
-                <Input
-                  className="flex-1"
-                  isDisabled={
-                    loginMutation.isLoading || registerMutation.isLoading
-                  }
-                  label="Uzvārds (neobligāts)"
-                  name="lastName"
-                  placeholder="Ievadiet savu uzvārdu"
-                  value={lastName}
-                  variant="bordered"
-                  onChange={(e) => setLastName(e.target.value)}
-                />
-              </div>
+    <div className="flex w-full max-w-lg flex-col gap-4 rounded-large bg-content1 px-8 pb-10 pt-6 shadow-small">
+      <p className="pb-2 text-xl font-medium">
+        {type === "register" ? "Reģistrēties" : "Pieslēgties"}
+      </p>
+      <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
+        <Input
+          isRequired
+          isDisabled={loginMutation.isLoading || registerMutation.isLoading}
+          label="Lietotājvārds"
+          name="username"
+          placeholder="Ievadiet savu lietotājvārdu"
+          value={username}
+          variant="bordered"
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        {type === "register" && (
+          <>
+            <div className="flex flex-col md:flex-row gap-3">
               <Input
-                isRequired
+                className="flex-1"
                 isDisabled={
                   loginMutation.isLoading || registerMutation.isLoading
                 }
-                label="E-pasta adrese"
-                name="email"
-                placeholder="Ievadiet savu e-pastu"
-                type="email"
-                value={email}
+                label="Vārds (neobligāts)"
+                name="firstName"
+                placeholder="Ievadiet savu vārdu"
+                value={firstName}
                 variant="bordered"
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => setFirstName(e.target.value)}
               />
-            </>
-          )}
-          <div className="flex flex-col md:flex-row gap-3">
+              <Input
+                className="flex-1"
+                isDisabled={
+                  loginMutation.isLoading || registerMutation.isLoading
+                }
+                label="Uzvārds (neobligāts)"
+                name="lastName"
+                placeholder="Ievadiet savu uzvārdu"
+                value={lastName}
+                variant="bordered"
+                onChange={(e) => setLastName(e.target.value)}
+              />
+            </div>
+            <Input
+              isRequired
+              isDisabled={loginMutation.isLoading || registerMutation.isLoading}
+              label="E-pasta adrese"
+              name="email"
+              placeholder="Ievadiet savu e-pastu"
+              type="email"
+              value={email}
+              variant="bordered"
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </>
+        )}
+        <div className="flex flex-col md:flex-row gap-3">
+          <Input
+            isRequired
+            className="flex-1"
+            endContent={
+              <button type="button" onMouseDown={toggleVisibility}>
+                {isVisible ? (
+                  <Icon
+                    className="pointer-events-none text-2xl text-default-400"
+                    icon="solar:eye-closed-linear"
+                  />
+                ) : (
+                  <Icon
+                    className="pointer-events-none text-2xl text-default-400"
+                    icon="solar:eye-bold"
+                  />
+                )}
+              </button>
+            }
+            isDisabled={loginMutation.isLoading || registerMutation.isLoading}
+            label="Parole"
+            name="password"
+            placeholder="Ievadiet savu paroli"
+            type={isVisible ? "text" : "password"}
+            value={password}
+            variant="bordered"
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          {type === "register" && (
             <Input
               isRequired
               className="flex-1"
               endContent={
-                <button type="button" onMouseDown={toggleVisibility}>
-                  {isVisible ? (
+                <button type="button" onMouseDown={toggleConfirmVisibility}>
+                  {isConfirmVisible ? (
                     <Icon
                       className="pointer-events-none text-2xl text-default-400"
                       icon="solar:eye-closed-linear"
@@ -206,121 +238,87 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
                 </button>
               }
               isDisabled={loginMutation.isLoading || registerMutation.isLoading}
-              label="Parole"
-              name="password"
-              placeholder="Ievadiet savu paroli"
-              type={isVisible ? "text" : "password"}
-              value={password}
+              label="Apstipriniet paroli"
+              name="confirmPassword"
+              placeholder="Apstipriniet savu paroli"
+              type={isConfirmVisible ? "text" : "password"}
+              value={repPassword}
               variant="bordered"
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => setRepPassword(e.target.value)}
             />
-            {type === "register" && (
-              <Input
-                isRequired
-                className="flex-1"
-                endContent={
-                  <button type="button" onMouseDown={toggleConfirmVisibility}>
-                    {isConfirmVisible ? (
-                      <Icon
-                        className="pointer-events-none text-2xl text-default-400"
-                        icon="solar:eye-closed-linear"
-                      />
-                    ) : (
-                      <Icon
-                        className="pointer-events-none text-2xl text-default-400"
-                        icon="solar:eye-bold"
-                      />
-                    )}
-                  </button>
-                }
-                isDisabled={
-                  loginMutation.isLoading || registerMutation.isLoading
-                }
-                label="Apstipriniet paroli"
-                name="confirmPassword"
-                placeholder="Apstipriniet savu paroli"
-                type={isConfirmVisible ? "text" : "password"}
-                value={repPassword}
-                variant="bordered"
-                onChange={(e) => setRepPassword(e.target.value)}
-              />
-            )}
-          </div>
-          {false && type === "register" && (
-            <Checkbox isRequired className="py-4" size="sm">
-              Es piekrītu&nbsp;
-              <Link href="#" size="sm">
-                Noteikumiem
-              </Link>
-              &nbsp; un&nbsp;
-              <Link href="#" size="sm">
-                Privātuma politikai
-              </Link>
-            </Checkbox>
           )}
-          <Button
-            color="primary"
-            isLoading={loginMutation.isLoading || registerMutation.isLoading}
-            type="submit"
-          >
-            {type === "register" ? "Reģistrēties" : "Pieslēgties"}
-          </Button>
-        </form>
-
-        {error && (
-          <Alert message={error} type="error" onClose={() => setError(null)} />
-        )}
-        <div className="flex items-center gap-4 py-2">
-          <Divider className="flex-1" />
-          <p className="shrink-0 text-tiny text-default-500">VAI</p>
-          <Divider className="flex-1" />
         </div>
-        {/* <div className="flex flex-col gap-2">
-          <Button
-            startContent={<Icon icon="flat-color-icons:google" width={24} />}
-            variant="bordered"
-          >
-            Turpināt ar Google
-          </Button>
-          <Button
-            startContent={<Icon className="text-default-500" icon="fe:github" width={24} />}
-            variant="bordered"
-          >
-            Turpināt ar Github
-          </Button>
-        </div> */}
-        <p className="text-center text-small">
-          {type === "register" ? (
-            <>
-              Jau ir konts?&nbsp;
-              <Link
-                href={
-                  redirectParam
-                    ? `/login?redirect=${encodeURIComponent(redirectParam)}`
-                    : `/login`
-                }
-                size="sm"
-              >
-                Pieslēgties
-              </Link>
-            </>
-          ) : (
-            <>
-              Nav konta?&nbsp;
-              <Link
-                href={
-                  redirectParam
-                    ? `/register?redirect=${encodeURIComponent(redirectParam)}`
-                    : `/register`
-                }
-                size="sm"
-              >
-                Reģistrēties
-              </Link>
-            </>
-          )}
-        </p>
+        {false && type === "register" && (
+          <Checkbox isRequired className="py-4" size="sm">
+            Es piekrītu&nbsp;
+            <Link href="#" size="sm">
+              Noteikumiem
+            </Link>
+            &nbsp; un&nbsp;
+            <Link href="#" size="sm">
+              Privātuma politikai
+            </Link>
+          </Checkbox>
+        )}
+        <Button
+          color="primary"
+          isLoading={loginMutation.isLoading || registerMutation.isLoading}
+          type="submit"
+        >
+          {type === "register" ? "Reģistrēties" : "Pieslēgties"}
+        </Button>
+      </form>
+
+      {error && (
+        <Alert message={error} type="error" onClose={() => setError(null)} />
+      )}
+      <div className="flex items-center gap-4 py-2">
+        <Divider className="flex-1" />
+        <p className="shrink-0 text-tiny text-default-500">VAI</p>
+        <Divider className="flex-1" />
       </div>
+      <Suspense>
+        <GoToLoginOrRegister type={type} />
+      </Suspense>
     </div>
+  );
+}
+
+function GoToLoginOrRegister({ type }: { type: "login" | "register" }) {
+  const searchParams = useSearchParams();
+  const redirectParam = searchParams.get("redirect");
+
+  return (
+    <p className="text-center text-small">
+      {type === "register" ? (
+        <>
+          Jau ir konts?&nbsp;
+          <Link
+            href={
+              redirectParam
+                ? `/login?redirect=${encodeURIComponent(redirectParam)}`
+                : `/login`
+            }
+            size="sm"
+          >
+            Pieslēgties
+          </Link>
+        </>
+      ) : (
+        <>
+          Nav konta?&nbsp;
+          <Link
+            href={
+              redirectParam
+                ? `/register?redirect=${encodeURIComponent(redirectParam)}`
+                : `/register`
+            }
+            size="sm"
+          >
+            Reģistrēties
+          </Link>
+        </>
+      )}
+    </p>
   );
 }

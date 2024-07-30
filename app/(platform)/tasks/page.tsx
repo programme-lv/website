@@ -6,7 +6,8 @@ import Link from "next/link";
 
 import Alert from "@/components/Alert";
 import TaskCard from "@/components/TaskCard/TaskCard";
-import { Task, listTasks } from "@/lib/tasks";
+import { listTasks } from "@/lib/tasks";
+import { Task } from "@/types/proglv";
 
 export default function TaskList() {
   let { data, error, isLoading } = useQuery("tasks", listTasks);

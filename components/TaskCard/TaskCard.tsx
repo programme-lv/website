@@ -124,7 +124,10 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, ...props }) => {
               <div className="flex justify-between max-w-72">
                 {task.origin_olympiad && task.origin_olympiad === "LIO" && (
                   <div className="w-16 min-w-16">
-                    <Image src="https://lio.lv/LIO_logo_jaunais3.png" />
+                    <Image
+                      alt="Latvijas informātikas olimpiādes logo"
+                      src="https://lio.lv/LIO_logo_jaunais3.png"
+                    />
                   </div>
                 )}
                 {task.origin_notes && task.origin_notes["lv"] && (
