@@ -10,9 +10,13 @@ import { listTasks } from "@/lib/tasks";
 import { Task } from "@/types/proglv";
 
 export default function TaskList() {
-  let { data, error, isLoading } = useQuery("tasks", listTasks);
+  let { data, error, isLoading } = useQuery("list-tasks", listTasks);
 
   if (isLoading) {
+    return <></>;
+  }
+
+  if (!data) {
     return <></>;
   }
 
@@ -21,6 +25,8 @@ export default function TaskList() {
       <Alert message="Failed to load tasks" type="error" onClose={() => null} />
     );
   }
+
+  console.log(data);
 
   // sort by difficulty
   data = data?.sort(
