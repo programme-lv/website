@@ -46,10 +46,10 @@ export default function TaskDetailsPage() {
   const pageRef = useRef<HTMLDivElement>(null);
 
   return (
-    <main className="mt-3 flex-grow w-full overflow-visible">
+    <main className="mt-3 flex-grow w-full overflow-visible relative">
       <div
         ref={pageRef}
-        className="hidden xl:flex w-full h-full max-w-full gap-4"
+        className="hidden xl:flex w-full h-full max-h-full max-w-full gap-4 absolute"
       >
         <Resizable
           defaultSize={{ width: "50%" }}
@@ -64,7 +64,7 @@ export default function TaskDetailsPage() {
       </div>
       <div
         ref={pageRef}
-        className="flex flex-col xl:hidden w-full h-full max-w-full gap-3"
+        className="flex flex-col xl:hidden w-full h-full max-w-full gap-3 absolute"
       >
         <LeftSide task_id={task_id as string} />
         {/* <RightSide taskCode={task_id as string} /> */}
@@ -91,8 +91,8 @@ function LeftSide({ task_id }: { task_id: string }) {
   }, [task?.default_pdf_statement_url, task?.default_md_statement]);
 
   return (
-    <div className="h-full w-full rounded-small border-small border-divider p-2 bg-white">
-      <div className="h-full relative flex flex-col items-center gap-1 flex-grow overflow-hidden">
+    <div className="h-full max-h-full overflow-y-auto w-full rounded-small border-small border-divider p-2 bg-white">
+      <div className="h-full relative flex flex-col items-center gap-1 flex-grow overflow-y-scroll">
         <TaskInformation task={task} />
 
         <Divider className="my-1" />
@@ -303,8 +303,8 @@ const TaskInformation: React.FC<TaskInformationProps> = ({ task, ...props }) => 
   }, [cardRef]);
 
   return (
-    <Card className="w-full" {...props} ref={cardRef} radius="none" shadow="none">
-      <CardBody className="flex flex-col p-0 sm:flex-nowrap overflow-y-hidden">
+    <Card className="w-full" {...props} ref={cardRef} radius="none" shadow="none" classNames={{base:"overflow-visible"}}>
+      <CardBody className="flex flex-col p-0 sm:flex-nowrap">
         <div className="flex flex-row">
           <div className="h-full flex flex-row flex-wrap sm:flex-nowrap flex-grow">
             <Skeleton isLoaded={!!task} className="max-w-40 min-w-20 flex p-2">
