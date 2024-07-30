@@ -127,25 +127,25 @@ function MdView({
   return (
     <div className="w-full flex-grow flex flex-col gap-4 my-3 px-4">
       <div>
-        <h2 className="text-small my-1 font-medium">Stāsts</h2>
+        <h2 className="text-small my-1 font-semibold">Stāsts</h2>
         <div className="">
           <span dangerouslySetInnerHTML={{ __html: storyMd }} />
         </div>
       </div>
       <div>
-        <h2 className="text-small my-1 font-medium">Ievaddati</h2>
+        <h2 className="text-small my-1 font-semibold">Ievaddati</h2>
         <div className="">
           <span dangerouslySetInnerHTML={{ __html: inputMd }} />
         </div>
       </div>
       <div>
-        <h2 className="text-small my-1 font-medium">Izvaddati</h2>
+        <h2 className="text-small my-1 font-semibold">Izvaddati</h2>
         <div className="">
           <span dangerouslySetInnerHTML={{ __html: outputMd }} />
         </div>
       </div>
       <div>
-        <h2 className="text-small my-1 mb-2 font-medium">Piemēri</h2>
+        <h2 className="text-small my-1 mb-2 font-semibold">Piemēri</h2>
         <div className="flex gap-2 flex-wrap w-full max-w-full">
           {examples &&
             examples.map((example, i) => (
@@ -207,7 +207,7 @@ function MdView({
         </div>
 
         {scoringMd && <div>
-          <h2 className="text-small mb-3 mt-6 font-medium">Vērtēšana</h2>
+          <h2 className="text-small mb-3 mt-6 font-semibold">Vērtēšana</h2>
           <div className="">
             <span dangerouslySetInnerHTML={{ __html: scoringMd }} />
           </div>
@@ -320,7 +320,7 @@ const TaskInformation: React.FC<TaskInformationProps> = ({ task, ...props }) => 
               <Skeleton isLoaded={!!task}>
                 <div>
                   <div className="inline-flex gap-x-2 gap-y-1 justify-between items-center flex-wrap">
-                    <h3 className="text-large font-medium">
+                    <h3 className="text-large font-semibold">
                       {task?.task_full_name || "Loading..."}
                     </h3>
                     {task && difficultyChips[task.difficulty_rating]}
