@@ -47,10 +47,7 @@ export default function RootLayout({
             forcedTheme: "light",
           }}
         >
-          <NextTopLoader
-            zIndex={1600}
-            showAtBottom={true}
-          />
+          <NextTopLoader showAtBottom={true} zIndex={1600} />
           {/* <Navbar />
           <main className="container mx-auto max-w-7xl pt-16 px-6 flex-grow"> */}
           {children}

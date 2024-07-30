@@ -64,6 +64,15 @@ type User = {
   email: string;
   firstname: string;
   lastname: string;
-}
+};
 
-export type { ProgrammingLanguage, Evaluation, Language, TaskReference, Submission, User, Task, MarkdownStatement };
+export type {
+  ProgrammingLanguage,
+  Evaluation,
+  Language,
+  TaskReference,
+  Submission,
+  User,
+  Task,
+  MarkdownStatement,
+};

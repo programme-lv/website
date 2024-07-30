@@ -31,7 +31,7 @@ import { getTaskById } from "@/lib/tasks";
 import getHardcodedLanguageList from "@/data/languages";
 import { MarkdownStatement, ProgrammingLanguage, Task } from "@/types/proglv";
 import { AuthContext } from "@/app/providers";
-import 'katex/dist/katex.min.css'
+import "katex/dist/katex.min.css";
 import renderMd from "@/lib/render-md";
 
 export default function TaskDetailsPage() {
@@ -94,6 +94,7 @@ export default function TaskDetailsPage() {
 
 function LeftSide({ task }: { task: Task }) {
   const [viewMode, setViewMode] = useState<"md" | "pdf" | undefined>(undefined);
+
   useEffect(() => {
     if (task.default_pdf_statement_url && window.navigator.pdfViewerEnabled) {
       setViewMode("pdf");
@@ -110,44 +111,44 @@ function LeftSide({ task }: { task: Task }) {
         <TaskInformation task={task} />
 
         <Divider className="my-1" />
-        {viewMode === "pdf" && task.default_pdf_statement_url &&
+        {viewMode === "pdf" && task.default_pdf_statement_url && (
           <PdfView pdf_statement_url={task.default_pdf_statement_url} />
-        }
-        {viewMode === "md" && task.default_md_statement &&
+        )}
+        {viewMode === "md" && task.default_md_statement && (
           <MdView md_statement={task.default_md_statement} />
-        }
+        )}
       </div>
     </div>
   );
 }
 
-
 function MdView({ md_statement }: { md_statement: MarkdownStatement }) {
   const storyMd = renderMd(md_statement.story);
   const inputMd = renderMd(md_statement.input);
   const outputMd = renderMd(md_statement.output);
+
   return (
     <div className="w-full flex-grow flex flex-col gap-4 my-3 px-4">
       <div>
         <h2 className="text-default-700 text-small my-1">Stāsts</h2>
         <div className="ms-4">
-        <span dangerouslySetInnerHTML={{ __html: storyMd }} />
+          <span dangerouslySetInnerHTML={{ __html: storyMd }} />
         </div>
       </div>
       <div>
         <h2 className="text-default-700 text-small my-1">Ievaddati</h2>
         <div className="ms-4">
-        <span dangerouslySetInnerHTML={{ __html: inputMd }} />
+          <span dangerouslySetInnerHTML={{ __html: inputMd }} />
         </div>
       </div>
       <div>
         <h2 className="text-default-700 text-small my-1">Izvaddati</h2>
         <div className="ms-4">
-        <span dangerouslySetInnerHTML={{ __html: outputMd }} />
+          <span dangerouslySetInnerHTML={{ __html: outputMd }} />
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 function PdfView({ pdf_statement_url }: { pdf_statement_url: string }) {
@@ -175,6 +176,7 @@ function PdfView({ pdf_statement_url }: { pdf_statement_url: string }) {
 
     return () => resizeObserver.disconnect();
   }, [elementRef]);
+
   return (
     <div ref={elementRef} className="bg-violet-100 flex-grow w-full">
       <div
@@ -193,7 +195,7 @@ function PdfView({ pdf_statement_url }: { pdf_statement_url: string }) {
         )}
       </div>
     </div>
-  )
+  );
 }
 
 type TaskInformationProps = CardProps & {
@@ -341,14 +343,18 @@ function RightSide({ taskCode }: { taskCode: string }) {
     <div className="flex flex-col flex-grow bg-white rounded-small border-small border-divider px-2 pb-2">
       <ClientCodePanel languages={languages} taskCode={taskCode} />
       <div className="mt-2 flex justify-end gap-3">
-        {authContext.user !== null && <Button color="primary">
-          Iesūtīt risinājumu
-          <IconSend size={16} />
-        </Button>}
-        {authContext.user === null && <Button color="primary" isDisabled>
-          Pieslēdzieties, lai iesūtīt risinājumu!
-          <IconSend size={16} />
-        </Button>}
+        {authContext.user !== null && (
+          <Button color="primary">
+            Iesūtīt risinājumu
+            <IconSend size={16} />
+          </Button>
+        )}
+        {authContext.user === null && (
+          <Button isDisabled color="primary">
+            Pieslēdzieties, lai iesūtīt risinājumu!
+            <IconSend size={16} />
+          </Button>
+        )}
       </div>
     </div>
   );
@@ -356,7 +362,10 @@ function RightSide({ taskCode }: { taskCode: string }) {
 
 function ResizeBar() {
   return (
-    <div className="flex items-center justify-center w-3 h-full p-0" style={{marginLeft: 6}}>
+    <div
+      className="flex items-center justify-center w-3 h-full p-0"
+      style={{ marginLeft: 6 }}
+    >
       <div className="flex flex-col gap-0">
         {[...Array(3)].map((_, i) => (
           <IconGripVertical

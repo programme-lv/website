@@ -11,7 +11,7 @@ import { registerUser, loginUser } from "@/lib/auth";
 import Alert from "@/components/Alert";
 import MountainsImage from "@/public/mountains.png";
 import LogoImage from "@/public/logo.png";
-import { getUserInfoFromJWT, setJwt } from "@/lib/jwt";
+import { setJwt } from "@/lib/jwt";
 import { AuthContext } from "@/app/providers";
 
 const translations: { [key: string]: string } = {
@@ -33,16 +33,17 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
   const [repPassword, setRepPassword] = useState("");
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectParam = searchParams.get('redirect');
+  const redirectParam = searchParams.get("redirect");
   const authContext = useContext(AuthContext);
 
   const registerMutation = useMutation(registerUser, {
     onSuccess: async (response) => {
       if (response.ok) {
         const data = await response.json();
+
         setJwt(data.token);
         authContext.refresh();
-        if(redirectParam) router.push(redirectParam);
+        if (redirectParam) router.push(redirectParam);
         else router.push("/tasks");
       } else {
         const error: string = await response.text();
@@ -60,9 +61,10 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
     onSuccess: async (response) => {
       if (response.ok) {
         const data = await response.json();
+
         setJwt(data.token);
         authContext.refresh();
-        if(redirectParam) router.push(redirectParam);
+        if (redirectParam) router.push(redirectParam);
         else router.push("/tasks");
       } else {
         const error: string = await response.text();
@@ -291,14 +293,28 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
           {type === "register" ? (
             <>
               Jau ir konts?&nbsp;
-              <Link href={redirectParam ? `/login?redirect=${encodeURIComponent(redirectParam)}` : `/login`} size="sm">
+              <Link
+                href={
+                  redirectParam
+                    ? `/login?redirect=${encodeURIComponent(redirectParam)}`
+                    : `/login`
+                }
+                size="sm"
+              >
                 Pieslēgties
               </Link>
             </>
           ) : (
             <>
               Nav konta?&nbsp;
-              <Link href={redirectParam ? `/register?redirect=${encodeURIComponent(redirectParam)}` : `/register`} size="sm">
+              <Link
+                href={
+                  redirectParam
+                    ? `/register?redirect=${encodeURIComponent(redirectParam)}`
+                    : `/register`
+                }
+                size="sm"
+              >
                 Reģistrēties
               </Link>
             </>
