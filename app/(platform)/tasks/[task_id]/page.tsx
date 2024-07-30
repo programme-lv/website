@@ -29,7 +29,12 @@ import MonacoEditor from "@monaco-editor/react";
 import Alert from "@/components/Alert";
 import { getTaskById } from "@/lib/tasks";
 import getHardcodedLanguageList from "@/data/languages";
-import { Example, MarkdownStatement, ProgrammingLanguage, Task } from "@/types/proglv";
+import {
+  Example,
+  MarkdownStatement,
+  ProgrammingLanguage,
+  Task,
+} from "@/types/proglv";
 import { AuthContext } from "@/app/providers";
 import "katex/dist/katex.min.css";
 import renderMd from "@/lib/render-md";
@@ -115,19 +120,26 @@ function LeftSide({ task }: { task: Task }) {
           <PdfView pdf_statement_url={task.default_pdf_statement_url} />
         )}
         {viewMode === "md" && task.default_md_statement && (
-          <MdView md_statement={task.default_md_statement} examples={task.examples} />
+          <MdView
+            examples={task.examples}
+            md_statement={task.default_md_statement}
+          />
         )}
       </div>
     </div>
   );
 }
 
-function MdView({ md_statement, examples }: { md_statement: MarkdownStatement, examples?: Example[] }) {
+function MdView({
+  md_statement,
+  examples,
+}: {
+  md_statement: MarkdownStatement;
+  examples?: Example[];
+}) {
   const storyMd = renderMd(md_statement.story);
   const inputMd = renderMd(md_statement.input);
   const outputMd = renderMd(md_statement.output);
-
-  console.log(examples);
 
   return (
     <div className="w-full flex-grow flex flex-col gap-4 my-3 px-4">
@@ -152,51 +164,63 @@ function MdView({ md_statement, examples }: { md_statement: MarkdownStatement, e
       <div>
         <h2 className="text-small my-1 mb-2 font-medium">Piemēri</h2>
         <div className="flex gap-2 flex-wrap w-full max-w-full">
-          {examples && examples.map((example, i) => (
-            <div key={i} className="border-small border-divider p-2 flex-grow rounded-md w-[350px] max-w-full">
-              <div className="flex gap-2 flex-wrap">
-                <div className="flex-grow basis-0 overflow-hidden min-w-[175px]">
-                  <div className="flex flex-col">
-                    <p className="text-tiny text-default-700 my-0.5 mb-2 select-none">
-                      Ievaddati:
-                    </p>
-                    <code
-                      className="p-1.5 border-small border-divider"
-                      style={{
-                        backgroundColor: "rgba(212, 212, 216, 0.4)",
-                        whiteSpace: "pre-wrap",
-                      }}>{example.input}</code>
+          {examples &&
+            examples.map((example, i) => (
+              <div
+                key={i}
+                className="border-small border-divider p-2 flex-grow rounded-md w-[350px] max-w-full"
+              >
+                <div className="flex gap-2 flex-wrap">
+                  <div className="flex-grow basis-0 overflow-hidden min-w-[175px]">
+                    <div className="flex flex-col">
+                      <p className="text-tiny text-default-700 my-0.5 mb-2 select-none">
+                        Ievaddati:
+                      </p>
+                      <code
+                        className="p-1.5 border-small border-divider"
+                        style={{
+                          backgroundColor: "rgba(212, 212, 216, 0.4)",
+                          whiteSpace: "pre-wrap",
+                        }}
+                      >
+                        {example.input}
+                      </code>
+                    </div>
                   </div>
-                </div>
-                <div className="flex-grow basis-0 overflow-hidden min-w-[175px]">
-                  <div className="flex flex-col">
-                    <p className="text-tiny text-default-700 my-0.5 mb-2 select-none">
-                      Izvaddati:
-                    </p>
-                    <code
-                      className="p-1.5 border-small border-divider"
-                      style={{
-                        backgroundColor: "rgba(212, 212, 216, 0.4)",
-                        whiteSpace: "pre-wrap",
-                      }}>{example.output}</code>
+                  <div className="flex-grow basis-0 overflow-hidden min-w-[175px]">
+                    <div className="flex flex-col">
+                      <p className="text-tiny text-default-700 my-0.5 mb-2 select-none">
+                        Izvaddati:
+                      </p>
+                      <code
+                        className="p-1.5 border-small border-divider"
+                        style={{
+                          backgroundColor: "rgba(212, 212, 216, 0.4)",
+                          whiteSpace: "pre-wrap",
+                        }}
+                      >
+                        {example.output}
+                      </code>
+                    </div>
                   </div>
+                  {example.md_note && (
+                    <div className="flex-grow basis-0 overflow-hidden min-w-[175px]">
+                      <div className="flex flex-col">
+                        <p className="text-tiny text-default-700 my-0.5 mb-1.5 select-none">
+                          Piezīme:
+                        </p>
+                        <p
+                          dangerouslySetInnerHTML={{
+                            __html: renderMd(example.md_note),
+                          }}
+                          className="min-h-14 text-small"
+                        />
+                      </div>
+                    </div>
+                  )}
                 </div>
-                {example.md_note && (
-                <div className="flex-grow basis-0 overflow-hidden min-w-[175px]">
-                  <div className="flex flex-col">
-                    <p className="text-tiny text-default-700 my-0.5 mb-1.5 select-none">
-                      Piezīme:
-                    </p>
-                    <p
-                      className="min-h-14 text-small"
-                      dangerouslySetInnerHTML={{ __html: renderMd(example.md_note) }}></p>
-                  </div>
-                </div>
-                  
-                )}
               </div>
-            </div>
-          ))}
+            ))}
         </div>
       </div>
     </div>

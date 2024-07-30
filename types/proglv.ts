@@ -82,5 +82,5 @@ export type {
   User,
   Task,
   MarkdownStatement,
-  Example
+  Example,
 };
