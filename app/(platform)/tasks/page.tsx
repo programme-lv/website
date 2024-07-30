@@ -10,7 +10,9 @@ import { listTasks } from "@/lib/tasks";
 import { Task } from "@/types/proglv";
 
 export default function TaskList() {
-  let { data, error, isLoading } = useQuery("list-tasks", listTasks);
+  let { data, error, isLoading } = useQuery("list-tasks", listTasks,{
+    staleTime: 30*1000
+  });
 
   if (isLoading) {
     return <></>;
