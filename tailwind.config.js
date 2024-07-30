@@ -14,11 +14,16 @@ module.exports = {
   plugins: [nextui()],
   safelist: [
     'text-2xl', 'font-bold', 'mb-4',
-    'text-xl', 'mb-3',
-    'text-base', 'mb-2',
+    'text-xl', 'font-bold', 'mb-3',
+    'mb-2',
     'list-disc', 'pl-5',
     'list-decimal',
     'mb-1',
     'bg-gray-100', 'p-1', 'rounded',
-  ]
+    'min-w-full', 'divide-y', 'divide-gray-200',
+    'bg-gray-50',
+    'bg-white',
+    'px-6', 'py-3', 'text-left', 'text-xs', 'font-medium', 'text-gray-500', 'uppercase', 'tracking-wider',
+    'px-6', 'py-4', 'whitespace-nowrap',
+  ],
 }

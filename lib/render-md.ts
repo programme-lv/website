@@ -4,6 +4,7 @@ import remarkMath from "remark-math";
 import remarkRehype from "remark-rehype";
 import rehypeKatex from "rehype-katex";
 import rehypeStringify from "rehype-stringify";
+import remarkGfm from 'remark-gfm';
 import { Node } from "unist";
 import { Element } from "hast";
 import { visit } from "unist-util-visit";
@@ -36,7 +37,24 @@ function rehypeAddClasses() {
         case "code":
           node.properties.className = ["bg-gray-100", "p-1", "rounded"];
           break;
-        // Add more element types and their classes as needed
+        case "table":
+          node.properties.className = ["min-w-full", "divide-y", "divide-gray-200"];
+          break;
+        case "thead":
+          node.properties.className = ["border"];
+          break;
+        case "tbody":
+          node.properties.className = ["bg-white", "divide-y", "divide-gray-200"];
+          break;
+        case "tr":
+          node.properties.className = [];
+          break;
+        case "th":
+          node.properties.className = ["px-3", "py-1", "text-left", "text-small", "font-medium", "text-default-800", "border"];
+          break;
+        case "td":
+          node.properties.className = ["px-3", "py-1", "whitespace-nowrap", "border"];
+          break;
         default:
           break;
       }
@@ -48,6 +66,7 @@ function rehypeAddClasses() {
 export default function renderMd(md: string): string {
   return unified()
     .use(remarkParse)
+    .use(remarkGfm)
     .use(remarkMath)
     .use(remarkRehype)
     .use(rehypeKatex)

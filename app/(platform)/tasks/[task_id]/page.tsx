@@ -75,12 +75,12 @@ export default function TaskDetailsPage() {
 
 function LeftSide({ task_id }: { task_id: string }) {
 
-  let { data, error, isLoading } = useQuery("view-task", ()=>getTaskById(task_id));
+  let { data, error, isLoading } = useQuery("view-task", () => getTaskById(task_id));
   const [viewMode, setViewMode] = useState<"md" | "pdf" | undefined>(undefined);
   const task = data as Task | null;
 
   useEffect(() => {
-    if(!task) return;
+    if (!task) return;
     if (task.default_pdf_statement_url && window.navigator.pdfViewerEnabled) {
       setViewMode("pdf");
     } else if (task.default_md_statement) {
@@ -99,13 +99,13 @@ function LeftSide({ task_id }: { task_id: string }) {
         {viewMode === "pdf" && task!.default_pdf_statement_url && (
           <PdfView pdf_statement_url={task!.default_pdf_statement_url} />
         )}
-        <Skeleton isLoaded={!isLoading&&!error&&!!task}>
-        {viewMode === "md" && task!.default_md_statement && (
-          <MdView
-            examples={task!.examples}
-            md_statement={task!.default_md_statement}
-          />
-        )}
+        <Skeleton isLoaded={!isLoading && !error && !!task}>
+          {viewMode === "md" && task!.default_md_statement && (
+            <MdView
+              examples={task!.examples}
+              md_statement={task!.default_md_statement}
+            />
+          )}
         </Skeleton>
       </div>
     </div>
@@ -122,6 +122,7 @@ function MdView({
   const storyMd = renderMd(md_statement.story);
   const inputMd = renderMd(md_statement.input);
   const outputMd = renderMd(md_statement.output);
+  const scoringMd = md_statement.scoring ? renderMd(md_statement.scoring) : "";
 
   return (
     <div className="w-full flex-grow flex flex-col gap-4 my-3 px-4">
@@ -204,6 +205,13 @@ function MdView({
               </div>
             ))}
         </div>
+
+        {scoringMd && <div>
+          <h2 className="text-small mb-3 mt-6 font-medium">Vērtēšana</h2>
+          <div className="">
+            <span dangerouslySetInnerHTML={{ __html: scoringMd }} />
+          </div>
+        </div>}
       </div>
     </div>
   );
