@@ -22,7 +22,7 @@ function rehypeAddClasses() {
           node.properties.className = ["text-xl", "font-bold", "mb-3"];
           break;
         case "p":
-          node.properties.className = ["text-base", "mb-2"];
+          node.properties.className = ["mb-2"];
           break;
         case "ul":
           node.properties.className = ["list-disc", "pl-5", "mb-2"];

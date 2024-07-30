@@ -161,7 +161,7 @@ function MdView({ md_statement, examples }: { md_statement: MarkdownStatement, e
                       Ievaddati:
                     </p>
                     <code
-                      className="p-1.5 border-small border-divider min-h-14"
+                      className="p-1.5 border-small border-divider"
                       style={{
                         backgroundColor: "rgba(212, 212, 216, 0.4)",
                         whiteSpace: "pre-wrap",
@@ -174,13 +174,26 @@ function MdView({ md_statement, examples }: { md_statement: MarkdownStatement, e
                       Izvaddati:
                     </p>
                     <code
-                      className="p-1.5 border-small border-divider min-h-14"
+                      className="p-1.5 border-small border-divider"
                       style={{
                         backgroundColor: "rgba(212, 212, 216, 0.4)",
                         whiteSpace: "pre-wrap",
                       }}>{example.output}</code>
                   </div>
                 </div>
+                {example.md_note && (
+                <div className="flex-grow basis-0 overflow-hidden min-w-[175px]">
+                  <div className="flex flex-col">
+                    <p className="text-tiny text-default-700 my-0.5 mb-1.5 select-none">
+                      Piezīme:
+                    </p>
+                    <p
+                      className="min-h-14 text-small"
+                      dangerouslySetInnerHTML={{ __html: renderMd(example.md_note) }}></p>
+                  </div>
+                </div>
+                  
+                )}
               </div>
             </div>
           ))}
