@@ -36,4 +36,12 @@ type Submission = {
   };
 };
 
-export type { ProgrammingLanguage, Evaluation, Language, Task, Submission };
+type User = {
+  uuid: string;
+  username: string;
+  email: string;
+  firstname: string;
+  lastname: string;
+}
+
+export type { ProgrammingLanguage, Evaluation, Language, Task, Submission, User };

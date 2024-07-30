@@ -59,15 +59,16 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
     const [disabledPointerEvents, setDisabledPointerEvents] = useState(false);
     const [breadcrumbs, setBreadcrumbs] = useState<BreadcrumbItem[]>([]);
-    const [user, setUser] = useState<{
-        username: string;
-        email: string;
-        firstName: string;
-        lastName: string;
-    } | null | undefined>(undefined);
+    // const [user, setUser] = useState<{
+    //     username: string;
+    //     email: string;
+    //     firstName: string;
+    //     lastName: string;
+    // } | null | undefined>(undefined);
     const router = useRouter();
 
-    const jwt = useContext(AuthContext);
+    const authContext = useContext(AuthContext);
+    const user = authContext.user;
 
     const onSidebarToggle = React.useCallback(() => {
         setIsCollapsed((prev) => !prev);
@@ -190,19 +191,19 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             break;
     }
 
-    useEffect(() => {
-        const userInfoFromJwt = getUserInfoFromJWT();
-        if (userInfoFromJwt===null) {
-            setUser(null);
-        } else {
-        setUser({
-            username: userInfoFromJwt?.username ?? "",
-            email: userInfoFromJwt?.email ?? "",
-            firstName: userInfoFromJwt?.firstname ?? "",
-            lastName: userInfoFromJwt?.lastname ?? "",
-        })
-    }
-    }, [jwt]);
+    // useEffect(() => {
+    //     const userInfoFromJwt = getUserInfoFromJWT();
+    //     if (userInfoFromJwt === null) {
+    //         setUser(null);
+    //     } else {
+    //         setUser({
+    //             username: userInfoFromJwt?.username ?? "",
+    //             email: userInfoFromJwt?.email ?? "",
+    //             firstName: userInfoFromJwt?.firstname ?? "",
+    //             lastName: userInfoFromJwt?.lastname ?? "",
+    //         })
+    //     }
+    // }, [authContext]);
 
 
     return (
@@ -341,25 +342,25 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
                             <div className="flex items-center gap-3">
 
-{user===null && <>
-                            <Link href={"/auth/login"}>
-          <Button className="text-default-500" radius="full" variant="light">
-            Pieslēgties
-          </Button>
-          </Link>
-          <Link href={"/auth/register"}>
-          <Button
-            className="bg-blue-700 font-medium text-background"
-            color="secondary"
-            endContent={<Icon icon="solar:alt-arrow-right-linear" />}
-            radius="full"
-            variant="flat"
-            size="sm"
-          >
-            Pievienoties
-          </Button>
-          </Link>
-          </>}
+                                {user === null && <>
+                                    <Link href={"/login"}>
+                                        <Button className="text-default-500" radius="full" variant="light">
+                                            Pieslēgties
+                                        </Button>
+                                    </Link>
+                                    <Link href={"/register"}>
+                                        <Button
+                                            className="bg-blue-700 font-medium text-background"
+                                            color="secondary"
+                                            endContent={<Icon icon="solar:alt-arrow-right-linear" />}
+                                            radius="full"
+                                            variant="flat"
+                                            size="sm"
+                                        >
+                                            Pievienoties
+                                        </Button>
+                                    </Link>
+                                </>}
                                 {user && <Dropdown placement="bottom-end">
                                     <DropdownTrigger>
                                         <button className="outline-none transition-transform flex gap-3 items-center">
@@ -384,9 +385,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                         Profils <IconUserCircle size={16} />
                       </div>
                     </DropdownItem> */}
-                                        <DropdownItem key="logout" color="warning" onClick={()=>{
-                                                    removeJwt();
-                                                    setUser(null);
+                                        <DropdownItem key="logout" color="warning" onClick={() => {
+                                            removeJwt();
+                                            authContext.refresh();
                                         }}>
                                             <div className="flex gap-2 items-center justify-between">
                                                 <span>Iziet no sistēmas</span>
@@ -397,7 +398,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                                         </DropdownItem>
                                     </DropdownMenu>
                                 </Dropdown>
-}
+                                }
                             </div>
                         </div>
                         {/* <Breadcrumbs className="z-10 sm:hidden block">

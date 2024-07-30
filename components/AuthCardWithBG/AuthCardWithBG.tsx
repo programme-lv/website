@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useMutation } from "react-query";
 import { useRouter } from "next/navigation";
 import { Button, Input, Checkbox, Link, Divider } from "@nextui-org/react";
@@ -11,7 +11,8 @@ import { registerUser, loginUser } from "@/lib/auth";
 import Alert from "@/components/Alert";
 import MountainsImage from "@/public/mountains.png";
 import LogoImage from "@/public/logo.png";
-import { setJwt } from "@/lib/jwt";
+import { getUserInfoFromJWT, setJwt } from "@/lib/jwt";
+import { AuthContext } from "@/app/providers";
 
 const translations: { [key: string]: string } = {
   "invalid username or password": "nepareizs lietotājvārds vai parole",
@@ -30,15 +31,15 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
   const [lastName, setLastName] = useState("");
 
   const [repPassword, setRepPassword] = useState("");
-
   const router = useRouter();
+  const authContext = useContext(AuthContext);
 
   const registerMutation = useMutation(registerUser, {
     onSuccess: async (response) => {
       if (response.ok) {
         const data = await response.json();
-
         setJwt(data.token);
+        authContext.refresh();
         router.push("/tasks");
       } else {
         const error: string = await response.text();
@@ -56,8 +57,8 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
     onSuccess: async (response) => {
       if (response.ok) {
         const data = await response.json();
-
         setJwt(data.token);
+        authContext.refresh();
         router.push("/tasks");
       } else {
         const error: string = await response.text();
