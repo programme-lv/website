@@ -132,49 +132,49 @@ function MdView({ md_statement, examples }: { md_statement: MarkdownStatement, e
   return (
     <div className="w-full flex-grow flex flex-col gap-4 my-3 px-4">
       <div>
-        <h2 className="text-default-700 text-small my-1">Stāsts</h2>
-        <div className="ms-4">
+        <h2 className="text-small my-1 font-medium">Stāsts</h2>
+        <div className="">
           <span dangerouslySetInnerHTML={{ __html: storyMd }} />
         </div>
       </div>
       <div>
-        <h2 className="text-default-700 text-small my-1">Ievaddati</h2>
-        <div className="ms-4">
+        <h2 className="text-small my-1 font-medium">Ievaddati</h2>
+        <div className="">
           <span dangerouslySetInnerHTML={{ __html: inputMd }} />
         </div>
       </div>
       <div>
-        <h2 className="text-default-700 text-small my-1">Izvaddati</h2>
-        <div className="ms-4">
+        <h2 className="text-small my-1 font-medium">Izvaddati</h2>
+        <div className="">
           <span dangerouslySetInnerHTML={{ __html: outputMd }} />
         </div>
       </div>
       <div>
-        <h2 className="text-default-700 text-small my-1 mb-2">Piemēri</h2>
-        <div className="flex flex-col gap-3">
+        <h2 className="text-small my-1 mb-2 font-medium">Piemēri</h2>
+        <div className="flex gap-2 flex-wrap w-full max-w-full">
           {examples && examples.map((example, i) => (
-            <div key={i} className="ms-4 border-small border-divider p-1">
-              <div className="flex gap-2">
-                <div className="w-[50%] overflow-hidden">
+            <div key={i} className="border-small border-divider p-2 flex-grow rounded-md w-[350px] max-w-full">
+              <div className="flex gap-2 flex-wrap">
+                <div className="flex-grow basis-0 overflow-hidden min-w-[175px]">
                   <div className="flex flex-col">
-                    <p className="text-tiny text-default-700 my-0.5 ">
+                    <p className="text-tiny text-default-700 my-0.5 mb-2 select-none">
                       Ievaddati:
                     </p>
                     <code
-                      className="p-1.5"
+                      className="p-1.5 border-small border-divider min-h-14"
                       style={{
                         backgroundColor: "rgba(212, 212, 216, 0.4)",
                         whiteSpace: "pre-wrap",
                       }}>{example.input}</code>
                   </div>
                 </div>
-                <div className="w-[50%] overflow-hidden">
+                <div className="flex-grow basis-0 overflow-hidden min-w-[175px]">
                   <div className="flex flex-col">
-                    <p className="text-tiny text-default-700 my-0.5">
+                    <p className="text-tiny text-default-700 my-0.5 mb-2 select-none">
                       Izvaddati:
                     </p>
                     <code
-                      className="p-1.5"
+                      className="p-1.5 border-small border-divider min-h-14"
                       style={{
                         backgroundColor: "rgba(212, 212, 216, 0.4)",
                         whiteSpace: "pre-wrap",
