@@ -48,10 +48,7 @@ export function Providers({ children, themeProps }: ProvidersProps) {
 
   useEffect(()=>{
     if (typeof document !== "undefined") {
-      const jwt = getJwt();
-      if (jwt) {
-        setUser(retrieveUserInfoFromJwt());
-      }
+      setUser(retrieveUserInfoFromJwt());
     }
   },[typeof document === "undefined"])
 
