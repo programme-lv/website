@@ -53,7 +53,7 @@ function rehypeAddClasses() {
           node.properties.className = ["px-3", "py-1", "text-left", "text-small", "font-medium", "text-default-800", "border"];
           break;
         case "td":
-          node.properties.className = ["px-3", "py-1", "whitespace-nowrap", "border"];
+          node.properties.className = ["px-3", "py-1", "border"];
           break;
         default:
           break;

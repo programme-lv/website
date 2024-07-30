@@ -64,7 +64,7 @@ export default function TaskDetailsPage() {
       </div>
       <div
         ref={pageRef}
-        className="flex flex-col xl:hidden w-full h-full max-w-full gap-3 absolute"
+        className="flex flex-col xl:hidden w-full h-full max-w-full gap-3"
       >
         <LeftSide task_id={task_id as string} />
         {/* <RightSide taskCode={task_id as string} /> */}
@@ -99,7 +99,7 @@ function LeftSide({ task_id }: { task_id: string }) {
         {viewMode === "pdf" && task!.default_pdf_statement_url && (
           <PdfView pdf_statement_url={task!.default_pdf_statement_url} />
         )}
-        <Skeleton isLoaded={!isLoading && !error && !!task}>
+        <Skeleton isLoaded={!isLoading && !error && !!task} className="max-w-full">
           {viewMode === "md" && task!.default_md_statement && (
             <MdView
               examples={task!.examples}
