@@ -7,6 +7,7 @@ import React, {
   useRef,
   Dispatch,
   SetStateAction,
+  useContext,
 } from "react";
 import { useParams } from "next/navigation";
 import { debounce } from "lodash";
@@ -29,6 +30,7 @@ import Alert from "@/components/Alert";
 import { Task, getTaskById } from "@/lib/tasks";
 import getHardcodedLanguageList from "@/data/languages";
 import { ProgrammingLanguage } from "@/types/proglv";
+import { AuthContext } from "@/app/providers";
 
 export default function TaskDetailsPage() {
   const { task_id } = useParams();
@@ -283,18 +285,20 @@ const TaskInformation: React.FC<TaskInformationProps> = ({
 
 function RightSide({ taskCode }: { taskCode: string }) {
   const languages = getHardcodedLanguageList() as ProgrammingLanguage[];
+  const authContext = useContext(AuthContext);
 
   return (
     <div className="flex flex-col flex-grow bg-white rounded-small border-small border-divider px-2 pb-2">
       <ClientCodePanel languages={languages} taskCode={taskCode} />
       <div className="mt-2 flex justify-end gap-3">
-        {/* <Button color="secondary" disabled>
-					Pārbaudīt
-				</Button> */}
-        <Button color="primary">
-          Iesūtīt
+        {authContext.user !== null && <Button color="primary">
+          Iesūtīt risinājumu
           <IconSend size={16} />
-        </Button>
+        </Button>}
+        {authContext.user === null && <Button color="primary" isDisabled>
+          Pieslēdzieties, lai iesūtīt risinājumu!
+          <IconSend size={16} />
+        </Button>}
       </div>
     </div>
   );
