@@ -343,12 +343,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                             <div className="flex items-center gap-3">
 
                                 {user === null && <>
-                                    <Link href={"/login"}>
+                                    <Link href={`/login?redirect=${encodeURIComponent(pathname)}`}>
                                         <Button className="text-default-500" radius="full" variant="light">
                                             Pieslēgties
                                         </Button>
                                     </Link>
-                                    <Link href={"/register"}>
+                                    <Link href={`/register?redirect=${encodeURIComponent(pathname)}`}>
                                         <Button
                                             className="bg-blue-700 font-medium text-background"
                                             color="secondary"

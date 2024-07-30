@@ -2,7 +2,7 @@
 
 import React, { useContext, useState } from "react";
 import { useMutation } from "react-query";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Button, Input, Checkbox, Link, Divider } from "@nextui-org/react";
 import { Icon } from "@iconify/react";
 import Image from "next/image";
@@ -32,6 +32,8 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
 
   const [repPassword, setRepPassword] = useState("");
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectParam = searchParams.get('redirect');
   const authContext = useContext(AuthContext);
 
   const registerMutation = useMutation(registerUser, {
@@ -40,7 +42,8 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
         const data = await response.json();
         setJwt(data.token);
         authContext.refresh();
-        router.push("/tasks");
+        if(redirectParam) router.push(redirectParam);
+        else router.push("/tasks");
       } else {
         const error: string = await response.text();
         const translated = translations[error.trim()] || error;
@@ -59,7 +62,8 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
         const data = await response.json();
         setJwt(data.token);
         authContext.refresh();
-        router.push("/tasks");
+        if(redirectParam) router.push(redirectParam);
+        else router.push("/tasks");
       } else {
         const error: string = await response.text();
         const translated = translations[error.trim()] || error;
@@ -287,14 +291,14 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
           {type === "register" ? (
             <>
               Jau ir konts?&nbsp;
-              <Link href="/auth/login" size="sm">
+              <Link href={redirectParam ? `/login?redirect=${encodeURIComponent(redirectParam)}` : `/login`} size="sm">
                 Pieslēgties
               </Link>
             </>
           ) : (
             <>
               Nav konta?&nbsp;
-              <Link href="/auth/register" size="sm">
+              <Link href={redirectParam ? `/register?redirect=${encodeURIComponent(redirectParam)}` : `/register`} size="sm">
                 Reģistrēties
               </Link>
             </>
