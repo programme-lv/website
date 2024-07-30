@@ -33,7 +33,7 @@ type Task = {
   illustration_img_url?: string;
   difficulty_rating: 1 | 2 | 3 | 4 | 5;
   default_md_statement?: MarkdownStatement;
-  examples: Example[];
+  examples?: Example[];
   default_pdf_statement_url?: string;
   origin_notes?: Record<string, string>;
 };
@@ -41,7 +41,7 @@ type Task = {
 type Example = {
   input: string;
   output: string;
-  note?: string;
+  md_note?: string;
 };
 
 type MarkdownStatement = {
@@ -82,4 +82,5 @@ export type {
   User,
   Task,
   MarkdownStatement,
+  Example
 };

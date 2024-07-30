@@ -29,7 +29,7 @@ import MonacoEditor from "@monaco-editor/react";
 import Alert from "@/components/Alert";
 import { getTaskById } from "@/lib/tasks";
 import getHardcodedLanguageList from "@/data/languages";
-import { MarkdownStatement, ProgrammingLanguage, Task } from "@/types/proglv";
+import { Example, MarkdownStatement, ProgrammingLanguage, Task } from "@/types/proglv";
 import { AuthContext } from "@/app/providers";
 import "katex/dist/katex.min.css";
 import renderMd from "@/lib/render-md";
@@ -115,17 +115,19 @@ function LeftSide({ task }: { task: Task }) {
           <PdfView pdf_statement_url={task.default_pdf_statement_url} />
         )}
         {viewMode === "md" && task.default_md_statement && (
-          <MdView md_statement={task.default_md_statement} />
+          <MdView md_statement={task.default_md_statement} examples={task.examples} />
         )}
       </div>
     </div>
   );
 }
 
-function MdView({ md_statement }: { md_statement: MarkdownStatement }) {
+function MdView({ md_statement, examples }: { md_statement: MarkdownStatement, examples?: Example[] }) {
   const storyMd = renderMd(md_statement.story);
   const inputMd = renderMd(md_statement.input);
   const outputMd = renderMd(md_statement.output);
+
+  console.log(examples);
 
   return (
     <div className="w-full flex-grow flex flex-col gap-4 my-3 px-4">
@@ -145,6 +147,43 @@ function MdView({ md_statement }: { md_statement: MarkdownStatement }) {
         <h2 className="text-default-700 text-small my-1">Izvaddati</h2>
         <div className="ms-4">
           <span dangerouslySetInnerHTML={{ __html: outputMd }} />
+        </div>
+      </div>
+      <div>
+        <h2 className="text-default-700 text-small my-1 mb-2">Piemēri</h2>
+        <div className="flex flex-col gap-3">
+          {examples && examples.map((example, i) => (
+            <div key={i} className="ms-4 border-small border-divider p-1">
+              <div className="flex gap-2">
+                <div className="w-[50%] overflow-hidden">
+                  <div className="flex flex-col">
+                    <p className="text-tiny text-default-700 my-0.5 ">
+                      Ievaddati:
+                    </p>
+                    <code
+                      className="p-1.5"
+                      style={{
+                        backgroundColor: "rgba(212, 212, 216, 0.4)",
+                        whiteSpace: "pre-wrap",
+                      }}>{example.input}</code>
+                  </div>
+                </div>
+                <div className="w-[50%] overflow-hidden">
+                  <div className="flex flex-col">
+                    <p className="text-tiny text-default-700 my-0.5">
+                      Izvaddati:
+                    </p>
+                    <code
+                      className="p-1.5"
+                      style={{
+                        backgroundColor: "rgba(212, 212, 216, 0.4)",
+                        whiteSpace: "pre-wrap",
+                      }}>{example.output}</code>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
