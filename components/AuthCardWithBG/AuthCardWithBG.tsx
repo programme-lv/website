@@ -39,7 +39,7 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
         const data = await response.json();
 
         setJwt(data.token);
-        router.push("/status");
+        router.push("/tasks");
       } else {
         const error: string = await response.text();
         const translated = translations[error.trim()] || error;
@@ -58,7 +58,7 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
         const data = await response.json();
 
         setJwt(data.token);
-        router.push("/status");
+        router.push("/tasks");
       } else {
         const error: string = await response.text();
         const translated = translations[error.trim()] || error;

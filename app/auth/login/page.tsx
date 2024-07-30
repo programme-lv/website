@@ -11,7 +11,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (jwt) {
-      router.push("/status");
+      router.push("/tasks");
     }
   }, [jwt, router]);
 
