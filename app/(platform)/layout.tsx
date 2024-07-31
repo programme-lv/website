@@ -106,7 +106,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         [task_id + ""]: fetchedTask.task_full_name,
       }));
     } catch (err) {
-      alert("Failed to load task details");
+      console.error(err);
+      // alert("Failed to load task details");
     }
   };
 
