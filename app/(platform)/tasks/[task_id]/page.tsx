@@ -75,7 +75,9 @@ export default function TaskDetailsPage() {
 
 function LeftSide({ task_id }: { task_id: string }) {
 
-  let { data, error, isLoading } = useQuery(`task-${task_id}`, () => getTaskById(task_id));
+  let { data, error, isLoading } = useQuery(`task-${task_id}`, () => getTaskById(task_id),{
+    refetchOnWindowFocus:false,
+  });
   const [viewMode, setViewMode] = useState<"md" | "pdf" | undefined>(undefined);
   const task = data as Task | null;
 
