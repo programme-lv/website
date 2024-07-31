@@ -93,7 +93,7 @@ function LeftSide({ task_id }: { task_id: string }) {
   }, [task?.default_pdf_statement_url, task?.default_md_statement]);
 
   return (
-    <div className="h-full max-h-full overflow-y-auto w-full rounded-small border-small border-divider p-2 bg-white">
+    <div className="h-full max-h-[99%] overflow-y-auto w-full rounded-small border-small border-divider p-2 bg-white">
       <div className="h-full relative flex flex-col items-center gap-1 flex-grow overflow-y-auto">
         <TaskInformation task={task} />
 
