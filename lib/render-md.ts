@@ -4,16 +4,15 @@ import remarkMath from "remark-math";
 import remarkRehype from "remark-rehype";
 import rehypeKatex from "rehype-katex";
 import rehypeStringify from "rehype-stringify";
-import remarkGfm from 'remark-gfm';
+import remarkGfm from "remark-gfm";
 import { Node } from "unist";
 import { Element } from "hast";
 import { visit } from "unist-util-visit";
-import { ElementContent } from "rehype-katex/lib";
 
 // Define the custom plugin within the same file
 function rehypeAddClasses() {
   return (tree: Node) => {
-    visit(tree, "element", (node: Element, index, parent:Element) => {
+    visit(tree, "element", (node: Element, index, parent: Element) => {
       if (!node.properties) node.properties = {};
       // Add Tailwind classes based on the element type
       switch (node.tagName) {
@@ -39,32 +38,51 @@ function rehypeAddClasses() {
           node.properties.className = ["bg-gray-100", "p-1", "rounded"];
           break;
         case "table":
-          node.properties.className = ["min-w-full", "divide-y", "divide-gray-200"];
+          node.properties.className = [
+            "min-w-full",
+            "divide-y",
+            "divide-gray-200",
+          ];
           break;
         case "thead":
           node.properties.className = ["border"];
           break;
         case "tbody":
-          node.properties.className = ["bg-white", "divide-y", "divide-gray-200"];
+          node.properties.className = [
+            "bg-white",
+            "divide-y",
+            "divide-gray-200",
+          ];
           break;
         case "tr":
           node.properties.className = [];
           break;
         case "th":
-          node.properties.className = ["px-3", "py-1", "text-left", "text-small", "font-medium", "text-default-800", "border"];
+          node.properties.className = [
+            "px-3",
+            "py-1",
+            "text-left",
+            "text-small",
+            "font-medium",
+            "text-default-800",
+            "border",
+          ];
           break;
         case "td":
           node.properties.className = ["px-3", "py-1", "border"];
           break;
         case "img":
           // node.properties.className = ["w-2/3"]
-          node.properties.style = "margin-top: .5rem; margin-bottom: .5rem; width: 450px; object-fit:contain;";
+          node.properties.style =
+            "margin-top: .5rem; margin-bottom: .5rem; width: 450px; object-fit:contain;";
           // Wrap the image in a figure and add a caption
           if (parent && parent.children) {
-            const figure:any = {
+            const figure: any = {
               type: "element",
               tagName: "figure",
-              properties: { className: ["flex", "flex-col", "items-center", "mb-4"] },
+              properties: {
+                className: ["flex", "flex-col", "items-center", "mb-4"],
+              },
               children: [
                 {
                   type: "element",
@@ -75,10 +93,13 @@ function rehypeAddClasses() {
                   type: "element",
                   tagName: "figcaption",
                   properties: { className: ["text-sm", "text-center", "mt-2"] },
-                  children: [{ type: "text", value: node.properties.alt || "Image" }],
+                  children: [
+                    { type: "text", value: node.properties.alt || "Image" },
+                  ],
                 },
               ],
             };
+
             parent.children[index] = figure;
           }
           break;

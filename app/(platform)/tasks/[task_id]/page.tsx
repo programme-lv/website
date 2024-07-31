@@ -17,7 +17,6 @@ import {
   Button,
   Card,
   CardBody,
-  CardProps,
   Chip,
   Divider,
   Select,
@@ -27,8 +26,8 @@ import {
 } from "@nextui-org/react";
 import { Image } from "@nextui-org/react";
 import MonacoEditor from "@monaco-editor/react";
+import { useQuery } from "react-query";
 
-import Alert from "@/components/Alert";
 import { getTaskById } from "@/lib/tasks";
 import getHardcodedLanguageList from "@/data/languages";
 import {
@@ -41,7 +40,6 @@ import {
 import { AuthContext } from "@/app/providers";
 import "katex/dist/katex.min.css";
 import renderMd from "@/lib/render-md";
-import { useQuery } from "react-query";
 
 export default function TaskDetailsPage() {
   const { task_id } = useParams();
@@ -76,10 +74,10 @@ export default function TaskDetailsPage() {
 }
 
 function LeftSide({ task_id }: { task_id: string }) {
-
-  let { data, error, isLoading } = useQuery(`task-${task_id}`, () => getTaskById(task_id), {
+  let { data } = useQuery(`task-${task_id}`, () => getTaskById(task_id), {
     refetchOnWindowFocus: false,
   });
+
   const [viewMode, setViewMode] = useState<"md" | "pdf" | undefined>(undefined);
   const task = data as Task | null;
 
@@ -95,7 +93,12 @@ function LeftSide({ task_id }: { task_id: string }) {
   }, [task?.default_pdf_statement_url, task?.default_md_statement]);
 
   return (
-    <div className={cn("h-full max-h-full w-full overflow-hidden rounded-small border-small border-divider p-2 bg-white", { "overflow-y-auto": (viewMode == "md") })}>
+    <div
+      className={cn(
+        "h-full max-h-full w-full overflow-hidden rounded-small border-small border-divider p-2 bg-white",
+        { "overflow-y-auto": viewMode == "md" },
+      )}
+    >
       <div className="h-full relative flex flex-col items-center gap-1 flex-grow">
         <TaskInformation task={task} />
 
@@ -103,14 +106,14 @@ function LeftSide({ task_id }: { task_id: string }) {
         {viewMode === "pdf" && task!.default_pdf_statement_url && (
           <PdfView pdf_statement_url={task!.default_pdf_statement_url} />
         )}
-        {viewMode === "md" && task!.default_md_statement && (<Skeleton isLoaded={!!task} className="max-w-full flex-grow w-full">
-
-          <MdView
-            examples={task!.examples}
-            md_statement={task!.default_md_statement}
-            vis_inp_st_inputs={task?.visible_input_subtasks}
-          />
-        </Skeleton>
+        {viewMode === "md" && task!.default_md_statement && (
+          <Skeleton className="max-w-full flex-grow w-full" isLoaded={!!task}>
+            <MdView
+              examples={task!.examples}
+              md_statement={task!.default_md_statement}
+              vis_inp_st_inputs={task?.visible_input_subtasks}
+            />
+          </Skeleton>
         )}
       </div>
     </div>
@@ -120,7 +123,7 @@ function LeftSide({ task_id }: { task_id: string }) {
 function MdView({
   md_statement,
   examples,
-  vis_inp_st_inputs
+  vis_inp_st_inputs,
 }: {
   md_statement: MarkdownStatement;
   examples?: Example[];
@@ -130,6 +133,7 @@ function MdView({
   const [inputMd, setInputMd] = useState<string>("");
   const [outputMd, setOutputMd] = useState<string>("");
   const [scoringMd, setScoringMd] = useState<string>("");
+
   useEffect(() => {
     setStoryMd(renderMd(md_statement.story));
     setInputMd(renderMd(md_statement.input));
@@ -219,11 +223,13 @@ function MdView({
             ))}
         </div>
       </div>
-      {vis_inp_st_inputs?.map((vis_inp_st_input: StInputs, i) => (
-      <div>
-        <h2 className="text-small my-1 mb-2 font-semibold">{vis_inp_st_input.subtask}. apakšuzdevuma ievaddati</h2>
-        <div className="flex gap-2 flex-wrap w-full max-w-full">
-          {vis_inp_st_input.inputs.map((input, i) => (
+      {vis_inp_st_inputs?.map((vis_inp_st_input: StInputs) => (
+        <div key={vis_inp_st_input.subtask}>
+          <h2 className="text-small my-1 mb-2 font-semibold">
+            {vis_inp_st_input.subtask}. apakšuzdevuma ievaddati
+          </h2>
+          <div className="flex gap-2 flex-wrap w-full max-w-full">
+            {vis_inp_st_input.inputs.map((input, i) => (
               <div
                 key={i}
                 className="border-small border-divider p-2 flex-grow rounded-md w-[350px] max-w-full"
@@ -248,17 +254,20 @@ function MdView({
                 </div>
               </div>
             ))}
+          </div>
         </div>
-      </div>
-        
       ))}
 
-      {scoringMd && <div>
-        <h2 className="text-small mb-3 mt-6 font-semibold">Apakšuzdevumi un to vērtēšana</h2>
-        <div className="">
-          <span dangerouslySetInnerHTML={{ __html: scoringMd }} />
+      {scoringMd && (
+        <div>
+          <h2 className="text-small mb-3 mt-6 font-semibold">
+            Apakšuzdevumi un to vērtēšana
+          </h2>
+          <div className="">
+            <span dangerouslySetInnerHTML={{ __html: scoringMd }} />
+          </div>
         </div>
-      </div>}
+      )}
     </div>
   );
 }
@@ -315,13 +324,36 @@ type TaskInformationProps = {
   onSelectedTabChange?: (key: string) => void;
 };
 
-const TaskInformation: React.FC<TaskInformationProps> = ({ task, ...props }) => {
+const TaskInformation: React.FC<TaskInformationProps> = ({
+  task,
+  ...props
+}) => {
   let difficultyChips = {
-    1: <Chip className="bg-green-100 text-green-800" size="sm" variant="flat">ļoti viegls</Chip>,
-    2: <Chip className="bg-sky-100 text-sky-800" size="sm" variant="flat">viegls</Chip>,
-    3: <Chip className="bg-violet-100 text-violet-800" size="sm" variant="flat">vidēji grūts</Chip>,
-    4: <Chip className="bg-yellow-100 text-yellow-800" size="sm" variant="flat">grūts</Chip>,
-    5: <Chip className="bg-red-100 text-red-800" size="sm" variant="flat">ļoti grūts</Chip>,
+    1: (
+      <Chip className="bg-green-100 text-green-800" size="sm" variant="flat">
+        ļoti viegls
+      </Chip>
+    ),
+    2: (
+      <Chip className="bg-sky-100 text-sky-800" size="sm" variant="flat">
+        viegls
+      </Chip>
+    ),
+    3: (
+      <Chip className="bg-violet-100 text-violet-800" size="sm" variant="flat">
+        vidēji grūts
+      </Chip>
+    ),
+    4: (
+      <Chip className="bg-yellow-100 text-yellow-800" size="sm" variant="flat">
+        grūts
+      </Chip>
+    ),
+    5: (
+      <Chip className="bg-red-100 text-red-800" size="sm" variant="flat">
+        ļoti grūts
+      </Chip>
+    ),
   };
 
   const cardRef = useRef<HTMLDivElement>(null);
@@ -349,12 +381,22 @@ const TaskInformation: React.FC<TaskInformationProps> = ({ task, ...props }) => 
   }, [cardRef]);
 
   return (
-    <Card className="w-full" {...props} ref={cardRef} radius="none" shadow="none" classNames={{ base: "overflow-visible" }}>
+    <Card
+      className="w-full"
+      {...props}
+      ref={cardRef}
+      classNames={{ base: "overflow-visible" }}
+      radius="none"
+      shadow="none"
+    >
       <CardBody className="flex flex-col p-0 sm:flex-nowrap">
         <div className="flex flex-row">
           <div className="h-full flex flex-row flex-wrap sm:flex-nowrap flex-grow">
             {layout === "wide" && task?.illustration_img_url && (
-              <Skeleton isLoaded={!!task} className="max-w-40 min-w-20 flex p-2">
+              <Skeleton
+                className="max-w-40 min-w-20 flex p-2"
+                isLoaded={!!task}
+              >
                 <Image
                   alt={task.task_full_name}
                   className="h-full flex-none object-cover"
@@ -374,14 +416,15 @@ const TaskInformation: React.FC<TaskInformationProps> = ({ task, ...props }) => 
                 </div>
                 <div className="flex justify-between pt-1 max-w-72">
                   <div className="flex justify-between ">
-                    {task?.origin_olympiad && task.origin_olympiad === "LIO" && (
-                      <div className="w-16 min-w-16">
-                        <Image
-                          alt="Latvijas Informātikas olimpiādes logo"
-                          src="https://lio.lv/LIO_logo_jaunais3.png"
-                        />
-                      </div>
-                    )}
+                    {task?.origin_olympiad &&
+                      task.origin_olympiad === "LIO" && (
+                        <div className="w-16 min-w-16">
+                          <Image
+                            alt="Latvijas Informātikas olimpiādes logo"
+                            src="https://lio.lv/LIO_logo_jaunais3.png"
+                          />
+                        </div>
+                      )}
                     {task?.origin_notes?.lv && (
                       <div className="text-tiny text-default-700 py-1 ms-1">
                         {task.origin_notes.lv}
