@@ -92,21 +92,21 @@ function LeftSide({ task_id }: { task_id: string }) {
 
   return (
     <div className="h-full max-h-full overflow-y-auto w-full rounded-small border-small border-divider p-2 bg-white">
-      <div className="h-full relative flex flex-col items-center gap-1 flex-grow overflow-y-scroll">
+      <div className="h-full relative flex flex-col items-center gap-1 flex-grow overflow-y-auto">
         <TaskInformation task={task} />
 
         <Divider className="my-1" />
         {viewMode === "pdf" && task!.default_pdf_statement_url && (
           <PdfView pdf_statement_url={task!.default_pdf_statement_url} />
         )}
-        <Skeleton isLoaded={!!task} className="max-w-full flex-grow w-full">
-          {viewMode === "md" && task!.default_md_statement && (
+        {viewMode === "md" && task!.default_md_statement && (<Skeleton isLoaded={!!task} className="max-w-full flex-grow w-full">
+          
             <MdView
               examples={task!.examples}
               md_statement={task!.default_md_statement}
             />
-          )}
         </Skeleton>
+          )}
       </div>
     </div>
   );
@@ -288,9 +288,9 @@ const TaskInformation: React.FC<TaskInformationProps> = ({ task, ...props }) => 
   const [layout, setLayout] = useState<"narrow" | "wide">("wide");
 
   function handleCardResize(cardWidth: number) {
-    if (cardWidth < 600) {
+    if (cardWidth < 550) {
       setLayout("narrow");
-    } else {
+    } else if(cardWidth > 650){
       setLayout("wide");
     }
   }
@@ -480,7 +480,7 @@ int main() {
             language={monacoLangId}
             options={{
               minimap: { enabled: false },
-              fontSize: 12,
+              fontSize: 14,
             }}
             theme="vs-dark"
             value={code}
