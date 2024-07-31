@@ -313,15 +313,15 @@ const TaskInformation: React.FC<TaskInformationProps> = ({ task, ...props }) => 
       <CardBody className="flex flex-col p-0 sm:flex-nowrap">
         <div className="flex flex-row">
           <div className="h-full flex flex-row flex-wrap sm:flex-nowrap flex-grow">
+          {layout === "wide" && task?.illustration_img_url && (
             <Skeleton isLoaded={!!task} className="max-w-40 min-w-20 flex p-2">
-              {layout === "wide" && task?.illustration_img_url && (
                 <Image
                   alt={task.task_full_name}
                   className="h-full flex-none object-cover"
                   src={task.illustration_img_url}
                 />
-              )}
             </Skeleton>
+              )}
             <div className="flex flex-col justify-between ps-4 pt-2 pb-1 w-full">
               <Skeleton isLoaded={!!task}>
                 <div>
