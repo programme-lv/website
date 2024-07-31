@@ -23,6 +23,7 @@ import {
   Select,
   SelectItem,
   Skeleton,
+  cn,
 } from "@nextui-org/react";
 import { Image } from "@nextui-org/react";
 import MonacoEditor from "@monaco-editor/react";
@@ -94,7 +95,7 @@ function LeftSide({ task_id }: { task_id: string }) {
   }, [task?.default_pdf_statement_url, task?.default_md_statement]);
 
   return (
-    <div className="h-full max-h-full overflow-y-auto w-full rounded-small border-small border-divider p-2 bg-white">
+    <div className={cn("h-full max-h-full w-full overflow-hidden rounded-small border-small border-divider p-2 bg-white",{"overflow-y-auto":(viewMode=="md")})}>
       <div className="h-full relative flex flex-col items-center gap-1 flex-grow">
         <TaskInformation task={task} />
 
