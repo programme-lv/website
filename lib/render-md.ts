@@ -57,7 +57,8 @@ function rehypeAddClasses() {
           node.properties.className = ["px-3", "py-1", "border"];
           break;
         case "img":
-          node.properties.style = "width: 50%; margin-top: .5rem; margin-bottom: .5rem;";
+          // node.properties.className = ["w-2/3"]
+          node.properties.style = "margin-top: .5rem; margin-bottom: .5rem; max-height:300px";
           // Wrap the image in a figure and add a caption
           if (parent && parent.children) {
             const figure:any = {
