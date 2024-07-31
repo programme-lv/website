@@ -254,7 +254,7 @@ function MdView({
       ))}
 
       {scoringMd && <div>
-        <h2 className="text-small mb-3 mt-6 font-semibold">Vērtēšana</h2>
+        <h2 className="text-small mb-3 mt-6 font-semibold">Apakšuzdevumi un to vērtēšana</h2>
         <div className="">
           <span dangerouslySetInnerHTML={{ __html: scoringMd }} />
         </div>
