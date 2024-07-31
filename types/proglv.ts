@@ -36,6 +36,12 @@ type Task = {
   examples?: Example[];
   default_pdf_statement_url?: string;
   origin_notes?: Record<string, string>;
+  visible_input_subtasks?: StInputs[];
+};
+
+type StInputs = {
+  subtask: number;
+  inputs: string[];
 };
 
 type Example = {
@@ -83,4 +89,5 @@ export type {
   Task,
   MarkdownStatement,
   Example,
+  StInputs,
 };

@@ -34,6 +34,7 @@ import {
   Example,
   MarkdownStatement,
   ProgrammingLanguage,
+  StInputs,
   Task,
 } from "@/types/proglv";
 import { AuthContext } from "@/app/providers";
@@ -93,8 +94,8 @@ function LeftSide({ task_id }: { task_id: string }) {
   }, [task?.default_pdf_statement_url, task?.default_md_statement]);
 
   return (
-    <div className="h-[98%] max-h-[98%] overflow-y-auto w-full rounded-small border-small border-divider p-2 bg-white">
-      <div className="h-[98%] relative flex flex-col items-center gap-1 flex-grow overflow-y-auto">
+    <div className="h-full max-h-full overflow-y-auto w-full rounded-small border-small border-divider p-2 bg-white">
+      <div className="h-full relative flex flex-col items-center gap-1 flex-grow">
         <TaskInformation task={task} />
 
         <Divider className="my-1" />
@@ -106,6 +107,7 @@ function LeftSide({ task_id }: { task_id: string }) {
             <MdView
               examples={task!.examples}
               md_statement={task!.default_md_statement}
+              vis_inp_st_inputs={task?.visible_input_subtasks}
             />
         </Skeleton>
           )}
@@ -117,9 +119,11 @@ function LeftSide({ task_id }: { task_id: string }) {
 function MdView({
   md_statement,
   examples,
+  vis_inp_st_inputs
 }: {
   md_statement: MarkdownStatement;
   examples?: Example[];
+  vis_inp_st_inputs?: StInputs[];
 }) {
   const [storyMd, setStoryMd] = useState<string>("");
   const [inputMd, setInputMd] = useState<string>("");
