@@ -77,8 +77,8 @@ export default function TaskDetailsPage() {
 
 function LeftSide({ task_id }: { task_id: string }) {
 
-  let { data, error, isLoading } = useQuery(`task-${task_id}`, () => getTaskById(task_id),{
-    refetchOnWindowFocus:false,
+  let { data, error, isLoading } = useQuery(`task-${task_id}`, () => getTaskById(task_id), {
+    refetchOnWindowFocus: false,
   });
   const [viewMode, setViewMode] = useState<"md" | "pdf" | undefined>(undefined);
   const task = data as Task | null;
@@ -95,7 +95,7 @@ function LeftSide({ task_id }: { task_id: string }) {
   }, [task?.default_pdf_statement_url, task?.default_md_statement]);
 
   return (
-    <div className={cn("h-full max-h-full w-full overflow-hidden rounded-small border-small border-divider p-2 bg-white",{"overflow-y-auto":(viewMode=="md")})}>
+    <div className={cn("h-full max-h-full w-full overflow-hidden rounded-small border-small border-divider p-2 bg-white", { "overflow-y-auto": (viewMode == "md") })}>
       <div className="h-full relative flex flex-col items-center gap-1 flex-grow">
         <TaskInformation task={task} />
 
@@ -104,14 +104,14 @@ function LeftSide({ task_id }: { task_id: string }) {
           <PdfView pdf_statement_url={task!.default_pdf_statement_url} />
         )}
         {viewMode === "md" && task!.default_md_statement && (<Skeleton isLoaded={!!task} className="max-w-full flex-grow w-full">
-          
-            <MdView
-              examples={task!.examples}
-              md_statement={task!.default_md_statement}
-              vis_inp_st_inputs={task?.visible_input_subtasks}
-            />
+
+          <MdView
+            examples={task!.examples}
+            md_statement={task!.default_md_statement}
+            vis_inp_st_inputs={task?.visible_input_subtasks}
+          />
         </Skeleton>
-          )}
+        )}
       </div>
     </div>
   );
@@ -218,14 +218,47 @@ function MdView({
               </div>
             ))}
         </div>
-
-        {scoringMd && <div>
-          <h2 className="text-small mb-3 mt-6 font-semibold">Vērtēšana</h2>
-          <div className="">
-            <span dangerouslySetInnerHTML={{ __html: scoringMd }} />
-          </div>
-        </div>}
       </div>
+      {vis_inp_st_inputs?.map((vis_inp_st_input: StInputs, i) => (
+      <div>
+        <h2 className="text-small my-1 mb-2 font-semibold">{vis_inp_st_input.subtask}. apakšuzdevuma ievaddati</h2>
+        <div className="flex gap-2 flex-wrap w-full max-w-full">
+          {vis_inp_st_input.inputs.map((input, i) => (
+              <div
+                key={i}
+                className="border-small border-divider p-2 flex-grow rounded-md w-[350px] max-w-full"
+              >
+                <div className="flex gap-2 flex-wrap">
+                  <div className="flex-grow basis-0 overflow-hidden min-w-[175px]">
+                    <div className="flex flex-col">
+                      {/* <p className="text-tiny text-default-700 my-0.5 mb-2 select-none">
+                        Ievaddati:
+                      </p> */}
+                      <code
+                        className="p-1.5 border-small border-divider"
+                        style={{
+                          backgroundColor: "rgba(212, 212, 216, 0.4)",
+                          whiteSpace: "pre-wrap",
+                        }}
+                      >
+                        {input}
+                      </code>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+        </div>
+      </div>
+        
+      ))}
+
+      {scoringMd && <div>
+        <h2 className="text-small mb-3 mt-6 font-semibold">Vērtēšana</h2>
+        <div className="">
+          <span dangerouslySetInnerHTML={{ __html: scoringMd }} />
+        </div>
+      </div>}
     </div>
   );
 }
@@ -297,7 +330,7 @@ const TaskInformation: React.FC<TaskInformationProps> = ({ task, ...props }) => 
   function handleCardResize(cardWidth: number) {
     if (cardWidth < 550) {
       setLayout("narrow");
-    } else if(cardWidth > 650){
+    } else if (cardWidth > 650) {
       setLayout("wide");
     }
   }
@@ -316,19 +349,19 @@ const TaskInformation: React.FC<TaskInformationProps> = ({ task, ...props }) => 
   }, [cardRef]);
 
   return (
-    <Card className="w-full" {...props} ref={cardRef} radius="none" shadow="none" classNames={{base:"overflow-visible"}}>
+    <Card className="w-full" {...props} ref={cardRef} radius="none" shadow="none" classNames={{ base: "overflow-visible" }}>
       <CardBody className="flex flex-col p-0 sm:flex-nowrap">
         <div className="flex flex-row">
           <div className="h-full flex flex-row flex-wrap sm:flex-nowrap flex-grow">
-          {layout === "wide" && task?.illustration_img_url && (
-            <Skeleton isLoaded={!!task} className="max-w-40 min-w-20 flex p-2">
+            {layout === "wide" && task?.illustration_img_url && (
+              <Skeleton isLoaded={!!task} className="max-w-40 min-w-20 flex p-2">
                 <Image
                   alt={task.task_full_name}
                   className="h-full flex-none object-cover"
                   src={task.illustration_img_url}
                 />
-            </Skeleton>
-              )}
+              </Skeleton>
+            )}
             <div className="flex flex-col justify-between ps-4 pt-2 pb-1 w-full">
               <Skeleton isLoaded={!!task}>
                 <div>
