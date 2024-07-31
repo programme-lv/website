@@ -8,11 +8,12 @@ import remarkGfm from 'remark-gfm';
 import { Node } from "unist";
 import { Element } from "hast";
 import { visit } from "unist-util-visit";
+import { ElementContent } from "rehype-katex/lib";
 
 // Define the custom plugin within the same file
 function rehypeAddClasses() {
   return (tree: Node) => {
-    visit(tree, "element", (node: Element) => {
+    visit(tree, "element", (node: Element, index, parent:Element) => {
       if (!node.properties) node.properties = {};
       // Add Tailwind classes based on the element type
       switch (node.tagName) {
@@ -54,6 +55,31 @@ function rehypeAddClasses() {
           break;
         case "td":
           node.properties.className = ["px-3", "py-1", "border"];
+          break;
+        case "img":
+          node.properties.style = "width: 50%; margin-top: .5rem; margin-bottom: .5rem;";
+          // Wrap the image in a figure and add a caption
+          if (parent && parent.children) {
+            const figure:any = {
+              type: "element",
+              tagName: "figure",
+              properties: { className: ["flex", "flex-col", "items-center", "mb-4"] },
+              children: [
+                {
+                  type: "element",
+                  tagName: "img",
+                  properties: node.properties,
+                },
+                {
+                  type: "element",
+                  tagName: "figcaption",
+                  properties: { className: ["text-sm", "text-center", "mt-2"] },
+                  children: [{ type: "text", value: node.properties.alt || "Image" }],
+                },
+              ],
+            };
+            parent.children[index] = figure;
+          }
           break;
         default:
           break;

@@ -99,7 +99,7 @@ function LeftSide({ task_id }: { task_id: string }) {
         {viewMode === "pdf" && task!.default_pdf_statement_url && (
           <PdfView pdf_statement_url={task!.default_pdf_statement_url} />
         )}
-        <Skeleton isLoaded={!isLoading && !error && !!task} className="max-w-full">
+        <Skeleton isLoaded={!!task} className="max-w-full flex-grow w-full">
           {viewMode === "md" && task!.default_md_statement && (
             <MdView
               examples={task!.examples}
@@ -119,10 +119,16 @@ function MdView({
   md_statement: MarkdownStatement;
   examples?: Example[];
 }) {
-  const storyMd = renderMd(md_statement.story);
-  const inputMd = renderMd(md_statement.input);
-  const outputMd = renderMd(md_statement.output);
-  const scoringMd = md_statement.scoring ? renderMd(md_statement.scoring) : "";
+  const [storyMd, setStoryMd] = useState<string>("");
+  const [inputMd, setInputMd] = useState<string>("");
+  const [outputMd, setOutputMd] = useState<string>("");
+  const [scoringMd, setScoringMd] = useState<string>("");
+  useEffect(() => {
+    setStoryMd(renderMd(md_statement.story));
+    setInputMd(renderMd(md_statement.input));
+    setOutputMd(renderMd(md_statement.output));
+    setScoringMd(md_statement.scoring ? renderMd(md_statement.scoring) : "");
+  }, [md_statement]);
 
   return (
     <div className="w-full flex-grow flex flex-col gap-4 my-3 px-4">
