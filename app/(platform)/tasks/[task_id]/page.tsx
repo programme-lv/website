@@ -55,7 +55,7 @@ export default function TaskDetailsPage() {
           defaultSize={{ width: "50%" }}
           enable={{ right: true }}
           handleComponent={{ right: <ResizeBar /> }}
-          maxWidth={"80%"}
+          maxWidth={"70%"}
           minWidth={"200px"}
         >
           <LeftSide task_id={task_id as string} />
@@ -99,7 +99,7 @@ function LeftSide({ task_id }: { task_id: string }) {
   useEffect(() => {
     if (!task) return;
     if (task.default_pdf_statement_url && window.navigator.pdfViewerEnabled) {
-      setViewMode("pdf");
+      setViewMode("md");
     } else if (task.default_md_statement) {
       setViewMode("md");
     } else {
@@ -122,13 +122,13 @@ function LeftSide({ task_id }: { task_id: string }) {
           <PdfView pdf_statement_url={task!.default_pdf_statement_url} />
         )}
         {viewMode === "md" && task!.default_md_statement && (
-          <Skeleton className="max-w-full flex-grow w-full" isLoaded={!!task}>
+          // <Skeleton className="max-w-full flex-grow w-full" isLoaded={!!task}>
             <MdView
               examples={task!.examples}
               md_statement={task!.default_md_statement}
               vis_inp_st_inputs={task?.visible_input_subtasks}
             />
-          </Skeleton>
+          // </Skeleton>
         )}
       </div>
     </div>
@@ -408,16 +408,17 @@ const TaskInformation: React.FC<TaskInformationProps> = ({
         <div className="flex flex-row">
           <div className="h-full flex flex-row flex-wrap sm:flex-nowrap flex-grow">
             {layout === "wide" && task?.illustration_img_url && (
-              <Skeleton
-                className="max-w-40 min-w-20 flex p-2"
-                isLoaded={!!task}
+              <div
+                className="max-w-[150px] max-h-[150px] min-w-16 flex p-1"
               >
                 <Image
                   alt={task.task_full_name}
                   className="h-full flex-none object-cover"
                   src={task.illustration_img_url}
+                  fetchPriority="high"
+                  disableSkeleton={true}
                 />
-              </Skeleton>
+              </div>
             )}
             <div className="flex flex-col justify-between ps-4 pt-2 pb-1 w-full">
               <Skeleton isLoaded={!!task}>
