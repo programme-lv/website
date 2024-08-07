@@ -1,6 +1,6 @@
 import { Task } from "@/types/proglv";
 
-const API_HOST = "http://localhost:8080";
+const API_HOST = "https://api.programme.lv";
 
 export const getTaskById = async (taskId: string): Promise<Task> => {
   const response = await fetch(`${API_HOST}/tasks/${taskId}`, {
