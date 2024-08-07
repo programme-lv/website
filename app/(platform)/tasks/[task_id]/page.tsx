@@ -161,7 +161,7 @@ function MdView({
   }, [md_statement]);
 
   return (
-    <div className="w-full flex-grow flex flex-col gap-4 my-3 px-4">
+    <div className="w-full flex-grow flex flex-col gap-4 my-3 px-4 pb-4">
       <div>
         <h2 className="text-small my-1 font-semibold">Stāsts</h2>
         <div className="">
@@ -381,7 +381,7 @@ const TaskInformation: React.FC<TaskInformationProps> = ({
   function handleCardResize(cardWidth: number) {
     if (cardWidth < 550) {
       setLayout("narrow");
-    } else if (cardWidth > 650) {
+    } else if (cardWidth > 600) {
       setLayout("wide");
     }
   }
