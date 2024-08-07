@@ -1,6 +1,6 @@
 import { Task } from "@/types/proglv";
 
-const API_HOST = "https://0f6de9e9w5.execute-api.eu-central-1.amazonaws.com";
+const API_HOST = "http://localhost:8080";
 
 export const getTaskById = async (taskId: string): Promise<Task> => {
   const response = await fetch(`${API_HOST}/tasks/${taskId}`, {
@@ -19,11 +19,11 @@ export const getTaskById = async (taskId: string): Promise<Task> => {
 
   const data = await response.json();
 
-  return data.task;
+  return data;
 };
 
 export const listTasks = async (): Promise<Task[]> => {
-  const response = await fetch(`${API_HOST}/tasks/`, {
+  const response = await fetch(`${API_HOST}/tasks`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -36,8 +36,7 @@ export const listTasks = async (): Promise<Task[]> => {
   if (!response.ok) {
     throw new Error("Error fetching tasks");
   }
-
   const data = await response.json();
 
-  return data.tasks;
+  return data;
 };

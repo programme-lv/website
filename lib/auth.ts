@@ -1,4 +1,4 @@
-const API_HOST = "https://0f6de9e9w5.execute-api.eu-central-1.amazonaws.com";
+const API_HOST = "https://api.programme.lv";
 
 type RegisterUserInput = {
   username: string;
