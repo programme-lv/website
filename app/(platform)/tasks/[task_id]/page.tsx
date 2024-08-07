@@ -12,13 +12,17 @@ import React, {
 import { useParams } from "next/navigation";
 import { debounce } from "lodash";
 import { Resizable } from "re-resizable";
-import { IconGripVertical, IconMenu2, IconSend } from "@tabler/icons-react";
+import { IconFileTypePdf, IconGripVertical, IconMenu2, IconSend } from "@tabler/icons-react";
 import {
   Button,
   Card,
   CardBody,
   Chip,
   Divider,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
   Select,
   SelectItem,
   Skeleton,
@@ -81,7 +85,7 @@ const useTask = (id: string) => {
     initialData: () => {
       return queryClient
         .getQueryData<Task[]>(["list-tasks"])
-        ?.find((task:any) => task.published_task_id === id);
+        ?.find((task: any) => task.published_task_id === id);
     },
     initialDataUpdatedAt: () =>
       queryClient.getQueryState(["list-tasks"])?.dataUpdatedAt,
@@ -123,11 +127,11 @@ function LeftSide({ task_id }: { task_id: string }) {
         )}
         {viewMode === "md" && task!.default_md_statement && (
           // <Skeleton className="max-w-full flex-grow w-full" isLoaded={!!task}>
-            <MdView
-              examples={task!.examples}
-              md_statement={task!.default_md_statement}
-              vis_inp_st_inputs={task?.visible_input_subtasks}
-            />
+          <MdView
+            examples={task!.examples}
+            md_statement={task!.default_md_statement}
+            vis_inp_st_inputs={task?.visible_input_subtasks}
+          />
           // </Skeleton>
         )}
       </div>
@@ -430,18 +434,28 @@ const TaskInformation: React.FC<TaskInformationProps> = ({
                     {task && difficultyChips[task.difficulty_rating]}
                   </div>
                   <div className="me-3">
-                  <Button
-                    isIconOnly
-                    size="sm"
-                    variant="light"
-                  >
-                    <IconMenu2
-                      className="text-default-700"
-                      height={20}
-                      // icon="solar:sidebar-minimalistic-outline"
-                      width={20}
-                    />
-                  </Button>
+                    <Dropdown
+                    placement="bottom-end"
+                    >
+                      <DropdownTrigger>
+                        <Button
+                          isIconOnly
+                          size="sm"
+                          variant="light"
+
+                        >
+                          <IconMenu2
+                            className="text-default-700"
+                            height={20}
+                            // icon="solar:sidebar-minimalistic-outline"
+                            width={20}
+                          />
+                        </Button>
+                      </DropdownTrigger>
+                      <DropdownMenu aria-label="Static Actions" disabledKeys={[...((task?.default_pdf_statement_url) ? [] : ['open-original-pdf'])]}>
+                        <DropdownItem key="open-original-pdf" endContent={<IconFileTypePdf className="text-default-600"/>} href={task?.default_pdf_statement_url} target="_blank" >Atvērt oriģinālo PDF</DropdownItem>
+                      </DropdownMenu>
+                    </Dropdown>
                   </div>
                 </div>
                 <div className="flex justify-between pt-1 max-w-72">
