@@ -26,7 +26,7 @@ import {
 } from "@nextui-org/react";
 import { Image } from "@nextui-org/react";
 import MonacoEditor from "@monaco-editor/react";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 
 import { getTaskById } from "@/lib/tasks";
 import getHardcodedLanguageList from "@/data/languages";
@@ -72,11 +72,26 @@ export default function TaskDetailsPage() {
     </main>
   );
 }
-
-function LeftSide({ task_id }: { task_id: string }) {
-  let { data } = useQuery(`task-${task_id}`, () => getTaskById(task_id), {
+const useTask = (id: string) => {
+  const queryClient = useQueryClient();
+  return useQuery({
     refetchOnWindowFocus: false,
+    queryKey: ["task", id],
+    queryFn: () => getTaskById(id),
+    initialData: () => {
+      return queryClient
+        .getQueryData<Task[]>(["list-tasks"])
+        ?.find((task:any) => task.published_task_id === id);
+    },
+    initialDataUpdatedAt: () =>
+      queryClient.getQueryState(["list-tasks"])?.dataUpdatedAt,
   });
+};
+function LeftSide({ task_id }: { task_id: string }) {
+  // let { data } = useQuery(`task-${task_id}`, () => getTaskById(task_id), {
+  //   refetchOnWindowFocus: false,
+  // });
+  let { data } = useTask(task_id);
 
   const [viewMode, setViewMode] = useState<"md" | "pdf" | undefined>(undefined);
   const task = data as Task | null;
