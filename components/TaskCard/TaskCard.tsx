@@ -119,7 +119,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, ...props }) => {
       shadow="none"
       ref={cardRef}
     >
-      <CardBody className={cn("flex flex-col p-2 sm:flex-nowrap overflow-y-hidden",{"p-4":isWide})}>
+      <CardBody className={cn("flex flex-col p-3 sm:flex-nowrap overflow-y-hidden",{"p-4":isWide})}>
         <div className="h-full flex gap-x-2 flex-row flex-wrap sm:flex-nowrap">
           {task.illustration_img_url && isWide && (<div className="max-w-40 flex">
 
