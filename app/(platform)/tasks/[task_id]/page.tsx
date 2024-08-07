@@ -379,7 +379,7 @@ const TaskInformation: React.FC<TaskInformationProps> = ({
   const [layout, setLayout] = useState<"narrow" | "wide">("wide");
 
   function handleCardResize(cardWidth: number) {
-    if (cardWidth < 550) {
+    if (cardWidth < 680) {
       setLayout("narrow");
     } else if (cardWidth > 600) {
       setLayout("wide");

@@ -2,13 +2,14 @@
 
 import type { CardProps } from "@nextui-org/react";
 
-import React from "react";
-import { Card, Image, CardBody, Chip, Tooltip } from "@nextui-org/react";
+import React, { useRef } from "react";
+import { Card, Image, CardBody, Chip, Tooltip, cn } from "@nextui-org/react";
 import { InlineMath } from "react-katex";
 import { Icon } from "@iconify/react";
 import accountGroup from "@iconify-icons/mdi/account-group";
 import checkCircleOutline from "@iconify-icons/mdi/check-circle-outline";
 import "katex/dist/katex.min.css"; // Import KaTeX CSS for styling
+import _ from "lodash";
 
 type Task = {
   published_task_id: string;
@@ -57,6 +58,31 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, ...props }) => {
     });
   };
 
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [isWide, setIsWide] = React.useState(false);
+
+  // listen to card resize, debounce (lodash) by 10 ms
+  React.useEffect(() => {
+    const handleResize = () => {
+      if (cardRef.current) {
+        console.log(cardRef.current.clientWidth);
+        setIsWide(cardRef.current.clientWidth > 614);
+      }
+    };
+
+    handleResize();
+
+    // const debouncedHandleResize = _.debounce(handleResize, 50);
+    const debouncedHandleResize = handleResize;
+
+    window.addEventListener("resize", debouncedHandleResize);
+
+    return () => {
+      window.removeEventListener("resize", debouncedHandleResize);
+    };
+  }, []);
+
+
   let difficultyChips = {
     1: (
       <Chip className="bg-green-100 text-green-800" size="sm" variant="flat">
@@ -91,33 +117,65 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, ...props }) => {
       {...props}
       classNames={{ base: "radius-small border-small border-divider" }}
       shadow="none"
+      ref={cardRef}
     >
-      <CardBody className="flex flex-col p-4 sm:flex-nowrap overflow-y-hidden">
-        <div className="h-full flex flex-row flex-wrap sm:flex-nowrap">
-          <div className="max-w-40 flex">
-            {task.illustration_img_url && (
-              <Image
-                alt={task.task_full_name}
-                className="h-full flex-none object-cover"
-                src={task.illustration_img_url}
-              />
-            )}
+      <CardBody className={cn("flex flex-col p-2 sm:flex-nowrap overflow-y-hidden",{"p-4":isWide})}>
+        <div className="h-full flex gap-x-2 flex-row flex-wrap sm:flex-nowrap">
+          {task.illustration_img_url && isWide && (<div className="max-w-40 flex">
+
+            <Image
+              alt={task.task_full_name}
+              className="h-full flex-none object-cover"
+              src={task.illustration_img_url}
+            />
           </div>
-          <div className="flex flex-col justify-between ps-4 pt-2 pb-1 w-full">
+          )}
+          <div className="flex flex-col justify-between ps-1 pb-1 w-full">
             <div>
-              <div className="flex justify-between w-full items-end">
-                <h3 className="text-large font-medium">
-                  {task.task_full_name}
-                </h3>
-                {difficultyChips[task.difficulty_rating]}
+              <div className={cn("flex justify-between w-full items-end", { "items-center gap-x-3": !isWide })}>
+                <div className={cn("contents", { "flex gap-x-4 w-full flex-wrap items-center": !isWide && task.illustration_img_url })}>
+                  <div className="flex gap-x-4">
+                  <h3 className="text-large font-medium">
+                    {task.task_full_name}
+                  </h3>
+                  {difficultyChips[task.difficulty_rating]}
+                  </div>
+                  {!isWide && task.illustration_img_url && (<div className="py-2 flex gap-x-1">
+                    {task.default_md_statement && (
+                      <div>
+                      <div className="text-small text-default-500 line-clamp-5">
+                        {renderStory(task.default_md_statement.story)}
+                      </div>
+                      </div>
+                    )}
+                    <div className="max-w-24 min-w-24 flex">
+                      <Image
+                        alt={task.task_full_name}
+                        className="h-full flex-none object-cover"
+                        src={task.illustration_img_url}
+                      />
+                    </div>
+                  </div>)}
+                </div>
+                {/* {task.illustration_img_url && !isWide && (
+                  <div className="max-w-24 min-w-24 flex">
+                    <Image
+                      alt={task.task_full_name}
+                      className="h-full flex-none object-cover"
+                      src={task.illustration_img_url}
+                    />
+                  </div>
+                )} */}
               </div>
+              {(isWide || !task.illustration_img_url) && task.default_md_statement && (
               <div className="py-2">
-                {task.default_md_statement && (
+                  <div>
                   <div className="text-small text-default-500 line-clamp-3">
                     {renderStory(task.default_md_statement.story)}
                   </div>
-                )}
+                  </div>
               </div>
+                )}
             </div>
 
             <div className="flex justify-between pt-1">
@@ -131,7 +189,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, ...props }) => {
                   </div>
                 )}
                 {task.origin_notes && task.origin_notes["lv"] && (
-                  <div className="text-tiny text-default-700 py-1 ms-1">
+                  <div className="text-tiny text-default-700 ms-1">
                     {task.origin_notes["lv"]}
                   </div>
                 )}
