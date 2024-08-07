@@ -300,10 +300,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     onPressStart={onSidebarToggle}
                   >
                     <Icon
-                      className="text-default-500"
-                      height={24}
+                      className="text-default-600"
+                      height={22}
                       icon="solar:sidebar-minimalistic-outline"
-                      width={24}
+                      width={22}
                     />
                   </Button>
                 </div>

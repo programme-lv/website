@@ -12,7 +12,7 @@ import React, {
 import { useParams } from "next/navigation";
 import { debounce } from "lodash";
 import { Resizable } from "re-resizable";
-import { IconGripVertical, IconSend } from "@tabler/icons-react";
+import { IconGripVertical, IconMenu2, IconSend } from "@tabler/icons-react";
 import {
   Button,
   Card,
@@ -422,12 +422,26 @@ const TaskInformation: React.FC<TaskInformationProps> = ({
             )}
             <div className="flex flex-col justify-between ps-4 pt-2 pb-1 w-full">
               <Skeleton isLoaded={!!task}>
-                <div>
+                <div className="flex justify-between items-center">
                   <div className="inline-flex gap-x-2 gap-y-1 justify-between items-center flex-wrap">
                     <h3 className="text-large font-semibold">
                       {task?.task_full_name || "Loading..."}
                     </h3>
                     {task && difficultyChips[task.difficulty_rating]}
+                  </div>
+                  <div className="me-3">
+                  <Button
+                    isIconOnly
+                    size="sm"
+                    variant="light"
+                  >
+                    <IconMenu2
+                      className="text-default-700"
+                      height={20}
+                      // icon="solar:sidebar-minimalistic-outline"
+                      width={20}
+                    />
+                  </Button>
                   </div>
                 </div>
                 <div className="flex justify-between pt-1 max-w-72">
