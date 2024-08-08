@@ -498,23 +498,23 @@ const TaskInformation: React.FC<TaskInformationProps> = ({
                     <div className="flex-grow flex flex-col justify-end items-end ms-3">
                       {/* <Skeleton isLoaded={!!task}> */}
                       <div className="grid grid-cols-2 gap-x-2">
-                        <span className="text-tiny text-default-700 flex items-end justify-end">
+                        <span className="text-small text-default-700 flex items-end justify-end">
                           izpildes laiks
                         </span>
                         <div className="flex items-end gap-1">
-                          <span className="text-small text-default-900">
+                          <span className="text-medium text-default-900">
                             {task?.cpu_time_limit_seconds}
                           </span>
-                          <span className="text-tiny text-default-800">sek.</span>
+                          <span className="text-small text-default-800">sek.</span>
                         </div>
-                        <span className="text-tiny text-default-700 flex items-end justify-end">
+                        <span className="text-small text-default-700 flex items-end justify-end">
                           atmiņa
                         </span>
                         <div className="flex items-end gap-1">
-                          <span className="text-small text-default-900">
+                          <span className="text-medium text-default-900">
                             {task?.memory_limit_megabytes}
                           </span>
-                          <span className="text-tiny text-default-800">MB</span>
+                          <span className="text-small text-default-800">MB</span>
                         </div>
                       </div>
                       {/* </Skeleton> */}
