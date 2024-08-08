@@ -376,12 +376,16 @@ const TaskInformation: React.FC<TaskInformationProps> = ({
   };
 
   const cardRef = useRef<HTMLDivElement>(null);
-  const [layout, setLayout] = useState<"narrow" | "wide">("wide");
+  const [layout, setLayout] = useState<"xs" | "narrow" | "wide">("wide");
 
   function handleCardResize(cardWidth: number) {
-    if (cardWidth < 680) {
+    const wideBoundary = 550;
+    const narrowBoundary = 350;
+    if (cardWidth < narrowBoundary) {
+      setLayout("xs");
+    } else if (cardWidth < wideBoundary) {
       setLayout("narrow");
-    } else if (cardWidth > 600) {
+    } else {
       setLayout("wide");
     }
   }
@@ -419,7 +423,7 @@ const TaskInformation: React.FC<TaskInformationProps> = ({
                   alt={task.task_full_name}
                   className="h-full flex-none object-cover"
                   src={task.illustration_img_url}
-                  fetchPriority="high"
+                  // fetchPriority="high"
                   disableSkeleton={true}
                 />
               </div>
@@ -427,7 +431,7 @@ const TaskInformation: React.FC<TaskInformationProps> = ({
             <div className="flex flex-col justify-between ps-4 pt-2 pb-1 w-full">
               <Skeleton isLoaded={!!task}>
                 <div className="flex justify-between items-center">
-                  <div className="inline-flex gap-x-2 gap-y-1 justify-between items-center flex-wrap">
+                  <div className="inline-flex gap-x-4 gap-y-1 justify-between items-center flex-wrap">
                     <h3 className="text-large font-semibold">
                       {task?.task_full_name || "Loading..."}
                     </h3>
@@ -435,7 +439,7 @@ const TaskInformation: React.FC<TaskInformationProps> = ({
                   </div>
                   <div className="me-3">
                     <Dropdown
-                    placement="bottom-end"
+                      placement="bottom-end"
                     >
                       <DropdownTrigger>
                         <Button
@@ -453,54 +457,71 @@ const TaskInformation: React.FC<TaskInformationProps> = ({
                         </Button>
                       </DropdownTrigger>
                       <DropdownMenu aria-label="Static Actions" disabledKeys={[...((task?.default_pdf_statement_url) ? [] : ['open-original-pdf'])]}>
-                        <DropdownItem key="open-original-pdf" endContent={<IconFileTypePdf className="text-default-600"/>} href={task?.default_pdf_statement_url} target="_blank" >Atvērt oriģinālo PDF</DropdownItem>
+                        <DropdownItem key="open-original-pdf" endContent={<IconFileTypePdf className="text-default-600" />} href={task?.default_pdf_statement_url} target="_blank" >Atvērt oriģinālo PDF</DropdownItem>
                       </DropdownMenu>
                     </Dropdown>
                   </div>
                 </div>
-                <div className="flex justify-between pt-1 max-w-72">
-                  <div className="flex justify-between ">
-                    {task?.origin_olympiad &&
-                      task.origin_olympiad === "LIO" && (
-                        <div className="w-16 min-w-16">
-                          <Image
-                            alt="Latvijas Informātikas olimpiādes logo"
-                            src="https://lio.lv/LIO_logo_jaunais3.png"
-                          />
-                        </div>
-                      )}
-                    {task?.origin_notes?.lv && (
-                      <div className="text-tiny text-default-700 py-1 ms-1">
-                        {task.origin_notes.lv}
+                <div className="flex">
+                  {layout === "narrow" && task?.illustration_img_url && (
+                    <div
+                      className="max-w-[100px] max-h-[100px] min-w-16 flex p-1"
+                    >
+                      <Image
+                        alt={task.task_full_name}
+                        className="h-full flex-none object-cover"
+                        src={task.illustration_img_url}
+                        // fetchPriority="high"
+                        disableSkeleton={true}
+                      />
+                    </div>
+                  )}
+                  <div className="flex flex-col flex-grow">
+                    <div className="flex justify-between pt-1 max-w-72">
+                      <div className="flex justify-between ">
+                        {task?.origin_olympiad &&
+                          task.origin_olympiad === "LIO" && (
+                            <div className="w-16 min-w-16">
+                              <Image
+                                alt="Latvijas Informātikas olimpiādes logo"
+                                src="https://lio.lv/LIO_logo_jaunais3.png"
+                              />
+                            </div>
+                          )}
+                        {task?.origin_notes?.lv && (
+                          <div className="text-tiny text-default-700 py-1 ms-1">
+                            {task.origin_notes.lv}
+                          </div>
+                        )}
                       </div>
-                    )}
+                    </div>
+                    <div className="flex-grow flex flex-col justify-end items-end ms-3">
+                      {/* <Skeleton isLoaded={!!task}> */}
+                      <div className="grid grid-cols-2 gap-x-2">
+                        <span className="text-tiny text-default-700 flex items-end justify-end">
+                          izpildes laiks
+                        </span>
+                        <div className="flex items-end gap-1">
+                          <span className="text-small text-default-900">
+                            {task?.cpu_time_limit_seconds}
+                          </span>
+                          <span className="text-tiny text-default-800">sek.</span>
+                        </div>
+                        <span className="text-tiny text-default-700 flex items-end justify-end">
+                          atmiņa
+                        </span>
+                        <div className="flex items-end gap-1">
+                          <span className="text-small text-default-900">
+                            {task?.memory_limit_megabytes}
+                          </span>
+                          <span className="text-tiny text-default-800">MB</span>
+                        </div>
+                      </div>
+                      {/* </Skeleton> */}
+                    </div>
                   </div>
                 </div>
               </Skeleton>
-              <div className="flex-grow flex flex-col justify-end items-end ms-3">
-                <Skeleton isLoaded={!!task}>
-                  <div className="grid grid-cols-2 gap-x-2">
-                    <span className="text-tiny text-default-700 flex items-end justify-end">
-                      izpildes laiks
-                    </span>
-                    <div className="flex items-end gap-1">
-                      <span className="text-small text-default-900">
-                        {task?.cpu_time_limit_seconds}
-                      </span>
-                      <span className="text-tiny text-default-800">sek.</span>
-                    </div>
-                    <span className="text-tiny text-default-700 flex items-end justify-end">
-                      atmiņa
-                    </span>
-                    <div className="flex items-end gap-1">
-                      <span className="text-small text-default-900">
-                        {task?.memory_limit_megabytes}
-                      </span>
-                      <span className="text-tiny text-default-800">MB</span>
-                    </div>
-                  </div>
-                </Skeleton>
-              </div>
             </div>
           </div>
         </div>
