@@ -31,7 +31,13 @@ export const setJwt = (jwt: any) => {
 };
 
 export function parseJwt(token: any) {
+  if(!token) {
+    return null;
+  }
   var base64Url = token.split(".")[1];
+  if (!base64Url) {
+    return null;
+  }
   var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
   var jsonPayload = decodeURIComponent(
     window
@@ -49,7 +55,7 @@ export function parseJwt(token: any) {
 export function getJWTDecoded() {
   const jwt = getJwt();
 
-  if (!jwt) {
+  if (!jwt || jwt === undefined) {
     return null;
   }
 
@@ -67,7 +73,7 @@ type JWTUserInfo = {
 export function getUserInfoFromJWT() {
   const jwt = getJWTDecoded();
 
-  if (!jwt) {
+  if (!jwt || jwt === undefined) {
     return null;
   }
 

@@ -80,15 +80,17 @@ function AuthForm({ type }: { type: "login" | "register" }) {
   const [isConfirmVisible, setIsConfirmVisible] = React.useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
   const toggleConfirmVisibility = () => setIsConfirmVisible(!isConfirmVisible);
+  const [isRedirecting, setIsRedirecting] = useState(false);
   const registerMutation = useMutation(registerUser, {
+    onMutate: () => {
+      setError(null);
+    },
     onSuccess: async (response) => {
-      if (response.ok) {
-        const data = await response.json();
-
-        setJwt(data.token);
+      if (response.status === 201) { // Created
+        await response.json();
         authContext.refresh();
-        if (redirectParam) router.push(redirectParam);
-        else router.push("/tasks");
+        setIsRedirecting(true);
+        loginMutation.mutate({ username, password });
       } else {
         const error: string = JSON.parse(await response.text());
         console.error(error);
@@ -103,12 +105,15 @@ function AuthForm({ type }: { type: "login" | "register" }) {
   });
 
   const loginMutation = useMutation(loginUser, {
+    onMutate: () => {
+      setError(null);
+    },
     onSuccess: async (response) => {
       if (response.ok) {
         const data = await response.json();
-
-        setJwt(data.token);
+        setJwt(data);
         authContext.refresh();
+        setIsRedirecting(true);
         if (redirectParam) router.push(redirectParam);
         else router.push("/tasks");
       } else {
@@ -159,7 +164,7 @@ function AuthForm({ type }: { type: "login" | "register" }) {
       <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
         <Input
           isRequired
-          isDisabled={loginMutation.isLoading || registerMutation.isLoading}
+          isDisabled={loginMutation.isLoading || registerMutation.isLoading || isRedirecting}
           label="Lietotājvārds"
           name="username"
           // placeholder="Ievadiet savu lietotājvārdu"
@@ -173,7 +178,7 @@ function AuthForm({ type }: { type: "login" | "register" }) {
               <Input
                 className="flex-1"
                 isDisabled={
-                  loginMutation.isLoading || registerMutation.isLoading
+                  loginMutation.isLoading || registerMutation.isLoading || isRedirecting
                 }
                 label="Vārds (neobligāts)"
                 name="firstName"
@@ -185,7 +190,7 @@ function AuthForm({ type }: { type: "login" | "register" }) {
               <Input
                 className="flex-1"
                 isDisabled={
-                  loginMutation.isLoading || registerMutation.isLoading
+                  loginMutation.isLoading || registerMutation.isLoading || isRedirecting
                 }
                 label="Uzvārds (neobligāts)"
                 name="lastName"
@@ -197,7 +202,7 @@ function AuthForm({ type }: { type: "login" | "register" }) {
             </div>
             <Input
               isRequired
-              isDisabled={loginMutation.isLoading || registerMutation.isLoading}
+              isDisabled={loginMutation.isLoading || registerMutation.isLoading || isRedirecting}
               label="E-pasta adrese"
               name="email"
               // placeholder="Ievadiet savu e-pastu"
@@ -227,7 +232,7 @@ function AuthForm({ type }: { type: "login" | "register" }) {
                 )}
               </button>
             }
-            isDisabled={loginMutation.isLoading || registerMutation.isLoading}
+            isDisabled={loginMutation.isLoading || registerMutation.isLoading || isRedirecting}
             label="Parole"
             name="password"
             // placeholder="Ievadiet savu paroli"
@@ -240,7 +245,7 @@ function AuthForm({ type }: { type: "login" | "register" }) {
             <Input
               isRequired
               className="flex-1"
-              isDisabled={loginMutation.isLoading || registerMutation.isLoading}
+              isDisabled={loginMutation.isLoading || registerMutation.isLoading || isRedirecting}
               label="Apstipriniet paroli"
               name="confirmPassword"
               // placeholder="Apstipriniet savu paroli"
@@ -266,7 +271,7 @@ function AuthForm({ type }: { type: "login" | "register" }) {
         <div className="flex justify-center">
         <Button
           color="primary"
-          isLoading={loginMutation.isLoading || registerMutation.isLoading}
+          isLoading={loginMutation.isLoading || registerMutation.isLoading || isRedirecting}
           type="submit"
           className="flex-grow mt-4"
         >

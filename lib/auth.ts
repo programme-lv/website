@@ -9,7 +9,7 @@ type RegisterUserInput = {
 };
 
 export const registerUser = async (input: RegisterUserInput) => {
-  const response = await fetch(`${API_HOST}/auth/register`, {
+  const response = await fetch(`${API_HOST}/users`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
