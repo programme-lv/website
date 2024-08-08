@@ -1,23 +1,3 @@
-type ProgrammingLanguage = {
-  id: string;
-  fullName: string;
-  monacoId: string;
-};
-
-type Evaluation = {
-  uuid: string;
-  status: string;
-  receivedScore: number;
-  possibleScore: number;
-};
-
-type Language = {
-  id: string;
-  fullName: string;
-  monacoID: string;
-  enabled: boolean;
-};
-
 type TaskReference = {
   name: string;
   code: string;
@@ -64,12 +44,27 @@ type Submission = {
   username: string;
   createdAt: string;
   evaluation: Evaluation;
-  language: Language;
+  language: ProgrammingLang;
   task: {
     name: string;
     code: string;
   };
 };
+
+type ProgrammingLang = {
+  id: string;
+  fullName: string;
+  monacoId: string;
+};
+
+
+type Evaluation = {
+  uuid: string;
+  status: string;
+  receivedScore: number;
+  possibleScore: number;
+};
+
 
 type User = {
   uuid: string;
@@ -80,9 +75,8 @@ type User = {
 };
 
 export type {
-  ProgrammingLanguage,
+  ProgrammingLang as ProgrammingLanguage,
   Evaluation,
-  Language,
   TaskReference,
   Submission,
   User,
