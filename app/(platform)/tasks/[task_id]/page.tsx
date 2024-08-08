@@ -60,7 +60,7 @@ export default function TaskDetailsPage() {
           enable={{ right: true }}
           handleComponent={{ right: <ResizeBar /> }}
           maxWidth={"70%"}
-          minWidth={"200px"}
+          minWidth={"330px"}
         >
           <LeftSide task_id={task_id as string} />
         </Resizable>
@@ -478,7 +478,7 @@ const TaskInformation: React.FC<TaskInformationProps> = ({
                   )}
                   <div className="flex flex-col flex-grow">
                     <div className="flex justify-between pt-1 max-w-72">
-                      <div className="flex justify-between ">
+                      <div className={cn("flex justify-between",{"":layout==="xs"})}>
                         {task?.origin_olympiad &&
                           task.origin_olympiad === "LIO" && (
                             <div className="w-16 min-w-16">
