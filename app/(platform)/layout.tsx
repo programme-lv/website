@@ -264,7 +264,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               </Link>
             </div>
             <span
-              className={cn("text-small font-bold uppercase opacity-100", {
+              className={cn("text-small font-medium uppercase opacity-100", {
                 "w-0 opacity-0 hidden": isCompact,
               })}
             >

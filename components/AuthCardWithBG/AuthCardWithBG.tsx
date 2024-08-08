@@ -34,7 +34,15 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
       <div className="absolute left-10 top-10 bg-white p-2 rounded-md">
         <Link className="flex items-center" href="/">
           <Image alt="programme.lv logo" height={26} src={LogoImage} />
-          <p className="ms-2 text-black dark:text-white font-semibold">
+          <p className="ms-2 me-1 text-black dark:text-white font-medium uppercase text-small  ">
+
+          {/* <span
+              className={cn("text-small font-medium uppercase opacity-100", {
+                "w-0 opacity-0 hidden": isCompact,
+              })}
+            >
+              programme.lv
+            </span> */}
             programme.lv
           </p>
         </Link>
@@ -81,7 +89,8 @@ function AuthForm({ type }: { type: "login" | "register" }) {
         if (redirectParam) router.push(redirectParam);
         else router.push("/tasks");
       } else {
-        const error: string = await response.text();
+        const error: string = JSON.parse(await response.text());
+        console.error(error);
         const translated = translations[error.trim()] || error;
 
         setError("Kļūda: " + translated + ".");
@@ -102,7 +111,8 @@ function AuthForm({ type }: { type: "login" | "register" }) {
         if (redirectParam) router.push(redirectParam);
         else router.push("/tasks");
       } else {
-        const error: string = await response.text();
+        const error: string = JSON.parse(await response.text());
+        console.error(error);
         const translated = translations[error.trim()] || error;
 
         setError("Kļūda: " + translated + ".");

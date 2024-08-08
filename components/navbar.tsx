@@ -16,7 +16,7 @@ export const Navbar = () => {
           <NextLink className="flex justify-start items-center gap-1" href="/">
             <Image alt="programme.lv logo" height={26} src={Logo} />
             <span className="px-0.5" />
-            <p className="font-bold text-inherit">programme.lv</p>
+            <p className="font-medium text-inherit">programme.lv</p>
           </NextLink>
         </NavbarBrand>
       </NavbarContent>
