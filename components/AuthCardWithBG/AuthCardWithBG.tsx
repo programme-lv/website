@@ -24,7 +24,7 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
 
   return (
     <div
-      className="flex min-h-screen relative w-screen items-center justify-center overflow-hidden bg-content1 p-2 pt-16 lg:px-8 lg:pt-16"
+      className="flex min-h-screen relative w-screen items-center justify-center overflow-hidden bg-content1 p-2 pt-16 pb-16 lg:px-8"
       style={{
         backgroundImage: `url(${MountainsImage.src})`,
         backgroundSize: "cover",
