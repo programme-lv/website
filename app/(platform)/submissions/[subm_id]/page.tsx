@@ -39,8 +39,7 @@ const sampleData: Submission & { test_results: TestResultOverview[] } = {
   language: {
     id: "ab4f8c00-96a5-44be-8385-c08059247220",
     fullName: "C++17 (GCC)",
-    monacoID: "cpp",
-    enabled: true,
+    monacoId: "cpp",
   },
   task: {
     name: "Kvadrātveida putekļsūcējs",
@@ -206,7 +205,7 @@ export default function SubmissionView() {
         <CardBody>
           <MonacoEditor
             height="400px"
-            language={sampleData.language.monacoID}
+            language={sampleData.language.monacoId}
             options={{
               minimap: { enabled: false },
               fontSize: 12,

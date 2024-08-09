@@ -12,7 +12,12 @@ import React, {
 import { useParams } from "next/navigation";
 import { debounce } from "lodash";
 import { Resizable } from "re-resizable";
-import { IconFileTypePdf, IconGripVertical, IconMenu2, IconSend } from "@tabler/icons-react";
+import {
+  IconFileTypePdf,
+  IconGripVertical,
+  IconMenu2,
+  IconSend,
+} from "@tabler/icons-react";
 import {
   Button,
   Card,
@@ -78,6 +83,7 @@ export default function TaskDetailsPage() {
 }
 const useTask = (id: string) => {
   const queryClient = useQueryClient();
+
   return useQuery({
     refetchOnWindowFocus: false,
     queryKey: ["task", id],
@@ -91,6 +97,7 @@ const useTask = (id: string) => {
       queryClient.getQueryState(["list-tasks"])?.dataUpdatedAt,
   });
 };
+
 function LeftSide({ task_id }: { task_id: string }) {
   // let { data } = useQuery(`task-${task_id}`, () => getTaskById(task_id), {
   //   refetchOnWindowFocus: false,
@@ -381,6 +388,7 @@ const TaskInformation: React.FC<TaskInformationProps> = ({
   function handleCardResize(cardWidth: number) {
     const wideBoundary = 550;
     const narrowBoundary = 350;
+
     if (cardWidth < narrowBoundary) {
       setLayout("xs");
     } else if (cardWidth < wideBoundary) {
@@ -416,15 +424,13 @@ const TaskInformation: React.FC<TaskInformationProps> = ({
         <div className="flex flex-row">
           <div className="h-full flex flex-row flex-wrap sm:flex-nowrap flex-grow">
             {layout === "wide" && task?.illustration_img_url && (
-              <div
-                className="max-w-[150px] max-h-[150px] min-w-16 flex p-1"
-              >
+              <div className="max-w-[150px] max-h-[150px] min-w-16 flex p-1">
                 <Image
                   alt={task.task_full_name}
                   className="h-full flex-none object-cover"
+                  disableSkeleton={true}
                   src={task.illustration_img_url}
                   // fetchPriority="high"
-                  disableSkeleton={true}
                 />
               </div>
             )}
@@ -438,16 +444,9 @@ const TaskInformation: React.FC<TaskInformationProps> = ({
                     {task && difficultyChips[task.difficulty_rating]}
                   </div>
                   <div className="me-3">
-                    <Dropdown
-                      placement="bottom-end"
-                    >
+                    <Dropdown placement="bottom-end">
                       <DropdownTrigger>
-                        <Button
-                          isIconOnly
-                          size="sm"
-                          variant="light"
-
-                        >
+                        <Button isIconOnly size="sm" variant="light">
                           <IconMenu2
                             className="text-default-700"
                             height={20}
@@ -456,29 +455,47 @@ const TaskInformation: React.FC<TaskInformationProps> = ({
                           />
                         </Button>
                       </DropdownTrigger>
-                      <DropdownMenu aria-label="Static Actions" disabledKeys={[...((task?.default_pdf_statement_url) ? [] : ['open-original-pdf'])]}>
-                        <DropdownItem key="open-original-pdf" endContent={<IconFileTypePdf className="text-default-600" />} href={task?.default_pdf_statement_url} target="_blank" >Atvērt oriģinālo PDF</DropdownItem>
+                      <DropdownMenu
+                        aria-label="Static Actions"
+                        disabledKeys={[
+                          ...(task?.default_pdf_statement_url
+                            ? []
+                            : ["open-original-pdf"]),
+                        ]}
+                      >
+                        <DropdownItem
+                          key="open-original-pdf"
+                          endContent={
+                            <IconFileTypePdf className="text-default-600" />
+                          }
+                          href={task?.default_pdf_statement_url}
+                          target="_blank"
+                        >
+                          Atvērt oriģinālo PDF
+                        </DropdownItem>
                       </DropdownMenu>
                     </Dropdown>
                   </div>
                 </div>
                 <div className="flex">
                   {layout === "narrow" && task?.illustration_img_url && (
-                    <div
-                      className="max-w-[100px] max-h-[100px] min-w-16 flex p-1"
-                    >
+                    <div className="max-w-[100px] max-h-[100px] min-w-16 flex p-1">
                       <Image
                         alt={task.task_full_name}
                         className="h-full flex-none object-cover"
+                        disableSkeleton={true}
                         src={task.illustration_img_url}
                         // fetchPriority="high"
-                        disableSkeleton={true}
                       />
                     </div>
                   )}
                   <div className="flex flex-col flex-grow">
                     <div className="flex justify-between pt-1 max-w-72">
-                      <div className={cn("flex justify-between",{"":layout==="xs"})}>
+                      <div
+                        className={cn("flex justify-between", {
+                          "": layout === "xs",
+                        })}
+                      >
                         {task?.origin_olympiad &&
                           task.origin_olympiad === "LIO" && (
                             <div className="w-16 min-w-16">
@@ -505,7 +522,9 @@ const TaskInformation: React.FC<TaskInformationProps> = ({
                           <span className="text-medium text-default-900">
                             {task?.cpu_time_limit_seconds}
                           </span>
-                          <span className="text-small text-default-800">sek.</span>
+                          <span className="text-small text-default-800">
+                            sek.
+                          </span>
                         </div>
                         <span className="text-small text-default-700 flex items-end justify-end">
                           atmiņa
@@ -514,7 +533,9 @@ const TaskInformation: React.FC<TaskInformationProps> = ({
                           <span className="text-medium text-default-900">
                             {task?.memory_limit_megabytes}
                           </span>
-                          <span className="text-small text-default-800">MB</span>
+                          <span className="text-small text-default-800">
+                            MB
+                          </span>
                         </div>
                       </div>
                       {/* </Skeleton> */}

@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Button, Input, Checkbox, Link, Divider } from "@nextui-org/react";
 import { Icon } from "@iconify/react";
 import Image from "next/image";
+import { IconLogin2 } from "@tabler/icons-react";
 
 import { registerUser, loginUser } from "@/lib/auth";
 import Alert from "@/components/Alert";
@@ -13,7 +14,6 @@ import MountainsImage from "@/public/mountains.png";
 import LogoImage from "@/public/logo.png";
 import { setJwt } from "@/lib/jwt";
 import { AuthContext } from "@/app/providers";
-import { IconLogin2, IconUser } from "@tabler/icons-react";
 
 const translations: { [key: string]: string } = {
   "invalid username or password": "nepareizs lietotājvārds vai parole",
@@ -36,8 +36,7 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
         <Link className="flex items-center" href="/">
           <Image alt="programme.lv logo" height={26} src={LogoImage} />
           <p className="ms-2 me-1 text-black dark:text-white font-medium uppercase text-small  ">
-
-          {/* <span
+            {/* <span
               className={cn("text-small font-medium uppercase opacity-100", {
                 "w-0 opacity-0 hidden": isCompact,
               })}
@@ -77,22 +76,22 @@ function AuthForm({ type }: { type: "login" | "register" }) {
   const router = useRouter();
   const [isVisible, setIsVisible] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
-  const [isConfirmVisible, setIsConfirmVisible] = React.useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
-  const toggleConfirmVisibility = () => setIsConfirmVisible(!isConfirmVisible);
   const [isRedirecting, setIsRedirecting] = useState(false);
   const registerMutation = useMutation(registerUser, {
     onMutate: () => {
       setError(null);
     },
     onSuccess: async (response) => {
-      if (response.status === 201) { // Created
+      if (response.status === 201) {
+        // Created
         await response.json();
         authContext.refresh();
         setIsRedirecting(true);
         loginMutation.mutate({ username, password });
       } else {
         const error: string = JSON.parse(await response.text());
+
         console.error(error);
         const translated = translations[error.trim()] || error;
 
@@ -111,6 +110,7 @@ function AuthForm({ type }: { type: "login" | "register" }) {
     onSuccess: async (response) => {
       if (response.ok) {
         const data = await response.json();
+
         setJwt(data);
         authContext.refresh();
         setIsRedirecting(true);
@@ -118,6 +118,7 @@ function AuthForm({ type }: { type: "login" | "register" }) {
         else router.push("/tasks");
       } else {
         const error: string = JSON.parse(await response.text());
+
         console.error(error);
         const translated = translations[error.trim()] || error;
 
@@ -152,19 +153,27 @@ function AuthForm({ type }: { type: "login" | "register" }) {
   return (
     <div className="flex w-full max-w-md flex-col gap-4 rounded-md bg-content1 px-4 md:px-8 pb-10 pt-6 shadow-small">
       <p className="pb-2 text-xl flex gap-x-2">
-        {type === "register" ? <>
-          Reģistrēties
-          <Icon icon={"mdi:register-outline"} className="text-2xl"/>
-        </> : <>
-        Pieslēgties
-        <IconLogin2 className="text-default-700"/>
-        {/* <IconLogin2 className="text-default-700"/> */}
-        </>}
+        {type === "register" ? (
+          <>
+            Reģistrēties
+            <Icon className="text-2xl" icon={"mdi:register-outline"} />
+          </>
+        ) : (
+          <>
+            Pieslēgties
+            <IconLogin2 className="text-default-700" />
+            {/* <IconLogin2 className="text-default-700"/> */}
+          </>
+        )}
       </p>
       <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
         <Input
           isRequired
-          isDisabled={loginMutation.isLoading || registerMutation.isLoading || isRedirecting}
+          isDisabled={
+            loginMutation.isLoading ||
+            registerMutation.isLoading ||
+            isRedirecting
+          }
           label="Lietotājvārds"
           name="username"
           // placeholder="Ievadiet savu lietotājvārdu"
@@ -178,7 +187,9 @@ function AuthForm({ type }: { type: "login" | "register" }) {
               <Input
                 className="flex-1"
                 isDisabled={
-                  loginMutation.isLoading || registerMutation.isLoading || isRedirecting
+                  loginMutation.isLoading ||
+                  registerMutation.isLoading ||
+                  isRedirecting
                 }
                 label="Vārds (neobligāts)"
                 name="firstName"
@@ -190,7 +201,9 @@ function AuthForm({ type }: { type: "login" | "register" }) {
               <Input
                 className="flex-1"
                 isDisabled={
-                  loginMutation.isLoading || registerMutation.isLoading || isRedirecting
+                  loginMutation.isLoading ||
+                  registerMutation.isLoading ||
+                  isRedirecting
                 }
                 label="Uzvārds (neobligāts)"
                 name="lastName"
@@ -202,7 +215,11 @@ function AuthForm({ type }: { type: "login" | "register" }) {
             </div>
             <Input
               isRequired
-              isDisabled={loginMutation.isLoading || registerMutation.isLoading || isRedirecting}
+              isDisabled={
+                loginMutation.isLoading ||
+                registerMutation.isLoading ||
+                isRedirecting
+              }
               label="E-pasta adrese"
               name="email"
               // placeholder="Ievadiet savu e-pastu"
@@ -232,7 +249,11 @@ function AuthForm({ type }: { type: "login" | "register" }) {
                 )}
               </button>
             }
-            isDisabled={loginMutation.isLoading || registerMutation.isLoading || isRedirecting}
+            isDisabled={
+              loginMutation.isLoading ||
+              registerMutation.isLoading ||
+              isRedirecting
+            }
             label="Parole"
             name="password"
             // placeholder="Ievadiet savu paroli"
@@ -245,11 +266,14 @@ function AuthForm({ type }: { type: "login" | "register" }) {
             <Input
               isRequired
               className="flex-1"
-              isDisabled={loginMutation.isLoading || registerMutation.isLoading || isRedirecting}
+              isDisabled={
+                loginMutation.isLoading ||
+                registerMutation.isLoading ||
+                isRedirecting
+              }
               label="Apstipriniet paroli"
               name="confirmPassword"
               // placeholder="Apstipriniet savu paroli"
-              type={isConfirmVisible ? "text" : "password"}
               value={repPassword}
               variant="bordered"
               onChange={(e) => setRepPassword(e.target.value)}
@@ -269,14 +293,18 @@ function AuthForm({ type }: { type: "login" | "register" }) {
           </Checkbox>
         )}
         <div className="flex justify-center">
-        <Button
-          color="primary"
-          isLoading={loginMutation.isLoading || registerMutation.isLoading || isRedirecting}
-          type="submit"
-          className="flex-grow mt-4"
-        >
-          {type === "register" ? "Reģistrēties" : "Pieslēgties"}
-        </Button>
+          <Button
+            className="flex-grow mt-4"
+            color="primary"
+            isLoading={
+              loginMutation.isLoading ||
+              registerMutation.isLoading ||
+              isRedirecting
+            }
+            type="submit"
+          >
+            {type === "register" ? "Reģistrēties" : "Pieslēgties"}
+          </Button>
         </div>
       </form>
 

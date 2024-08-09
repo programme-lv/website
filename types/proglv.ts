@@ -57,14 +57,12 @@ type ProgrammingLang = {
   monacoId: string;
 };
 
-
 type Evaluation = {
   uuid: string;
   status: string;
   receivedScore: number;
   possibleScore: number;
 };
-
 
 type User = {
   uuid: string;

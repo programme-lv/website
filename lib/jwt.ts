@@ -31,10 +31,11 @@ export const setJwt = (jwt: any) => {
 };
 
 export function parseJwt(token: any) {
-  if(!token) {
+  if (!token) {
     return null;
   }
   var base64Url = token.split(".")[1];
+
   if (!base64Url) {
     return null;
   }
