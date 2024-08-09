@@ -24,7 +24,7 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
 
   return (
     <div
-      className="flex min-h-screen relative w-screen items-center justify-center overflow-hidden bg-content1 p-2 sm:p-4 lg:p-8"
+      className="flex min-h-dvh relative w-screen items-center justify-center overflow-hidden bg-content1 p-2 sm:p-4 lg:p-8"
       style={{
         backgroundImage: `url(${MountainsImage.src})`,
         backgroundSize: "cover",
@@ -32,7 +32,7 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
       }}
     >
       {/* Brand Logo */}
-      <div className="absolute left-10 top-10 bg-white p-2 rounded-md">
+      <div className="absolute left-2 top-2 md:left-6 md:top-6 bg-white p-2 rounded-md">
         <Link className="flex items-center" href="/">
           <Image alt="programme.lv logo" height={26} src={LogoImage} />
           <p className="ms-2 me-1 text-black dark:text-white font-medium uppercase text-small  ">
@@ -150,7 +150,7 @@ function AuthForm({ type }: { type: "login" | "register" }) {
   };
 
   return (
-    <div className="flex w-full max-w-md flex-col gap-4 rounded-large bg-content1 px-8 pb-10 pt-6 shadow-small">
+    <div className="flex w-full max-w-md flex-col gap-4 rounded-md bg-content1 px-4 md:px-8 pb-10 pt-6 shadow-small">
       <p className="pb-2 text-xl flex gap-x-2">
         {type === "register" ? <>
           Reģistrēties
