@@ -24,7 +24,7 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
 
   return (
     <div
-      className="flex min-h-dvh relative w-screen items-center justify-center overflow-hidden bg-content1 p-2 sm:p-4 lg:p-8"
+      className="flex min-h-screen relative w-screen items-center justify-center overflow-hidden bg-content1 p-2 pt-16 lg:px-8 lg:pt-16"
       style={{
         backgroundImage: `url(${MountainsImage.src})`,
         backgroundSize: "cover",
@@ -32,7 +32,7 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
       }}
     >
       {/* Brand Logo */}
-      <div className="absolute left-2 top-2 md:left-6 md:top-6 bg-white p-2 rounded-md">
+      <div className="absolute left-2 top-2  bg-white p-2 rounded-md">
         <Link className="flex items-center" href="/">
           <Image alt="programme.lv logo" height={26} src={LogoImage} />
           <p className="ms-2 me-1 text-black dark:text-white font-medium uppercase text-small  ">
