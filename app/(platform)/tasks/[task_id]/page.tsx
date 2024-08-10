@@ -38,7 +38,6 @@ import MonacoEditor from "@monaco-editor/react";
 import { useQuery, useQueryClient } from "react-query";
 
 import { getTaskById } from "@/lib/tasks";
-import getHardcodedLanguageList from "@/data/languages";
 import {
   Example,
   MarkdownStatement,
@@ -49,6 +48,7 @@ import {
 import { AuthContext } from "@/app/providers";
 import "katex/dist/katex.min.css";
 import renderMd from "@/lib/render-md";
+import { listProgrammingLanguages } from "@/lib/langs";
 
 export default function TaskDetailsPage() {
   const { task_id } = useParams();
@@ -552,12 +552,11 @@ const TaskInformation: React.FC<TaskInformationProps> = ({
 };
 
 function RightSide({ taskCode }: { taskCode: string }) {
-  const languages = getHardcodedLanguageList() as ProgrammingLanguage[];
   const authContext = useContext(AuthContext);
 
   return (
     <div className="flex flex-col flex-grow bg-white rounded-small border-small border-divider px-2 pb-2">
-      <ClientCodePanel languages={languages} taskCode={taskCode} />
+      <ClientCodePanel taskCode={taskCode} />
       <div className="mt-2 flex justify-end gap-3">
         {authContext.user !== null && (
           <Button color="primary">
@@ -596,20 +595,34 @@ function ResizeBar() {
 }
 
 function ClientCodePanel(props: {
-  languages: ProgrammingLanguage[];
   taskCode: string;
 }) {
-  const languages = props.languages as ProgrammingLanguage[];
+  let {data, error, isLoading} = useQuery("list-languages", listProgrammingLanguages)
+
+  const languages = data;
   const taskCode = props.taskCode;
 
-  let defaultLang = languages[0].id;
-
-  for (let lang of languages) if (lang.id === "cpp17") defaultLang = lang.id;
-  const [selectedLanguage, setSelectedLanguage] = useState<string>(defaultLang);
+  const [selectedLanguage, setSelectedLanguage] = useState<string>("");
   const [code, setCode] = useState<string>("");
 
-  const monacoLangId =
-    languages.filter((lang) => lang.id === selectedLanguage)[0]?.monacoId || "";
+  useEffect(() => {
+    if(!languages) return
+    if(selectedLanguage === "") {
+      for (let lang of languages) {
+        if(lang.id === "cpp17") {
+          setSelectedLanguage("cpp17")
+          return;
+        }
+      }
+      setSelectedLanguage(languages[0].id)
+    }
+  }, [languages])
+
+
+  let monacoLangId = ""
+  if (selectedLanguage&&languages) {
+    monacoLangId = languages.filter((lang) => lang.id === selectedLanguage)[0]?.monacoId || "";
+  }
 
   useEffect(() => {
     const savedText = sessionStorage.getItem(
@@ -633,6 +646,8 @@ int main() {
   useEffect(() => {
     sessionStorage.setItem(`code-${taskCode}-${selectedLanguage}`, code);
   }, [code]);
+
+  console.log(monacoLangId)
 
   return (
     <div className="h-full w-full flex flex-col gap-2">
@@ -668,12 +683,16 @@ type SelectLang = {
 };
 
 type LanguageSelectProps = {
-  languages: SelectLang[];
+  languages: SelectLang[] | undefined | null;
   selectedLanguage: string;
   setSelectedLanguage: Dispatch<SetStateAction<string>>;
 };
 
 function LanguageSelect(props: LanguageSelectProps) {
+  if (!props.languages) {
+    return null;
+  }
+
   const data = props.languages.map((lang) => ({
     value: lang.id,
     label: lang.fullName,

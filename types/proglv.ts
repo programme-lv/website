@@ -44,14 +44,14 @@ type Submission = {
   username: string;
   createdAt: string;
   evaluation: Evaluation;
-  language: ProgrammingLang;
+  language: ProgrammingLanguage;
   task: {
     name: string;
     code: string;
   };
 };
 
-type ProgrammingLang = {
+type ProgrammingLanguage = {
   id: string;
   fullName: string;
   monacoId: string;
@@ -73,7 +73,7 @@ type User = {
 };
 
 export type {
-  ProgrammingLang as ProgrammingLanguage,
+  ProgrammingLanguage,
   Evaluation,
   TaskReference,
   Submission,
