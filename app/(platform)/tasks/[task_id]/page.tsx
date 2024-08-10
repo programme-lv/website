@@ -9,7 +9,7 @@ import React, {
   SetStateAction,
   useContext,
 } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { debounce } from "lodash";
 import { Resizable } from "re-resizable";
 import {
@@ -49,6 +49,7 @@ import { AuthContext } from "@/app/providers";
 import "katex/dist/katex.min.css";
 import renderMd from "@/lib/render-md";
 import { listProgrammingLanguages } from "@/lib/langs";
+import { createSubmission } from "@/lib/subms";
 
 export default function TaskDetailsPage() {
   const { task_id } = useParams();
@@ -553,13 +554,28 @@ const TaskInformation: React.FC<TaskInformationProps> = ({
 
 function RightSide({ taskCode }: { taskCode: string }) {
   const authContext = useContext(AuthContext);
+  const [selectedLanguage, setSelectedLanguage] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const router = useRouter();
+  async function submitSolution() {
+    setIsLoading(true)
+    try {
+    let response = await createSubmission("test", authContext.user?.username ?? "", selectedLanguage, taskCode)
+    console.log(response)
+    await router.push(`/submissions`)
+    // await 
+    } catch (error) {
+      setIsLoading(false)
+      alert(error)
+    }
+  }
 
   return (
     <div className="flex flex-col flex-grow bg-white rounded-small border-small border-divider px-3 py-1 pb-2">
-      <ClientCodePanel taskCode={taskCode} />
+      <ClientCodePanel taskCode={taskCode} selectedLanguage={selectedLanguage} setSelectedLanguage={setSelectedLanguage}/>
       <div className="mt-2 flex justify-end gap-3">
         {authContext.user !== null && (
-          <Button color="primary">
+          <Button color="primary" onClick={submitSolution} isLoading={isLoading}>
             Iesūtīt risinājumu
             <IconSend size={16} />
           </Button>
@@ -595,14 +611,17 @@ function ResizeBar() {
 }
 
 function ClientCodePanel(props: {
+  selectedLanguage: string;
+  setSelectedLanguage: Dispatch<SetStateAction<string>>;
   taskCode: string;
 }) {
   let {data, error, isLoading} = useQuery("list-languages", listProgrammingLanguages)
+  let selectedLanguage = props.selectedLanguage;
+  let setSelectedLanguage = props.setSelectedLanguage;
 
   const languages = data;
   const taskCode = props.taskCode;
 
-  const [selectedLanguage, setSelectedLanguage] = useState<string>("");
   const [code, setCode] = useState<string>("");
 
   useEffect(() => {

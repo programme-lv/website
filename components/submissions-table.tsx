@@ -110,9 +110,7 @@ const sampleData: Submission[] = [
 
 export default function SubmissionTable() {
   const [submissionsState, setSubmissionsState] = useState<Submission[]>([]);
-  let { data, error, isLoading } = useQuery("submissions", listSubmissions, {
-    staleTime: 30 * 1000,
-  });
+  let { data, error, isLoading } = useQuery("submissions", listSubmissions);
   const router = useRouter();
 
   useEffect(() => {
