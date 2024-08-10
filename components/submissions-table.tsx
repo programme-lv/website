@@ -11,6 +11,7 @@ import {
 import { Submission } from "@/types/proglv";
 import { listSubmissions } from "@/lib/subms";
 import { useQuery } from "react-query";
+import { useRouter } from "next/navigation";
 
 export const statusTranslations: Record<string, string> = {
   "in queue": "Gaida rindā",
@@ -22,6 +23,50 @@ export const statusTranslations: Record<string, string> = {
 };
 
 const sampleData: Submission[] = [
+  {
+    uuid: "3b6b-433a-869e-b528e7cde1a0",
+    submission: "sample submission code",
+    username: "KrisjanisP",
+    createdAt: "2021-01-25T10:35:00",
+    evaluation: {
+      uuid: "ab4f8c00-96a5-44be-8385-c08059247220",
+      status: "finished",
+      receivedScore: 0,
+      possibleScore: 100,
+    },
+    language: {
+      id: "ab4f8c00-96a5-44be-8385-c08059247220",
+      fullName: "C++17 (GCC)",
+      monacoId: "cpp",
+      // enabled: true,
+    },
+    task: {
+      name: "Kvadrātveida putekļsūcējs",
+      code: "kvadrputekl",
+    },
+  },
+  {
+    uuid: "314b728f-3b6b-433a-869e-b528e7cde1a0",
+    submission: "sample submission code",
+    username: "KrisjanisP",
+    createdAt: "2021-01-25T10:34:00",
+    evaluation: {
+      uuid: "ab4f8c00-96a5-44be-8385-c08059247220",
+      status: "finished",
+      receivedScore: 100,
+      possibleScore: 100,
+    },
+    language: {
+      id: "ab4f8c00-96a5-44be-8385-c08059247220",
+      fullName: "C++17 (GCC)",
+      monacoId: "cpp",
+      // enabled: true,
+    },
+    task: {
+      name: "Kvadrātveida putekļsūcējs",
+      code: "kvadrputekl",
+    },
+  },
   {
     uuid: "314b728f-3b6b-433a-869e-b528e7cde110",
     submission: "sample submission code",
@@ -68,10 +113,12 @@ export default function SubmissionTable() {
   let { data, error, isLoading } = useQuery("submissions", listSubmissions, {
     staleTime: 30 * 1000,
   });
+  const router = useRouter();
 
   useEffect(() => {
     if(data) {
-      const sortedSubmissions = [...data].sort((a, b) => 
+      let x = [...data, ...sampleData];
+      const sortedSubmissions = [...x].sort((a, b) => 
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       );
       setSubmissionsState(sortedSubmissions);
@@ -189,7 +236,7 @@ export default function SubmissionTable() {
             <TableRow
               key={item.uuid}
               className="cursor-pointer"
-              href={`/submissions/${item.uuid}`}
+              onClick={() => router.push(`/submissions/${item.uuid}`)}
             >
               {(columnKey) => (
                 <TableCell className="h-12">
