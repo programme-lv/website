@@ -424,7 +424,7 @@ const TaskInformation: React.FC<TaskInformationProps> = ({
         <div className="flex flex-row">
           <div className="h-full flex flex-row gap-3 sm:flex-nowrap flex-grow px-3 py-1">
             {layout === "wide" && task?.illustration_img_url && (
-              <div className="max-w-[150px] min-h-[150px] min-w-16 flex pt-1">
+              <div className="max-w-[150px] min-h-16 min-w-16 flex pt-1">
                 <Image
                   alt={task.task_full_name}
                   className="h-full flex-none object-cover"
