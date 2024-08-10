@@ -427,7 +427,7 @@ const TaskInformation: React.FC<TaskInformationProps> = ({
               <div className="max-w-[150px] min-h-16 min-w-16 flex pt-1">
                 <Image
                   alt={task.task_full_name}
-                  className="h-full flex-none object-cover"
+                  className="flex-none object-cover"
                   disableSkeleton={true}
                   src={task.illustration_img_url}
                   // fetchPriority="high"
@@ -479,10 +479,10 @@ const TaskInformation: React.FC<TaskInformationProps> = ({
                 </div>
                 <div className="flex flex-grow gap-2 mt-1">
                   {layout === "narrow" && task?.illustration_img_url && (
-                    <div className="max-w-[100px] min-w-16 flex">
+                    <div className="max-w-[100px] min-h-16 min-w-16 flex">
                       <Image
                         alt={task.task_full_name}
-                        className="h-full flex-none object-cover"
+                        className="flex-none object-cover"
                         disableSkeleton={true}
                         src={task.illustration_img_url}
                         // fetchPriority="high"
