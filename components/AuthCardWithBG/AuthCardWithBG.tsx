@@ -273,6 +273,7 @@ function AuthForm({ type }: { type: "login" | "register" }) {
               }
               label="Apstipriniet paroli"
               name="confirmPassword"
+              type="password"
               // placeholder="Apstipriniet savu paroli"
               value={repPassword}
               variant="bordered"
