@@ -42,13 +42,32 @@ const sampleData: Submission[] = [
       code: "kvadrputekl",
     },
   },
+  {
+    uuid: "314b728f-3b6b-433a-869e-b528e7cde111",
+    submission: "sample submission code",
+    username: "KrisjanisP",
+    createdAt: "2021-01-25T10:33:00",
+    evaluation: null,
+    language: {
+      id: "ab4f8c00-96a5-44be-8385-c08059247220",
+      fullName: "C++17 (GCC)",
+      monacoId: "cpp",
+      // enabled: true,
+    },
+    task: {
+      name: "Kvadrātveida putekļsūcējs",
+      code: "kvadrputekl",
+    },
+  },
 ];
 
 export default function SubmissionTable() {
   const [submissionsState, setSubmissionsState] = useState<Submission[]>([]);
-
   useEffect(() => {
-    setSubmissionsState(sampleData);
+    const sortedSubmissions = [...sampleData].sort((a, b) => 
+      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+    setSubmissionsState(sortedSubmissions);
   }, []);
 
   const renderCell = (row: Submission, columnKey: React.Key) => {
@@ -74,9 +93,29 @@ export default function SubmissionTable() {
       case "language":
         return row.language.fullName;
       case "result":
+        if (!row.evaluation) {
+          return (
+            <div className="flex justify-center flex-col items-center full min-w-36">
+              <div className="relative pt-1 w-full">
+                <div className="overflow-hidden h-1.5 text-xs flex rounded">
+                  <div
+                    className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-teal-600"
+                    style={{ width: `${0}%` }}
+                  />
+                  {/* <Spacer x={0.2}/> */}
+                  <div
+                    className={`shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center ${"bg-gray-500"}`}
+                    style={{ width: `${100}%` }}
+                  />
+                </div>
+              </div>
+            </div>
+          )
+        }
+
         let result = Math.floor(
-          (100 * row.evaluation.receivedScore) /
-            (row.evaluation.possibleScore ?? 100),
+          (100 * row.evaluation!.receivedScore) /
+            (row.evaluation!.possibleScore ?? 100),
         );
 
         return (
@@ -86,7 +125,7 @@ export default function SubmissionTable() {
                 {result > 0 ? `${result}%` : ""}
               </span>
               <span
-                className={`text-tiny ${row.evaluation.status === "finished" ? "text-red-500" : "text-gray-500"}`}
+                className={`text-tiny ${row.evaluation!.status === "finished" ? "text-red-500" : "text-gray-500"}`}
               >
                 {100 - result > 0 ? `${100 - result}%` : ""}
               </span>
@@ -107,6 +146,9 @@ export default function SubmissionTable() {
           </div>
         );
       case "status":
+        if (!row.evaluation) {
+          return <>Gaida rindā</>;
+        }
         return statusTranslations[
           row.evaluation.status as keyof typeof statusTranslations
         ];
@@ -114,6 +156,7 @@ export default function SubmissionTable() {
         return <></>;
     }
   };
+
 
   return (
     <div className="overflow-x-auto">

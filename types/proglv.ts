@@ -43,7 +43,7 @@ type Submission = {
   submission: string;
   username: string;
   createdAt: string;
-  evaluation: Evaluation;
+  evaluation: Evaluation | null;
   language: ProgrammingLanguage;
   task: {
     name: string;
