@@ -114,7 +114,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, ...props }) => {
       className="w-full"
       {...props}
       ref={cardRef}
-      classNames={{ base: "radius-small border-small border-divider" }}
+      classNames={{ base: "radius-small border-small border-divider hover:border-blue-500" }}
       shadow="none"
     >
       <CardBody
