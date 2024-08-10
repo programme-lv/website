@@ -422,9 +422,9 @@ const TaskInformation: React.FC<TaskInformationProps> = ({
     >
       <CardBody className="flex flex-col p-0 sm:flex-nowrap">
         <div className="flex flex-row">
-          <div className="h-full flex flex-row flex-wrap sm:flex-nowrap flex-grow">
+          <div className="h-full flex flex-row gap-3 sm:flex-nowrap flex-grow px-3">
             {layout === "wide" && task?.illustration_img_url && (
-              <div className="max-w-[150px] max-h-[150px] min-w-16 flex p-1">
+              <div className="max-w-[150px] min-w-16 flex pt-1">
                 <Image
                   alt={task.task_full_name}
                   className="h-full flex-none object-cover"
@@ -434,7 +434,7 @@ const TaskInformation: React.FC<TaskInformationProps> = ({
                 />
               </div>
             )}
-            <div className="flex flex-col justify-between ps-4 pt-2 pb-1 w-full">
+            <div className="flex flex-col flex-grow justify-between w-full">
               <Skeleton isLoaded={!!task}>
                 <div className="flex justify-between items-center">
                   <div className="inline-flex gap-x-4 gap-y-1 justify-between items-center flex-wrap">
@@ -443,7 +443,7 @@ const TaskInformation: React.FC<TaskInformationProps> = ({
                     </h3>
                     {task && difficultyChips[task.difficulty_rating]}
                   </div>
-                  <div className="me-3">
+                  <div className="">
                     <Dropdown placement="bottom-end">
                       <DropdownTrigger>
                         <Button isIconOnly size="sm" variant="light">
@@ -477,9 +477,9 @@ const TaskInformation: React.FC<TaskInformationProps> = ({
                     </Dropdown>
                   </div>
                 </div>
-                <div className="flex">
+                <div className="flex flex-grow gap-2 mt-1">
                   {layout === "narrow" && task?.illustration_img_url && (
-                    <div className="max-w-[100px] max-h-[100px] min-w-16 flex p-1">
+                    <div className="max-w-[100px] min-w-16 flex">
                       <Image
                         alt={task.task_full_name}
                         className="h-full flex-none object-cover"
@@ -490,7 +490,7 @@ const TaskInformation: React.FC<TaskInformationProps> = ({
                     </div>
                   )}
                   <div className="flex flex-col flex-grow">
-                    <div className="flex justify-between pt-1 max-w-72">
+                    <div className="flex justify-between max-w-72">
                       <div
                         className={cn("flex justify-between", {
                           "": layout === "xs",
@@ -514,26 +514,26 @@ const TaskInformation: React.FC<TaskInformationProps> = ({
                     </div>
                     <div className="flex-grow flex flex-col justify-end items-end ms-3">
                       {/* <Skeleton isLoaded={!!task}> */}
-                      <div className="grid grid-cols-2 gap-x-2">
-                        <span className="text-small text-default-700 flex items-end justify-end">
+                      <div className="grid gap-x-2">
+                        <span className="text-small text-default-700 flex items-end justify-end" style={{lineHeight:'24px'}}>
                           izpildes laiks
                         </span>
-                        <div className="flex items-end gap-1">
-                          <span className="text-medium text-default-900">
+                        <div className="flex items-end gap-1 col-start-2">
+                          <span className="text-medium text-default-900" style={{lineHeight:'24px'}}>
                             {task?.cpu_time_limit_seconds}
                           </span>
-                          <span className="text-small text-default-800">
+                          <span className="text-small text-default-800" style={{lineHeight:'24px'}}>
                             sek.
                           </span>
                         </div>
-                        <span className="text-small text-default-700 flex items-end justify-end">
+                        <span className="text-small text-default-700 flex items-end justify-end" style={{lineHeight:'24px'}}>
                           atmiņa
                         </span>
-                        <div className="flex items-end gap-1">
-                          <span className="text-medium text-default-900">
+                        <div className="flex items-end gap-1 col-start-2">
+                          <span className="text-medium text-default-900" style={{lineHeight:'24px'}}>
                             {task?.memory_limit_megabytes}
                           </span>
-                          <span className="text-small text-default-800">
+                          <span className="text-small text-default-800" style={{lineHeight:'24px'}}>
                             MB
                           </span>
                         </div>
