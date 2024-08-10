@@ -9,6 +9,8 @@ import {
 } from "@nextui-org/react";
 
 import { Submission } from "@/types/proglv";
+import { listSubmissions } from "@/lib/subms";
+import { useQuery } from "react-query";
 
 export const statusTranslations: Record<string, string> = {
   "in queue": "Gaida rindā",
@@ -63,12 +65,18 @@ const sampleData: Submission[] = [
 
 export default function SubmissionTable() {
   const [submissionsState, setSubmissionsState] = useState<Submission[]>([]);
+  let { data, error, isLoading } = useQuery("submissions", listSubmissions, {
+    staleTime: 30 * 1000,
+  });
+
   useEffect(() => {
-    const sortedSubmissions = [...sampleData].sort((a, b) => 
-      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    );
-    setSubmissionsState(sortedSubmissions);
-  }, []);
+    if(data) {
+      const sortedSubmissions = [...data].sort((a, b) => 
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+      setSubmissionsState(sortedSubmissions);
+    }
+  }, [data]);
 
   const renderCell = (row: Submission, columnKey: React.Key) => {
     switch (columnKey) {
