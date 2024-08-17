@@ -1,7 +1,7 @@
 import { Submission } from "@/types/proglv";
 import { getJwt } from "./jwt";
 
-const API_HOST = "https://api.programme.lv";
+const API_HOST = "http://localhost:8080";
 
 export const listSubmissions = async (): Promise<Submission[]> => {
   const response = await fetch(`${API_HOST}/submissions`, {

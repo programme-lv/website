@@ -39,16 +39,29 @@ type MarkdownStatement = {
 };
 
 type Submission = {
-  uuid: string;
+  subm_uuid: string;
   submission: string;
   username: string;
-  createdAt: string;
-  evaluation: Evaluation | null;
-  language: ProgrammingLanguage;
-  task: {
-    name: string;
-    code: string;
-  };
+  created_at: string;
+  eval_status: string;
+  eval_scoring_testgroups: {
+    test_group_id: number;
+    test_group_score: number;
+    statement_subtask: number;
+    accepted_tests: number;
+    wrong_tests: number;
+    untested_tests: number;
+  }[];
+  p_lang_id: string;
+  p_lang_display_name: string;
+  p_lang_monaco_id: string;
+  task_name: string;
+  task_id: string;
+  user_uuid: string;
+  user_username: string;
+  user_email: string;
+  user_firstname: string;
+  user_lastname: string;
 };
 
 type ProgrammingLanguage = {
