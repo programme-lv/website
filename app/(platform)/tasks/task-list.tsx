@@ -46,7 +46,7 @@ export function TaskList(props: { tasks: Task[] }) {
             </Link>
           ))
         ) : (
-          <p>No tasks found</p>
+          <></>
         )}
       </div>
     </main>
