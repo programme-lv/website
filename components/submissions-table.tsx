@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   Table,
   TableHeader,
@@ -7,24 +7,42 @@ import {
   TableRow,
   TableCell,
 } from "@nextui-org/react";
-
-import { Submission } from "@/types/proglv";
-import { listSubmissions } from "@/lib/subms";
 import { useQuery } from "react-query";
 import { useRouter } from "next/navigation";
 
+import { Submission } from "@/types/proglv";
+import { listSubmissions } from "@/lib/subms";
+
 export const statusTranslations: Record<string, string> = {
-  "waiting": "Gaida rindā",
-  "received": "Sagatavo testēšanai",
-  "compiling": "Tiek kompilēts",
-  "testing": "Tiek testēts",
-  "finished": "Izvērtēts",
-  "error":"Servera kļūda",
+  waiting: "Gaida rindā",
+  received: "Sagatavo testēšanai",
+  compiling: "Tiek kompilēts",
+  testing: "Tiek testēts",
+  finished: "Izvērtēts",
+  error: "Servera kļūda",
+};
+
+export const statusImportance: Record<string, number> = {
+  waiting: 0,
+  received: 1,
+  compiling: 2,
+  testing: 3,
+  finished: 4,
+  error: 5,
 };
 
 export default function SubmissionTable() {
   let { data, error, isLoading } = useQuery("submissions", listSubmissions);
   const router = useRouter();
+
+  // useEffect(() => {
+  //   const unsubscribe = subscribeToSubmissionUpdates((update: SubmListWebSocketUpdate) => {
+  //     console.log("Received update:", update);
+  //   });
+  //   return () => {
+  //     unsubscribe();
+  //   };
+  // }, []);
 
   console.log(data);
 
@@ -121,12 +139,15 @@ type TestgroupScoring = {
 //   return values.map(val => val / total);
 // }
 
-function TestgroupScoringBar({ testgroups }: { testgroups: TestgroupScoring[] }) {
+function TestgroupScoringBar({
+  testgroups,
+}: {
+  testgroups: TestgroupScoring[];
+}) {
   // const [green, setGreen] = useState(0.2);
   // const [yellow, setYellow] = useState(0.3);
   // const [gray, setGray] = useState(0.4);
   // const [red, setRed] = useState(0.1);
-
 
   // useEffect(() => {
   //   const interval = setInterval(() => {
@@ -152,6 +173,7 @@ function TestgroupScoringBar({ testgroups }: { testgroups: TestgroupScoring[] })
   let red = 0;
 
   let total_score = 0;
+
   for (const testgroup of testgroups) {
     total_score += testgroup.test_group_score;
   }
@@ -159,16 +181,22 @@ function TestgroupScoringBar({ testgroups }: { testgroups: TestgroupScoring[] })
   for (const testgroup of testgroups) {
     const score = testgroup.test_group_score;
     const normalized_score = score / total_score;
+
     if (testgroup.wrong_tests > 0) {
       red += normalized_score;
-      continue
+      continue;
     }
     const finished = testgroup.untested_tests === 0;
+
     if (finished) {
       green += normalized_score;
     } else {
-      yellow += normalized_score * testgroup.accepted_tests / (testgroup.accepted_tests + testgroup.untested_tests);
-      gray += normalized_score * testgroup.untested_tests / (testgroup.accepted_tests + testgroup.untested_tests);
+      yellow +=
+        (normalized_score * testgroup.accepted_tests) /
+        (testgroup.accepted_tests + testgroup.untested_tests);
+      gray +=
+        (normalized_score * testgroup.untested_tests) /
+        (testgroup.accepted_tests + testgroup.untested_tests);
     }
   }
 
@@ -188,28 +216,28 @@ function TestgroupScoringBar({ testgroups }: { testgroups: TestgroupScoring[] })
             className="flex flex-col text-center whitespace-nowrap text-white justify-center transition-all duration-1000 ease-in-out"
             style={{
               width: `${(green * 100).toFixed(0)}%`,
-              background: 'linear-gradient(90deg, #38b2ac, #2c7a7b)',
+              background: "linear-gradient(90deg, #38b2ac, #2c7a7b)",
             }}
           />
           <div
             className="flex flex-col text-center whitespace-nowrap text-white justify-center transition-all duration-1000 ease-in-out"
             style={{
               width: `${(yellow * 100).toFixed(0)}%`,
-              background: 'linear-gradient(90deg, #ecc94b, #d69e2e)',
+              background: "linear-gradient(90deg, #ecc94b, #d69e2e)",
             }}
           />
           <div
             className="flex flex-col text-center whitespace-nowrap text-white justify-center transition-all duration-1000 ease-in-out"
             style={{
               width: `${(gray * 100).toFixed(0)}%`,
-              background: 'linear-gradient(90deg, #a0aec0, #718096)',
+              background: "linear-gradient(90deg, #a0aec0, #718096)",
             }}
           />
           <div
             className="flex flex-col text-center whitespace-nowrap text-white justify-center transition-all duration-1000 ease-in-out"
             style={{
               width: `${(red * 100).toFixed(0)}%`,
-              background: 'linear-gradient(90deg, #f56565, #c53030)',
+              background: "linear-gradient(90deg, #f56565, #c53030)",
             }}
           />
         </div>

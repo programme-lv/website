@@ -2,7 +2,9 @@ import { ProgrammingLanguage } from "@/types/proglv";
 
 const API_HOST = "https://api.programme.lv";
 
-export const listProgrammingLanguages = async (): Promise<ProgrammingLanguage[]> => {
+export const listProgrammingLanguages = async (): Promise<
+  ProgrammingLanguage[]
+> => {
   const response = await fetch(`${API_HOST}/programming-languages`, {
     method: "GET",
     headers: {

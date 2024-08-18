@@ -83,19 +83,12 @@ function AuthForm({ type }: { type: "login" | "register" }) {
       setError(null);
     },
     onSuccess: async (response) => {
-      if (response.status === 201) {
-        // Created
-        await response.json();
+      if (response.status === "success") {
         authContext.refresh();
         setIsRedirecting(true);
         loginMutation.mutate({ username, password });
       } else {
-        const error: string = JSON.parse(await response.text());
-
-        console.error(error);
-        const translated = translations[error.trim()] || error;
-
-        setError("Kļūda: " + translated + ".");
+        setError(`Kļūda: ${response.message}.`);
       }
     },
     onError: (error) => {
@@ -108,21 +101,16 @@ function AuthForm({ type }: { type: "login" | "register" }) {
       setError(null);
     },
     onSuccess: async (response) => {
-      if (response.ok) {
-        const data = await response.json();
+      if (response.status === "success") {
+        const token = response.data;
 
-        setJwt(data);
+        setJwt(token);
         authContext.refresh();
         setIsRedirecting(true);
         if (redirectParam) router.push(redirectParam);
         else router.push("/tasks");
       } else {
-        const error: string = JSON.parse(await response.text());
-
-        console.error(error);
-        const translated = translations[error.trim()] || error;
-
-        setError("Kļūda: " + translated + ".");
+        setError(`Kļūda: ${response.message}.`);
       }
     },
     onError: async (response) => {

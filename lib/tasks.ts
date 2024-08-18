@@ -1,8 +1,13 @@
 import { Task } from "@/types/proglv";
 
-const API_HOST = "https://api.programme.lv";
+import { ApiResponse } from "./api-response";
 
-export const getTaskById = async (taskId: string): Promise<Task> => {
+const API_HOST = "https://api.programme.lv";
+// const API_HOST = "http://localhost:8080";
+
+export const getTaskById = async (
+  taskId: string,
+): Promise<ApiResponse<Task>> => {
   const response = await fetch(`${API_HOST}/tasks/${taskId}`, {
     method: "GET",
     headers: {
@@ -22,7 +27,7 @@ export const getTaskById = async (taskId: string): Promise<Task> => {
   return data;
 };
 
-export const listTasks = async (): Promise<Task[]> => {
+export const listTasks = async (): Promise<ApiResponse<Task[]>> => {
   const response = await fetch(`${API_HOST}/tasks`, {
     method: "GET",
     headers: {
@@ -33,10 +38,5 @@ export const listTasks = async (): Promise<Task[]> => {
     },
   });
 
-  if (!response.ok) {
-    throw new Error("Error fetching tasks");
-  }
-  const data = await response.json();
-
-  return data;
+  return response.json();
 };

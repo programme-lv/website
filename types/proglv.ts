@@ -85,6 +85,25 @@ type User = {
   lastname: string;
 };
 
+interface EvalStateUpdate {
+  subm_uuid: string;
+  eval_uuid: string;
+  new_state: string;
+}
+
+interface TestgroupResUpdate {
+  subm_uuid: string;
+  eval_uuid: string;
+  test_group_id: number;
+  accepted_tests: number;
+  wrong_tests: number;
+  untested_tests: number;
+}
+
+type SubmListWebSocketUpdate =
+  | { state_update: EvalStateUpdate }
+  | { testgroup_res_update: TestgroupResUpdate };
+
 export type {
   ProgrammingLanguage,
   Evaluation,
@@ -95,4 +114,7 @@ export type {
   MarkdownStatement,
   Example,
   StInputs,
+  SubmListWebSocketUpdate,
+  EvalStateUpdate,
+  TestgroupResUpdate,
 };

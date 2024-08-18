@@ -103,7 +103,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
       setTaskCodeFullNameDict((taskCodeFullNameDict) => ({
         ...taskCodeFullNameDict,
-        [task_id + ""]: fetchedTask.task_full_name,
+        [task_id + ""]: fetchedTask.data?.task_full_name ?? (task_id as string),
       }));
     } catch (err) {
       // alert("Failed to load task details");
