@@ -64,7 +64,6 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, ...props }) => {
   React.useEffect(() => {
     const handleResize = () => {
       if (cardRef.current) {
-        console.log(cardRef.current.clientWidth);
         setIsWide(cardRef.current.clientWidth > 614);
       }
     };

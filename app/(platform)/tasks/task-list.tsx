@@ -10,7 +10,6 @@ import { listTasks } from "@/lib/tasks";
 import { Task } from "@/types/proglv";
 
 export function TaskList(props: { tasks: Task[] }) {
-  console.log("task list props: ", props);
   let {
     data: listTasksData,
     error,
@@ -18,10 +17,6 @@ export function TaskList(props: { tasks: Task[] }) {
   } = useQuery("list-tasks", listTasks, {
     staleTime: 30 * 1000, // 30 seconds
   });
-
-  console.log("listTasksData: ", listTasksData?.data);
-  console.log("error: ", error);
-  console.log("props.tasks: ", props.tasks);
 
   let data = listTasksData ? (listTasksData.data ?? []) : props.tasks;
 

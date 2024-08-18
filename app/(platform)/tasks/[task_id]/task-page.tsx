@@ -693,8 +693,6 @@ int main() {
     sessionStorage.setItem(`code-${taskCode}-${selectedLanguage}`, code);
   }, [code]);
 
-  console.log(monacoLangId);
-
   return (
     <div className="h-full w-full flex flex-col gap-2">
       <div className="flex justify-end">
