@@ -1,10 +1,11 @@
 import { ProgrammingLanguage } from "@/types/proglv";
+import { ApiResponse } from "./api-response";
 
 const API_HOST = "https://api.programme.lv";
+// const API_HOST = "http://localhost:8080";
 
-export const listProgrammingLanguages = async (): Promise<
-  ProgrammingLanguage[]
-> => {
+export const listProgrammingLanguages = async (): Promise<ApiResponse<
+  ProgrammingLanguage[]>> => {
   const response = await fetch(`${API_HOST}/programming-languages`, {
     method: "GET",
     headers: {
@@ -15,10 +16,5 @@ export const listProgrammingLanguages = async (): Promise<
     },
   });
 
-  if (!response.ok) {
-    throw new Error("Error fetching programming languages");
-  }
-  const data = await response.json();
-
-  return data;
+  return response.json();
 };

@@ -636,14 +636,14 @@ function ClientCodePanel(props: {
   setSelectedLanguage: Dispatch<SetStateAction<string>>;
   taskCode: string;
 }) {
-  let { data, error, isLoading } = useQuery(
+  let { data: listLangsResponse, error, isLoading } = useQuery(
     "list-languages",
     listProgrammingLanguages,
   );
   let selectedLanguage = props.selectedLanguage;
   let setSelectedLanguage = props.setSelectedLanguage;
 
-  const languages = data;
+  const languages = listLangsResponse?.data;
   const taskCode = props.taskCode;
 
   const [code, setCode] = useState<string>("");
