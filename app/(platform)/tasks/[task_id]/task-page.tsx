@@ -564,88 +564,12 @@ function RightSide({ taskCode }: { taskCode: string }) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
 
-  async function submitSolution() {
-    setIsLoading(true);
-    try {
-      let response = await createSubmission(
-        "test",
-        authContext.user?.username ?? "",
-        selectedLanguage,
-        taskCode,
-      );
-
-      console.log(response);
-      await router.push(`/submissions`);
-      // await
-    } catch (error) {
-      setIsLoading(false);
-      alert(error);
-    }
-  }
-
-  return (
-    <div className="flex flex-col flex-grow bg-white rounded-small border-small border-divider px-3 py-1 pb-2">
-      <ClientCodePanel
-        selectedLanguage={selectedLanguage}
-        setSelectedLanguage={setSelectedLanguage}
-        taskCode={taskCode}
-      />
-      <div className="mt-2 flex justify-end gap-3">
-        {authContext.user !== null && (
-          <Button
-            color="primary"
-            isLoading={isLoading}
-            onClick={submitSolution}
-          >
-            Iesūtīt risinājumu
-            <IconSend size={16} />
-          </Button>
-        )}
-        {authContext.user === null && (
-          <Button isDisabled color="primary">
-            Pieslēdzieties, lai iesūtīt risinājumu!
-            <IconSend size={16} />
-          </Button>
-        )}
-      </div>
-    </div>
-  );
-}
-
-function ResizeBar() {
-  return (
-    <div
-      className="flex items-center justify-center w-3 h-full p-0"
-      style={{ marginLeft: 6 }}
-    >
-      <div className="flex flex-col gap-0">
-        {[...Array(3)].map((_, i) => (
-          <IconGripVertical
-            key={i}
-            className="w-5 h-5 text-gray-700"
-            stroke={1.5}
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function ClientCodePanel(props: {
-  selectedLanguage: string;
-  setSelectedLanguage: Dispatch<SetStateAction<string>>;
-  taskCode: string;
-}) {
-  let { data: listLangsResponse, error, isLoading } = useQuery(
+  let { data: listLangsResponse } = useQuery(
     "list-languages",
     listProgrammingLanguages,
   );
-  let selectedLanguage = props.selectedLanguage;
-  let setSelectedLanguage = props.setSelectedLanguage;
 
   const languages = listLangsResponse?.data;
-  const taskCode = props.taskCode;
-
   const [code, setCode] = useState<string>("");
 
   useEffect(() => {
@@ -692,8 +616,27 @@ int main() {
   useEffect(() => {
     sessionStorage.setItem(`code-${taskCode}-${selectedLanguage}`, code);
   }, [code]);
+  async function submitSolution() {
+    setIsLoading(true);
+    try {
+      let response = await createSubmission(
+        code,
+        authContext.user?.username ?? "",
+        selectedLanguage,
+        taskCode,
+      );
+
+      console.log(response);
+      await router.push(`/submissions`);
+      // await
+    } catch (error) {
+      setIsLoading(false);
+      alert(error);
+    }
+  }
 
   return (
+    <div className="flex flex-col flex-grow bg-white rounded-small border-small border-divider px-3 py-1 pb-2">
     <div className="h-full w-full flex flex-col gap-2">
       <div className="flex justify-end">
         <LanguageSelect
@@ -717,6 +660,44 @@ int main() {
         </div>
       </div>
       {/* <SubmitButton langId={selectedLanguage} code={code} taskCode={taskCode} /> */}
+    </div>
+      <div className="mt-2 flex justify-end gap-3">
+        {authContext.user !== null && (
+          <Button
+            color="primary"
+            isLoading={isLoading}
+            onClick={submitSolution}
+          >
+            Iesūtīt risinājumu
+            <IconSend size={16} />
+          </Button>
+        )}
+        {authContext.user === null && (
+          <Button isDisabled color="primary">
+            Pieslēdzieties, lai iesūtīt risinājumu!
+            <IconSend size={16} />
+          </Button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function ResizeBar() {
+  return (
+    <div
+      className="flex items-center justify-center w-3 h-full p-0"
+      style={{ marginLeft: 6 }}
+    >
+      <div className="flex flex-col gap-0">
+        {[...Array(3)].map((_, i) => (
+          <IconGripVertical
+            key={i}
+            className="w-5 h-5 text-gray-700"
+            stroke={1.5}
+          />
+        ))}
+      </div>
     </div>
   );
 }
