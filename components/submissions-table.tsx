@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect } from "react";
 import {
   Table,
@@ -31,10 +32,10 @@ export const statusImportance: Record<string, number> = {
   error: 5,
 };
 
-export default function SubmissionTable() {
+export default function SubmissionTable(props: { initialSubmissions: Submission[] }) {
   let { data, error, isLoading } = useQuery("submissions", listSubmissions);
   let [updates, setUpdates] = React.useState<SubmListWebSocketUpdate[]>([]);
-  const [submissions, setSubmissions] = React.useState<Submission[]>(data ?? []);
+  const [submissions, setSubmissions] = React.useState<Submission[]>(data ?? props.initialSubmissions ?? []);
   const router = useRouter();
 
   useEffect(() => {
