@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Table,
   TableHeader,
@@ -10,8 +10,8 @@ import {
 import { useQuery } from "react-query";
 import { useRouter } from "next/navigation";
 
-import { Submission } from "@/types/proglv";
-import { listSubmissions } from "@/lib/subms";
+import { Submission, SubmListWebSocketUpdate } from "@/types/proglv";
+import { listSubmissions, subscribeToSubmissionUpdates } from "@/lib/subms";
 
 export const statusTranslations: Record<string, string> = {
   waiting: "Gaida rindā",
@@ -33,18 +33,90 @@ export const statusImportance: Record<string, number> = {
 
 export default function SubmissionTable() {
   let { data, error, isLoading } = useQuery("submissions", listSubmissions);
+  let [updates, setUpdates] = React.useState<SubmListWebSocketUpdate[]>([]);
+  const [submissions, setSubmissions] = React.useState<Submission[]>(data ?? []);
   const router = useRouter();
 
-  // useEffect(() => {
-  //   const unsubscribe = subscribeToSubmissionUpdates((update: SubmListWebSocketUpdate) => {
-  //     console.log("Received update:", update);
-  //   });
-  //   return () => {
-  //     unsubscribe();
-  //   };
-  // }, []);
+  useEffect(() => {
+    const unsubscribe = subscribeToSubmissionUpdates((update: SubmListWebSocketUpdate) => {
+      console.log("Received update:", update);
+      // add an update but only if there is a 1000 updates, delete the oldest one
+      setUpdates((updates) => {
+        if (updates.length >= 1000) {
+          updates.shift();
+        }
+        return [...updates, update];
+      });
+    });
+    return () => {
+      unsubscribe();
+    };
+  }, []);
 
-  console.log(data);
+  useEffect(() => {
+    setSubmissions((prevSubms) => {
+      const subms = [...(data ?? prevSubms)];
+      const updatedSubms = subms.map(subm => ({...subm})); // Create shallow copies
+  
+      const submUuidToIndex = new Map(updatedSubms.map((s, i) => [s.subm_uuid, i]));
+  
+      for (let update of updates) {
+        if ("subm_created" in update && update.subm_created) {
+          if (!submUuidToIndex.has(update.subm_created.subm_uuid)) {
+            updatedSubms.push({...update.subm_created});
+            submUuidToIndex.set(update.subm_created.subm_uuid, updatedSubms.length - 1);
+          }
+        }
+        else if ("state_update" in update && update.state_update) {
+          let index = submUuidToIndex.get(update.state_update.subm_uuid);
+          if (index !== undefined && updatedSubms[index].eval_uuid === update.state_update.eval_uuid) {
+            const new_state_importance = statusImportance[update.state_update.new_state];
+            const old_state_importance = statusImportance[updatedSubms[index].eval_status];
+            if (new_state_importance > old_state_importance) {
+              updatedSubms[index] = {...updatedSubms[index], eval_status: update.state_update.new_state};
+            }
+          }
+        }
+        else if ("testgroup_res_update" in update && update.testgroup_res_update) {
+          let index = submUuidToIndex.get(update.testgroup_res_update.subm_uuid);
+          if (index !== undefined && updatedSubms[index].eval_uuid === update.testgroup_res_update.eval_uuid) {
+            const test_group_id = update.testgroup_res_update.test_group_id;
+            const new_untested_testcount = update.testgroup_res_update.untested_tests;
+            const old_testgroup_index = updatedSubms[index].eval_scoring_testgroups.findIndex(tg => tg.test_group_id === test_group_id);
+            const old_untested_testcount = old_testgroup_index >= 0 ? updatedSubms[index].eval_scoring_testgroups[old_testgroup_index].untested_tests : 0;
+            if (new_untested_testcount < old_untested_testcount) {
+              updatedSubms[index] = {
+                ...updatedSubms[index],
+                eval_scoring_testgroups: updatedSubms[index].eval_scoring_testgroups.map((tg, i) => {
+                  if (i === old_testgroup_index) {
+                    return {
+                      ...tg,
+                      untested_tests: new_untested_testcount,
+                      accepted_tests: update.testgroup_res_update.accepted_tests,
+                      wrong_tests: update.testgroup_res_update.wrong_tests
+                    };
+                  }
+                  return tg;
+                })
+              };
+            }
+          }
+        }
+      }
+  
+      const res = updatedSubms.sort((a, b) => {
+        const dateA = new Date(a.created_at);
+        const dateB = new Date(b.created_at);
+        if (dateA < dateB) {return 1;}
+        if (dateA > dateB) {return -1; }
+        if (a.subm_uuid < b.subm_uuid) {return 1;}
+        if (a.subm_uuid > b.subm_uuid) {return -1; }
+        return 0;
+      });
+      // console.log(res);
+      return res;
+    });
+  }, [updates,data]);
 
   const renderCell = (row: Submission, columnKey: React.Key) => {
     switch (columnKey) {
@@ -73,7 +145,10 @@ export default function SubmissionTable() {
           return (
             <TestgroupScoringBar testgroups={row.eval_scoring_testgroups} />
           );
+        } else {
+          console.log(row.eval_scoring_testgroups)
         }
+        return <></>;
       case "status":
         return statusTranslations[
           row.eval_status as keyof typeof statusTranslations
@@ -101,7 +176,7 @@ export default function SubmissionTable() {
           <TableColumn key="status">Statuss</TableColumn>
           <TableColumn key="result">Rezultāts</TableColumn>
         </TableHeader>
-        <TableBody items={data ?? []}>
+        <TableBody items={submissions}>
           {(item) => (
             <TableRow
               key={item.subm_uuid}
@@ -120,6 +195,7 @@ export default function SubmissionTable() {
     </div>
   );
 }
+
 
 type TestgroupScoring = {
   test_group_id: number;

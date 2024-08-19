@@ -43,6 +43,7 @@ type Submission = {
   submission: string;
   username: string;
   created_at: string;
+  eval_uuid: string;
   eval_status: string;
   eval_scoring_testgroups: {
     test_group_id: number;
@@ -101,6 +102,7 @@ interface TestgroupResUpdate {
 }
 
 type SubmListWebSocketUpdate =
+  | { subm_created: Submission }
   | { state_update: EvalStateUpdate }
   | { testgroup_res_update: TestgroupResUpdate };
 
