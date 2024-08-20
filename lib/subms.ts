@@ -1,4 +1,4 @@
-import { BriefSubmission, SubmListWebSocketUpdate } from "@/types/proglv";
+import { BriefSubmission, FullSubmission, SubmListWebSocketUpdate } from "@/types/proglv";
 
 import { getJwt } from "./jwt";
 import { API_HOST } from "./config";
@@ -80,3 +80,20 @@ export const subscribeToSubmissionUpdates = (
     eventSource.close();
   };
 };
+
+export const getSubmission = async (submUuid: string): Promise<FullSubmission> => {
+  const response = await fetch(`${API_HOST}/submissions/${submUuid}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Error fetching submission");
+  }
+
+  const data = await response.json();
+
+  return data.data;
+}

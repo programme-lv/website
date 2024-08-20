@@ -60,9 +60,67 @@ type BriefSubmission = {
   task_id: string;
   user_uuid: string;
   user_username: string;
-  user_email: string;
-  user_firstname: string;
-  user_lastname: string;
+};
+
+type ProgrammingLang = {
+  id: string;
+  fullName: string;
+  codeFilename: string;
+  compileCmd: string;
+  executeCmd: string;
+  envVersionCmd: string;
+  helloWorldCode: string;
+  monacoId: string;
+  compiledFilename: string;
+  enabled: boolean;
+};
+
+type EvalDetails = {
+  eval_uuid: string;
+  created_at_rfc3339: string;
+  error_msg: string | null;
+  eval_stage: string;
+  cpu_time_limit_millis: number;
+  memory_limit_kibi_bytes: number;
+  programming_lang: ProgrammingLang;
+  system_information: string;
+  compile_cpu_time_millis: number;
+  compile_mem_kibi_bytes: number;
+  compile_wall_time: number;
+  compile_exit_code: number;
+  compile_stdout_trimmed: string;
+  compile_stderr_trimmed: string;
+};
+
+type TestResult = {
+  test_id: number;
+  reached: boolean;
+  ignored: boolean;
+  finished: boolean;
+  input_trimmed: string | null;
+  answer_trimmed: string | null;
+  time_limit_exceeded: boolean;
+  memory_limit_exceeded: boolean;
+  subtasks: number[];
+  test_group: number;
+  subm_cpu_time_millis: number;
+  subm_mem_kibi_bytes: number;
+  subm_wall_time: number;
+  subm_exit_code: number;
+  subm_stdout_trimmed: string;
+  subm_stderr_trimmed: string;
+  checker_cpu_time_millis: number;
+  checker_mem_kibi_bytes: number;
+  checker_wall_time: number;
+  checker_exit_code: number;
+  checker_stdout_trimmed: string;
+  checker_stderr_trimmed: string;
+};
+
+type FullSubmission = BriefSubmission & {
+  subm_content: string;
+  eval_test_results: TestResult[];
+  eval_details: EvalDetails;
 };
 
 type ProgrammingLanguage = {
@@ -119,4 +177,8 @@ export type {
   SubmListWebSocketUpdate,
   EvalStateUpdate,
   TestgroupResUpdate,
+  FullSubmission,
+  ProgrammingLang,
+  EvalDetails,
+  TestResult,
 };
