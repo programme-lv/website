@@ -38,9 +38,9 @@ type MarkdownStatement = {
   scoring?: string;
 };
 
-type Submission = {
+type BriefSubmission = {
   subm_uuid: string;
-  submission: string;
+  // submission: string;
   username: string;
   created_at: string;
   eval_uuid: string;
@@ -102,7 +102,7 @@ interface TestgroupResUpdate {
 }
 
 type SubmListWebSocketUpdate =
-  | { subm_created: Submission }
+  | { subm_created: BriefSubmission }
   | { state_update: EvalStateUpdate }
   | { testgroup_res_update: TestgroupResUpdate };
 
@@ -110,7 +110,7 @@ export type {
   ProgrammingLanguage,
   Evaluation,
   TaskReference,
-  Submission,
+  BriefSubmission,
   User,
   Task,
   MarkdownStatement,

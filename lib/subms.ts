@@ -1,11 +1,9 @@
-import { Submission, SubmListWebSocketUpdate } from "@/types/proglv";
+import { BriefSubmission, SubmListWebSocketUpdate } from "@/types/proglv";
 
 import { getJwt } from "./jwt";
+import { API_HOST } from "./config";
 
-// const API_HOST = "http://localhost:8080";
-const API_HOST = "https://api.programme.lv";
-
-export const listSubmissions = async (): Promise<Submission[]> => {
+export const listSubmissions = async (): Promise<BriefSubmission[]> => {
   const response = await fetch(`${API_HOST}/submissions`, {
     method: "GET",
     headers: {
@@ -30,7 +28,7 @@ export const createSubmission = async (
   username: string,
   programmingLangId: string,
   taskCodeId: string,
-): Promise<Submission> => {
+): Promise<BriefSubmission> => {
   const jwt = getJwt();
 
   const response = await fetch(`${API_HOST}/submissions`, {

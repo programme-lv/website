@@ -11,7 +11,7 @@ import {
 import { useQuery } from "react-query";
 import { useRouter } from "next/navigation";
 
-import { Submission, SubmListWebSocketUpdate, TestgroupResUpdate } from "@/types/proglv";
+import { BriefSubmission, SubmListWebSocketUpdate, TestgroupResUpdate } from "@/types/proglv";
 import { listSubmissions, subscribeToSubmissionUpdates } from "@/lib/subms";
 
 export const statusTranslations: Record<string, string> = {
@@ -32,10 +32,10 @@ export const statusImportance: Record<string, number> = {
   error: 5,
 };
 
-export default function SubmissionTable(props: { initialSubmissions: Submission[] }) {
+export default function SubmissionTable(props: { initialSubmissions: BriefSubmission[] }) {
   let { data, error, isLoading } = useQuery("submissions", listSubmissions);
   let [updates, setUpdates] = React.useState<SubmListWebSocketUpdate[]>([]);
-  const [submissions, setSubmissions] = React.useState<Submission[]>(data ?? props.initialSubmissions ?? []);
+  const [submissions, setSubmissions] = React.useState<BriefSubmission[]>(data ?? props.initialSubmissions ?? []);
   const router = useRouter();
 
   useEffect(() => {
@@ -120,7 +120,7 @@ export default function SubmissionTable(props: { initialSubmissions: Submission[
     });
   }, [updates,data]);
 
-  const renderCell = (row: Submission, columnKey: React.Key) => {
+  const renderCell = (row: BriefSubmission, columnKey: React.Key) => {
     switch (columnKey) {
       case "createdAt":
         return (

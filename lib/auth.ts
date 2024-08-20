@@ -1,9 +1,7 @@
 import { User } from "@/types/proglv";
 
 import { ApiResponse } from "./api-response";
-
-const API_HOST = "https://api.programme.lv";
-// const API_HOST = "http://localhost:8080";
+import { API_HOST } from "./config";
 
 type RegisterUserInput = {
   username: string;
