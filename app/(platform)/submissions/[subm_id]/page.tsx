@@ -46,6 +46,9 @@ export default function SubmissionView() {
       }
     }
   }
+
+  data.eval_scoring_testgroups?.sort((a, b) => a.test_group_id - b.test_group_id);
+
   const infoCardEntries = [
     { label: "Autors", value: data.username },
     { label: "Uzdevums", value: data.task_name },
@@ -162,6 +165,97 @@ export default function SubmissionView() {
         </CardBody>
       </Card>
       <Spacer y={4} />
+      <Card classNames={{ base: "border-small border-divider" }} radius="sm" shadow="none">
+        <CardBody>
+          <Accordion fullWidth isCompact variant="light">
+      {data.eval_scoring_testgroups?.map((testGroup) => (
+            <AccordionItem
+              key={testGroup.test_group_id}
+              title={`Testu grupa #${String(testGroup.test_group_id).padStart(2, '0')} (${testGroup.statement_subtask}. apakšuzdevums)`}
+            >
+              <div className="overflow-x-scroll flex flex-col gap-3 max-w-full w-full relative p-3  rounded-none" style={{ backgroundColor: "#f8f8f8" }}>
+                {data!.eval_test_results.map((testResult) => {
+                  if(testResult.test_group !== testGroup.test_group_id) return null;
+                  let verdict = "AC";
+                  if (testResult.memory_limit_exceeded) verdict = "MLE";
+                  if (testResult.time_limit_exceeded) verdict = "TLE";
+                  if (testResult.checker_exit_code !== 0) verdict = "WA";
+                  return (
+                  <Card key={testResult.test_id} className="border-small border-divider" radius="sm" shadow="none">
+                    <CardBody>
+                      <div className="flex gap-2">
+                        Tests #{testResult.test_id}
+                        <Chip color={(verdict === "AC" ? "success" : "danger")??false} size="sm" variant="flat">
+                          {verdict === "AC" && "Atbilde ir pareiza"}
+                          {verdict === "MLE" && "Pārsniegts atmiņas limits"}
+                          {verdict === "TLE" && "Pārsniegts laika limits"}
+                          {verdict === "WA" && "Atbilde ir nepareiza"}
+                        </Chip>
+                      </div>
+                      <Spacer y={4} />
+                      <div className="flex flex-col gap-2">
+                        <div className="w-[50%] overflow-hidden">
+                          <div className="flex gap-3">
+                            <p className="text-small text-default-700">Izpildes laiks:</p>
+                            <code>{testResult.subm_cpu_time_millis} ms</code>
+                          </div>
+                        </div>
+                        <div className="w-[50%] overflow-hidden">
+                          <div className="flex gap-3">
+                            <p className="text-small text-default-700">Patērētā atmiņa:</p>
+                            <code>{testResult.subm_mem_kibi_bytes} KB</code>
+                          </div>
+                        </div>
+                      </div>
+                      <Spacer y={4} />
+                      <div className="flex gap-4">
+                        <div className="w-[50%] overflow-hidden">
+                          <div className="flex flex-col">
+                            <p className="text-small text-default-700">Ievaddati:</p>
+                            <code className="text-small p-1.5" style={{ backgroundColor: "rgba(212, 212, 216, 0.4)", whiteSpace: "pre-wrap" }}>
+                              {testResult.input_trimmed}
+                            </code>
+                          </div>
+                        </div>
+                        <div className="w-[50%] overflow-hidden">
+                          <div className="flex flex-col">
+                            <p className="text-small text-default-700">Atbilde:</p>
+                            <code className="text-small p-1.5" style={{ backgroundColor: "rgba(212, 212, 216, 0.4)", whiteSpace: "pre-wrap" }}>
+                              {testResult.answer_trimmed}
+                            </code>
+                          </div>
+                        </div>
+                      </div>
+                      <Spacer y={4} />
+                      <div className="flex gap-4">
+                        <div className="w-[50%] overflow-hidden">
+                          <div className="flex flex-col">
+                            <p className="text-small text-default-700">Programmas izvaddati:</p>
+                            <code className="text-small p-1.5" style={{ backgroundColor: "rgba(212, 212, 216, 0.4)", whiteSpace: "pre-wrap" }}>
+                              {testResult.subm_stdout_trimmed}
+                            </code>
+                          </div>
+                        </div>
+                        <div className="w-[50%] overflow-hidden">
+                          <div className="flex flex-col">
+                            <p className="text-small text-default-700">Pārbaudes piezīmes:</p>
+                            <code className="text-small p-1.5" style={{ backgroundColor: "rgba(212, 212, 216, 0.4)", whiteSpace: "pre-wrap" }}>
+                              {testResult.checker_stderr_trimmed}
+                            </code>
+                          </div>
+                        </div>
+                      </div>
+                    </CardBody>
+                  </Card>
+                )
+                })}
+              </div>
+            </AccordionItem>
+            ))}
+          </Accordion>
+        </CardBody>
+      </Card> 
+      <Spacer y={2} />
     </div>
   );
 }
