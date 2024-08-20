@@ -125,14 +125,9 @@ export default function SubmissionTable(props: { initialSubmissions: BriefSubmis
       case "createdAt":
         return (
           <div className="flex flex-wrap gap-x-2 gap-y-1 min-w-20">
-            <span>{new Date(row.created_at).toISOString().split("T")[0]}</span>
+            <span>{new Date(row.created_at).toLocaleString('lv').split(" ")[0]}</span>
             <span>
-              {
-                new Date(row.created_at)
-                  .toISOString()
-                  .split("T")[1]
-                  .split(".")[0]
-              }
+              {new Date(row.created_at).toLocaleString('lv').split(" ")[1]}
             </span>
           </div>
         );
