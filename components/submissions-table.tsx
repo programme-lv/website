@@ -11,7 +11,7 @@ import {
 import { useQuery } from "react-query";
 import { useRouter } from "next/navigation";
 
-import { Submission, SubmListWebSocketUpdate } from "@/types/proglv";
+import { Submission, SubmListWebSocketUpdate, TestgroupResUpdate } from "@/types/proglv";
 import { listSubmissions, subscribeToSubmissionUpdates } from "@/lib/subms";
 
 export const statusTranslations: Record<string, string> = {
@@ -79,6 +79,7 @@ export default function SubmissionTable(props: { initialSubmissions: Submission[
           }
         }
         else if ("testgroup_res_update" in update && update.testgroup_res_update) {
+
           let index = submUuidToIndex.get(update.testgroup_res_update.subm_uuid);
           if (index !== undefined && updatedSubms[index].eval_uuid === update.testgroup_res_update.eval_uuid) {
             const test_group_id = update.testgroup_res_update.test_group_id;
@@ -93,8 +94,8 @@ export default function SubmissionTable(props: { initialSubmissions: Submission[
                     return {
                       ...tg,
                       untested_tests: new_untested_testcount,
-                      accepted_tests: update.testgroup_res_update.accepted_tests,
-                      wrong_tests: update.testgroup_res_update.wrong_tests
+                      accepted_tests: (update as {testgroup_res_update:TestgroupResUpdate}).testgroup_res_update.accepted_tests,
+                      wrong_tests: (update as {testgroup_res_update:TestgroupResUpdate}).testgroup_res_update.wrong_tests
                     };
                   }
                   return tg;
