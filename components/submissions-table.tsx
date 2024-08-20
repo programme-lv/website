@@ -16,7 +16,7 @@ import { listSubmissions, subscribeToSubmissionUpdates } from "@/lib/subms";
 
 export const statusTranslations: Record<string, string> = {
   waiting: "Gaida rindā",
-  received: "Sagatavo testēšanai",
+  received: "Sagatavo datus",
   compiling: "Tiek kompilēts",
   testing: "Tiek testēts",
   finished: "Izvērtēts",
@@ -147,9 +147,9 @@ export default function SubmissionTable(props: { initialSubmissions: BriefSubmis
         }
         return <></>;
       case "status":
-        return statusTranslations[
+        return <span>{statusTranslations[
           row.eval_status as keyof typeof statusTranslations
-        ];
+        ]}</span>
       default:
         return <></>;
     }
@@ -170,8 +170,8 @@ export default function SubmissionTable(props: { initialSubmissions: BriefSubmis
           <TableColumn key="author">Autors</TableColumn>
           <TableColumn key="task">Uzdevums</TableColumn>
           <TableColumn key="language">Valoda</TableColumn>
-          <TableColumn key="status">Statuss</TableColumn>
           <TableColumn key="result">Rezultāts</TableColumn>
+          <TableColumn key="status" width={150}>Statuss</TableColumn>
         </TableHeader>
         <TableBody items={submissions}>
           {(item) => (
