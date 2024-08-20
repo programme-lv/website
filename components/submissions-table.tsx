@@ -307,15 +307,15 @@ function TestgroupScoringBar({
           <div
             className="flex flex-col text-center whitespace-nowrap text-white justify-center transition-all duration-1000 ease-in-out"
             style={{
-              width: `${(gray * 100).toFixed(0)}%`,
-              background: "linear-gradient(90deg, #a0aec0, #718096)",
+              width: `${(red * 100).toFixed(0)}%`,
+              background: "linear-gradient(90deg, #f56565, #c53030)",
             }}
           />
           <div
             className="flex flex-col text-center whitespace-nowrap text-white justify-center transition-all duration-1000 ease-in-out"
             style={{
-              width: `${(red * 100).toFixed(0)}%`,
-              background: "linear-gradient(90deg, #f56565, #c53030)",
+              width: `${(gray * 100).toFixed(0)}%`,
+              background: "linear-gradient(90deg, #a0aec0, #718096)",
             }}
           />
         </div>

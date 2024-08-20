@@ -394,6 +394,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                         color="warning"
                         onClick={() => {
                           removeJwt();
+                          sessionStorage.clear();
                           authContext.refresh();
                         }}
                       >
