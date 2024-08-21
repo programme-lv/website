@@ -220,7 +220,7 @@ export default function SubmissionView() {
                             <div className="flex gap-2 items-center">
                               <span className="text-sm">Tests</span> #
                               {testResult.test_id}
-                              <Chip
+                              {testResult.reached &&<Chip
                                 color={
                                   (verdict === "AC" ? "success" : "danger") ??
                                   false
@@ -234,7 +234,14 @@ export default function SubmissionView() {
                                 {verdict === "TLE" &&
                                   "Pārsniegts izpildes laiks"}
                                 {verdict === "WA" && "Atbilde ir nepareiza"}
-                              </Chip>
+                              </Chip>}
+                              {!testResult.reached &&<Chip
+                                color={"default"}
+                                size="sm"
+                                variant="flat"
+                              >
+                                Nav sasniegts
+                              </Chip>}
                             </div>
                             <div className="flex gap-x-2 gap-y-1 items-center flex-wrap">
                               <div className="flex gap-1 items-center">
