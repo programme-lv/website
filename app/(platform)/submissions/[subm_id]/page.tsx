@@ -16,6 +16,7 @@ import { useParams } from "next/navigation";
 import { useQuery } from "react-query";
 import { getSubmission } from "@/lib/subms";
 import { cn } from "@/components/cn";
+import { TestResult } from "@/types/proglv";
 
 type InfoCardEntry = {
   label: string;
@@ -44,6 +45,12 @@ export default function SubmissionView() {
         receivedScore += testGroup.test_group_score;
       }
     }
+  } else if (data.eval_scoring_tests) {
+    let wrong = data.eval_scoring_tests.wrong;
+    let accepted = data.eval_scoring_tests.accepted;
+    let untested = data.eval_scoring_tests.untested;
+    possibleScore = wrong + accepted + untested;
+    receivedScore = accepted;
   }
 
   data.eval_scoring_testgroups?.sort(
@@ -97,7 +104,7 @@ export default function SubmissionView() {
 
   const updateHeight = (editor: any) => {
     const contentHeight = Math.max(100, editor.getContentHeight());
-    setEditorHeight(contentHeight);
+    setEditorHeight(contentHeight+10);
     editor.layout({ height: contentHeight });
   };
 
@@ -182,7 +189,7 @@ export default function SubmissionView() {
           <Spacer y={3} />
         </>
       )}
-      <Card
+      {data.eval_scoring_testgroups && data.eval_scoring_testgroups.length > 0 && <Card
         classNames={{ base: "border-small border-divider" }}
         radius="sm"
         shadow="none"
@@ -257,244 +264,173 @@ export default function SubmissionView() {
                   {data!.eval_test_results.map((testResult) => {
                     if (testResult.test_group !== testGroup.test_group_id)
                       return null;
-                    let verdict = "AC";
-                    if (testResult.memory_limit_exceeded) verdict = "MLE";
-                    else if (testResult.time_limit_exceeded) verdict = "TLE";
-                    else if (testResult.subm_exit_code !== 0) verdict = "RE";
-                    else if (testResult.checker_exit_code !== 0) verdict = "WA";
-                    return (
-                      <Card
-                        key={testResult.test_id}
-                        className="border-small border-divider"
-                        radius="none"
-                        shadow="none"
-                      >
-                        <CardBody>
-                          <div className="flex gap-4 flex-wrap">
-                            <div className="flex gap-2 items-center">
-                              <span className="text-sm">Tests</span> #
-                              {testResult.test_id}
-                              {testResult.reached && (
-                                <Chip
-                                  color={
-                                    (verdict === "AC" ? "success" : (verdict === "RE" ? "secondary" : "danger")) ??
-                                    false
-                                  }
-                                  size="sm"
-                                  variant="flat"
-                                >
-                                  {verdict === "AC" && "Atbilde ir pareiza"}
-                                  {verdict === "MLE" &&
-                                    "Pārsniegts atmiņas limits"}
-                                  {verdict === "TLE" &&
-                                    "Pārsniegts izpildes laiks"}
-                                  {verdict === "WA" && "Atbilde ir nepareiza"}
-                                  {verdict === "RE" && "Izpildes kļūda"}
-                                </Chip>
-                              )}
-                              {!testResult.reached && (
-                                <Chip
-                                  color={"default"}
-                                  size="sm"
-                                  variant="flat"
-                                >
-                                  Nav sasniegts
-                                </Chip>
-                              )}
-                            </div>
-                            <div className="flex gap-x-2 gap-y-1 items-center flex-wrap">
-                              <div className="flex gap-1 items-center">
-                                <p className="text-small text-default-700 whitespace-nowrap">
-                                  Izpildes laiks:
-                                </p>
-                                <code className="whitespace-nowrap">
-                                  {testResult.subm_cpu_time_millis} ms
-                                </code>
-                              </div>
-                              <div className="flex gap-1 items-center">
-                                <p className="text-small text-default-700 whitespace-nowrap">
-                                  Patērētā atmiņa:
-                                </p>
-                                <code className="whitespace-nowrap">
-                                  {Math.ceil(
-                                    testResult.subm_mem_kibi_bytes *
-                                    0.001024 *
-                                    100
-                                  ) / 100}{" "}
-                                  MB
-                                </code>
-                              </div>
-                            </div>
-                          </div>
-                          <Spacer y={1.5} />
-                          <div className="flex flex-col gap-4">
-                            <div className="w-full overflow-hidden">
-                              <div className="flex flex-col">
-                                <p className="text-tiny text-default-700 select-none">
-                                  Ievaddati:
-                                </p>
-                                <code
-                                  className="text-small p-1.5 min-h-[32px]"
-                                  style={{
-                                    backgroundColor: "rgba(212, 212, 216, 0.3)",
-                                    whiteSpace: "pre-wrap",
-                                  }}
-                                >
-                                  {testResult.input_trimmed}
-                                </code>
-                              </div>
-                            </div>
-                          </div>
-                          <Spacer y={2} />
-                          <div className="flex gap-x-3 flex-wrap">
-                            <div className="md:flex-grow md:w-auto w-full overflow-hidden">
-                              <div className="flex flex-col">
-                                <p className="text-tiny text-default-700 select-none">
-                                  Programmas izvaddati:
-                                </p>
-                                <code
-                                  className="text-small p-1.5 min-h-[32px]"
-                                  style={{
-                                    backgroundColor: "rgba(212, 212, 216, 0.3)",
-                                    whiteSpace: "pre-wrap",
-                                  }}
-                                >
-                                  {testResult.subm_stdout_trimmed}
-                                </code>
-                              </div>
-                            </div>
-                            <div className="md:flex-grow md:w-auto w-full overflow-hidden">
-                              <div className="flex flex-col">
-                                <p className="text-tiny text-default-700 select-none">
-                                  Atbilde:
-                                </p>
-                                <code
-                                  className="text-small p-1.5 min-h-[32px]"
-                                  style={{
-                                    backgroundColor: "rgba(212, 212, 216, 0.3)",
-                                    whiteSpace: "pre-wrap",
-                                  }}
-                                >
-                                  {testResult.answer_trimmed}
-                                </code>
-                              </div>
-                            </div>
-                          </div>
-                          <Spacer y={2} />
-                          <div className="flex gap-4">
-                            <div className="w-full overflow-hidden">
-                              <div className="flex flex-col">
-                                <p className="text-tiny text-default-700 select-none">
-                                  Pārbaudes piezīmes:
-                                </p>
-                                <code
-                                  className="text-small p-1.5 min-h-[32px]"
-                                  style={{
-                                    backgroundColor: "rgba(212, 212, 216, 0.3)",
-                                    whiteSpace: "pre-wrap",
-                                  }}
-                                >
-                                  {testResult.checker_stderr_trimmed}
-                                </code>
-                              </div>
-                            </div>
-                          </div>
-                        </CardBody>
-                      </Card>
-                    );
+                    return <SingleTestResultCard testResult={testResult} />;
                   })}
                 </div>
               </AccordionItem>
             ))}
           </Accordion>
         </CardBody>
-      </Card>
+      </Card>}
+      {data.eval_scoring_tests && data.eval_test_results && data.eval_test_results.map((testResult) => {
+        return <div key={testResult.test_id}>
+        <SingleTestResultCard testResult={testResult} />
+        <Spacer y={2} />
+        </div>
+      }
+    )
+      
+    
+    }
       <Spacer y={2} />
     </div>
   );
 }
 
-/* <Card classNames={{ base: "border-small border-divider" }} radius="sm" shadow="none">
-  <CardBody>
-    <Accordion fullWidth isCompact>
-      <AccordionItem
-        key="1"
-        title={`Testu grupa #1 (${sampleData.test_results.map((_, i) => `${i + 1}.`).join(" ")} apakšuzdevums)`}
-      >
-        <div className="overflow-x-scroll flex flex-col gap-3 max-w-full w-full relative p-3  rounded-none" style={{ backgroundColor: "#f8f8f8" }}>
-          {sampleData.test_results.map((testResult) => (
-            <Card key={testResult.id} className="border-small border-divider" radius="sm" shadow="none">
-              <CardBody>
-                <div className="flex gap-2">
-                  Tests #{testResult.id}
-                  <Chip color={testResult.verdict === "AC" ? "success" : "error"} size="sm" variant="flat">
-                    {testResult.verdict === "AC" ? "Atbilde ir pareiza" : "Atbilde ir nepareiza"}
-                  </Chip>
-                </div>
-                <Spacer y={4} />
-                <div className="flex flex-col gap-2">
-                  <div className="w-[50%] overflow-hidden">
-                    <div className="flex gap-3">
-                      <p className="text-small text-default-700">Izpildes laiks:</p>
-                      <code>{testResult.exec_time_ms} ms</code>
-                    </div>
-                  </div>
-                  <div className="w-[50%] overflow-hidden">
-                    <div className="flex gap-3">
-                      <p className="text-small text-default-700">Patērētā atmiņa:</p>
-                      <code>{testResult.exec_memory_kb} KB</code>
-                    </div>
-                  </div>
-                </div>
-                <Spacer y={4} />
-                <div className="flex gap-4">
-                  <div className="w-[50%] overflow-hidden">
-                    <div className="flex flex-col">
-                      <p className="text-small text-default-700">Ievaddati:</p>
-                      <code className="text-small p-1.5" style={{ backgroundColor: "rgba(212, 212, 216, 0.4)", whiteSpace: "pre-wrap" }}>
-                        {testResult.input_preview}
-                      </code>
-                    </div>
-                  </div>
-                  <div className="w-[50%] overflow-hidden">
-                    <div className="flex flex-col">
-                      <p className="text-small text-default-700">Atbilde:</p>
-                      <code className="text-small p-1.5" style={{ backgroundColor: "rgba(212, 212, 216, 0.4)", whiteSpace: "pre-wrap" }}>
-                        {testResult.answer_preview}
-                      </code>
-                    </div>
-                  </div>
-                </div>
-                <Spacer y={4} />
-                <div className="flex gap-4">
-                  <div className="w-[50%] overflow-hidden">
-                    <div className="flex flex-col">
-                      <p className="text-small text-default-700">Programmas izvaddati:</p>
-                      <code className="text-small p-1.5" style={{ backgroundColor: "rgba(212, 212, 216, 0.4)", whiteSpace: "pre-wrap" }}>
-                        {testResult.output_preview}
-                      </code>
-                    </div>
-                  </div>
-                  <div className="w-[50%] overflow-hidden">
-                    <div className="flex flex-col">
-                      <p className="text-small text-default-700">Pārbaudes piezīmes:</p>
-                      <code className="text-small p-1.5" style={{ backgroundColor: "rgba(212, 212, 216, 0.4)", whiteSpace: "pre-wrap" }}>
-                        {testResult.checker_log}
-                      </code>
-                    </div>
-                  </div>
-                </div>
-              </CardBody>
-            </Card>
-          ))}
+function SingleTestResultCard({ testResult }: { testResult: TestResult }) {
+  let verdict = "AC";
+  if (testResult.memory_limit_exceeded) verdict = "MLE";
+  else if (testResult.time_limit_exceeded) verdict = "TLE";
+  else if (testResult.subm_exit_code !== 0) verdict = "RE";
+  else if (testResult.checker_exit_code !== 0) verdict = "WA";
+  return (
+
+    <Card
+      key={testResult.test_id}
+      className="border-small border-divider"
+      radius="sm"
+      shadow="none"
+    >
+      <CardBody>
+        <div className="flex gap-4 flex-wrap">
+          <div className="flex gap-2 items-center">
+            <span className="text-sm">Tests</span> #
+            {testResult.test_id}
+            {testResult.reached && (
+              <Chip
+                color={
+                  (verdict === "AC" ? "success" : (verdict === "RE" ? "secondary" : "danger")) ??
+                  false
+                }
+                size="sm"
+                variant="flat"
+              >
+                {verdict === "AC" && "Atbilde ir pareiza"}
+                {verdict === "MLE" &&
+                  "Pārsniegts atmiņas limits"}
+                {verdict === "TLE" &&
+                  "Pārsniegts izpildes laiks"}
+                {verdict === "WA" && "Atbilde ir nepareiza"}
+                {verdict === "RE" && "Izpildes kļūda"}
+              </Chip>
+            )}
+            {!testResult.reached && (
+              <Chip
+                color={"default"}
+                size="sm"
+                variant="flat"
+              >
+                Nav sasniegts
+              </Chip>
+            )}
+          </div>
+          <div className="flex gap-x-3 gap-y-1 items-center flex-wrap">
+            <div className="flex gap-1 items-center">
+              <p className="text-small text-default-700 whitespace-nowrap">
+                Izpildes laiks:
+              </p>
+              <code className="whitespace-nowrap h-[20px]">
+                {testResult.subm_cpu_time_millis}ms
+              </code>
+            </div>
+            <div className="flex gap-1 items-center">
+              <p className="text-small text-default-700 whitespace-nowrap">
+                Patērētā atmiņa:
+              </p>
+              <code className="whitespace-nowrap h-[20px]">
+                {Math.ceil(
+                  testResult.subm_mem_kibi_bytes *
+                  0.001024 *
+                  100
+                ) / 100}MB
+              </code>
+            </div>
+          </div>
         </div>
-      </AccordionItem>
-      <AccordionItem key="2" title="Accordion 2">
-        Default content here.
-      </AccordionItem>
-      <AccordionItem key="3" title="Accordion 3">
-        Default content here.
-      </AccordionItem>
-    </Accordion>
-  </CardBody>
-</Card> */
+        <Spacer y={1.5} />
+        <div className="flex flex-col gap-4">
+          <div className="w-full overflow-hidden">
+            <div className="flex flex-col">
+              <p className="text-tiny text-default-700 select-none">
+                Ievaddati:
+              </p>
+              <code
+                className="text-small p-1.5 min-h-[32px]"
+                style={{
+                  backgroundColor: "rgba(212, 212, 216, 0.3)",
+                  whiteSpace: "pre-wrap",
+                }}
+              >
+                {testResult.input_trimmed}
+              </code>
+            </div>
+          </div>
+        </div>
+        <Spacer y={2} />
+        <div className="flex gap-x-3 flex-wrap">
+          <div className="md:flex-grow md:w-auto w-full overflow-hidden">
+            <div className="flex flex-col">
+              <p className="text-tiny text-default-700 select-none">
+                Programmas izvaddati:
+              </p>
+              <code
+                className="text-small p-1.5 min-h-[32px]"
+                style={{
+                  backgroundColor: "rgba(212, 212, 216, 0.3)",
+                  whiteSpace: "pre-wrap",
+                }}
+              >
+                {testResult.subm_stdout_trimmed}
+              </code>
+            </div>
+          </div>
+          <div className="md:flex-grow md:w-auto w-full overflow-hidden">
+            <div className="flex flex-col">
+              <p className="text-tiny text-default-700 select-none">
+                Atbilde:
+              </p>
+              <code
+                className="text-small p-1.5 min-h-[32px]"
+                style={{
+                  backgroundColor: "rgba(212, 212, 216, 0.3)",
+                  whiteSpace: "pre-wrap",
+                }}
+              >
+                {testResult.answer_trimmed}
+              </code>
+            </div>
+          </div>
+        </div>
+        <Spacer y={2} />
+        <div className="flex gap-4">
+          <div className="w-full overflow-hidden">
+            <div className="flex flex-col">
+              <p className="text-tiny text-default-700 select-none">
+                Pārbaudes piezīmes:
+              </p>
+              <code
+                className="text-small p-1.5 min-h-[32px]"
+                style={{
+                  backgroundColor: "rgba(212, 212, 216, 0.3)",
+                  whiteSpace: "pre-wrap",
+                }}
+              >
+                {testResult.checker_stderr_trimmed}
+              </code>
+            </div>
+          </div>
+        </div>
+      </CardBody>
+    </Card>
+  )
+}
