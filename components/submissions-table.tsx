@@ -21,6 +21,7 @@ export const statusTranslations: Record<string, string> = {
   testing: "Tiek testēts",
   finished: "Izvērtēts",
   error: "Servera kļūda",
+  compile_error: "Kompilācijas kļūda",
 };
 
 export const statusImportance: Record<string, number> = {
@@ -30,6 +31,7 @@ export const statusImportance: Record<string, number> = {
   testing: 3,
   finished: 4,
   error: 5,
+  compile_error: 6,
 };
 
 export default function SubmissionTable(props: { initialSubmissions: BriefSubmission[] }) {
