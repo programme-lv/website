@@ -241,14 +241,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         </ModalContent>
       </Modal>
       <div
-        className={cn("flex h-dvh w-full", {
+        className={cn("flex h-screen w-full", {
           "pointer-events-none": disabledPointerEvents,
         })}
       >
         <div
           className={cn(
             "relative h-full w-60 flex-col !border-r-small border-divider p-6 transition-width",
-            { "w-16 items-center px-2 py-6": isCompact },
+            { "w-14 items-center px-2 py-6": isCompact },
             "hidden md:flex",
           )}
         >
@@ -289,7 +289,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             backgroundColor: "#f8f8f8",
           }}
         >
-          <header className="flex flex-col items-center justify-between gap-1 rounded-small border-small border-divider px-2 py-1 bg-white">
+          <header className="flex flex-col items-center justify-between gap-1 rounded-small border-small border-divider px-2 py-2 bg-white">
             <div className="flex items-center justify-between w-full">
               <div className="flex gap-3 items-center">
                 <div className="hidden md:flex">

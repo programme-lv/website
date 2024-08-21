@@ -143,7 +143,8 @@ export default function SubmissionView() {
   };
 
   return (
-    <div className="mt-3">
+    <div className="mt-3 flex flex-col flex-grow relative">
+      <div className="h-full w-full absolute overflow-y-auto">
       <Card
         classNames={{ base: "border-small border-divider" }}
         radius="sm"
@@ -219,32 +220,56 @@ export default function SubmissionView() {
             {data.eval_scoring_testgroups?.map((testGroup) => (
               <AccordionItem
                 key={testGroup.test_group_id}
-                classNames={{startContent:"w-[80%]"}}
+                classNames={{ startContent: "w-[80%]" }}
                 startContent={
                   <div className="flex flex-grow justify-start gap-x-3 items-center flex-wrap">
                     <div className="ms-1 flex gap-x-2">
                       <div className="whitespace-nowrap">
-                      <span className="text-small text-default-600">Testu grupa </span>
-                      <span className="font-mono">
-                        #{String(testGroup.test_group_id).padStart(2, "0")}
-                      </span></div>
+                        <span className="text-small text-default-600">
+                          Testu grupa{" "}
+                        </span>
+                        <span className="font-mono">
+                          #{String(testGroup.test_group_id).padStart(2, "0")}
+                        </span>
+                      </div>
                       <div>
-                      <span className="whitespace-nowrap">
-                        {" "}
-                        ( <span className="font-mono">{testGroup.statement_subtask}</span>.{" "}
-                        <span className="text-small text-default-600">apakšuzdevums</span> )
-                      </span></div>
+                        <span className="whitespace-nowrap">
+                          {" "}
+                          ({" "}
+                          <span className="font-mono">
+                            {testGroup.statement_subtask}
+                          </span>
+                          .{" "}
+                          <span className="text-small text-default-600">
+                            apakšuzdevums
+                          </span>{" "}
+                          )
+                        </span>
+                      </div>
                     </div>
                     <div className="ms-1">
-                    <span className={`whitespace-nowrap ${testGroup.wrong_tests === 0 &&
-                      testGroup.untested_tests === 0 && "text-success-600"} ${testGroup.wrong_tests > 0 && "text-danger-600"}`}>
-                      <span className={`font-mono`}>{testGroup.wrong_tests === 0 &&
-                      testGroup.untested_tests === 0
-                        ? testGroup.test_group_score
-                        : 0}</span>{" "}
-                      / <span className="font-mono">{testGroup.test_group_score}</span>
-                    </span>
-                    <span className="text-small text-default-600"> punkti</span>
+                      <span
+                        className={`whitespace-nowrap ${
+                          testGroup.wrong_tests === 0 &&
+                          testGroup.untested_tests === 0 &&
+                          "text-success-600"
+                        } ${testGroup.wrong_tests > 0 && "text-danger-500"}`}
+                      >
+                        <span className={`font-mono`}>
+                          {testGroup.wrong_tests === 0 &&
+                          testGroup.untested_tests === 0
+                            ? testGroup.test_group_score
+                            : 0}
+                        </span>{" "}
+                        /{" "}
+                        <span className="font-mono">
+                          {testGroup.test_group_score}
+                        </span>
+                      </span>
+                      <span className="text-small text-default-600">
+                        {" "}
+                        punkti
+                      </span>
                     </div>
                   </div>
                 }
@@ -283,7 +308,8 @@ export default function SubmissionView() {
                                 {verdict === "AC" && "Atbilde ir pareiza"}
                                 {verdict === "MLE" &&
                                   "Pārsniegts atmiņas limits"}
-                                {verdict === "TLE" && "Pārsniegts izpildes laiks"}
+                                {verdict === "TLE" &&
+                                  "Pārsniegts izpildes laiks"}
                                 {verdict === "WA" && "Atbilde ir nepareiza"}
                               </Chip>
                             </div>
@@ -394,7 +420,7 @@ export default function SubmissionView() {
           </Accordion>
         </CardBody>
       </Card>
-      <Spacer y={2} />
+      <Spacer y={2} /></div>
     </div>
   );
 }
