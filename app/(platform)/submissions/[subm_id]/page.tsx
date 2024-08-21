@@ -183,7 +183,7 @@ export default function SubmissionView() {
                   return (
                   <Card key={testResult.test_id} className="border-small border-divider" radius="none" shadow="none">
                     <CardBody>
-                      <div className="flex gap-4">
+                      <div className="flex gap-4 flex-wrap">
                       <div className="flex gap-2 items-center">
 
                         <span className="text-sm">Tests</span> #{testResult.test_id}
@@ -194,13 +194,15 @@ export default function SubmissionView() {
                           {verdict === "WA" && "Atbilde ir nepareiza"}
                         </Chip>
                         </div>
+                        <div className="flex gap-2 items-center flex-wrap">
                           <div className="flex gap-1 items-center">
-                            <p className="text-small text-default-700">Izpildes laiks:</p>
-                            <code className="h-[20px]">{testResult.subm_cpu_time_millis} ms</code>
+                            <p className="text-small text-default-700 whitespace-nowrap">Izpildes laiks:</p>
+                            <code className="whitespace-nowrap">{testResult.subm_cpu_time_millis} ms</code>
                           </div>
                           <div className="flex gap-1 items-center">
-                            <p className="text-small text-default-700">Patērētā atmiņa:</p>
-                            <code className="h-[20px]">{Math.ceil(testResult.subm_mem_kibi_bytes *0.001024*100)/100} MB</code>
+                            <p className="text-small text-default-700 whitespace-nowrap">Patērētā atmiņa:</p>
+                            <code className="whitespace-nowrap">{Math.ceil(testResult.subm_mem_kibi_bytes *0.001024*100)/100} MB</code>
+                          </div>
                           </div>
                       </div>
                       <Spacer y={1.5} />
@@ -215,8 +217,8 @@ export default function SubmissionView() {
                         </div>
                       </div>
                       <Spacer y={2} />
-                      <div className="flex gap-4">
-                        <div className="w-[50%] overflow-hidden">
+                      <div className="flex gap-x-3 flex-wrap">
+                        <div className="md:flex-grow md:w-auto w-full overflow-hidden">
                           <div className="flex flex-col">
                             <p className="text-tiny text-default-700 select-none">Programmas izvaddati:</p>
                             <code className="text-small p-1.5" style={{ backgroundColor: "rgba(212, 212, 216, 0.4)", whiteSpace: "pre-wrap" }}>
@@ -224,7 +226,7 @@ export default function SubmissionView() {
                             </code>
                           </div>
                         </div>
-                        <div className="w-[50%] overflow-hidden">
+                        <div className="md:flex-grow md:w-auto w-full overflow-hidden">
                           <div className="flex flex-col">
                             <p className="text-tiny text-default-700 select-none">Atbilde:</p>
                             <code className="text-small p-1.5" style={{ backgroundColor: "rgba(212, 212, 216, 0.4)", whiteSpace: "pre-wrap" }}>
