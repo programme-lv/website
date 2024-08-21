@@ -166,14 +166,14 @@ export default function SubmissionView() {
       </Card>
       <Spacer y={4} />
       <Card classNames={{ base: "border-small border-divider" }} radius="sm" shadow="none">
-        <CardBody>
-          <Accordion fullWidth isCompact variant="light">
+        <CardBody className="px-0 lg:px-2">
+          <Accordion fullWidth isCompact variant="light" defaultExpandedKeys={['1']}>
       {data.eval_scoring_testgroups?.map((testGroup) => (
             <AccordionItem
               key={testGroup.test_group_id}
-              title={`Testu grupa #${String(testGroup.test_group_id).padStart(2, '0')} (${testGroup.statement_subtask}. apakšuzdevums)`}
+              startContent={<><span className="text-small">Testu grupa </span><span>#{String(testGroup.test_group_id).padStart(2, '0')}</span><span> ({testGroup.statement_subtask}. <span className="text-small">apakšuzdevums</span>)</span></>}
             >
-              <div className="overflow-x-scroll flex flex-col gap-3 max-w-full w-full relative p-3  rounded-none" style={{ backgroundColor: "#f8f8f8" }}>
+              <div className="overflow-x-scroll flex flex-col gap-2 max-w-full w-full relative p-2  rounded-none" style={{ backgroundColor: "#f8f8f8" }}>
                 {data!.eval_test_results.map((testResult) => {
                   if(testResult.test_group !== testGroup.test_group_id) return null;
                   let verdict = "AC";
@@ -181,56 +181,44 @@ export default function SubmissionView() {
                   if (testResult.time_limit_exceeded) verdict = "TLE";
                   if (testResult.checker_exit_code !== 0) verdict = "WA";
                   return (
-                  <Card key={testResult.test_id} className="border-small border-divider" radius="sm" shadow="none">
+                  <Card key={testResult.test_id} className="border-small border-divider" radius="none" shadow="none">
                     <CardBody>
-                      <div className="flex gap-2">
-                        Tests #{testResult.test_id}
+                      <div className="flex gap-4">
+                      <div className="flex gap-2 items-center">
+
+                        <span className="text-sm">Tests</span> #{testResult.test_id}
                         <Chip color={(verdict === "AC" ? "success" : "danger")??false} size="sm" variant="flat">
                           {verdict === "AC" && "Atbilde ir pareiza"}
                           {verdict === "MLE" && "Pārsniegts atmiņas limits"}
                           {verdict === "TLE" && "Pārsniegts laika limits"}
                           {verdict === "WA" && "Atbilde ir nepareiza"}
                         </Chip>
-                      </div>
-                      <Spacer y={4} />
-                      <div className="flex flex-col gap-2">
-                        <div className="w-[50%] overflow-hidden">
-                          <div className="flex gap-3">
+                        </div>
+                          <div className="flex gap-1 items-center">
                             <p className="text-small text-default-700">Izpildes laiks:</p>
-                            <code>{testResult.subm_cpu_time_millis} ms</code>
+                            <code className="h-[20px]">{testResult.subm_cpu_time_millis} ms</code>
                           </div>
-                        </div>
-                        <div className="w-[50%] overflow-hidden">
-                          <div className="flex gap-3">
+                          <div className="flex gap-1 items-center">
                             <p className="text-small text-default-700">Patērētā atmiņa:</p>
-                            <code>{testResult.subm_mem_kibi_bytes} KB</code>
+                            <code className="h-[20px]">{Math.ceil(testResult.subm_mem_kibi_bytes *0.001024*100)/100} MB</code>
                           </div>
-                        </div>
                       </div>
-                      <Spacer y={4} />
-                      <div className="flex gap-4">
-                        <div className="w-[50%] overflow-hidden">
+                      <Spacer y={1.5} />
+                      <div className="flex flex-col gap-4">
+                        <div className="w-full overflow-hidden">
                           <div className="flex flex-col">
-                            <p className="text-small text-default-700">Ievaddati:</p>
+                            <p className="text-tiny text-default-700 select-none">Ievaddati:</p>
                             <code className="text-small p-1.5" style={{ backgroundColor: "rgba(212, 212, 216, 0.4)", whiteSpace: "pre-wrap" }}>
                               {testResult.input_trimmed}
                             </code>
                           </div>
                         </div>
-                        <div className="w-[50%] overflow-hidden">
-                          <div className="flex flex-col">
-                            <p className="text-small text-default-700">Atbilde:</p>
-                            <code className="text-small p-1.5" style={{ backgroundColor: "rgba(212, 212, 216, 0.4)", whiteSpace: "pre-wrap" }}>
-                              {testResult.answer_trimmed}
-                            </code>
-                          </div>
-                        </div>
                       </div>
-                      <Spacer y={4} />
+                      <Spacer y={2} />
                       <div className="flex gap-4">
                         <div className="w-[50%] overflow-hidden">
                           <div className="flex flex-col">
-                            <p className="text-small text-default-700">Programmas izvaddati:</p>
+                            <p className="text-tiny text-default-700 select-none">Programmas izvaddati:</p>
                             <code className="text-small p-1.5" style={{ backgroundColor: "rgba(212, 212, 216, 0.4)", whiteSpace: "pre-wrap" }}>
                               {testResult.subm_stdout_trimmed}
                             </code>
@@ -238,7 +226,18 @@ export default function SubmissionView() {
                         </div>
                         <div className="w-[50%] overflow-hidden">
                           <div className="flex flex-col">
-                            <p className="text-small text-default-700">Pārbaudes piezīmes:</p>
+                            <p className="text-tiny text-default-700 select-none">Atbilde:</p>
+                            <code className="text-small p-1.5" style={{ backgroundColor: "rgba(212, 212, 216, 0.4)", whiteSpace: "pre-wrap" }}>
+                              {testResult.answer_trimmed}
+                            </code>
+                          </div>
+                        </div>
+                      </div>
+                      <Spacer y={2} />
+                      <div className="flex gap-4">
+                        <div className="w-full overflow-hidden">
+                          <div className="flex flex-col">
+                            <p className="text-tiny text-default-700 select-none">Pārbaudes piezīmes:</p>
                             <code className="text-small p-1.5" style={{ backgroundColor: "rgba(212, 212, 216, 0.4)", whiteSpace: "pre-wrap" }}>
                               {testResult.checker_stderr_trimmed}
                             </code>
