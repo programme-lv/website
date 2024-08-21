@@ -52,7 +52,17 @@ export default function SubmissionView() {
 
   const infoCardEntries = [
     { label: "Autors", value: data.username },
-    { label: "Uzdevums", value: <Link href={`/tasks/${data.task_id}`} className="text-blue-600 hover:underline">{data.task_name}</Link> },
+    {
+      label: "Uzdevums",
+      value: (
+        <Link
+          href={`/tasks/${data.task_id}`}
+          className="text-blue-600 hover:underline"
+        >
+          {data.task_name}
+        </Link>
+      ),
+    },
     { label: "Valoda", value: data.p_lang_display_name },
     {
       label: "Iesūtīts",
@@ -64,10 +74,26 @@ export default function SubmissionView() {
     },
     {
       label: "Rezultāts",
-      value: <div><span className={cn("",{"text-success-600":receivedScore===possibleScore},{"text-danger-600":receivedScore===0&&possibleScore>0},{"text-warning-500":receivedScore>0&&receivedScore<possibleScore})}>{receivedScore} / {possibleScore}</span> punkti</div>,
+      value: (
+        <div>
+          <span
+            className={cn(
+              "",
+              { "text-success-600": receivedScore === possibleScore },
+              { "text-danger-600": receivedScore === 0 && possibleScore > 0 },
+              {
+                "text-warning-500":
+                  receivedScore > 0 && receivedScore < possibleScore,
+              }
+            )}
+          >
+            {receivedScore} / {possibleScore}
+          </span>{" "}
+          punkti
+        </div>
+      ),
     },
   ];
-
 
   const updateHeight = (editor: any) => {
     const contentHeight = Math.max(100, editor.getContentHeight());
@@ -92,8 +118,8 @@ export default function SubmissionView() {
                   </span>
                   <span>{entry.value}</span>
                 </div>
-              )
-            })} 
+              );
+            })}
           </div>
         </CardBody>
       </Card>
@@ -128,12 +154,38 @@ export default function SubmissionView() {
         </CardBody>
       </Card>
       <Spacer y={3} />
+      {data.eval_details.programming_lang.compileCmd && (
       <Card
         classNames={{ base: "border-small border-divider" }}
         radius="sm"
         shadow="none"
       >
-        <CardBody className="px-0 lg:px-2">
+        <CardBody>
+          <div className="flex flex-col gap-1">
+            <p className="text-small text-default-900 select-none">
+              Kompilācijas izvaddati:
+            </p>
+            <code
+              className="text-small p-1.5 min-h-[32px]"
+              style={{
+                backgroundColor: "rgba(212, 212, 216, 0.3)",
+                whiteSpace: "pre-wrap",
+              }}
+            >
+              {data.eval_details.compile_stdout_trimmed}
+              {data.eval_details.compile_stderr_trimmed}
+            </code>
+          </div>
+        </CardBody>
+      </Card>
+      )}
+      <Spacer y={3} />
+      <Card
+        classNames={{ base: "border-small border-divider" }}
+        radius="sm"
+        shadow="none"
+      >
+        <CardBody className="px-0 lg:px-1 p-0">
           <Accordion
             fullWidth
             isCompact
@@ -220,28 +272,32 @@ export default function SubmissionView() {
                             <div className="flex gap-2 items-center">
                               <span className="text-sm">Tests</span> #
                               {testResult.test_id}
-                              {testResult.reached &&<Chip
-                                color={
-                                  (verdict === "AC" ? "success" : "danger") ??
-                                  false
-                                }
-                                size="sm"
-                                variant="flat"
-                              >
-                                {verdict === "AC" && "Atbilde ir pareiza"}
-                                {verdict === "MLE" &&
-                                  "Pārsniegts atmiņas limits"}
-                                {verdict === "TLE" &&
-                                  "Pārsniegts izpildes laiks"}
-                                {verdict === "WA" && "Atbilde ir nepareiza"}
-                              </Chip>}
-                              {!testResult.reached &&<Chip
-                                color={"default"}
-                                size="sm"
-                                variant="flat"
-                              >
-                                Nav sasniegts
-                              </Chip>}
+                              {testResult.reached && (
+                                <Chip
+                                  color={
+                                    (verdict === "AC" ? "success" : "danger") ??
+                                    false
+                                  }
+                                  size="sm"
+                                  variant="flat"
+                                >
+                                  {verdict === "AC" && "Atbilde ir pareiza"}
+                                  {verdict === "MLE" &&
+                                    "Pārsniegts atmiņas limits"}
+                                  {verdict === "TLE" &&
+                                    "Pārsniegts izpildes laiks"}
+                                  {verdict === "WA" && "Atbilde ir nepareiza"}
+                                </Chip>
+                              )}
+                              {!testResult.reached && (
+                                <Chip
+                                  color={"default"}
+                                  size="sm"
+                                  variant="flat"
+                                >
+                                  Nav sasniegts
+                                </Chip>
+                              )}
                             </div>
                             <div className="flex gap-x-2 gap-y-1 items-center flex-wrap">
                               <div className="flex gap-1 items-center">
