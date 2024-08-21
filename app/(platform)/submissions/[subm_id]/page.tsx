@@ -155,31 +155,33 @@ export default function SubmissionView() {
       </Card>
       <Spacer y={3} />
       {data.eval_details.programming_lang.compileCmd && (
-      <Card
-        classNames={{ base: "border-small border-divider" }}
-        radius="sm"
-        shadow="none"
-      >
-        <CardBody>
-          <div className="flex flex-col gap-1">
-            <p className="text-small text-default-900 select-none">
-              Kompilācijas izvaddati:
-            </p>
-            <code
-              className="text-small p-1.5 min-h-[32px]"
-              style={{
-                backgroundColor: "rgba(212, 212, 216, 0.3)",
-                whiteSpace: "pre-wrap",
-              }}
-            >
-              {data.eval_details.compile_stdout_trimmed}
-              {data.eval_details.compile_stderr_trimmed}
-            </code>
-          </div>
-        </CardBody>
-      </Card>
+        <>
+          <Card
+            classNames={{ base: "border-small border-divider" }}
+            radius="sm"
+            shadow="none"
+          >
+            <CardBody>
+              <div className="flex flex-col gap-1">
+                <p className="text-small text-default-900 select-none">
+                  Kompilācijas izvaddati:
+                </p>
+                <code
+                  className="text-small p-1.5 min-h-[32px]"
+                  style={{
+                    backgroundColor: "rgba(212, 212, 216, 0.3)",
+                    whiteSpace: "pre-wrap",
+                  }}
+                >
+                  {data.eval_details.compile_stdout_trimmed}
+                  {data.eval_details.compile_stderr_trimmed}
+                </code>
+              </div>
+            </CardBody>
+          </Card>
+          <Spacer y={3} />
+        </>
       )}
-      <Spacer y={3} />
       <Card
         classNames={{ base: "border-small border-divider" }}
         radius="sm"
@@ -224,15 +226,14 @@ export default function SubmissionView() {
                     </div>
                     <div className="ms-1">
                       <span
-                        className={`whitespace-nowrap ${
-                          testGroup.wrong_tests === 0 &&
+                        className={`whitespace-nowrap ${testGroup.wrong_tests === 0 &&
                           testGroup.untested_tests === 0 &&
                           "text-success-600"
-                        } ${testGroup.wrong_tests > 0 && "text-danger-600"}`}
+                          } ${testGroup.wrong_tests > 0 && "text-danger-600"}`}
                       >
                         <span className={`font-mono`}>
                           {testGroup.wrong_tests === 0 &&
-                          testGroup.untested_tests === 0
+                            testGroup.untested_tests === 0
                             ? testGroup.test_group_score
                             : 0}
                         </span>{" "}
@@ -317,8 +318,8 @@ export default function SubmissionView() {
                                 <code className="whitespace-nowrap">
                                   {Math.ceil(
                                     testResult.subm_mem_kibi_bytes *
-                                      0.001024 *
-                                      100
+                                    0.001024 *
+                                    100
                                   ) / 100}{" "}
                                   MB
                                 </code>

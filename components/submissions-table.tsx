@@ -147,7 +147,7 @@ export default function SubmissionTable(props: { initialSubmissions: BriefSubmis
         if(row.eval_status === "error" || row.eval_status === "compile_error" || row.eval_status === "runtime_error" || row.eval_status === "checker_error") {
           return <ErrorScoringBar />;
         }
-        if (row.eval_scoring_testgroups.length > 0) {
+        if (row.eval_scoring_testgroups && row.eval_scoring_testgroups.length > 0) {
           return (
             <TestgroupScoringBar testgroups={row.eval_scoring_testgroups}/>
           );
