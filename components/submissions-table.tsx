@@ -22,6 +22,7 @@ export const statusTranslations: Record<string, string> = {
   finished: "Izvērtēts",
   error: "Servera kļūda",
   compile_error: "Kompilācijas kļūda",
+  runtime_error: "Izpildes kļūda",
 };
 
 export const statusImportance: Record<string, number> = {
@@ -32,6 +33,7 @@ export const statusImportance: Record<string, number> = {
   finished: 4,
   error: 5,
   compile_error: 6,
+  runtime_error: 7,
 };
 
 export default function SubmissionTable(props: { initialSubmissions: BriefSubmission[] }) {
@@ -140,9 +142,12 @@ export default function SubmissionTable(props: { initialSubmissions: BriefSubmis
       case "language":
         return row.p_lang_display_name;
       case "result":
+        if(row.eval_status === "error" || row.eval_status === "compile_error" || row.eval_status === "runtime_error") {
+          return <ErrorScoringBar />;
+        }
         if (row.eval_scoring_testgroups.length > 0) {
           return (
-            <TestgroupScoringBar testgroups={row.eval_scoring_testgroups} />
+            <TestgroupScoringBar testgroups={row.eval_scoring_testgroups}/>
           );
         } else {
           console.log(row.eval_scoring_testgroups)
@@ -214,34 +219,32 @@ type TestgroupScoring = {
 //   return values.map(val => val / total);
 // }
 
+function ErrorScoringBar() {
+  return (
+    <div className="flex justify-center flex-col items-center w-full min-w-36">
+      <div className="relative pt-1 w-full">
+        <div className="overflow-hidden h-1.5 text-xs flex rounded">
+        <div
+          className="flex flex-col text-center whitespace-nowrap text-white justify-center transition-all duration-1000 ease-in-out"
+          style={{
+            width: `${(1 * 100).toFixed(0)}%`,
+            // background: "linear-gradient(90deg, #9F7AEA, #6B46C1)",
+            // background: "linear-gradient(90deg, rgba(131,58,180,1) 0%, rgba(253,179,29,1) 100%)",
+            background: "linear-gradient(90deg, rgba(131,58,180,1) 0%, rgba(152,126,208,1) 100%)",
+          }}
+        />
+        </div>
+      </div>
+    </div>
+  );
+
+}
+
 function TestgroupScoringBar({
   testgroups,
 }: {
   testgroups: TestgroupScoring[];
 }) {
-  // const [green, setGreen] = useState(0.2);
-  // const [yellow, setYellow] = useState(0.3);
-  // const [gray, setGray] = useState(0.4);
-  // const [red, setRed] = useState(0.1);
-
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     const randomValues = normalizeValues([
-  //       getRandomValue(),
-  //       getRandomValue(),
-  //       getRandomValue(),
-  //       getRandomValue(),
-  //     ]);
-
-  //     setGreen(randomValues[0]);
-  //     setYellow(randomValues[1]);
-  //     setGray(randomValues[2]);
-  //     setRed(randomValues[3]);
-  //   }, 2000);
-
-  //   return () => clearInterval(interval); // Cleanup the interval on component unmount
-  // }, []);
-
   let green = 0;
   let yellow = 0;
   let gray = 0;

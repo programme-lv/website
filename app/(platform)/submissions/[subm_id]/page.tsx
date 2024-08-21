@@ -259,6 +259,7 @@ export default function SubmissionView() {
                     let verdict = "AC";
                     if (testResult.memory_limit_exceeded) verdict = "MLE";
                     else if (testResult.time_limit_exceeded) verdict = "TLE";
+                    else if (testResult.subm_exit_code !== 0) verdict = "RE";
                     else if (testResult.checker_exit_code !== 0) verdict = "WA";
                     return (
                       <Card
@@ -275,7 +276,7 @@ export default function SubmissionView() {
                               {testResult.reached && (
                                 <Chip
                                   color={
-                                    (verdict === "AC" ? "success" : "danger") ??
+                                    (verdict === "AC" ? "success" : (verdict === "RE" ? "secondary" : "danger")) ??
                                     false
                                   }
                                   size="sm"
@@ -287,6 +288,7 @@ export default function SubmissionView() {
                                   {verdict === "TLE" &&
                                     "Pārsniegts izpildes laiks"}
                                   {verdict === "WA" && "Atbilde ir nepareiza"}
+                                  {verdict === "RE" && "Izpildes kļūda"}
                                 </Chip>
                               )}
                               {!testResult.reached && (
