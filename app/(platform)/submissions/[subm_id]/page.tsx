@@ -144,7 +144,6 @@ export default function SubmissionView() {
 
   return (
     <div className="mt-3 flex flex-col flex-grow relative">
-      <div className="h-full w-full absolute overflow-y-auto">
       <Card
         classNames={{ base: "border-small border-divider" }}
         radius="sm"
@@ -420,7 +419,7 @@ export default function SubmissionView() {
           </Accordion>
         </CardBody>
       </Card>
-      <Spacer y={2} /></div>
+      <Spacer y={2} />
     </div>
   );
 }

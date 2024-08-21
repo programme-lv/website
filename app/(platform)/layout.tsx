@@ -284,7 +284,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </ScrollShadow>
         </div>
         <div
-          className="w-full flex flex-1 flex-col p-3"
+          className="w-full flex flex-1 flex-col p-2 overflow-y-scroll"
           style={{
             backgroundColor: "#f8f8f8",
           }}
