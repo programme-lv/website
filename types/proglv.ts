@@ -132,6 +132,7 @@ type ProgrammingLanguage = {
   id: string;
   fullName: string;
   monacoId: string;
+  enabled: boolean;
 };
 
 type Evaluation = {
