@@ -15,6 +15,7 @@ import { statusTranslations } from "@/components/submissions-table";
 import { useParams } from "next/navigation";
 import { useQuery } from "react-query";
 import { getSubmission } from "@/lib/subms";
+import { cn } from "@/components/cn";
 
 type InfoCardEntry = {
   label: string;
@@ -51,7 +52,7 @@ export default function SubmissionView() {
 
   const infoCardEntries = [
     { label: "Autors", value: data.username },
-    { label: "Uzdevums", value: data.task_name },
+    { label: "Uzdevums", value: <Link href={`/tasks/${data.task_id}`} className="text-blue-600 hover:underline">{data.task_name}</Link> },
     { label: "Valoda", value: data.p_lang_display_name },
     {
       label: "Iesūtīts",
@@ -63,78 +64,10 @@ export default function SubmissionView() {
     },
     {
       label: "Rezultāts",
-      value: `${receivedScore} / ${possibleScore} punkti`,
+      value: <div><span className={cn("",{"text-success-600":receivedScore===possibleScore},{"text-danger-600":receivedScore===0&&possibleScore>0},{"text-warning-500":receivedScore>0&&receivedScore<possibleScore})}>{receivedScore} / {possibleScore}</span> punkti</div>,
     },
   ];
 
-  function InfoEntryColumn({ entries }: { entries: InfoCardEntry[] }) {
-    return (
-      <div
-        className="grid gap-x-1 gap-y-1 mb-1 mx-1"
-        style={{ gridTemplateColumns: "auto auto" }}
-      >
-        {entries.map((entry, index) => (
-          <div key={index} className="contents">
-            <span className="text-small text-default-700 flex items-end justify-start">
-              {entry.label}:
-            </span>
-            <div className="flex items-end gap-1">
-              <span className="text-default-900">
-                {[
-                  "Autors",
-                  "Valoda",
-                  "Iesūtīts",
-                  "Statuss",
-                  "Rezultāts",
-                  "Valoda",
-                ].includes(entry.label) && entry.value}
-                {["Uzdevums"].includes(entry.label) && (
-                  <Link
-                    className="text-blue-600"
-                    href={"/tasks/" + data!.task_id}
-                  >
-                    {entry.value}
-                  </Link>
-                )}
-              </span>
-            </div>
-          </div>
-        ))}
-      </div>
-    );
-  }
-
-  function StackedInfoEntryColumn({ entries }: { entries: InfoCardEntry[] }) {
-    return (
-      <div className="flex flex-col gap-3">
-        {entries.map((entry, index) => (
-          <div key={index}>
-            <span className="text-small text-default-700">{entry.label}:</span>
-            <div className="flex items-end gap-1">
-              <span className="text-default-900">
-                {[
-                  "Autors",
-                  "Valoda",
-                  "Iesūtīts",
-                  "Statuss",
-                  "Rezultāts",
-                  "Valoda",
-                ].includes(entry.label) && entry.value}
-                {["Uzdevums"].includes(entry.label) && (
-                  <Link
-                    className="text-blue-600"
-                    href={"/tasks/" + data!.task_id}
-                  >
-                    {entry.value}
-                  </Link>
-                )}
-              </span>
-            </div>
-          </div>
-        ))}
-      </div>
-    );
-  }
 
   const updateHeight = (editor: any) => {
     const contentHeight = Math.max(100, editor.getContentHeight());
@@ -150,30 +83,21 @@ export default function SubmissionView() {
         shadow="none"
       >
         <CardBody>
-          <div className="max-w-[700px]">
-            <div
-              className="hidden md:grid gap-x-3"
-              style={{ gridTemplateColumns: "auto auto" }}
-            >
-              <InfoEntryColumn entries={infoCardEntries.slice(0, 3)} />
-              <InfoEntryColumn entries={infoCardEntries.slice(3, 6)} />
-            </div>
-            <div
-              className="hidden sm:grid md:hidden gap-x-3"
-              style={{ gridTemplateColumns: "auto auto" }}
-            >
-              <InfoEntryColumn entries={infoCardEntries.slice(0, 6)} />
-            </div>
-            <div
-              className="grid sm:hidden md:hidden gap-y-2"
-              style={{ gridTemplateColumns: "auto auto" }}
-            >
-              <StackedInfoEntryColumn entries={infoCardEntries.slice(0, 6)} />
-            </div>
+          <div className="flex flex-wrap gap-x-6 gap-y-3 lg:gap-8 xl:gap-10 px-1">
+            {infoCardEntries.map((entry) => {
+              return (
+                <div key={entry.label} className="flex flex-col">
+                  <span className="text-tiny text-default-600">
+                    {entry.label}
+                  </span>
+                  <span>{entry.value}</span>
+                </div>
+              )
+            })} 
           </div>
         </CardBody>
       </Card>
-      <Spacer y={4} />
+      <Spacer y={3} />
       <Card
         classNames={{ base: "border-small border-divider" }}
         radius="sm"
@@ -203,7 +127,7 @@ export default function SubmissionView() {
           />
         </CardBody>
       </Card>
-      <Spacer y={4} />
+      <Spacer y={3} />
       <Card
         classNames={{ base: "border-small border-divider" }}
         radius="sm"
@@ -252,7 +176,7 @@ export default function SubmissionView() {
                           testGroup.wrong_tests === 0 &&
                           testGroup.untested_tests === 0 &&
                           "text-success-600"
-                        } ${testGroup.wrong_tests > 0 && "text-danger-500"}`}
+                        } ${testGroup.wrong_tests > 0 && "text-danger-600"}`}
                       >
                         <span className={`font-mono`}>
                           {testGroup.wrong_tests === 0 &&
