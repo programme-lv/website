@@ -57,7 +57,7 @@ type BriefSubmission = {
     accepted: number;
     wrong: number;
     untested: number;
-  }
+  };
   p_lang_id: string;
   p_lang_display_name: string;
   p_lang_monaco_id: string;
@@ -155,7 +155,7 @@ type EvalStateUpdate = {
   new_state: string;
 };
 
-type TestgroupResUpdate ={
+type TestgroupResUpdate = {
   subm_uuid: string;
   eval_uuid: string;
   test_group_id: number;
@@ -170,7 +170,7 @@ type TestsResUpdate = {
   accepted: number;
   wrong: number;
   untested: number;
-}
+};
 
 type SubmListWebSocketUpdate =
   | { subm_created: BriefSubmission }
@@ -195,5 +195,5 @@ export type {
   ProgrammingLang,
   EvalDetails,
   TestResult,
-  TestsResUpdate
+  TestsResUpdate,
 };

@@ -1,4 +1,8 @@
-import { BriefSubmission, FullSubmission, SubmListWebSocketUpdate } from "@/types/proglv";
+import {
+  BriefSubmission,
+  FullSubmission,
+  SubmListWebSocketUpdate,
+} from "@/types/proglv";
 
 import { getJwt } from "./jwt";
 import { API_HOST } from "./config";
@@ -62,6 +66,7 @@ export const subscribeToSubmissionUpdates = (
   eventSource.onmessage = (event) => {
     try {
       const data: SubmListWebSocketUpdate = JSON.parse(event.data);
+
       onUpdate(data);
     } catch (error) {
       console.error("Error parsing SSE data:", error);
@@ -81,7 +86,9 @@ export const subscribeToSubmissionUpdates = (
   };
 };
 
-export const getSubmission = async (submUuid: string): Promise<FullSubmission> => {
+export const getSubmission = async (
+  submUuid: string,
+): Promise<FullSubmission> => {
   const response = await fetch(`${API_HOST}/submissions/${submUuid}`, {
     method: "GET",
     headers: {
@@ -96,4 +103,4 @@ export const getSubmission = async (submUuid: string): Promise<FullSubmission> =
   const data = await response.json();
 
   return data.data;
-}
+};

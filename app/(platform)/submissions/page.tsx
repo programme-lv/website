@@ -9,7 +9,7 @@ export default async function SubmissionListServerComponent() {
 
   return (
     <main className="mt-3 flex-grow w-full overflow-visible">
-      <SubmissionTable initialSubmissions={submissions??[]} />
+      <SubmissionTable initialSubmissions={submissions ?? []} />
     </main>
   );
 }

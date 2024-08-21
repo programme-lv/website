@@ -637,30 +637,30 @@ int main() {
 
   return (
     <div className="flex flex-col flex-grow bg-white rounded-small border-small border-divider px-3 py-1 pb-2">
-    <div className="h-full w-full flex flex-col gap-2">
-      <div className="flex justify-end">
-        <LanguageSelect
-          languages={languages}
-          selectedLanguage={selectedLanguage}
-          setSelectedLanguage={setSelectedLanguage}
-        />
-      </div>
-      <div style={{ flexGrow: 1, position: "relative" }}>
-        <div style={{ width: "100%", height: "100%", position: "absolute" }}>
-          <MonacoEditor
-            language={monacoLangId}
-            options={{
-              minimap: { enabled: false },
-              fontSize: 14,
-            }}
-            theme="vs-dark"
-            value={code}
-            onChange={(value: any) => setCode(value as string)}
+      <div className="h-full w-full flex flex-col gap-2">
+        <div className="flex justify-end">
+          <LanguageSelect
+            languages={languages}
+            selectedLanguage={selectedLanguage}
+            setSelectedLanguage={setSelectedLanguage}
           />
         </div>
+        <div style={{ flexGrow: 1, position: "relative" }}>
+          <div style={{ width: "100%", height: "100%", position: "absolute" }}>
+            <MonacoEditor
+              language={monacoLangId}
+              options={{
+                minimap: { enabled: false },
+                fontSize: 14,
+              }}
+              theme="vs-dark"
+              value={code}
+              onChange={(value: any) => setCode(value as string)}
+            />
+          </div>
+        </div>
+        {/* <SubmitButton langId={selectedLanguage} code={code} taskCode={taskCode} /> */}
       </div>
-      {/* <SubmitButton langId={selectedLanguage} code={code} taskCode={taskCode} /> */}
-    </div>
       <div className="mt-2 flex justify-end gap-3">
         {authContext.user !== null && (
           <Button
