@@ -23,6 +23,7 @@ export const statusTranslations: Record<string, string> = {
   error: "Servera kļūda",
   compile_error: "Kompilācijas kļūda",
   runtime_error: "Izpildes kļūda",
+  checker_error: "Servera kļūda"
 };
 
 export const statusImportance: Record<string, number> = {
@@ -34,6 +35,7 @@ export const statusImportance: Record<string, number> = {
   error: 5,
   compile_error: 6,
   runtime_error: 7,
+  checker_error: 8
 };
 
 export default function SubmissionTable(props: { initialSubmissions: BriefSubmission[] }) {
@@ -142,7 +144,7 @@ export default function SubmissionTable(props: { initialSubmissions: BriefSubmis
       case "language":
         return row.p_lang_display_name;
       case "result":
-        if(row.eval_status === "error" || row.eval_status === "compile_error" || row.eval_status === "runtime_error") {
+        if(row.eval_status === "error" || row.eval_status === "compile_error" || row.eval_status === "runtime_error" || row.eval_status === "checker_error") {
           return <ErrorScoringBar />;
         }
         if (row.eval_scoring_testgroups.length > 0) {
