@@ -11,7 +11,7 @@ import {
 import { useQuery } from "react-query";
 import { useRouter } from "next/navigation";
 
-import { BriefSubmission, SubmListWebSocketUpdate, TestgroupResUpdate } from "@/types/proglv";
+import { BriefSubmission, SubmListWebSocketUpdate, TestgroupResUpdate, TestsResUpdate } from "@/types/proglv";
 import { listSubmissions, subscribeToSubmissionUpdates } from "@/lib/subms";
 
 export const statusTranslations: Record<string, string> = {
@@ -110,6 +110,23 @@ export default function SubmissionTable(props: { initialSubmissions: BriefSubmis
             }
           }
         }
+        else if ("tests_score_update" in update && update.tests_score_update) {
+          let index = submUuidToIndex.get(update.tests_score_update.subm_uuid);
+          if (index !== undefined && updatedSubms[index].eval_uuid === update.tests_score_update.eval_uuid){
+            const new_score_untested = update.tests_score_update.untested;
+            const old_score_untested = updatedSubms[index].eval_scoring_tests ? updatedSubms[index].eval_scoring_tests.untested : 0;
+            if (new_score_untested < old_score_untested) {
+              updatedSubms[index] = {
+                ...updatedSubms[index],
+                eval_scoring_tests: {
+                  accepted: (update as {tests_score_update:TestsResUpdate}).tests_score_update.accepted,
+                  wrong: (update as {tests_score_update:TestsResUpdate}).tests_score_update.wrong,
+                  untested: new_score_untested
+                }
+              };
+            }
+          }
+        }
       }
   
       const res = updatedSubms.sort((a, b) => {
@@ -146,6 +163,12 @@ export default function SubmissionTable(props: { initialSubmissions: BriefSubmis
       case "result":
         if(row.eval_status === "error" || row.eval_status === "compile_error" || row.eval_status === "runtime_error" || row.eval_status === "checker_error") {
           return <ErrorScoringBar />;
+        }
+        if (row.eval_scoring_tests ) {
+          return (
+            <TestsScoringBar accepted={row.eval_scoring_tests.accepted}
+            wrong={row.eval_scoring_tests.wrong} untested={row.eval_scoring_tests.untested}/>
+          );
         }
         if (row.eval_scoring_testgroups && row.eval_scoring_testgroups.length > 0) {
           return (
@@ -304,6 +327,54 @@ function TestgroupScoringBar({
             style={{
               width: `${(yellow * 100).toFixed(0)}%`,
               background: "linear-gradient(90deg, #ecc94b, #d69e2e)",
+            }}
+          />
+          <div
+            className="flex flex-col text-center whitespace-nowrap text-white justify-center transition-all duration-1000 ease-in-out"
+            style={{
+              width: `${(red * 100).toFixed(0)}%`,
+              background: "linear-gradient(90deg, #f56565, #c53030)",
+            }}
+          />
+          <div
+            className="flex flex-col text-center whitespace-nowrap text-white justify-center transition-all duration-1000 ease-in-out"
+            style={{
+              width: `${(gray * 100).toFixed(0)}%`,
+              background: "linear-gradient(90deg, #a0aec0, #718096)",
+            }}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function TestsScoringBar({
+  accepted,wrong,untested
+}: {accepted:number,wrong:number,untested:number}) {
+  let total_score = accepted + wrong + untested;
+  let green = accepted / total_score;
+  let gray = untested / total_score;
+  let red = wrong / total_score;
+
+
+  return (
+    <div className="flex justify-center flex-col items-center w-full min-w-36">
+      <div className="flex justify-between w-full items-center h-3">
+        <span className="text-teal-600 text-tiny">
+          {green > 0 ? `${(green * 100).toFixed(0)}%` : ""}
+        </span>
+        <span className="text-red-500 text-tiny">
+          {red > 0 ? `${(red * 100).toFixed(0)}%` : ""}
+        </span>
+      </div>
+      <div className="relative pt-1 w-full">
+        <div className="overflow-hidden h-1.5 text-xs flex rounded">
+          <div
+            className="flex flex-col text-center whitespace-nowrap text-white justify-center transition-all duration-1000 ease-in-out"
+            style={{
+              width: `${(green * 100).toFixed(0)}%`,
+              background: "linear-gradient(90deg, #38b2ac, #2c7a7b)",
             }}
           />
           <div

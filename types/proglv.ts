@@ -53,6 +53,11 @@ type BriefSubmission = {
     wrong_tests: number;
     untested_tests: number;
   }[];
+  eval_scoring_tests: {
+    accepted: number;
+    wrong: number;
+    untested: number;
+  }
   p_lang_id: string;
   p_lang_display_name: string;
   p_lang_monaco_id: string;
@@ -144,25 +149,34 @@ type User = {
   lastname: string;
 };
 
-interface EvalStateUpdate {
+type EvalStateUpdate = {
   subm_uuid: string;
   eval_uuid: string;
   new_state: string;
-}
+};
 
-interface TestgroupResUpdate {
+type TestgroupResUpdate ={
   subm_uuid: string;
   eval_uuid: string;
   test_group_id: number;
   accepted_tests: number;
   wrong_tests: number;
   untested_tests: number;
+};
+
+type TestsResUpdate = {
+  subm_uuid: string;
+  eval_uuid: string;
+  accepted: number;
+  wrong: number;
+  untested: number;
 }
 
 type SubmListWebSocketUpdate =
   | { subm_created: BriefSubmission }
   | { state_update: EvalStateUpdate }
-  | { testgroup_res_update: TestgroupResUpdate };
+  | { testgroup_res_update: TestgroupResUpdate }
+  | { tests_score_update: TestsResUpdate };
 
 export type {
   ProgrammingLanguage,
@@ -181,4 +195,5 @@ export type {
   ProgrammingLang,
   EvalDetails,
   TestResult,
+  TestsResUpdate
 };
