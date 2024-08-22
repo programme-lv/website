@@ -108,8 +108,8 @@ type TestResult = {
   memory_limit_exceeded: boolean;
   subtasks: number[];
   test_group: number;
-  subm_cpu_time_millis: number;
-  subm_mem_kibi_bytes: number;
+  subm_cpu_time_millis?: number;
+  subm_mem_kibi_bytes?: number;
   subm_wall_time: number;
   subm_exit_code: number;
   subm_stdout_trimmed: string;

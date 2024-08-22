@@ -343,6 +343,9 @@ function SingleTestResultCard({ testResult }: { testResult: TestResult }) {
   else if (testResult.subm_exit_code !== 0 || hasStderr || hasExitSignal) verdict = "RE";
   else if (testResult.checker_exit_code !== 0) verdict = "WA";
 
+  if(testResult.time_limit_exceeded) testResult.subm_cpu_time_millis = undefined;
+  if(testResult.memory_limit_exceeded) testResult.subm_mem_kibi_bytes = undefined;
+
   let exitSignalDescription:string = "Unknown exit signal";
   if (testResult.subm_exit_signal && exitSignalDescriptions[testResult.subm_exit_signal as keyof typeof exitSignalDescriptions]) {
     exitSignalDescription = exitSignalDescriptions[testResult.subm_exit_signal as keyof typeof exitSignalDescriptions];
