@@ -114,6 +114,7 @@ type TestResult = {
   subm_exit_code: number;
   subm_stdout_trimmed: string;
   subm_stderr_trimmed: string;
+  subm_exit_signal?: number;
   checker_cpu_time_millis: number;
   checker_mem_kibi_bytes: number;
   checker_wall_time: number;

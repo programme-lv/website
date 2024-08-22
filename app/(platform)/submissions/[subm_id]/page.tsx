@@ -299,19 +299,57 @@ export default function SubmissionView() {
     </div>
   );
 }
-
 function SingleTestResultCard({ testResult }: { testResult: TestResult }) {
+  const exitSignalDescriptions = {
+    1: "SIGHUP - Terminate - Hang up controlling terminal or process",
+    2: "SIGINT - Terminate - Interrupt from keyboard, Control-C",
+    3: "SIGQUIT - Dump - Quit from keyboard, Control-\\",
+    4: "SIGILL - Dump - Illegal instruction",
+    5: "SIGTRAP - Dump - Breakpoint for debugging",
+    6: "SIGABRT/SIGIOT - Dump - Abnormal termination / Equivalent to SIGABRT",
+    7: "SIGBUS - Dump - Bus error",
+    8: "SIGFPE - Dump - Floating-point exception",
+    9: "SIGKILL - Terminate - Forced-process termination",
+    10: "SIGUSR1 - Terminate - Available to processes",
+    11: "SIGSEGV - Dump - Invalid memory reference",
+    12: "SIGUSR2 - Terminate - Available to processes",
+    13: "SIGPIPE - Terminate - Write to pipe with no readers",
+    14: "SIGALRM - Terminate - Real-timer clock",
+    15: "SIGTERM - Terminate - Process termination",
+    16: "SIGSTKFLT - Terminate - Coprocessor stack error",
+    17: "SIGCHLD - Ignore - Child process stopped or terminated or got a signal if traced",
+    18: "SIGCONT - Continue - Resume execution, if stopped",
+    19: "SIGSTOP - Stop - Stop process execution, Ctrl-Z",
+    20: "SIGTSTP - Stop - Stop process issued from tty",
+    21: "SIGTTIN - Stop - Background process requires input",
+    22: "SIGTTOU - Stop - Background process requires output",
+    23: "SIGURG - Ignore - Urgent condition on socket",
+    24: "SIGXCPU - Dump - CPU time limit exceeded",
+    25: "SIGXFSZ - Dump - File size limit exceeded",
+    26: "SIGVTALRM - Terminate - Virtual timer clock",
+    27: "SIGPROF - Terminate - Profile timer clock",
+    28: "SIGWINCH - Ignore - Window resizing",
+    29: "SIGIO/SIGPOLL - Terminate - I/O now possible / Equivalent to SIGIO",
+    30: "SIGPWR - Terminate - Power supply failure",
+    31: "SIGSYS/SIGUNUSED - Dump - Bad system call / Equivalent to SIGSYS",
+  };
+  
   let verdict = "AC";
   const nonZeroExitCode = typeof testResult.subm_exit_code === "number" && testResult.subm_exit_code !== 0;
   const hasStderr = typeof testResult.subm_stderr_trimmed === "string" && testResult.subm_stderr_trimmed.trim().length > 0;
+  const hasExitSignal = typeof testResult.subm_exit_signal === "number" && testResult.subm_exit_signal !== 0;
   if (testResult.memory_limit_exceeded) verdict = "MLE";
   else if (testResult.time_limit_exceeded) verdict = "TLE";
-  else if (testResult.subm_exit_code !== 0 || hasStderr) verdict = "RE";
+  else if (testResult.subm_exit_code !== 0 || hasStderr || hasExitSignal) verdict = "RE";
   else if (testResult.checker_exit_code !== 0) verdict = "WA";
 
-  if (nonZeroExitCode || hasStderr) {
-    if(hasStderr) console.log("test stderr", testResult.subm_stderr_trimmed);
-    if(testResult.subm_exit_code !== 0) console.log("test exit code", testResult.subm_exit_code);
+  let exitSignalDescription:string = "Unknown exit signal";
+  if (testResult.subm_exit_signal && exitSignalDescriptions[testResult.subm_exit_signal as keyof typeof exitSignalDescriptions]) {
+    exitSignalDescription = exitSignalDescriptions[testResult.subm_exit_signal as keyof typeof exitSignalDescriptions];
+  }
+
+
+  if (nonZeroExitCode || hasStderr || hasExitSignal) {
     return (
       <Card
         key={testResult.test_id+"-error"}
@@ -406,6 +444,29 @@ function SingleTestResultCard({ testResult }: { testResult: TestResult }) {
                 </div>
               </div>
             </div>
+            {testResult.subm_exit_signal &&
+            <>
+            <Spacer y={2} />
+            <div className="flex gap-4">
+              <div className="w-full overflow-hidden">
+                <div className="flex flex-col">
+                  <p className="text-tiny text-default-700 select-none">
+                    Izejas signāls:
+                  </p>
+                  <code
+                    className="text-small p-1.5 min-h-[32px]"
+                    style={{
+                      backgroundColor: "rgba(212, 212, 216, 0.3)",
+                      whiteSpace: "pre-wrap",
+                    }}
+                  >
+                    {testResult.subm_exit_signal} : {exitSignalDescription}
+                  </code>
+                </div>
+              </div>
+            </div>
+            </>
+            }
         </CardBody>
       </Card>
     );
