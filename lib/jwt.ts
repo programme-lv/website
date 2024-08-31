@@ -69,20 +69,25 @@ type JWTUserInfo = {
   email: string;
   firstname: string;
   lastname: string;
+  expires: number;
+  expired?: boolean;
 };
 
-export function getUserInfoFromJWT() {
+export function getUserInfoFromJWT(): JWTUserInfo | null {
   const jwt = getJWTDecoded();
 
   if (!jwt || jwt === undefined) {
     return null;
   }
 
+  const expired = new Date(jwt.exp * 1000) < new Date();
   return {
     uuid: jwt.sub,
     username: jwt.username,
     email: jwt.email,
     firstname: jwt.firstname,
     lastname: jwt.lastname,
+    expires: jwt.exp,
+    expired: expired,
   } as JWTUserInfo;
 }

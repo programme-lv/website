@@ -44,178 +44,36 @@ export const statusImportance: Record<string, number> = {
 };
 
 export default function SubmissionTable(props: {
-  initialSubmissions: BriefSubmission[];
+  initial: BriefSubmission[];
 }) {
-  let { data, error, isLoading } = useQuery("submissions", listSubmissions);
+  props.initial = sortSubmissions(props.initial);
+
+  let { data, error, isLoading } = useQuery("submissions", listSubmissions,{
+    refetchInterval: 5000,
+  });
   let [updates, setUpdates] = React.useState<SubmListWebSocketUpdate[]>([]);
-  const [submissions, setSubmissions] = React.useState<BriefSubmission[]>(
-    data ?? props.initialSubmissions ?? [],
-  );
+  const [submissions, setSubmissions] = React.useState<BriefSubmission[]>(data ?? props.initial ?? []);
   const router = useRouter();
 
   useEffect(() => {
     const unsubscribe = subscribeToSubmissionUpdates(
       (update: SubmListWebSocketUpdate) => {
-        console.log("Received update:", update);
-        // add an update but only if there is a 1000 updates, delete the oldest one
+        // add an update but only if there is a 10000 updates, delete the oldest one
         setUpdates((updates) => {
-          if (updates.length >= 1000) {
-            updates.shift();
-          }
-
+          if (updates.length >= 10000) {updates.shift();}
           return [...updates, update];
         });
       },
     );
-
-    return () => {
-      unsubscribe();
-    };
+    return () => {unsubscribe();};
   }, []);
 
   useEffect(() => {
     setSubmissions((prevSubms) => {
-      const subms = [...(data ?? prevSubms)];
-      const updatedSubms = subms.map((subm) => ({ ...subm })); // Create shallow copies
-
-      const submUuidToIndex = new Map(
-        updatedSubms.map((s, i) => [s.subm_uuid, i]),
-      );
-
-      for (let update of updates) {
-        if ("subm_created" in update && update.subm_created) {
-          if (!submUuidToIndex.has(update.subm_created.subm_uuid)) {
-            updatedSubms.push({ ...update.subm_created });
-            submUuidToIndex.set(
-              update.subm_created.subm_uuid,
-              updatedSubms.length - 1,
-            );
-          }
-        } else if ("state_update" in update && update.state_update) {
-          let index = submUuidToIndex.get(update.state_update.subm_uuid);
-
-          if (
-            index !== undefined &&
-            updatedSubms[index].eval_uuid === update.state_update.eval_uuid
-          ) {
-            const new_state_importance =
-              statusImportance[update.state_update.new_state];
-            const old_state_importance =
-              statusImportance[updatedSubms[index].eval_status];
-
-            if (new_state_importance > old_state_importance) {
-              updatedSubms[index] = {
-                ...updatedSubms[index],
-                eval_status: update.state_update.new_state,
-              };
-            }
-          }
-        } else if (
-          "testgroup_res_update" in update &&
-          update.testgroup_res_update
-        ) {
-          let index = submUuidToIndex.get(
-            update.testgroup_res_update.subm_uuid,
-          );
-
-          if (
-            index !== undefined &&
-            updatedSubms[index].eval_uuid ===
-              update.testgroup_res_update.eval_uuid
-          ) {
-            const test_group_id = update.testgroup_res_update.test_group_id;
-            const new_untested_testcount =
-              update.testgroup_res_update.untested_tests;
-            const old_testgroup_index = updatedSubms[
-              index
-            ].eval_scoring_testgroups.findIndex(
-              (tg) => tg.test_group_id === test_group_id,
-            );
-            const old_untested_testcount =
-              old_testgroup_index >= 0
-                ? updatedSubms[index].eval_scoring_testgroups[
-                    old_testgroup_index
-                  ].untested_tests
-                : 0;
-
-            if (new_untested_testcount < old_untested_testcount) {
-              updatedSubms[index] = {
-                ...updatedSubms[index],
-                eval_scoring_testgroups: updatedSubms[
-                  index
-                ].eval_scoring_testgroups.map((tg, i) => {
-                  if (i === old_testgroup_index) {
-                    return {
-                      ...tg,
-                      untested_tests: new_untested_testcount,
-                      accepted_tests: (
-                        update as { testgroup_res_update: TestgroupResUpdate }
-                      ).testgroup_res_update.accepted_tests,
-                      wrong_tests: (
-                        update as { testgroup_res_update: TestgroupResUpdate }
-                      ).testgroup_res_update.wrong_tests,
-                    };
-                  }
-
-                  return tg;
-                }),
-              };
-            }
-          }
-        } else if (
-          "tests_score_update" in update &&
-          update.tests_score_update
-        ) {
-          let index = submUuidToIndex.get(update.tests_score_update.subm_uuid);
-
-          if (
-            index !== undefined &&
-            updatedSubms[index].eval_uuid ===
-              update.tests_score_update.eval_uuid
-          ) {
-            const new_score_untested = update.tests_score_update.untested;
-            const old_score_untested = updatedSubms[index].eval_scoring_tests
-              ? updatedSubms[index].eval_scoring_tests.untested
-              : 0;
-
-            if (new_score_untested < old_score_untested) {
-              updatedSubms[index] = {
-                ...updatedSubms[index],
-                eval_scoring_tests: {
-                  accepted: (update as { tests_score_update: TestsResUpdate })
-                    .tests_score_update.accepted,
-                  wrong: (update as { tests_score_update: TestsResUpdate })
-                    .tests_score_update.wrong,
-                  untested: new_score_untested,
-                },
-              };
-            }
-          }
-        }
-      }
-
-      const res = updatedSubms.sort((a, b) => {
-        const dateA = new Date(a.created_at);
-        const dateB = new Date(b.created_at);
-
-        if (dateA < dateB) {
-          return 1;
-        }
-        if (dateA > dateB) {
-          return -1;
-        }
-        if (a.subm_uuid < b.subm_uuid) {
-          return 1;
-        }
-        if (a.subm_uuid > b.subm_uuid) {
-          return -1;
-        }
-
-        return 0;
-      });
-
-      // console.log(res);
-      return res;
+      const subms = [...(data??prevSubms)];
+      const updatedSubms = applyUpdatesToSubmissions(subms, updates);
+      
+      return sortSubmissions(updatedSubms);
     });
   }, [updates, data]);
 
@@ -321,6 +179,168 @@ export default function SubmissionTable(props: {
       </Table>
     </div>
   );
+}
+
+function sortSubmissions(submissions: BriefSubmission[]): BriefSubmission[] {
+  const sorted = submissions.sort((a, b) => {
+    const dateA = new Date(a.created_at);
+    const dateB = new Date(b.created_at);
+
+    if (dateA < dateB) {
+      return 1;
+    }
+    if (dateA > dateB) {
+      return -1;
+    }
+    if (a.subm_uuid < b.subm_uuid) {
+      return 1;
+    }
+    if (a.subm_uuid > b.subm_uuid) {
+      return -1;
+    }
+
+    return 0;
+  });
+
+  // sort testgroups inside submissions if they exist
+  sorted.forEach((subm) => {
+    if (subm.eval_scoring_testgroups) {
+      subm.eval_scoring_testgroups.sort((a, b) => {
+        if (a.test_group_id < b.test_group_id) {
+          return -1;
+        }
+        if (a.test_group_id > b.test_group_id) {
+          return 1;
+        }
+
+        return 0;
+      });
+    }
+  });
+
+  return sorted;
+}
+
+function applyUpdatesToSubmissions(submissions: BriefSubmission[], updates: SubmListWebSocketUpdate[]): BriefSubmission[] {
+  const updatedSubms = submissions.map((subm) => ({ ...subm })); // Create shallow copies
+
+  const submUuidToIndex = new Map(
+    updatedSubms.map((s, i) => [s.subm_uuid, i]),
+  );
+
+  for (let update of updates) {
+    if ("subm_created" in update && update.subm_created) {
+      if (!submUuidToIndex.has(update.subm_created.subm_uuid)) {
+        updatedSubms.push({ ...update.subm_created });
+        submUuidToIndex.set(
+          update.subm_created.subm_uuid,
+          updatedSubms.length - 1,
+        );
+      }
+    } else if ("state_update" in update && update.state_update) {
+      let index = submUuidToIndex.get(update.state_update.subm_uuid);
+
+      if (
+        index !== undefined &&
+        updatedSubms[index].eval_uuid === update.state_update.eval_uuid
+      ) {
+        const new_state_importance =
+          statusImportance[update.state_update.new_state];
+        const old_state_importance =
+          statusImportance[updatedSubms[index].eval_status];
+
+        if (new_state_importance > old_state_importance) {
+          updatedSubms[index] = {
+            ...updatedSubms[index],
+            eval_status: update.state_update.new_state,
+          };
+        }
+      }
+    } else if (
+      "testgroup_res_update" in update &&
+      update.testgroup_res_update
+    ) {
+      let index = submUuidToIndex.get(
+        update.testgroup_res_update.subm_uuid,
+      );
+
+      if (
+        index !== undefined &&
+        updatedSubms[index].eval_uuid ===
+          update.testgroup_res_update.eval_uuid
+      ) {
+        const test_group_id = update.testgroup_res_update.test_group_id;
+        const new_untested_testcount =
+          update.testgroup_res_update.untested_tests;
+        const old_testgroup_index = updatedSubms[
+          index
+        ].eval_scoring_testgroups.findIndex(
+          (tg) => tg.test_group_id === test_group_id,
+        );
+        const old_untested_testcount =
+          old_testgroup_index >= 0
+            ? updatedSubms[index].eval_scoring_testgroups[
+                old_testgroup_index
+              ].untested_tests
+            : 0;
+
+        if (new_untested_testcount < old_untested_testcount) {
+          updatedSubms[index] = {
+            ...updatedSubms[index],
+            eval_scoring_testgroups: updatedSubms[
+              index
+            ].eval_scoring_testgroups.map((tg, i) => {
+              if (i === old_testgroup_index) {
+                return {
+                  ...tg,
+                  untested_tests: new_untested_testcount,
+                  accepted_tests: (
+                    update as { testgroup_res_update: TestgroupResUpdate }
+                  ).testgroup_res_update.accepted_tests,
+                  wrong_tests: (
+                    update as { testgroup_res_update: TestgroupResUpdate }
+                  ).testgroup_res_update.wrong_tests,
+                };
+              }
+
+              return tg;
+            }),
+          };
+        }
+      }
+    } else if (
+      "tests_score_update" in update &&
+      update.tests_score_update
+    ) {
+      let index = submUuidToIndex.get(update.tests_score_update.subm_uuid);
+
+      if (
+        index !== undefined &&
+        updatedSubms[index].eval_uuid ===
+          update.tests_score_update.eval_uuid
+      ) {
+        const new_score_untested = update.tests_score_update.untested;
+        const old_score_untested = updatedSubms[index].eval_scoring_tests
+          ? updatedSubms[index].eval_scoring_tests.untested
+          : 0;
+
+        if (new_score_untested < old_score_untested) {
+          updatedSubms[index] = {
+            ...updatedSubms[index],
+            eval_scoring_tests: {
+              accepted: (update as { tests_score_update: TestsResUpdate })
+                .tests_score_update.accepted,
+              wrong: (update as { tests_score_update: TestsResUpdate })
+                .tests_score_update.wrong,
+              untested: new_score_untested,
+            },
+          };
+        }
+      }
+    }
+  }
+
+  return updatedSubms;
 }
 
 type TestgroupScoring = {

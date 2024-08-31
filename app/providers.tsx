@@ -43,6 +43,7 @@ export function Providers({ children, themeProps }: ProvidersProps) {
     const userInfo = getUserInfoFromJWT();
 
     if (!userInfo) return null;
+    if (userInfo.expired) return null;
 
     return {
       uuid: userInfo.uuid,
@@ -60,6 +61,21 @@ export function Providers({ children, themeProps }: ProvidersProps) {
       setUser(retrieveUserInfoFromJwt());
     }
   }, [typeof document === "undefined"]);
+
+  // refresh user info every 10 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // TODO: show some kind of warning if the user is logged out
+      setUser((prev) => {
+        if (!prev) return prev;
+        const res = retrieveUserInfoFromJwt();
+        if (!res) sessionStorage.clear();
+        return res;
+      })
+    }, 10000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>

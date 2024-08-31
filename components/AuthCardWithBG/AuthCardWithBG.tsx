@@ -139,7 +139,7 @@ function AuthForm({ type }: { type: "login" | "register" }) {
   };
 
   return (
-    <div className="flex w-full max-w-md flex-col gap-4 rounded-md bg-content1 px-4 md:px-8 pb-10 pt-6 shadow-small">
+    <div className="flex w-full max-w-md flex-col gap-4 rounded-md bg-content1 px-4 md:px-6 pb-10 pt-6 shadow-small">
       <p className="pb-2 text-xl flex gap-x-2">
         {type === "register" ? (
           <>
@@ -154,7 +154,7 @@ function AuthForm({ type }: { type: "login" | "register" }) {
           </>
         )}
       </p>
-      <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
+      <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
         <Input
           isRequired
           isDisabled={
@@ -166,7 +166,6 @@ function AuthForm({ type }: { type: "login" | "register" }) {
           name="username"
           // placeholder="Ievadiet savu lietotājvārdu"
           value={username}
-          variant="bordered"
           onChange={(e) => setUsername(e.target.value)}
         />
         {type === "register" && (
@@ -183,7 +182,6 @@ function AuthForm({ type }: { type: "login" | "register" }) {
                 name="firstName"
                 // placeholder="Ievadiet savu vārdu"
                 value={firstName}
-                variant="bordered"
                 onChange={(e) => setFirstName(e.target.value)}
               />
               <Input
@@ -197,7 +195,6 @@ function AuthForm({ type }: { type: "login" | "register" }) {
                 name="lastName"
                 // placeholder="Ievadiet savu uzvārdu"
                 value={lastName}
-                variant="bordered"
                 onChange={(e) => setLastName(e.target.value)}
               />
             </div>
@@ -213,7 +210,6 @@ function AuthForm({ type }: { type: "login" | "register" }) {
               // placeholder="Ievadiet savu e-pastu"
               type="email"
               value={email}
-              variant="bordered"
               onChange={(e) => setEmail(e.target.value)}
             />
           </>
@@ -247,7 +243,6 @@ function AuthForm({ type }: { type: "login" | "register" }) {
             // placeholder="Ievadiet savu paroli"
             type={isVisible ? "text" : "password"}
             value={password}
-            variant="bordered"
             onChange={(e) => setPassword(e.target.value)}
           />
           {type === "register" && (
@@ -264,7 +259,6 @@ function AuthForm({ type }: { type: "login" | "register" }) {
               type="password"
               // placeholder="Apstipriniet savu paroli"
               value={repPassword}
-              variant="bordered"
               onChange={(e) => setRepPassword(e.target.value)}
             />
           )}
