@@ -169,12 +169,13 @@ export default function SubmissionTable(props: {
         <TableBody items={submissions}>
           {(item) => (
             <TableRow
+            
               key={item.subm_uuid}
               className="cursor-pointer "
               onClick={() => router.push(`/submissions/${item.subm_uuid}`)}
             >
               {(columnKey) => (
-                <TableCell className={cn("h-12 border-b-small",{"bg-blue-50":user?.username===item.username})}>
+                <TableCell className={cn("h-12 border-b-small",{"font-semibold":user?.username===item.username&&columnKey==="author"})}>
                   <div>{renderCell(item, columnKey)}</div>
                 </TableCell>
               )}
