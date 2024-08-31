@@ -338,9 +338,9 @@ function SingleTestResultCard({ testResult }: { testResult: TestResult }) {
   const nonZeroExitCode = typeof testResult.subm_exit_code === "number" && testResult.subm_exit_code !== 0;
   const hasStderr = typeof testResult.subm_stderr_trimmed === "string" && testResult.subm_stderr_trimmed.trim().length > 0;
   const hasExitSignal = typeof testResult.subm_exit_signal === "number" && testResult.subm_exit_signal !== 0;
-  if (testResult.memory_limit_exceeded) verdict = "MLE";
+  if (testResult.subm_exit_code !== 0 || hasStderr || hasExitSignal) verdict = "RE";
+  else if (testResult.memory_limit_exceeded) verdict = "MLE";
   else if (testResult.time_limit_exceeded) verdict = "TLE";
-  else if (testResult.subm_exit_code !== 0 || hasStderr || hasExitSignal) verdict = "RE";
   else if (testResult.checker_exit_code !== 0) verdict = "WA";
 
   if(testResult.time_limit_exceeded) testResult.subm_cpu_time_millis = undefined;
