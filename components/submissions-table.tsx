@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import {
   Table,
   TableHeader,
@@ -7,6 +7,7 @@ import {
   TableBody,
   TableRow,
   TableCell,
+  cn,
 } from "@nextui-org/react";
 import { useQuery } from "react-query";
 import { useRouter } from "next/navigation";
@@ -18,6 +19,7 @@ import {
   TestsResUpdate,
 } from "@/types/proglv";
 import { listSubmissions, subscribeToSubmissionUpdates } from "@/lib/subms";
+import { AuthContext } from "@/app/providers";
 
 export const statusTranslations: Record<string, string> = {
   waiting: "Gaida rindā",
@@ -54,6 +56,9 @@ export default function SubmissionTable(props: {
   let [updates, setUpdates] = React.useState<SubmListWebSocketUpdate[]>([]);
   const [submissions, setSubmissions] = React.useState<BriefSubmission[]>(data ?? props.initial ?? []);
   const router = useRouter();
+
+  const authContext = useContext(AuthContext);
+  const user = authContext.user;
 
   useEffect(() => {
     const unsubscribe = subscribeToSubmissionUpdates(
@@ -165,11 +170,11 @@ export default function SubmissionTable(props: {
           {(item) => (
             <TableRow
               key={item.subm_uuid}
-              className="cursor-pointer"
+              className="cursor-pointer "
               onClick={() => router.push(`/submissions/${item.subm_uuid}`)}
             >
               {(columnKey) => (
-                <TableCell className="h-12">
+                <TableCell className={cn("h-12 border-b-small",{"bg-blue-50":user?.username===item.username})}>
                   <div>{renderCell(item, columnKey)}</div>
                 </TableCell>
               )}
