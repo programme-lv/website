@@ -20,7 +20,6 @@ export default async function SubmissionListServerComponent() {
       <Spacer y={2} />
       <p className="text-default-700 px-2">
         Šobrīd tiek attēlots nenoteikts skaits ar iesūtījumiem, t.i., netiek attēloti visi iesūtījumi, kas jebkad ir bijuši saņemti.
-        Zilā krāsā iekrāsoti tie iesūtījumi, kas pieder šobrīd autentificētajam lietotājam.
         </p>
     </main>
   );
