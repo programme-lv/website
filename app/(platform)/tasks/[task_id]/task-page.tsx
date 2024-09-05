@@ -38,7 +38,13 @@ import MonacoEditor from "@monaco-editor/react";
 import { useQuery } from "react-query";
 
 import { getTaskById } from "@/lib/tasks";
-import { Example, MarkdownStatement, ProgrammingLanguage, StInputs, Task } from "@/types/proglv";
+import {
+  Example,
+  MarkdownStatement,
+  ProgrammingLanguage,
+  StInputs,
+  Task,
+} from "@/types/proglv";
 import { AuthContext } from "@/app/providers";
 import "katex/dist/katex.min.css";
 import renderMd from "@/lib/render-md";
@@ -713,17 +719,17 @@ function LanguageSelect(props: LanguageSelectProps) {
     return null;
   }
 
-  let disabledKeys =[...props.languages.filter((lang) => !lang.enabled).map((lang) => lang.id)];
-  console.log(props.languages)
-  console.log(disabledKeys)
+  let disabledKeys = [
+    ...props.languages.filter((lang) => !lang.enabled).map((lang) => lang.id),
+  ];
+
+  console.log(props.languages);
+  console.log(disabledKeys);
 
   return (
     <Select
       className="max-w-xs"
       disallowEmptySelection={true}
-      items={props.languages}
-      // filter out the ones that have "enabled" set to false
-      disabledKeys={disabledKeys}
       label="Programmēšanas valoda"
       selectedKeys={[props.selectedLanguage]}
       size="sm"
@@ -739,6 +745,9 @@ function LanguageSelect(props: LanguageSelectProps) {
             : (selectedKeys.currentKey ?? "cpp17"),
         )
       }
+      items={props.languages}
+      // filter out the ones that have "enabled" set to false
+      disabledKeys={disabledKeys}
     >
       {(x) => <SelectItem key={x.id}>{x.fullName}</SelectItem>}
     </Select>

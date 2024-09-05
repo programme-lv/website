@@ -146,7 +146,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, ...props }) => {
                       !isWide && task.illustration_img_url,
                   })}
                 >
-                  <div className="flex gap-x-4">
+                  <div className="flex gap-x-4 items-center">
                     <h3 className="text-large font-medium">
                       {task.task_full_name}
                     </h3>

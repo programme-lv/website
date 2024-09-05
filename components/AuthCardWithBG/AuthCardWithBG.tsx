@@ -15,10 +15,6 @@ import LogoImage from "@/public/logo.png";
 import { setJwt } from "@/lib/jwt";
 import { AuthContext } from "@/app/providers";
 
-const translations: { [key: string]: string } = {
-  "invalid username or password": "nepareizs lietotājvārds vai parole",
-};
-
 export default function AuthCardWithBG(props: { type: "login" | "register" }) {
   const { type } = props;
 

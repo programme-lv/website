@@ -15,6 +15,7 @@ import {
   ListboxSection,
 } from "@nextui-org/react";
 import { Icon } from "@iconify/react";
+import { useRouter } from "next/navigation";
 
 import { cn } from "./cn";
 
@@ -65,6 +66,7 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
     const [selected, setSelected] =
       React.useState<React.Key>(defaultSelectedKey);
 
+    const router = useRouter();
     const sectionClasses = {
       ...sectionClassesProp,
       base: cn(sectionClassesProp?.base, "w-full", {
@@ -223,6 +225,7 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
             endContent={
               isCompact || hideEndContent ? null : (item.endContent ?? null)
             }
+            href={undefined}
             startContent={
               isCompact ? null : item.icon ? (
                 <Icon
@@ -239,6 +242,9 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
             }
             textValue={item.title}
             title={isCompact ? null : item.title}
+            onClick={() => {
+              router.push(item.href ?? "#");
+            }}
           >
             {isCompact ? (
               <Tooltip content={item.title} placement="right">

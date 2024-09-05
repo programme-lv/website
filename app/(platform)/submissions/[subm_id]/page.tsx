@@ -13,20 +13,15 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useQuery } from "react-query";
 
-import { statusTranslations } from "@/components/submissions-table";
 import { getSubmission } from "@/lib/subms";
 import { cn } from "@/components/cn";
 import { TestResult } from "@/types/proglv";
-
-type InfoCardEntry = {
-  label: string;
-  value: string | number;
-};
+import { statusTranslations } from "@/components/subm-table/helpful-constants";
 
 export default function SubmissionView() {
   const { subm_id } = useParams();
-  let { data, error, isLoading } = useQuery(["submission", subm_id], () =>
-    getSubmission(subm_id as string)
+  let { data } = useQuery(["submission", subm_id], () =>
+    getSubmission(subm_id as string),
   );
 
   const [editorHeight, setEditorHeight] = useState(400); // Initial height
@@ -55,7 +50,7 @@ export default function SubmissionView() {
   }
 
   data.eval_scoring_testgroups?.sort(
-    (a, b) => a.test_group_id - b.test_group_id
+    (a, b) => a.test_group_id - b.test_group_id,
   );
 
   const infoCardEntries = [
@@ -92,7 +87,7 @@ export default function SubmissionView() {
               {
                 "text-warning-500":
                   receivedScore > 0 && receivedScore < possibleScore,
-              }
+              },
             )}
           >
             {receivedScore} / {possibleScore}
@@ -333,211 +328,238 @@ function SingleTestResultCard({ testResult }: { testResult: TestResult }) {
     30: "SIGPWR - Terminate - Power supply failure",
     31: "SIGSYS/SIGUNUSED - Dump - Bad system call / Equivalent to SIGSYS",
   };
-  
+
   let verdict = "AC";
-  const nonZeroExitCode = typeof testResult.subm_exit_code === "number" && testResult.subm_exit_code !== 0;
-  const hasStderr = typeof testResult.subm_stderr_trimmed === "string" && testResult.subm_stderr_trimmed.trim().length > 0;
-  const hasExitSignal = typeof testResult.subm_exit_signal === "number" && testResult.subm_exit_signal !== 0;
-  if (testResult.subm_exit_code !== 0 || hasStderr || hasExitSignal) verdict = "RE";
+  const nonZeroExitCode =
+    typeof testResult.subm_exit_code === "number" &&
+    testResult.subm_exit_code !== 0;
+  const hasStderr =
+    typeof testResult.subm_stderr_trimmed === "string" &&
+    testResult.subm_stderr_trimmed.trim().length > 0;
+  const hasExitSignal =
+    typeof testResult.subm_exit_signal === "number" &&
+    testResult.subm_exit_signal !== 0;
+
+  if (testResult.subm_exit_code !== 0 || hasStderr || hasExitSignal)
+    verdict = "RE";
   else if (testResult.memory_limit_exceeded) verdict = "MLE";
   else if (testResult.time_limit_exceeded) verdict = "TLE";
   else if (testResult.checker_exit_code !== 0) verdict = "WA";
 
-  if(testResult.time_limit_exceeded) testResult.subm_cpu_time_millis = undefined;
-  if(testResult.memory_limit_exceeded) testResult.subm_mem_kibi_bytes = undefined;
+  if (testResult.time_limit_exceeded)
+    testResult.subm_cpu_time_millis = undefined;
+  if (testResult.memory_limit_exceeded)
+    testResult.subm_mem_kibi_bytes = undefined;
 
-  let exitSignalDescription:string = "Unknown exit signal";
-  if (testResult.subm_exit_signal && exitSignalDescriptions[testResult.subm_exit_signal as keyof typeof exitSignalDescriptions]) {
-    exitSignalDescription = exitSignalDescriptions[testResult.subm_exit_signal as keyof typeof exitSignalDescriptions];
+  let exitSignalDescription: string = "Unknown exit signal";
+
+  if (
+    testResult.subm_exit_signal &&
+    exitSignalDescriptions[
+      testResult.subm_exit_signal as keyof typeof exitSignalDescriptions
+    ]
+  ) {
+    exitSignalDescription =
+      exitSignalDescriptions[
+        testResult.subm_exit_signal as keyof typeof exitSignalDescriptions
+      ];
   }
-
 
   if (nonZeroExitCode || hasStderr || hasExitSignal) {
     return (
       <Card
-        key={testResult.test_id+"-error"}
+        key={testResult.test_id + "-error"}
         className="border-small border-divider"
         radius="sm"
         shadow="none"
       >
         <CardBody>
-        <div className="flex gap-4 flex-wrap">
-          <div className="flex gap-2 items-center">
-            <span className="text-sm">Tests</span> #{testResult.test_id}
-            {testResult.reached && (
-              <Chip
-                color={
-                  (verdict === "AC"
-                    ? "success"
-                    : verdict === "RE"
-                      ? "secondary"
-                      : "danger") ?? false
-                }
-                size="sm"
-                variant="flat"
-              >
-                {verdict === "AC" && "Atbilde ir pareiza"}
-                {verdict === "MLE" && "Pārsniegts atmiņas limits"}
-                {verdict === "TLE" && "Pārsniegts izpildes laiks"}
-                {verdict === "WA" && "Atbilde ir nepareiza"}
-                {verdict === "RE" && "Izpildes kļūda"}
-              </Chip>
-            )}
-            {!testResult.reached && (
-              <Chip color={"default"} size="sm" variant="flat">
-                Nav sasniegts
-              </Chip>
-            )}
-          </div>
-          <div className="flex gap-x-3 gap-y-1 items-center flex-wrap">
-            {testResult.subm_cpu_time_millis && <div className="flex gap-1 items-center">
-              <p className="text-small text-default-700 whitespace-nowrap">
-                Izpildes laiks:
-              </p>
-              <code className="whitespace-nowrap h-[20px]">
-                {testResult.subm_cpu_time_millis}ms
-              </code>
-            </div>}
-           {testResult.subm_mem_kibi_bytes&& <div className="flex gap-1 items-center">
-              <p className="text-small text-default-700 whitespace-nowrap">
-                Patērētā atmiņa:
-              </p>
-              <code className="whitespace-nowrap h-[20px]">
-                {Math.ceil(testResult.subm_mem_kibi_bytes * 0.001024 * 100) /
-                  100}
-                MB
-              </code>
-            </div>}
-          </div>
-        </div>
-        <Spacer y={1.5} />
-            <div className="flex gap-4">
-              <div className="w-full overflow-hidden">
-                <div className="flex flex-col">
-                  <p className="text-tiny text-default-700 select-none">
-                    Izpildes kļūdas ziņojums:
+          <div className="flex gap-4 flex-wrap">
+            <div className="flex gap-2 items-center">
+              <span className="text-sm">Tests</span> #{testResult.test_id}
+              {testResult.reached && (
+                <Chip
+                  color={
+                    (verdict === "AC"
+                      ? "success"
+                      : verdict === "RE"
+                        ? "secondary"
+                        : "danger") ?? false
+                  }
+                  size="sm"
+                  variant="flat"
+                >
+                  {verdict === "AC" && "Atbilde ir pareiza"}
+                  {verdict === "MLE" && "Pārsniegts atmiņas limits"}
+                  {verdict === "TLE" && "Pārsniegts izpildes laiks"}
+                  {verdict === "WA" && "Atbilde ir nepareiza"}
+                  {verdict === "RE" && "Izpildes kļūda"}
+                </Chip>
+              )}
+              {!testResult.reached && (
+                <Chip color={"default"} size="sm" variant="flat">
+                  Nav sasniegts
+                </Chip>
+              )}
+            </div>
+            <div className="flex gap-x-3 gap-y-1 items-center flex-wrap">
+              {testResult.subm_cpu_time_millis && (
+                <div className="flex gap-1 items-center">
+                  <p className="text-small text-default-700 whitespace-nowrap">
+                    Izpildes laiks:
                   </p>
-                  <code
-                    className="text-small p-1.5 min-h-[32px]"
-                    style={{
-                      backgroundColor: "rgba(212, 212, 216, 0.3)",
-                      whiteSpace: "pre-wrap",
-                    }}
-                  >
-                    {testResult.subm_stderr_trimmed}
+                  <code className="whitespace-nowrap h-[20px]">
+                    {testResult.subm_cpu_time_millis}ms
                   </code>
                 </div>
-              </div>
-            </div>
-            <div className="flex gap-4">
-              <div className="w-full overflow-hidden">
-                <div className="flex flex-col">
-                  <p className="text-tiny text-default-700 select-none">
-                    Izejas kods:
+              )}
+              {testResult.subm_mem_kibi_bytes && (
+                <div className="flex gap-1 items-center">
+                  <p className="text-small text-default-700 whitespace-nowrap">
+                    Patērētā atmiņa:
                   </p>
-                  <code
-                    className="text-small p-1.5 min-h-[32px]"
-                    style={{
-                      backgroundColor: "rgba(212, 212, 216, 0.3)",
-                      whiteSpace: "pre-wrap",
-                    }}
-                  >
-                    {testResult.subm_exit_code}
+                  <code className="whitespace-nowrap h-[20px]">
+                    {Math.ceil(
+                      testResult.subm_mem_kibi_bytes * 0.001024 * 100,
+                    ) / 100}
+                    MB
                   </code>
                 </div>
+              )}
+            </div>
+          </div>
+          <Spacer y={1.5} />
+          <div className="flex gap-4">
+            <div className="w-full overflow-hidden">
+              <div className="flex flex-col">
+                <p className="text-tiny text-default-700 select-none">
+                  Izpildes kļūdas ziņojums:
+                </p>
+                <code
+                  className="text-small p-1.5 min-h-[32px]"
+                  style={{
+                    backgroundColor: "rgba(212, 212, 216, 0.3)",
+                    whiteSpace: "pre-wrap",
+                  }}
+                >
+                  {testResult.subm_stderr_trimmed}
+                </code>
               </div>
             </div>
-            {testResult.subm_exit_signal &&
+          </div>
+          <div className="flex gap-4">
+            <div className="w-full overflow-hidden">
+              <div className="flex flex-col">
+                <p className="text-tiny text-default-700 select-none">
+                  Izejas kods:
+                </p>
+                <code
+                  className="text-small p-1.5 min-h-[32px]"
+                  style={{
+                    backgroundColor: "rgba(212, 212, 216, 0.3)",
+                    whiteSpace: "pre-wrap",
+                  }}
+                >
+                  {testResult.subm_exit_code}
+                </code>
+              </div>
+            </div>
+          </div>
+          {testResult.subm_exit_signal && (
             <>
-            <Spacer y={2} />
-            <div className="flex gap-4">
-              <div className="w-full overflow-hidden">
-                <div className="flex flex-col">
-                  <p className="text-tiny text-default-700 select-none">
-                    Izejas signāls:
-                  </p>
-                  <code
-                    className="text-small p-1.5 min-h-[32px]"
-                    style={{
-                      backgroundColor: "rgba(212, 212, 216, 0.3)",
-                      whiteSpace: "pre-wrap",
-                    }}
-                  >
-                    {testResult.subm_exit_signal} : {exitSignalDescription}
-                  </code>
+              <Spacer y={2} />
+              <div className="flex gap-4">
+                <div className="w-full overflow-hidden">
+                  <div className="flex flex-col">
+                    <p className="text-tiny text-default-700 select-none">
+                      Izejas signāls:
+                    </p>
+                    <code
+                      className="text-small p-1.5 min-h-[32px]"
+                      style={{
+                        backgroundColor: "rgba(212, 212, 216, 0.3)",
+                        whiteSpace: "pre-wrap",
+                      }}
+                    >
+                      {testResult.subm_exit_signal} : {exitSignalDescription}
+                    </code>
+                  </div>
                 </div>
               </div>
-            </div>
             </>
-            }
+          )}
         </CardBody>
       </Card>
     );
   }
-  if(testResult.reached === false) {
+  if (testResult.reached === false) {
     return (
-
       <Card
-        key={testResult.test_id+"-error"}
+        key={testResult.test_id + "-error"}
         className="border-small border-divider"
         radius="sm"
         shadow="none"
       >
         <CardBody>
-        <div className="flex gap-4 flex-wrap">
-          <div className="flex gap-2 items-center">
-            <span className="text-sm">Tests</span> #{testResult.test_id}
-            {testResult.reached && (
-              <Chip
-                color={
-                  (verdict === "AC"
-                    ? "success"
-                    : verdict === "RE"
-                      ? "secondary"
-                      : "danger") ?? false
-                }
-                size="sm"
-                variant="flat"
-              >
-                {verdict === "AC" && "Atbilde ir pareiza"}
-                {verdict === "MLE" && "Pārsniegts atmiņas limits"}
-                {verdict === "TLE" && "Pārsniegts izpildes laiks"}
-                {verdict === "WA" && "Atbilde ir nepareiza"}
-                {verdict === "RE" && "Izpildes kļūda"}
-              </Chip>
-            )}
-            {!testResult.reached && (
-              <Chip color={"default"} size="sm" variant="flat">
-                Nav sasniegts
-              </Chip>
-            )}
+          <div className="flex gap-4 flex-wrap">
+            <div className="flex gap-2 items-center">
+              <span className="text-sm">Tests</span> #{testResult.test_id}
+              {testResult.reached && (
+                <Chip
+                  color={
+                    (verdict === "AC"
+                      ? "success"
+                      : verdict === "RE"
+                        ? "secondary"
+                        : "danger") ?? false
+                  }
+                  size="sm"
+                  variant="flat"
+                >
+                  {verdict === "AC" && "Atbilde ir pareiza"}
+                  {verdict === "MLE" && "Pārsniegts atmiņas limits"}
+                  {verdict === "TLE" && "Pārsniegts izpildes laiks"}
+                  {verdict === "WA" && "Atbilde ir nepareiza"}
+                  {verdict === "RE" && "Izpildes kļūda"}
+                </Chip>
+              )}
+              {!testResult.reached && (
+                <Chip color={"default"} size="sm" variant="flat">
+                  Nav sasniegts
+                </Chip>
+              )}
+            </div>
+            <div className="flex gap-x-3 gap-y-1 items-center flex-wrap">
+              {testResult.subm_cpu_time_millis && (
+                <div className="flex gap-1 items-center">
+                  <p className="text-small text-default-700 whitespace-nowrap">
+                    Izpildes laiks:
+                  </p>
+                  <code className="whitespace-nowrap h-[20px]">
+                    {testResult.subm_cpu_time_millis}ms
+                  </code>
+                </div>
+              )}
+              {testResult.subm_mem_kibi_bytes && (
+                <div className="flex gap-1 items-center">
+                  <p className="text-small text-default-700 whitespace-nowrap">
+                    Patērētā atmiņa:
+                  </p>
+                  <code className="whitespace-nowrap h-[20px]">
+                    {Math.ceil(
+                      testResult.subm_mem_kibi_bytes * 0.001024 * 100,
+                    ) / 100}
+                    MB
+                  </code>
+                </div>
+              )}
+            </div>
           </div>
-          <div className="flex gap-x-3 gap-y-1 items-center flex-wrap">
-            {testResult.subm_cpu_time_millis && <div className="flex gap-1 items-center">
-              <p className="text-small text-default-700 whitespace-nowrap">
-                Izpildes laiks:
-              </p>
-              <code className="whitespace-nowrap h-[20px]">
-                {testResult.subm_cpu_time_millis}ms
-              </code>
-            </div>}
-           {testResult.subm_mem_kibi_bytes&& <div className="flex gap-1 items-center">
-              <p className="text-small text-default-700 whitespace-nowrap">
-                Patērētā atmiņa:
-              </p>
-              <code className="whitespace-nowrap h-[20px]">
-                {Math.ceil(testResult.subm_mem_kibi_bytes * 0.001024 * 100) /
-                  100}
-                MB
-              </code>
-            </div>}
-          </div>
-        </div>
         </CardBody>
       </Card>
-    )
-
+    );
   }
+
   return (
     <Card
       key={testResult.test_id}
@@ -575,24 +597,28 @@ function SingleTestResultCard({ testResult }: { testResult: TestResult }) {
             )}
           </div>
           <div className="flex gap-x-3 gap-y-1 items-center flex-wrap">
-            {testResult.subm_cpu_time_millis && <div className="flex gap-1 items-center">
-              <p className="text-small text-default-700 whitespace-nowrap">
-                Izpildes laiks:
-              </p>
-              <code className="whitespace-nowrap h-[20px]">
-                {testResult.subm_cpu_time_millis}ms
-              </code>
-            </div>}
-            {testResult.subm_mem_kibi_bytes&& <div className="flex gap-1 items-center">
-              <p className="text-small text-default-700 whitespace-nowrap">
-                Patērētā atmiņa:
-              </p>
-              <code className="whitespace-nowrap h-[20px]">
-                {Math.ceil(testResult.subm_mem_kibi_bytes * 0.001024 * 100) /
-                  100}
-                MB
-              </code>
-            </div>}
+            {testResult.subm_cpu_time_millis && (
+              <div className="flex gap-1 items-center">
+                <p className="text-small text-default-700 whitespace-nowrap">
+                  Izpildes laiks:
+                </p>
+                <code className="whitespace-nowrap h-[20px]">
+                  {testResult.subm_cpu_time_millis}ms
+                </code>
+              </div>
+            )}
+            {testResult.subm_mem_kibi_bytes && (
+              <div className="flex gap-1 items-center">
+                <p className="text-small text-default-700 whitespace-nowrap">
+                  Patērētā atmiņa:
+                </p>
+                <code className="whitespace-nowrap h-[20px]">
+                  {Math.ceil(testResult.subm_mem_kibi_bytes * 0.001024 * 100) /
+                    100}
+                  MB
+                </code>
+              </div>
+            )}
           </div>
         </div>
         <Spacer y={1.5} />

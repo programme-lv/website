@@ -69,9 +69,11 @@ export function Providers({ children, themeProps }: ProvidersProps) {
       setUser((prev) => {
         if (!prev) return prev;
         const res = retrieveUserInfoFromJwt();
+
         if (!res) sessionStorage.clear();
+
         return res;
-      })
+      });
     }, 10000);
 
     return () => clearInterval(interval);

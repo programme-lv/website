@@ -69,15 +69,15 @@ export const subscribeToSubmissionUpdates = (
 
       onUpdate(data);
     } catch (error) {
-      console.error("Error parsing SSE data:", error);
+      alert("Error parsing SSE data:" + JSON.stringify(error));
     }
   };
 
   eventSource.onerror = (error) => {
     if (eventSource.readyState === EventSource.CLOSED) {
-      console.error("SSE connection was closed.");
+      alert("SSE connection was closed.");
     } else {
-      console.error("SSE error:", error);
+      alert("SSE error:" + JSON.stringify(error));
     }
   };
 

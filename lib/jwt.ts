@@ -81,6 +81,7 @@ export function getUserInfoFromJWT(): JWTUserInfo | null {
   }
 
   const expired = new Date(jwt.exp * 1000) < new Date();
+
   return {
     uuid: jwt.sub,
     username: jwt.username,

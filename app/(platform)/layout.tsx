@@ -43,9 +43,8 @@ type Page =
 type BreadcrumbItem = { label: string; href: string };
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const [isCollapsed, setIsCollapsed] = React.useState(true);
   const isMobile = useMediaQuery("(max-width: 768px)");
-  const isCompact = isCollapsed || isMobile;
+  const isCompact = isMobile;
   const { task_id, subm_id } = useParams();
   const [taskCodeFullNameDict, setTaskCodeFullNameDict] = useState<
     Record<string, string>
@@ -62,10 +61,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   const authContext = useContext(AuthContext);
   const user = authContext.user;
-
-  const onSidebarToggle = React.useCallback(() => {
-    setIsCollapsed((prev) => !prev);
-  }, []);
 
   const [page, setPage] = useState<Page>("");
 
@@ -289,24 +284,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             backgroundColor: "#f8f8f8",
           }}
         >
-          <header className="flex flex-col items-center justify-between gap-1 rounded-small border-small border-divider px-2 py-2 bg-white">
+          <header className="flex flex-col items-center justify-between gap-1 rounded-small border-small border-divider px-4 py-2 bg-white min-h-[57.6px]">
             <div className="flex items-center justify-between w-full">
-              <div className="flex gap-3 items-center">
-                <div className="hidden md:flex">
-                  <Button
-                    isIconOnly
-                    size="sm"
-                    variant="light"
-                    onPressStart={onSidebarToggle}
-                  >
-                    <Icon
-                      className="text-default-600"
-                      height={22}
-                      icon="solar:sidebar-minimalistic-outline"
-                      width={22}
-                    />
-                  </Button>
-                </div>
+              <div className="flex gap-2 items-center">
                 <div className="flex md:hidden">
                   <Button
                     isIconOnly
@@ -325,8 +305,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
                 <Breadcrumbs className="z-10 hidden sm:block">
                   {breadcrumbs.map((item, index) => (
-                    <BreadcrumbItem key={index} href={item.href}>
-                      {item.label}
+                    <BreadcrumbItem key={index}>
+                      <Link href={item.href}>{item.label}</Link>
                     </BreadcrumbItem>
                   ))}
                 </Breadcrumbs>

@@ -12,6 +12,7 @@
     "@iconify-icons/mdi": "^1.2.48",
     "@iconify/react": "^5.0.2",
     "@monaco-editor/react": "^4.6.0",
+    "@next/bundle-analyzer": "^14.2.7",
     "@nextui-org/button": "2.0.34",
     "@nextui-org/code": "2.0.29",
     "@nextui-org/input": "2.2.2",
