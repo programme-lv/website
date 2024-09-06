@@ -285,8 +285,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             backgroundColor: "#f8f8f8",
           }}
         >
-          <header className="flex flex-col items-center justify-between gap-1 rounded-small border-small border-divider px-4 py-2 bg-white min-h-[57.6px]">
-            <div className="flex items-center justify-between w-full">
+          <header className="flex items-center justify-between gap-1 rounded-small border-small border-divider px-2 md:px-4 py-2 bg-white h-[50px]">
+            <div className="flex items-center justify-between w-full flex-wrap">
               <div className="flex gap-2 items-center">
                 <div className="flex md:hidden">
                   <Button
