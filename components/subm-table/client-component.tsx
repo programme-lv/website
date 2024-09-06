@@ -46,7 +46,7 @@ export default function ClientSubmissionTable({
     });
   }, [data, updates]);
 
-  return <SubmissionTableServer submissions={submissions} skeleton={submissions ? false : true}/>;
+  return <SubmissionTableServer submissions={submissions} skeleton={submissions.length ? false : true}/>;
 }
 
 // Sorting and update logic can remain the same as the original code
