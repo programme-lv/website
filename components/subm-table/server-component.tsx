@@ -20,9 +20,15 @@ import { statusTranslations } from "./helpful-constants";
 
 export default function SubmissionTableServer({
   submissions,
+  skeleton
 }: {
   submissions: BriefSubmission[];
+  skeleton: boolean;
 }) {
+    if(skeleton){
+        // do 30 empty rows
+    }
+    
   // Server-side sorting of submissions
   const sortedSubmissions = sortSubmissions(submissions);
 

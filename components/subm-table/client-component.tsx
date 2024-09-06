@@ -46,11 +46,7 @@ export default function ClientSubmissionTable({
     });
   }, [data, updates]);
 
-  if (isLoading)
-    return <div className="px-2">Sagatavo iesūtījumu sarakstu...</div>;
-
-  // return <></>
-  return <SubmissionTableServer submissions={submissions} />;
+  return <SubmissionTableServer submissions={submissions} skeleton={submissions ? false : true}/>;
 }
 
 // Sorting and update logic can remain the same as the original code

@@ -225,12 +225,11 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
             as={Link}
             key={item.key}
             endContent={isCompact || hideEndContent ? null : (item.endContent ?? null)}
-            textValue={item.title}
             title={isCompact ? null : item.title}
           >
             {isCompact ? (
               <Tooltip content={item.title} placement="right">
-                <div className="flex w-full items-center justify-center bg-red-500 h-full">
+                <div className="flex w-full items-center justify-center">
                   {item.icon ? (
                     <Icon
                       className={cn(
