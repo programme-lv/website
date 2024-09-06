@@ -18,6 +18,7 @@ import { Icon } from "@iconify/react";
 import { useRouter } from "next/navigation";
 
 import { cn } from "./cn";
+import Link from "next/link";
 
 export enum SidebarItemType {
   Nest = "nest",
@@ -221,34 +222,15 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
         return (
           <ListboxItem
             {...item}
+            as={Link}
             key={item.key}
-            endContent={
-              isCompact || hideEndContent ? null : (item.endContent ?? null)
-            }
-            href={undefined}
-            startContent={
-              isCompact ? null : item.icon ? (
-                <Icon
-                  className={cn(
-                    "text-default-500 group-data-[selected=true]:text-foreground",
-                    iconClassName,
-                  )}
-                  icon={item.icon}
-                  width={24}
-                />
-              ) : (
-                (item.startContent ?? null)
-              )
-            }
+            endContent={isCompact || hideEndContent ? null : (item.endContent ?? null)}
             textValue={item.title}
             title={isCompact ? null : item.title}
-            onClick={() => {
-              router.push(item.href ?? "#");
-            }}
           >
             {isCompact ? (
               <Tooltip content={item.title} placement="right">
-                <div className="flex w-full items-center justify-center">
+                <div className="flex w-full items-center justify-center bg-red-500 h-full">
                   {item.icon ? (
                     <Icon
                       className={cn(

@@ -43,8 +43,9 @@ type Page =
 type BreadcrumbItem = { label: string; href: string };
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const isMobile = useMediaQuery("(max-width: 768px)");
-  const isCompact = isMobile;
+  // const isMobile = useMediaQuery("(max-width: 768px)");
+  // const isCompact = isMobile;
+  const isCompact = true;
   const { task_id, subm_id } = useParams();
   const [taskCodeFullNameDict, setTaskCodeFullNameDict] = useState<
     Record<string, string>
