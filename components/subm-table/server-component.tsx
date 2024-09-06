@@ -7,7 +7,6 @@ import {
     TableCell,
     cn,
   } from "@nextui-org/react";
-  import { useRouter } from "next/navigation";
   
   import { BriefSubmission } from "@/types/proglv";
   
@@ -17,7 +16,8 @@ import {
     TestsScoringBar,
   } from "./result-bars";
   import { statusTranslations } from "./helpful-constants";
-  
+import Link from "next/link";
+import { useRouter } from "next/navigation";
   export default function SubmissionTableServer({
     submissions,
     skeleton,
@@ -25,11 +25,11 @@ import {
     submissions: BriefSubmission[];
     skeleton: boolean;
   }) {
-    const router = useRouter();
-  
     // Server-side sorting of submissions
     const sortedSubmissions = sortSubmissions(submissions);
   
+    const router = useRouter();
+    
     return (
       <div className="overflow-x-auto">
         <Table
@@ -64,8 +64,11 @@ import {
                 ))
               : sortedSubmissions.map((item) => (
                   <TableRow
+                  as={Link}
                     key={item.subm_uuid}
                     className="cursor-pointer"
+                    // as={()=>{return <Link href={`/submissions/${item.subm_uuid}`}/>}}
+                    // href={`/submissions/${item.subm_uuid}`}
                     onClick={() => router.push(`/submissions/${item.subm_uuid}`)}
                   >
                     {["createdAt", "author", "task", "language", "result", "status"].map((columnKey) => (

@@ -3,7 +3,7 @@
 import React, { Suspense, useContext, useState } from "react";
 import { useMutation } from "react-query";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Button, Input, Checkbox, Link, Divider } from "@nextui-org/react";
+import { Button, Input, Checkbox, Divider } from "@nextui-org/react";
 import { Icon } from "@iconify/react";
 import Image from "next/image";
 import { IconLogin2 } from "@tabler/icons-react";
@@ -14,6 +14,7 @@ import MountainsImage from "@/public/mountains.png";
 import LogoImage from "@/public/logo.png";
 import { setJwt } from "@/lib/jwt";
 import { AuthContext } from "@/app/providers";
+import Link from "next/link";
 
 export default function AuthCardWithBG(props: { type: "login" | "register" }) {
   const { type } = props;
@@ -28,10 +29,10 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
       }}
     >
       {/* Brand Logo */}
-      <div className="absolute left-2 top-2  bg-white p-2 rounded-md">
-        <Link className="flex items-center" href="/">
-          <Image alt="programme.lv logo" height={26} src={LogoImage} />
-          <p className="ms-2 me-1 text-black dark:text-white font-medium uppercase text-small  ">
+      <div className="absolute left-2 top-2">
+        <Link className="flex items-center p-2 bg-white rounded-md hover:bg-gray-50" href="/">
+          <Image alt="programme.lv logo" height={22} src={LogoImage} />
+          <p className="ms-2 me-1 text-black dark:text-white text-medium lowercase font-mono  ">
             {/* <span
               className={cn("text-small font-medium uppercase opacity-100", {
                 "w-0 opacity-0 hidden": isCompact,
@@ -139,13 +140,13 @@ function AuthForm({ type }: { type: "login" | "register" }) {
       <p className="pb-2 text-xl flex gap-x-2">
         {type === "register" ? (
           <>
-            Reģistrēties
-            <Icon className="text-2xl" icon={"mdi:register-outline"} />
+            <span>Reģistrācija</span>
+            <Icon height={28} icon={"mdi:register"} />
           </>
         ) : (
           <>
-            Pieslēgties
-            <IconLogin2 className="text-default-700" />
+            Pieslēgšanās
+            <Icon height={28} icon={"mdi:login"} />
             {/* <IconLogin2 className="text-default-700"/> */}
           </>
         )}
@@ -259,18 +260,6 @@ function AuthForm({ type }: { type: "login" | "register" }) {
             />
           )}
         </div>
-        {false && type === "register" && (
-          <Checkbox isRequired className="py-4" size="sm">
-            Es piekrītu&nbsp;
-            <Link href="#" size="sm">
-              Noteikumiem
-            </Link>
-            &nbsp; un&nbsp;
-            <Link href="#" size="sm">
-              Privātuma politikai
-            </Link>
-          </Checkbox>
-        )}
         <div className="flex justify-center">
           <Button
             className="flex-grow mt-4"
@@ -317,7 +306,7 @@ function GoToLoginOrRegister({ type }: { type: "login" | "register" }) {
                 ? `/login?redirect=${encodeURIComponent(redirectParam)}`
                 : `/login`
             }
-            size="sm"
+            className="text-primary-500 hover:underline"
           >
             Pieslēgties
           </Link>
@@ -331,7 +320,7 @@ function GoToLoginOrRegister({ type }: { type: "login" | "register" }) {
                 ? `/register?redirect=${encodeURIComponent(redirectParam)}`
                 : `/register`
             }
-            size="sm"
+            className="text-primary-500 hover:underline"
           >
             Reģistrēties
           </Link>
