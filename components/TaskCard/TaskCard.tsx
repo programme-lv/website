@@ -4,11 +4,11 @@ import type { CardProps } from "@nextui-org/react";
 
 import React, { useRef } from "react";
 import { Card, Image, CardBody, Chip, Tooltip, cn } from "@nextui-org/react";
-import { InlineMath } from "react-katex";
 import { Icon } from "@iconify/react";
 import accountGroup from "@iconify-icons/mdi/account-group";
 import checkCircleOutline from "@iconify-icons/mdi/check-circle-outline";
 import "katex/dist/katex.min.css"; // Import KaTeX CSS for styling
+import renderMd from "@/lib/render-md";
 
 type Task = {
   published_task_id: string;
@@ -41,21 +41,6 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, ...props }) => {
   // task.solved_count = 69;
   // task.acceptance_rate = 85;
 
-  // Helper function to render story with inline KaTeX
-  const renderStory = (story: string) => {
-    if (story.length > 200) {
-      story = story.slice(0, 200) + "...";
-    }
-    const parts = story.split(/(\$[^$]*\$)/); // Split story by $...$
-
-    return parts.map((part, index) => {
-      if (part.startsWith("$") && part.endsWith("$")) {
-        return <InlineMath key={index}>{part.slice(1, -1)}</InlineMath>;
-      }
-
-      return <span key={index}>{part}</span>;
-    });
-  };
 
   const cardRef = useRef<HTMLDivElement>(null);
   const [isWide, setIsWide] = React.useState(false);
@@ -146,7 +131,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, ...props }) => {
                       !isWide && task.illustration_img_url,
                   })}
                 >
-                  <div className="flex gap-x-4 items-center">
+                  <div className="flex gap-x-2 items-center">
                     <h3 className="text-large font-medium">
                       {task.task_full_name}
                     </h3>
@@ -157,7 +142,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, ...props }) => {
                       {task.default_md_statement && (
                         <div>
                           <div className="text-small text-default-500 line-clamp-5">
-                            {renderStory(task.default_md_statement.story)}
+                            {renderMd(task.default_md_statement.story)}
                           </div>
                         </div>
                       )}
@@ -185,9 +170,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, ...props }) => {
                 task.default_md_statement && (
                   <div className="py-2">
                     <div>
-                      <div className="text-small text-default-500 line-clamp-3">
-                        {renderStory(task.default_md_statement.story)}
-                      </div>
+                      <div className="text-small text-default-500 line-clamp-2" dangerouslySetInnerHTML={{ __html: renderMd(task.default_md_statement.story) }} />
                     </div>
                   </div>
                 )}
@@ -196,7 +179,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, ...props }) => {
             <div className="flex justify-between pt-1">
               <div className="flex justify-between max-w-72">
                 {task.origin_olympiad && task.origin_olympiad === "LIO" && (
-                  <div className="w-16 min-w-16">
+                  <div className="w-[4em] min-w-[4em]">
                     <Image
                       alt="Latvijas informātikas olimpiādes logo"
                       src="https://lio.lv/LIO_logo_jaunais3.png"

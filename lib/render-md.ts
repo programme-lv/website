@@ -23,7 +23,7 @@ function rehypeAddClasses() {
           node.properties.className = ["text-xl", "font-bold", "mb-3"];
           break;
         case "p":
-          node.properties.className = ["mb-2"];
+          node.properties.className = ["mb-1"];
           break;
         case "ul":
           node.properties.className = ["list-disc", "pl-5", "mb-2"];
@@ -112,7 +112,7 @@ function rehypeAddClasses() {
 
 // The main function to render markdown with Tailwind CSS classes
 export default function renderMd(md: string): string {
-  return unified()
+  const result = unified()
     .use(remarkParse)
     .use(remarkGfm)
     .use(remarkMath)
@@ -122,4 +122,7 @@ export default function renderMd(md: string): string {
     .use(rehypeStringify)
     .processSync(md)
     .toString();
+  
+  return result;
 }
+
