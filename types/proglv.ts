@@ -16,12 +16,22 @@ type Task = {
   examples?: Example[];
   default_pdf_statement_url?: string;
   origin_notes?: Record<string, string>;
-  visible_input_subtasks?: StInputs[];
+  visible_input_subtasks?: VisibleInputSubtask[];
 };
 
 type StInputs = {
   subtask: number;
   inputs: string[];
+};
+
+type VisibleInputSubtask = {
+  subtask: number;
+  inputs: TestWithOnlyInput[];
+}
+
+type TestWithOnlyInput = {
+  test_id: number;
+  input: string;
 };
 
 type Example = {
@@ -198,4 +208,6 @@ export type {
   EvalDetails,
   TestResult,
   TestsResUpdate,
+  TestWithOnlyInput,
+  VisibleInputSubtask
 };

@@ -44,6 +44,8 @@ import {
   ProgrammingLanguage,
   StInputs,
   Task,
+  TestWithOnlyInput,
+  VisibleInputSubtask,
 } from "@/types/proglv";
 import { AuthContext } from "@/app/providers";
 import "katex/dist/katex.min.css";
@@ -117,7 +119,7 @@ function LeftSide({ task }: { task: Task | null }) {
     <div
       className={cn(
         "h-full max-h-full w-full overflow-hidden rounded-small border-small border-divider p-2 bg-white",
-        { "overflow-y-auto": viewMode == "md" },
+        { "overflow-y-auto": viewMode == "md" }
       )}
     >
       <div className="h-full relative flex flex-col items-center gap-1 flex-grow">
@@ -148,7 +150,7 @@ function MdView({
 }: {
   md_statement: MarkdownStatement;
   examples?: Example[];
-  vis_inp_st_inputs?: StInputs[];
+  vis_inp_st_inputs?: VisibleInputSubtask[];
 }) {
   const [storyMd, setStoryMd] = useState<string>("");
   const [inputMd, setInputMd] = useState<string>("");
@@ -244,13 +246,13 @@ function MdView({
             ))}
         </div>
       </div>
-      {vis_inp_st_inputs?.map((vis_inp_st_input: StInputs) => (
+      {vis_inp_st_inputs?.map((vis_inp_st_input: VisibleInputSubtask) => (
         <div key={vis_inp_st_input.subtask}>
           <h2 className="text-small my-1 mb-2 font-semibold">
             {vis_inp_st_input.subtask}. apakšuzdevuma ievaddati
           </h2>
           <div className="flex gap-2 flex-wrap w-full max-w-full">
-            {vis_inp_st_input.inputs.map((input, i) => (
+            {vis_inp_st_input.inputs.map((test, i) => (
               <div
                 key={i}
                 className="border-small border-divider p-2 flex-grow rounded-md w-[350px] max-w-full"
@@ -268,7 +270,7 @@ function MdView({
                           whiteSpace: "pre-wrap",
                         }}
                       >
-                        {input}
+                        {test.input}
                       </code>
                     </div>
                   </div>
@@ -303,7 +305,7 @@ function PdfView({ pdf_statement_url }: { pdf_statement_url: string }) {
       setPdfWidth(elementRef.current.clientWidth);
       setPdfHeight(elementRef.current.clientHeight);
     }, 100),
-    [],
+    []
   );
 
   useEffect(() => {
@@ -572,7 +574,7 @@ function RightSide({ taskCode }: { taskCode: string }) {
 
   let { data: listLangsResponse } = useQuery(
     "list-languages",
-    listProgrammingLanguages,
+    listProgrammingLanguages
   );
 
   const languages = listLangsResponse?.data;
@@ -602,7 +604,7 @@ function RightSide({ taskCode }: { taskCode: string }) {
 
   useEffect(() => {
     const savedText = sessionStorage.getItem(
-      `code-${taskCode}-${selectedLanguage}`,
+      `code-${taskCode}-${selectedLanguage}`
     );
 
     if (!savedText) {
@@ -629,7 +631,7 @@ int main() {
         code,
         authContext.user?.username ?? "",
         selectedLanguage,
-        taskCode,
+        taskCode
       );
 
       console.log(response);
@@ -737,12 +739,12 @@ function LanguageSelect(props: LanguageSelectProps) {
       onSelectionChange={(
         selectedKeys:
           | "all"
-          | (Set<React.Key> & { anchorKey?: string; currentKey?: string }),
+          | (Set<React.Key> & { anchorKey?: string; currentKey?: string })
       ) =>
         props.setSelectedLanguage(
           selectedKeys === "all"
             ? "cpp17"
-            : (selectedKeys.currentKey ?? "cpp17"),
+            : (selectedKeys.currentKey ?? "cpp17")
         )
       }
       items={props.languages}
