@@ -286,7 +286,7 @@ function MdView({
           </TableBody>
         </Table>
         <div className="mt-2 text-small">
-        Apakšuzdevumu punktu summa: <span className="font-medium">{statement_subtasks.reduce((a, b) => a + b.score, 0)}</span>.
+        Apakšuzdevumu punktu summa = <span className="font-medium">{statement_subtasks.reduce((a, b) => a + b.score, 0)}</span>.
         </div>
       </div>}
       {vis_inp_st_inputs?.map((vis_inp_st_input: VisibleInputSubtask) => (
