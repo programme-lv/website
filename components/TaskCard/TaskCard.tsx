@@ -105,12 +105,12 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, ...props }) => {
     >
       <CardBody
         className={cn("flex flex-col p-3 sm:flex-nowrap overflow-y-hidden", {
-          "p-4": isWide,
+          "p-3": isWide,
         })}
       >
         <div className="h-full flex gap-x-2 flex-row flex-wrap sm:flex-nowrap">
           {task.illustration_img_url && isWide && (
-            <div className="max-w-40 flex">
+            <div className="max-w-[130px] flex">
               <Image
                 alt={task.task_full_name}
                 className="h-full flex-none object-cover"
@@ -125,58 +125,22 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, ...props }) => {
                   "items-center gap-x-3": !isWide,
                 })}
               >
-                <div
-                  className={cn("contents", {
-                    "flex gap-x-4 w-full flex-wrap items-center":
-                      !isWide && task.illustration_img_url,
-                  })}
-                >
                   <div className="flex gap-x-2 items-center">
                     <h3 className="text-large font-medium">
                       {task.task_full_name}
                     </h3>
                     {difficultyChips[task.difficulty_rating]}
                   </div>
-                  {!isWide && task.illustration_img_url && (
-                    <div className="py-2 flex gap-x-1">
-                      {task.default_md_statement && (
-                        <div>
-                          <div className="text-small text-default-500 line-clamp-5">
-                            {renderMd(task.default_md_statement.story)}
-                          </div>
-                        </div>
-                      )}
-                      <div className="max-w-24 min-w-24 flex">
-                        <Image
-                          alt={task.task_full_name}
-                          className="h-full flex-none object-cover"
-                          src={task.illustration_img_url}
-                        />
-                      </div>
-                    </div>
-                  )}
-                </div>
-                {/* {task.illustration_img_url && !isWide && (
-                  <div className="max-w-24 min-w-24 flex">
-                    <Image
-                      alt={task.task_full_name}
-                      className="h-full flex-none object-cover"
-                      src={task.illustration_img_url}
-                    />
-                  </div>
-                )} */}
               </div>
-              {(isWide || !task.illustration_img_url) &&
+              {
                 task.default_md_statement && (
-                  <div className="py-2">
-                    <div>
-                      <div className="text-small text-default-500 line-clamp-2" dangerouslySetInnerHTML={{ __html: renderMd(task.default_md_statement.story) }} />
-                    </div>
+                  <div className="py-1">
+                    <div className="text-small text-default-500 line-clamp-2" dangerouslySetInnerHTML={{ __html: renderMd(task.default_md_statement.story) }} />
                   </div>
                 )}
             </div>
 
-            <div className="flex justify-between pt-1">
+            <div className="flex justify-between">
               <div className="flex justify-between max-w-72">
                 {task.origin_olympiad && task.origin_olympiad === "LIO" && (
                   <div className="w-[4em] min-w-[4em]">
