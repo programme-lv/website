@@ -17,6 +17,13 @@ type Task = {
   default_pdf_statement_url?: string;
   origin_notes?: Record<string, string>;
   visible_input_subtasks?: VisibleInputSubtask[];
+  statement_subtasks?: SubtaskOverview[];
+};
+
+type SubtaskOverview = {
+  subtask: number;
+  score: number;
+  descriptions: Record<string, string>;
 };
 
 type StInputs = {
@@ -209,5 +216,6 @@ export type {
   TestResult,
   TestsResUpdate,
   TestWithOnlyInput,
-  VisibleInputSubtask
+  VisibleInputSubtask,
+  SubtaskOverview,
 };

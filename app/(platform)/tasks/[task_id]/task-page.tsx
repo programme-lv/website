@@ -31,6 +31,12 @@ import {
   Select,
   SelectItem,
   Skeleton,
+  Table,
+  TableBody,
+  TableCell,
+  TableColumn,
+  TableHeader,
+  TableRow,
   cn,
 } from "@nextui-org/react";
 import { Image } from "@nextui-org/react";
@@ -43,13 +49,14 @@ import {
   MarkdownStatement,
   ProgrammingLanguage,
   StInputs,
+  SubtaskOverview,
   Task,
   TestWithOnlyInput,
   VisibleInputSubtask,
 } from "@/types/proglv";
 import { AuthContext } from "@/app/providers";
 import "katex/dist/katex.min.css";
-import renderMd from "@/lib/render-md";
+import renderMd, { renderMdLite } from "@/lib/render-md";
 import { listProgrammingLanguages } from "@/lib/langs";
 import { createSubmission } from "@/lib/subms";
 
@@ -137,6 +144,7 @@ function LeftSide({ task }: { task: Task | null }) {
             vis_inp_st_inputs={task?.visible_input_subtasks}
             cpu_time_limit_seconds={task?.cpu_time_limit_seconds}
             memory_limit_megabytes={task?.memory_limit_megabytes}
+            statement_subtasks={task?.statement_subtasks}
           />
           // </Skeleton>
         )}
@@ -151,12 +159,14 @@ function MdView({
   vis_inp_st_inputs,
   cpu_time_limit_seconds,
   memory_limit_megabytes,
+  statement_subtasks,
 }: {
   md_statement: MarkdownStatement;
   examples?: Example[];
   vis_inp_st_inputs?: VisibleInputSubtask[];
   cpu_time_limit_seconds?: number;
   memory_limit_megabytes?: number;
+  statement_subtasks?: SubtaskOverview[];
 }) {
   const [storyMd, setStoryMd] = useState<string>("");
   const [inputMd, setInputMd] = useState<string>("");
@@ -254,9 +264,31 @@ function MdView({
       </div>
       <div>
         <h2 className="text-small my-1 mb-2 font-semibold">Ierobežojumi un prasības</h2>
-        <div>Max izpildes laiks uz testu: <strong>{cpu_time_limit_seconds}</strong> sekundes.</div>
-        <div>Max atmiņas apjoms uz testu: <strong>{memory_limit_megabytes}</strong> megabaiti.</div>
+        <div>Max izpildes laiks uz testu: <span className="font-medium">{cpu_time_limit_seconds}</span> sekundes.</div>
+        <div>Max atmiņas apjoms uz testu: <span className="font-medium">{memory_limit_megabytes}</span> megabaiti.</div>
       </div>
+      {statement_subtasks && <div>
+        <h2 className="text-small my-1 mb-2 font-semibold">Apakšuzdevumi un to vērtēšana</h2>
+        <Table aria-label="Apakšuzdevumi un to vērtēšana" shadow="none" removeWrapper={true} isCompact className="z-0" classNames={{th:"h-8"}} isStriped>
+          <TableHeader>
+            <TableColumn>#</TableColumn>
+            <TableColumn>Apraksts</TableColumn>
+            <TableColumn>Punkti</TableColumn>
+          </TableHeader>
+          <TableBody>
+            {statement_subtasks.map((statement_subtask, i) => (
+              <TableRow key={statement_subtask.subtask}>
+                <TableCell>{statement_subtask.subtask}</TableCell>
+                <TableCell><div dangerouslySetInnerHTML={{ __html: renderMd(statement_subtask.descriptions["lv"])}}/></TableCell>
+                <TableCell>{statement_subtask.score}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+        <div className="mt-2 text-small">
+        Apakšuzdevumu punktu summa: <span className="font-medium">{statement_subtasks.reduce((a, b) => a + b.score, 0)}</span>.
+        </div>
+      </div>}
       {vis_inp_st_inputs?.map((vis_inp_st_input: VisibleInputSubtask) => (
         <div key={vis_inp_st_input.subtask}>
           <h2 className="text-small my-1 mb-2 font-semibold">
@@ -438,7 +470,7 @@ const TaskInformation: React.FC<TaskInformationProps> = ({
                   className="flex-none object-cover rounded-md"
                   disableSkeleton={true}
                   src={task.illustration_img_url}
-                  // fetchPriority="high"
+                // fetchPriority="high"
                 />
               </div>
             )}
@@ -493,7 +525,7 @@ const TaskInformation: React.FC<TaskInformationProps> = ({
                         className="flex-none object-cover"
                         disableSkeleton={true}
                         src={task.illustration_img_url}
-                        // fetchPriority="high"
+                      // fetchPriority="high"
                       />
                     </div>
                   )}
@@ -521,7 +553,7 @@ const TaskInformation: React.FC<TaskInformationProps> = ({
                       </div>
                     </div>
                     {/* TODO: move this shit to statement */}
-                    <div className="flex-grow flex flex-col justify-end items-end ms-3 hidden"> 
+                    <div className="flex-grow flex flex-col justify-end items-end ms-3 hidden">
                       {/* <Skeleton isLoaded={!!task}> */}
                       <div className="grid gap-x-2">
                         <span
