@@ -9,12 +9,12 @@ import { Node } from "unist";
 import { Element } from "hast";
 import { visit } from "unist-util-visit";
 
-// Define the custom plugin within the same file
+// Plugin to add Tailwind classes
 function rehypeAddClasses() {
   return (tree: Node) => {
-    visit(tree, "element", (node: Element, index, parent: Element) => {
+    visit(tree, "element", (node: Element) => {
       if (!node.properties) node.properties = {};
-      // Add Tailwind classes based on the element type
+
       switch (node.tagName) {
         case "h1":
           node.properties.className = ["text-2xl", "font-bold", "mb-4"];
@@ -71,38 +71,6 @@ function rehypeAddClasses() {
         case "td":
           node.properties.className = ["px-3", "py-1", "border"];
           break;
-        case "img":
-          // node.properties.className = ["w-2/3"]
-          node.properties.style =
-            "margin-top: .5rem; margin-bottom: .5rem; width: 450px; object-fit:contain;";
-          // Wrap the image in a figure and add a caption
-          if (parent && parent.children) {
-            const figure: any = {
-              type: "element",
-              tagName: "figure",
-              properties: {
-                className: ["flex", "flex-col", "items-center", "mb-4"],
-              },
-              children: [
-                {
-                  type: "element",
-                  tagName: "img",
-                  properties: node.properties,
-                },
-                {
-                  type: "element",
-                  tagName: "figcaption",
-                  properties: { className: ["text-sm", "text-center", "mt-2"] },
-                  children: [
-                    { type: "text", value: node.properties.alt || "Image" },
-                  ],
-                },
-              ],
-            };
-
-            parent.children[index] = figure;
-          }
-          break;
         default:
           break;
       }
@@ -110,7 +78,18 @@ function rehypeAddClasses() {
   };
 }
 
-// The main function to render markdown with Tailwind CSS classes
+// Plugin to remove images
+function rehypeRemoveImages() {
+  return (tree: Node) => {
+    visit(tree, "element", (node: Element, index, parent: Element | null) => {
+      if (node.tagName === "img" && parent && typeof index === "number") {
+        parent.children.splice(index, 1);
+      }
+    });
+  };
+}
+
+// The main function to render markdown with Tailwind CSS classes and no images
 export default function renderMd(md: string): string {
   const result = unified()
     .use(remarkParse)
@@ -119,10 +98,10 @@ export default function renderMd(md: string): string {
     .use(remarkRehype)
     .use(rehypeKatex)
     .use(rehypeAddClasses)
+    .use(rehypeRemoveImages) // Add the image removal plugin
     .use(rehypeStringify)
     .processSync(md)
     .toString();
-  
+
   return result;
 }
-

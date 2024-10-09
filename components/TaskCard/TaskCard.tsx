@@ -142,7 +142,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, ...props }) => {
                                         <div
                                             className={cn("text-small text-default-500",{"line-clamp-2": isWide}, {"line-clamp-3": !isWide})}
                                             dangerouslySetInnerHTML={{
-                                                __html: renderMd(task.default_md_statement.story),
+                                                __html: renderMd(task.default_md_statement.story.replace(/\n/g, " ").substring(0,300)),
                                             }}
                                         />
                                     </div>
