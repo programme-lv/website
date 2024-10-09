@@ -165,9 +165,9 @@ function MdView({
   }, [md_statement]);
 
   return (
-    <div className="w-full flex-grow flex flex-col gap-4 my-3 px-4 pb-4">
+    <div className="w-full flex-grow flex flex-col gap-4 my-2 px-3 pb-4">
       <div>
-        <h2 className="text-small my-1 font-semibold">Stāsts</h2>
+        <h2 className="text-small mb-1 font-semibold">Stāsts</h2>
         <div className="">
           <span dangerouslySetInnerHTML={{ __html: storyMd }} />
         </div>
@@ -421,10 +421,10 @@ const TaskInformation: React.FC<TaskInformationProps> = ({
         <div className="flex flex-row">
           <div className="h-full flex flex-row gap-3 sm:flex-nowrap flex-grow px-3 py-1">
             {layout === "wide" && task?.illustration_img_url && (
-              <div className="max-w-[150px] min-h-16 min-w-16 flex pt-1">
+              <div className="max-w-28 min-h-16 min-w-16 flex pt-1">
                 <Image
                   alt={task.task_full_name}
-                  className="flex-none object-cover"
+                  className="flex-none object-cover rounded-md"
                   disableSkeleton={true}
                   src={task.illustration_img_url}
                   // fetchPriority="high"
@@ -509,7 +509,8 @@ const TaskInformation: React.FC<TaskInformationProps> = ({
                         )}
                       </div>
                     </div>
-                    <div className="flex-grow flex flex-col justify-end items-end ms-3">
+                    {/* TODO: move this shit to statement */}
+                    <div className="flex-grow flex flex-col justify-end items-end ms-3 hidden"> 
                       {/* <Skeleton isLoaded={!!task}> */}
                       <div className="grid gap-x-2">
                         <span
@@ -634,7 +635,6 @@ int main() {
         taskCode
       );
 
-      console.log(response);
       await router.push(`/submissions`);
       // await
     } catch (error) {
@@ -644,7 +644,7 @@ int main() {
   }
 
   return (
-    <div className="flex flex-col flex-grow bg-white rounded-small border-small border-divider px-3 py-1 pb-2">
+    <div className="flex flex-col flex-grow bg-white rounded-small border-small border-divider px-2 py-1 pb-2">
       <div className="h-full w-full flex flex-col gap-2">
         <div className="flex justify-end">
           <LanguageSelect
@@ -724,9 +724,6 @@ function LanguageSelect(props: LanguageSelectProps) {
   let disabledKeys = [
     ...props.languages.filter((lang) => !lang.enabled).map((lang) => lang.id),
   ];
-
-  console.log(props.languages);
-  console.log(disabledKeys);
 
   return (
     <Select
