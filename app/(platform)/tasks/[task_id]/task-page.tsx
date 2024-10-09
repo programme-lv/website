@@ -135,6 +135,8 @@ function LeftSide({ task }: { task: Task | null }) {
             examples={task!.examples}
             md_statement={task!.default_md_statement}
             vis_inp_st_inputs={task?.visible_input_subtasks}
+            cpu_time_limit_seconds={task?.cpu_time_limit_seconds}
+            memory_limit_megabytes={task?.memory_limit_megabytes}
           />
           // </Skeleton>
         )}
@@ -147,10 +149,14 @@ function MdView({
   md_statement,
   examples,
   vis_inp_st_inputs,
+  cpu_time_limit_seconds,
+  memory_limit_megabytes,
 }: {
   md_statement: MarkdownStatement;
   examples?: Example[];
   vis_inp_st_inputs?: VisibleInputSubtask[];
+  cpu_time_limit_seconds?: number;
+  memory_limit_megabytes?: number;
 }) {
   const [storyMd, setStoryMd] = useState<string>("");
   const [inputMd, setInputMd] = useState<string>("");
@@ -245,6 +251,11 @@ function MdView({
               </div>
             ))}
         </div>
+      </div>
+      <div>
+        <h2 className="text-small my-1 mb-2 font-semibold">Ierobežojumi un prasības</h2>
+        <div>Max izpildes laiks uz testu: <strong>{cpu_time_limit_seconds}</strong> sekundes.</div>
+        <div>Max atmiņas apjoms uz testu: <strong>{memory_limit_megabytes}</strong> megabaiti.</div>
       </div>
       {vis_inp_st_inputs?.map((vis_inp_st_input: VisibleInputSubtask) => (
         <div key={vis_inp_st_input.subtask}>
