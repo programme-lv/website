@@ -89,8 +89,23 @@ function rehypeRemoveImages() {
   };
 }
 
-// The main function to render markdown with Tailwind CSS classes and no images
 export default function renderMd(md: string): string {
+  const result = unified()
+    .use(remarkParse)
+    .use(remarkGfm)
+    .use(remarkMath)
+    .use(remarkRehype)
+    .use(rehypeKatex)
+    .use(rehypeAddClasses)
+    .use(rehypeStringify)
+    .processSync(md)
+    .toString();
+
+  return result;
+}
+
+// same as renderMd but result without images
+export function renderMdLite(md: string): string {
   const result = unified()
     .use(remarkParse)
     .use(remarkGfm)
