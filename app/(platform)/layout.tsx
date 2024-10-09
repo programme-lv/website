@@ -320,17 +320,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                       href={`/login?redirect=${encodeURIComponent(pathname)}`}
                     >
                       <Button
-                        className="text-default-500"
-                        radius="full"
-                        variant="light"
-                      >
-                        Pieslēgties
-                      </Button>
-                    </Link>
-                    <Link
-                      href={`/register?redirect=${encodeURIComponent(pathname)}`}
-                    >
-                      <Button
                         className="bg-blue-700 font-medium text-background"
                         color="secondary"
                         endContent={
@@ -340,7 +329,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                         size="sm"
                         variant="flat"
                       >
-                        Pievienoties
+                        Pieslēgties
                       </Button>
                     </Link>
                   </>

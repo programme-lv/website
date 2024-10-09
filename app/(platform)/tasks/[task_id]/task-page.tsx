@@ -670,6 +670,7 @@ int main() {
         {/* <SubmitButton langId={selectedLanguage} code={code} taskCode={taskCode} /> */}
       </div>
       <div className="mt-2 flex justify-end gap-3">
+        {/* TODO: allow submission as anonymous person */}
         {authContext.user !== null && (
           <Button
             color="primary"
