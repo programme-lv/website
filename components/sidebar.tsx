@@ -103,6 +103,7 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
         return (
           <ListboxItem
             {...item}
+            aria-label={item.title}
             key={item.key}
             classNames={{
               base: cn(
@@ -224,6 +225,7 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
             {...item}
             as={Link}
             key={item.key}
+            aria-label={item.title}
             endContent={isCompact || hideEndContent ? null : (item.endContent ?? null)}
             title={isCompact ? null : item.title}
           >
@@ -258,6 +260,7 @@ const Sidebar = React.forwardRef<HTMLElement, SidebarProps>(
           ref={ref}
           hideSelectedIcon
           as="nav"
+          aria-label="Sidebar"
           className={cn("list-none", className)}
           classNames={{
             ...classNames,
