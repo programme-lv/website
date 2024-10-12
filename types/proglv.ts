@@ -229,4 +229,5 @@ export type {
   TestWithOnlyInput,
   VisibleInputSubtask,
   SubtaskOverview,
+  TestGroup,
 };

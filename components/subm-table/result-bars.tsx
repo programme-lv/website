@@ -1,3 +1,5 @@
+import { TestGroup } from "@/types/proglv";
+
 export function ErrorScoringBar() {
   return (
     <div className="flex justify-center flex-col items-center w-full min-w-36">
@@ -22,14 +24,7 @@ export function ErrorScoringBar() {
 export function TestgroupScoringBar({
   testgroups,
 }: {
-  testgroups: {
-    test_group_id: number;
-    test_group_score: number;
-    statement_subtask: number;
-    accepted_tests: number;
-    wrong_tests: number;
-    untested_tests: number;
-  }[];
+  testgroups: TestGroup[];
 }) {
   let green = 0;
   let yellow = 0;

@@ -114,23 +114,26 @@ import { useRouter } from "next/navigation";
         ) {
           return <ErrorScoringBar />;
         }
-        if (row.eval_scoring_tests) {
-          return (
-            <TestsScoringBar
-              accepted={row.eval_scoring_tests.accepted}
-              untested={row.eval_scoring_tests.untested}
-              wrong={row.eval_scoring_tests.wrong}
-            />
-          );
+        if(row.test_groups && row.test_groups.length > 0) {
+          return <TestgroupScoringBar testgroups={row.test_groups} />;
         }
-        if (
-          row.eval_scoring_testgroups &&
-          row.eval_scoring_testgroups.length > 0
-        ) {
-          return <TestgroupScoringBar testgroups={row.eval_scoring_testgroups} />;
-        } else {
-          alert("Unexpected submission result type: " + JSON.stringify(row));
-        }
+        // if (row.eval_scoring_tests) {
+        //   return (
+        //     <TestsScoringBar
+        //       accepted={row.eval_scoring_tests.accepted}
+        //       untested={row.eval_scoring_tests.untested}
+        //       wrong={row.eval_scoring_tests.wrong}
+        //     />
+        //   );
+        // }
+        // if (
+        //   row.eval_scoring_testgroups &&
+        //   row.eval_scoring_testgroups.length > 0
+        // ) {
+        //   return <TestgroupScoringBar testgroups={row.eval_scoring_testgroups} />;
+        // } else {
+        //   alert("Unexpected submission result type: " + JSON.stringify(row));
+        // }
   
         return <></>;
       case "status":
