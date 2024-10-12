@@ -34,7 +34,7 @@ type StInputs = {
 type VisibleInputSubtask = {
   subtask: number;
   inputs: TestWithOnlyInput[];
-}
+};
 
 type TestWithOnlyInput = {
   test_id: number;
@@ -55,33 +55,44 @@ type MarkdownStatement = {
   scoring?: string;
 };
 
+type TestGroup = {
+  test_group_id: number;
+  test_group_score: number;
+  accepted_tests: number;
+  wrong_tests: number;
+  untested_tests: number;
+  subtasks: number[];
+};
+
+type TestSet = {
+  accepted: number;
+  wrong: number;
+  untested: number;
+};
+
+type Subtask = {
+  subtask_id: number;
+  subtask_score: number;
+  accepted_tests: number;
+  wrong_tests: number;
+  untested_tests: number;
+  description: string;
+};
+
 type BriefSubmission = {
   subm_uuid: string;
-  // submission: string;
   username: string;
   created_at: string;
   eval_uuid: string;
   eval_status: string;
-  eval_scoring_testgroups: {
-    test_group_id: number;
-    test_group_score: number;
-    statement_subtask: number;
-    accepted_tests: number;
-    wrong_tests: number;
-    untested_tests: number;
-  }[];
-  eval_scoring_tests: {
-    accepted: number;
-    wrong: number;
-    untested: number;
-  };
+  test_groups: TestGroup[];
+  test_set: TestSet;
+  subtasks: Subtask[];
   p_lang_id: string;
   p_lang_display_name: string;
   p_lang_monaco_id: string;
   task_name: string;
   task_id: string;
-  user_uuid: string;
-  user_username: string;
 };
 
 type ProgrammingLang = {
