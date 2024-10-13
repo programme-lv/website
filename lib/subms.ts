@@ -75,8 +75,6 @@ export const subscribeToSubmissionUpdates = (
 
   eventSource.onerror = (error) => {
     if (eventSource.readyState === EventSource.CLOSED) {
-    } else {
-      alert("SSE error:" + JSON.stringify(error));
     }
   };
 

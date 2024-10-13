@@ -58,21 +58,19 @@ export function applyUpdatesToSubmissions(
           update.testgroup_res_update.untested_tests;
         const old_testgroup_index = updatedSubms[
           index
-        ].eval_scoring_testgroups.findIndex(
+        ].test_groups.findIndex(
           (tg) => tg.test_group_id === test_group_id,
         );
         const old_untested_testcount =
           old_testgroup_index >= 0
-            ? updatedSubms[index].eval_scoring_testgroups[old_testgroup_index]
+            ? updatedSubms[index].test_groups[old_testgroup_index]
                 .untested_tests
             : 0;
 
         if (new_untested_testcount < old_untested_testcount) {
           updatedSubms[index] = {
             ...updatedSubms[index],
-            eval_scoring_testgroups: updatedSubms[
-              index
-            ].eval_scoring_testgroups.map((tg, i) => {
+            test_groups: updatedSubms[index].test_groups.map((tg, i) => {
               if (i === old_testgroup_index) {
                 return {
                   ...tg,
@@ -99,14 +97,14 @@ export function applyUpdatesToSubmissions(
         updatedSubms[index].eval_uuid === update.tests_score_update.eval_uuid
       ) {
         const new_score_untested = update.tests_score_update.untested;
-        const old_score_untested = updatedSubms[index].eval_scoring_tests
-          ? updatedSubms[index].eval_scoring_tests.untested
+        const old_score_untested = updatedSubms[index].test_set
+          ? updatedSubms[index].test_set.untested
           : 0;
 
         if (new_score_untested < old_score_untested) {
           updatedSubms[index] = {
             ...updatedSubms[index],
-            eval_scoring_tests: {
+            test_set: {
               accepted: (update as { tests_score_update: TestsResUpdate })
                 .tests_score_update.accepted,
               wrong: (update as { tests_score_update: TestsResUpdate })
