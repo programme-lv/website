@@ -132,28 +132,27 @@ type TestResult = {
   finished: boolean;
   input_trimmed: string | null;
   answer_trimmed: string | null;
-  time_limit_exceeded: boolean;
-  memory_limit_exceeded: boolean;
+  time_exceeded: boolean;
+  memory_exceeded: boolean;
   subtasks: number[];
-  test_group: number;
-  subm_cpu_time_millis?: number;
-  subm_mem_kibi_bytes?: number;
-  subm_wall_time: number;
-  subm_exit_code: number;
-  subm_stdout_trimmed: string;
-  subm_stderr_trimmed: string;
-  subm_exit_signal?: number;
-  checker_cpu_time_millis: number;
-  checker_mem_kibi_bytes: number;
-  checker_wall_time: number;
-  checker_exit_code: number;
-  checker_stdout_trimmed: string;
-  checker_stderr_trimmed: string;
+  test_groups: number[];
+  subm_runtime?: RuntimeData;
+  checker_runtime?: RuntimeData;
+};
+
+type RuntimeData = {
+  cpu_time_millis: number;
+  mem_kibi_bytes: number;
+  wall_time: number;
+  exit_code: number;
+  stdout_trimmed: string;
+  stderr_trimmed: string;
+  exit_signal: number | null;
 };
 
 type FullSubmission = BriefSubmission & {
   subm_content: string;
-  eval_test_results: TestResult[];
+  test_results: TestResult[];
   eval_details: EvalDetails;
 };
 

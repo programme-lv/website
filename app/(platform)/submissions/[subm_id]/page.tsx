@@ -33,23 +33,23 @@ export default function SubmissionView() {
   let receivedScore = 0;
   let possibleScore = 0;
 
-  if (data.eval_scoring_testgroups) {
-    for (let testGroup of data.eval_scoring_testgroups) {
+  if (data.test_groups) {
+    for (let testGroup of data.test_groups) {
       possibleScore += testGroup.test_group_score;
       if (testGroup.wrong_tests === 0 && testGroup.untested_tests === 0) {
         receivedScore += testGroup.test_group_score;
       }
     }
-  } else if (data.eval_scoring_tests) {
-    let wrong = data.eval_scoring_tests.wrong;
-    let accepted = data.eval_scoring_tests.accepted;
-    let untested = data.eval_scoring_tests.untested;
+  } else if (data.test_set) {
+    let wrong = data.test_set.wrong;
+    let accepted = data.test_set.accepted;
+    let untested = data.test_set.untested;
 
     possibleScore = wrong + accepted + untested;
     receivedScore = accepted;
   }
 
-  data.eval_scoring_testgroups?.sort(
+  data.test_groups?.sort(
     (a, b) => a.test_group_id - b.test_group_id,
   );
 
@@ -186,8 +186,8 @@ export default function SubmissionView() {
           <Spacer y={3} />
         </>
       )}
-      {data.eval_scoring_testgroups &&
-        data.eval_scoring_testgroups.length > 0 && (
+      {data.test_groups &&
+        data.test_groups.length > 0 && (
           <Card
             classNames={{ base: "border-small border-divider" }}
             radius="sm"
@@ -200,7 +200,7 @@ export default function SubmissionView() {
                 defaultExpandedKeys={["1"]}
                 variant="light"
               >
-                {data.eval_scoring_testgroups?.map((testGroup) => (
+                {data.test_groups?.map((testGroup) => (
                   <AccordionItem
                     key={testGroup.test_group_id}
                     classNames={{ startContent: "w-[80%]" }}
@@ -221,7 +221,7 @@ export default function SubmissionView() {
                               {" "}
                               ({" "}
                               <span className="font-mono">
-                                {testGroup.statement_subtask}
+                                {testGroup.subtasks.join(", ")}
                               </span>
                               .{" "}
                               <span className="text-small text-default-600">
@@ -262,8 +262,8 @@ export default function SubmissionView() {
                       className="overflow-x-scroll flex flex-col lg:gap-2 max-w-full w-full relative lg:p-2  rounded-none"
                       style={{ backgroundColor: "#f8f8f8" }}
                     >
-                      {data!.eval_test_results.map((testResult) => {
-                        if (testResult.test_group !== testGroup.test_group_id)
+                      {data!.test_results.map((testResult) => {
+                        if (!testResult.test_groups.includes(testGroup.test_group_id))
                           return null;
 
                         return (
@@ -280,9 +280,9 @@ export default function SubmissionView() {
             </CardBody>
           </Card>
         )}
-      {data.eval_scoring_tests &&
-        data.eval_test_results &&
-        data.eval_test_results.map((testResult) => {
+      {data.test_set &&
+        data.test_results &&
+        data.test_results.map((testResult) => {
           return (
             <div key={testResult.test_id}>
               <SingleTestResultCard testResult={testResult} />
@@ -331,37 +331,37 @@ function SingleTestResultCard({ testResult }: { testResult: TestResult }) {
 
   let verdict = "AC";
   const nonZeroExitCode =
-    typeof testResult.subm_exit_code === "number" &&
-    testResult.subm_exit_code !== 0;
+    typeof testResult.subm_runtime?.exit_code === "number" &&
+    testResult.subm_runtime.exit_code !== 0;
   const hasStderr =
-    typeof testResult.subm_stderr_trimmed === "string" &&
-    testResult.subm_stderr_trimmed.trim().length > 0;
+    typeof testResult.subm_runtime?.stderr_trimmed === "string" &&
+    testResult.subm_runtime.stderr_trimmed.trim().length > 0;
   const hasExitSignal =
-    typeof testResult.subm_exit_signal === "number" &&
-    testResult.subm_exit_signal !== 0;
+    typeof testResult.subm_runtime?.exit_signal === "number" &&
+    testResult.subm_runtime.exit_signal !== 0;
 
-  if (testResult.subm_exit_code !== 0 || hasStderr || hasExitSignal)
+  if (testResult.subm_runtime?.exit_code !== 0 || hasStderr || hasExitSignal)
     verdict = "RE";
-  else if (testResult.memory_limit_exceeded) verdict = "MLE";
-  else if (testResult.time_limit_exceeded) verdict = "TLE";
-  else if (testResult.checker_exit_code !== 0) verdict = "WA";
+  else if (testResult.memory_exceeded) verdict = "MLE";
+  else if (testResult.time_exceeded) verdict = "TLE";
+  else if (testResult.checker_runtime?.exit_code !== 0) verdict = "WA";
 
-  if (testResult.time_limit_exceeded)
-    testResult.subm_cpu_time_millis = undefined;
-  if (testResult.memory_limit_exceeded)
-    testResult.subm_mem_kibi_bytes = undefined;
+  // if (testResult.time_exceeded)
+  //   testResult.subm_runtime.cpu_time_millis = undefined;
+  // if (testResult.memory_exceeded)
+  //   testResult.subm_runtime.mem_kibi_bytes = undefined;
 
   let exitSignalDescription: string = "Unknown exit signal";
 
   if (
-    testResult.subm_exit_signal &&
+    testResult.subm_runtime?.exit_signal &&
     exitSignalDescriptions[
-      testResult.subm_exit_signal as keyof typeof exitSignalDescriptions
+      testResult.subm_runtime?.exit_signal as keyof typeof exitSignalDescriptions
     ]
   ) {
     exitSignalDescription =
       exitSignalDescriptions[
-        testResult.subm_exit_signal as keyof typeof exitSignalDescriptions
+        testResult.subm_runtime?.exit_signal as keyof typeof exitSignalDescriptions
       ];
   }
 
@@ -403,24 +403,24 @@ function SingleTestResultCard({ testResult }: { testResult: TestResult }) {
               )}
             </div>
             <div className="flex gap-x-3 gap-y-1 items-center flex-wrap">
-              {testResult.subm_cpu_time_millis && (
+              {testResult.subm_runtime?.cpu_time_millis && (
                 <div className="flex gap-1 items-center">
                   <p className="text-small text-default-700 whitespace-nowrap">
                     Izpildes laiks:
                   </p>
                   <code className="whitespace-nowrap h-[20px]">
-                    {testResult.subm_cpu_time_millis}ms
+                    {testResult.subm_runtime.cpu_time_millis}ms
                   </code>
                 </div>
               )}
-              {testResult.subm_mem_kibi_bytes && (
+              {testResult.subm_runtime?.mem_kibi_bytes && (
                 <div className="flex gap-1 items-center">
                   <p className="text-small text-default-700 whitespace-nowrap">
                     Patērētā atmiņa:
                   </p>
                   <code className="whitespace-nowrap h-[20px]">
                     {Math.ceil(
-                      testResult.subm_mem_kibi_bytes * 0.001024 * 100,
+                      testResult.subm_runtime.mem_kibi_bytes * 0.001024 * 100,
                     ) / 100}
                     MB
                   </code>
@@ -442,7 +442,7 @@ function SingleTestResultCard({ testResult }: { testResult: TestResult }) {
                     whiteSpace: "pre-wrap",
                   }}
                 >
-                  {testResult.subm_stderr_trimmed}
+                  {testResult.subm_runtime?.stderr_trimmed}
                 </code>
               </div>
             </div>
@@ -460,12 +460,12 @@ function SingleTestResultCard({ testResult }: { testResult: TestResult }) {
                     whiteSpace: "pre-wrap",
                   }}
                 >
-                  {testResult.subm_exit_code}
+                  {testResult.subm_runtime?.exit_code}
                 </code>
               </div>
             </div>
           </div>
-          {testResult.subm_exit_signal && (
+          {testResult.subm_runtime?.exit_signal && (
             <>
               <Spacer y={2} />
               <div className="flex gap-4">
@@ -481,7 +481,7 @@ function SingleTestResultCard({ testResult }: { testResult: TestResult }) {
                         whiteSpace: "pre-wrap",
                       }}
                     >
-                      {testResult.subm_exit_signal} : {exitSignalDescription}
+                      {testResult.subm_runtime?.exit_signal} : {exitSignalDescription}
                     </code>
                   </div>
                 </div>
@@ -530,24 +530,24 @@ function SingleTestResultCard({ testResult }: { testResult: TestResult }) {
               )}
             </div>
             <div className="flex gap-x-3 gap-y-1 items-center flex-wrap">
-              {testResult.subm_cpu_time_millis && (
+              {testResult.subm_runtime?.cpu_time_millis && (
                 <div className="flex gap-1 items-center">
                   <p className="text-small text-default-700 whitespace-nowrap">
                     Izpildes laiks:
                   </p>
                   <code className="whitespace-nowrap h-[20px]">
-                    {testResult.subm_cpu_time_millis}ms
+                    {testResult.subm_runtime.cpu_time_millis}ms
                   </code>
                 </div>
               )}
-              {testResult.subm_mem_kibi_bytes && (
+              {testResult.subm_runtime?.mem_kibi_bytes && (
                 <div className="flex gap-1 items-center">
                   <p className="text-small text-default-700 whitespace-nowrap">
                     Patērētā atmiņa:
                   </p>
                   <code className="whitespace-nowrap h-[20px]">
                     {Math.ceil(
-                      testResult.subm_mem_kibi_bytes * 0.001024 * 100,
+                      testResult.subm_runtime.mem_kibi_bytes * 0.001024 * 100,
                     ) / 100}
                     MB
                   </code>
@@ -597,24 +597,25 @@ function SingleTestResultCard({ testResult }: { testResult: TestResult }) {
             )}
           </div>
           <div className="flex gap-x-3 gap-y-1 items-center flex-wrap">
-            {testResult.subm_cpu_time_millis && (
+            {testResult.subm_runtime?.cpu_time_millis && (
               <div className="flex gap-1 items-center">
                 <p className="text-small text-default-700 whitespace-nowrap">
                   Izpildes laiks:
                 </p>
                 <code className="whitespace-nowrap h-[20px]">
-                  {testResult.subm_cpu_time_millis}ms
+                  {testResult.subm_runtime.cpu_time_millis}ms
                 </code>
               </div>
             )}
-            {testResult.subm_mem_kibi_bytes && (
+            {testResult.subm_runtime?.mem_kibi_bytes && (
               <div className="flex gap-1 items-center">
                 <p className="text-small text-default-700 whitespace-nowrap">
                   Patērētā atmiņa:
                 </p>
                 <code className="whitespace-nowrap h-[20px]">
-                  {Math.ceil(testResult.subm_mem_kibi_bytes * 0.001024 * 100) /
-                    100}
+                  {Math.ceil(
+                    testResult.subm_runtime.mem_kibi_bytes * 0.001024 * 100,
+                  ) / 100}
                   MB
                 </code>
               </div>
@@ -654,7 +655,7 @@ function SingleTestResultCard({ testResult }: { testResult: TestResult }) {
                   whiteSpace: "pre-wrap",
                 }}
               >
-                {testResult.subm_stdout_trimmed}
+                {testResult.subm_runtime?.stdout_trimmed}
               </code>
             </div>
           </div>
@@ -687,7 +688,7 @@ function SingleTestResultCard({ testResult }: { testResult: TestResult }) {
                   whiteSpace: "pre-wrap",
                 }}
               >
-                {testResult.checker_stderr_trimmed}
+                {testResult.checker_runtime?.stderr_trimmed}
               </code>
             </div>
           </div>
