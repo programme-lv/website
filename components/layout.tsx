@@ -1,6 +1,7 @@
 "use client";
 import {
   Button,
+  cn,
   Modal,
   ModalBody,
   ModalContent,
@@ -93,19 +94,21 @@ const Layout: React.FC<LayoutProps> = ({ children, breadcrumbs }) => {
 
                 {/* Breadcrumbs */}
                 <nav className="hidden sm:block">
-                  <ul className="flex space-x-2">
+                  <ol className="flex gap-x-1.5 text-sm">
                     {breadcrumbs.map((item, index) => (
+                      <>
                       <li key={index}>
                         <Link
-                          className="text-gray-700 hover:underline"
+                          className={cn("text-default-500 hover:underline",{"text-default-900":index===breadcrumbs.length-1})}
                           href={item.href}
                         >
                           {item.label}
                         </Link>
-                        {index < breadcrumbs.length - 1 && <span>/</span>}
                       </li>
+                      {index < breadcrumbs.length - 1 && <span className="text-default-500"> / </span>}
+                      </>
                     ))}
-                  </ul>
+                  </ol>
                 </nav>
               </div>
 
