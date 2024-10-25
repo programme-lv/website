@@ -5,9 +5,9 @@ import { useQuery } from "react-query";
 import Link from "next/link";
 
 import Alert from "@/components/Alert";
-import TaskCard from "@/components/TaskCard/TaskCard";
 import { listTasks } from "@/lib/tasks";
 import { Task } from "@/types/proglv";
+import TaskCard from "@/components/task-card";
 
 export function TaskList(props: { tasks: Task[] }) {
   let {
@@ -33,7 +33,7 @@ export function TaskList(props: { tasks: Task[] }) {
 
   return (
     <main className="mt-3 flex-grow w-full overflow-visible">
-      <div className="grid grid-cols-1 min-[1340px]:grid-cols-2 min-[1910px]:grid-cols-3 gap-3 ">
+      <div className="grid grid-cols-1 min-[1340px]:grid-cols-2 min-[1960px]:grid-cols-3 gap-3 ">
         {data && data.length > 0 ? (
           data.map((task) => (
             <Link
