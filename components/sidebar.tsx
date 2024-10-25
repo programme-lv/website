@@ -48,7 +48,15 @@ export default function Sidebar(props: SidebarProps) {
         </div>
         <nav className="mt-12 flex flex-col gap-8 w-full">
           {items.map((item) => (
-            <Tooltip key={item.key} content={item.title} placement="right">
+            <Tooltip
+              disableAnimation
+              className="rounded-md"
+              delay={500}
+              closeDelay={0}
+              key={item.key}
+              content={item.title}
+              placement="right"
+            >
               <div
                 className={cn(
                   "flex items-center justify-center w-[38px] h-[38px] rounded-md",

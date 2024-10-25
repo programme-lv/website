@@ -14,7 +14,7 @@ export default async function TaskListServerComponent() {
 
   return (
     <Layout breadcrumbs={breadcrumbs}>
-      <TaskList tasks={tasks.data ?? []} />;
+      <TaskList tasks={tasks.data ?? []} />
     </Layout>
   );
 }

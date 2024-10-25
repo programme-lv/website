@@ -1,765 +1,661 @@
 "use client";
 
 import React, {
-  useEffect,
-  useState,
-  useCallback,
-  useRef,
-  Dispatch,
-  SetStateAction,
-  useContext,
+	useEffect,
+	useState,
+	useRef,
+	Dispatch,
+	SetStateAction,
+	useContext,
 } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { debounce } from "lodash";
 import { Resizable } from "re-resizable";
 import {
-  IconFileTypePdf,
-  IconGripVertical,
-  IconMenu2,
-  IconSend,
+	IconFileTypePdf,
+	IconGripVertical,
+	IconMenu2,
+	IconSend,
 } from "@tabler/icons-react";
 import {
-  Button,
-  Card,
-  CardBody,
-  Chip,
-  Divider,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger,
-  Select,
-  SelectItem,
-  Skeleton,
-  Table,
-  TableBody,
-  TableCell,
-  TableColumn,
-  TableHeader,
-  TableRow,
-  cn,
+	Button,
+	Divider,
+	Dropdown,
+	DropdownItem,
+	DropdownMenu,
+	DropdownTrigger,
+	Select,
+	SelectItem,
+	Skeleton,
+	cn,
+	Image,
 } from "@nextui-org/react";
-import { Image } from "@nextui-org/react";
 import MonacoEditor from "@monaco-editor/react";
 import { useQuery } from "react-query";
 
 import { getTaskById } from "@/lib/tasks";
 import {
-  Example,
-  MarkdownStatement,
-  ProgrammingLanguage,
-  SubtaskOverview,
-  Task,
-  VisibleInputSubtask,
+	Example,
+	MarkdownStatement,
+	ProgrammingLanguage,
+	SubtaskOverview,
+	Task,
+	VisibleInputSubtask,
 } from "@/types/proglv";
 import { AuthContext } from "@/app/providers";
 import "katex/dist/katex.min.css";
-import renderMd from "@/lib/render-md";
+import renderMd, { renderMdLite } from "@/lib/render-md";
 import { listProgrammingLanguages } from "@/lib/langs";
 import { createSubmission } from "@/lib/subms";
+import TaskDifficultyChip from "@/components/task-difficulty-chip";
+import LIO_LOGO from "@/public/lio-logo.png";
 
 export default function TaskDetailsPage(props: { task: Task }) {
-  const { task_id } = useParams();
-  const pageRef = useRef<HTMLDivElement>(null);
+	const { task_id } = useParams();
+	const pageRefXL = useRef<HTMLDivElement>(null);
+	const pageRefMobile = useRef<HTMLDivElement>(null);
 
-  const [task, setTask] = useState<Task>(props.task);
+	const [task, setTask] = useState<Task>(props.task);
 
-  let { data: getTaskByIdData } = useQuery(
-    ["task", task_id],
-    () => getTaskById(task_id as string),
-    { staleTime: 30 * 1000 }, // 30 seconds
-  );
+	const { data: getTaskByIdData } = useQuery(
+		["task", task_id],
+		() => getTaskById(task_id as string),
+		{ staleTime: 30 * 1000 } // 30 seconds
+	);
 
-  useEffect(() => {
-    if (getTaskByIdData && getTaskByIdData.data) {
-      setTask(getTaskByIdData.data);
-    }
-  }, [getTaskByIdData]);
+	useEffect(() => {
+		if (getTaskByIdData?.data) {
+			setTask(getTaskByIdData.data);
+		}
+	}, [getTaskByIdData]);
 
-  if (!task) {
-    return <></>;
-  }
+	if (!task) {
+		return null;
+	}
 
-  return (
-    <main className="mt-3 flex-grow w-full overflow-visible relative">
-      <div
-        ref={pageRef}
-        className="hidden xl:flex w-full h-full max-h-full max-w-full gap-4 absolute"
-      >
-        <Resizable
-          defaultSize={{ width: "50%" }}
-          enable={{ right: true }}
-          handleComponent={{ right: <ResizeBar /> }}
-          maxWidth={"70%"}
-          minWidth={"330px"}
-        >
-          <LeftSide task={task} />
-        </Resizable>
-        <RightSide taskCode={task_id as string} />
-      </div>
-      <div
-        ref={pageRef}
-        className="flex flex-col xl:hidden w-full h-full max-w-full gap-3"
-      >
-        <LeftSide task={task} />
-        {/* <RightSide taskCode={task_id as string} /> */}
-      </div>
-    </main>
-  );
+	return (
+		<main className="mt-3 flex-grow w-full overflow-visible relative">
+			{/* Desktop View */}
+			<div
+				ref={pageRefXL}
+				className="hidden xl:flex w-full h-full max-h-full max-w-full gap-4 absolute"
+			>
+				<Resizable
+					defaultSize={{ width: "50%" }}
+					enable={{ right: true }}
+					handleComponent={{ right: <ResizeBar /> }}
+					maxWidth={"70%"}
+					minWidth={"330px"}
+				>
+					<LeftSide task={task} />
+				</Resizable>
+				<RightSide taskCode={task_id as string} />
+			</div>
+
+			{/* Mobile View */}
+			<div
+				ref={pageRefMobile}
+				className="flex flex-col xl:hidden w-full h-full max-w-full gap-3"
+			>
+				<LeftSide task={task} />
+			</div>
+		</main>
+	);
 }
 
 function LeftSide({ task }: { task: Task }) {
-  const [viewMode, setViewMode] = useState<"md" | undefined>(undefined);
+	return (
+		<div
+			className="h-full max-h-full w-full overflow-hidden rounded-small border-small border-divider p-2 bg-white overflow-y-auto"
+		>
+			<div className="h-full relative flex flex-col items-center gap-1 flex-grow">
+				<TaskHeader {...task} />
 
-  useEffect(() => {
-    if (!task) return;
-    if (task.default_pdf_statement_url && window.navigator.pdfViewerEnabled) {
-      setViewMode("md");
-    } else if (task.default_md_statement) {
-      setViewMode("md");
-    } else {
-      setViewMode(undefined);
-    }
-  }, [task?.default_pdf_statement_url, task?.default_md_statement]);
-
-  return (
-    <div
-      className={cn(
-        "h-full max-h-full w-full overflow-hidden rounded-small border-small border-divider p-2 bg-white",
-        { "overflow-y-auto": viewMode == "md" },
-      )}
-    >
-      <div className="h-full relative flex flex-col items-center gap-1 flex-grow">
-        <TaskHeader {...task} />
-
-        <Divider className="my-1" />
-        {viewMode === "md" && task!.default_md_statement && (
-          // <Skeleton className="max-w-full flex-grow w-full" isLoaded={!!task}>
-          <MdView
-            cpu_time_limit_seconds={task?.cpu_time_limit_seconds}
-            examples={task!.examples}
-            md_statement={task!.default_md_statement}
-            memory_limit_megabytes={task?.memory_limit_megabytes}
-            statement_subtasks={task?.statement_subtasks}
-            vis_inp_st_inputs={task?.visible_input_subtasks}
-          />
-          // </Skeleton>
-        )}
-      </div>
-    </div>
-  );
+				<Divider className="my-1" />
+				{task.default_md_statement && (
+					<MdView
+						cpu_time_limit_seconds={task.cpu_time_limit_seconds}
+						examples={task.examples}
+						md_statement={task.default_md_statement}
+						memory_limit_megabytes={task.memory_limit_megabytes}
+						statement_subtasks={task.statement_subtasks}
+						vis_inp_st_inputs={task.visible_input_subtasks}
+					/>
+				)}
+			</div>
+		</div>
+	);
 }
 
 function MdView({
-  md_statement,
-  examples,
-  vis_inp_st_inputs,
-  cpu_time_limit_seconds,
-  memory_limit_megabytes,
-  statement_subtasks,
+	md_statement,
+	examples,
+	vis_inp_st_inputs,
+	cpu_time_limit_seconds,
+	memory_limit_megabytes,
+	statement_subtasks,
 }: {
-  md_statement: MarkdownStatement;
-  examples?: Example[];
-  vis_inp_st_inputs?: VisibleInputSubtask[];
-  cpu_time_limit_seconds?: number;
-  memory_limit_megabytes?: number;
-  statement_subtasks?: SubtaskOverview[];
+	md_statement: MarkdownStatement;
+	examples?: Example[];
+	vis_inp_st_inputs?: VisibleInputSubtask[];
+	cpu_time_limit_seconds?: number;
+	memory_limit_megabytes?: number;
+	statement_subtasks?: SubtaskOverview[];
 }) {
-  const [storyMd, setStoryMd] = useState<string>("");
-  const [inputMd, setInputMd] = useState<string>("");
-  const [outputMd, setOutputMd] = useState<string>("");
-  const [scoringMd, setScoringMd] = useState<string>("");
+	// const [sections, setSections] = useState({
+	// 	story: md_statement.story,
+	// 	input: md_statement.input,
+	// 	output: md_statement.output,
+	// 	scoring: md_statement.scoring ? md_statement.scoring : ""
+	// });
 
-  useEffect(() => {
-    setStoryMd(renderMd(md_statement.story));
-    setInputMd(renderMd(md_statement.input));
-    setOutputMd(renderMd(md_statement.output));
-    setScoringMd(md_statement.scoring ? renderMd(md_statement.scoring) : "");
-  }, [md_statement]);
+	// useEffect(() => {
+	// 	setSections({
+	// 		story: renderMd(md_statement.story),
+	// 		input: renderMd(md_statement.input), 
+	// 		output: renderMd(md_statement.output),
+	// 		scoring: md_statement.scoring ? renderMd(md_statement.scoring) : ""
+	// 	});
+	// }, [md_statement]);
 
-  return (
-    <div className="w-full flex-grow flex flex-col gap-4 my-2 px-3 pb-4">
-      <div>
-        <h2 className="text-small mb-1 font-semibold">Stāsts</h2>
-        <div className="">
-          <span dangerouslySetInnerHTML={{ __html: storyMd }} />
-        </div>
-      </div>
-      <div>
-        <h2 className="text-small my-1 font-semibold">Ievaddati</h2>
-        <div className="">
-          <span dangerouslySetInnerHTML={{ __html: inputMd }} />
-        </div>
-      </div>
-      <div>
-        <h2 className="text-small my-1 font-semibold">Izvaddati</h2>
-        <div className="">
-          <span dangerouslySetInnerHTML={{ __html: outputMd }} />
-        </div>
-      </div>
-      <div>
-        <h2 className="text-small my-1 mb-2 font-semibold">Piemēri</h2>
-        <div className="flex gap-2 flex-wrap w-full max-w-full">
-          {examples &&
-            examples.map((example, i) => (
-              <div
-                key={i}
-                className="border-small border-divider p-2 flex-grow rounded-md w-[350px] max-w-full"
-              >
-                <div className="flex gap-2 flex-wrap">
-                  <div className="flex-grow basis-0 overflow-hidden min-w-[175px]">
-                    <div className="flex flex-col">
-                      <p className="text-tiny text-default-700 my-0.5 mb-2 select-none">
-                        Ievaddati:
-                      </p>
-                      <code
-                        className="p-1.5 border-small border-divider"
-                        style={{
-                          backgroundColor: "rgba(212, 212, 216, 0.4)",
-                          whiteSpace: "pre-wrap",
-                        }}
-                      >
-                        {example.input}
-                      </code>
-                    </div>
-                  </div>
-                  <div className="flex-grow basis-0 overflow-hidden min-w-[175px]">
-                    <div className="flex flex-col">
-                      <p className="text-tiny text-default-700 my-0.5 mb-2 select-none">
-                        Izvaddati:
-                      </p>
-                      <code
-                        className="p-1.5 border-small border-divider"
-                        style={{
-                          backgroundColor: "rgba(212, 212, 216, 0.4)",
-                          whiteSpace: "pre-wrap",
-                        }}
-                      >
-                        {example.output}
-                      </code>
-                    </div>
-                  </div>
-                  {example.md_note && (
-                    <div className="flex-grow basis-0 overflow-hidden min-w-[175px]">
-                      <div className="flex flex-col">
-                        <p className="text-tiny text-default-700 my-0.5 mb-1.5 select-none">
-                          Piezīme:
-                        </p>
-                        <p
-                          dangerouslySetInnerHTML={{
-                            __html: renderMd(example.md_note),
-                          }}
-                          className="min-h-14 text-small"
-                        />
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
-        </div>
-      </div>
-      <div>
-        <h2 className="text-small my-1 mb-2 font-semibold">
-          Ierobežojumi un prasības
-        </h2>
-        <div>
-          Max izpildes laiks uz testu:{" "}
-          <span className="font-medium">{cpu_time_limit_seconds}</span>{" "}
-          sekundes.
-        </div>
-        <div>
-          Max atmiņas apjoms uz testu:{" "}
-          <span className="font-medium">{memory_limit_megabytes}</span>{" "}
-          megabaiti.
-        </div>
-      </div>
-      {statement_subtasks && (
-        <div>
-          <h2 className="text-small my-1 mb-2 font-semibold">
-            Apakšuzdevumi un to vērtēšana
-          </h2>
-          <Table
-            isCompact
-            isStriped
-            aria-label="Apakšuzdevumi un to vērtēšana"
-            className="z-0"
-            classNames={{ th: "h-8" }}
-            removeWrapper={true}
-            shadow="none"
-          >
-            <TableHeader>
-              <TableColumn>#</TableColumn>
-              <TableColumn>Apraksts</TableColumn>
-              <TableColumn>Punkti</TableColumn>
-            </TableHeader>
-            <TableBody>
-              {statement_subtasks.map((statement_subtask, i) => (
-                <TableRow key={statement_subtask.subtask}>
-                  <TableCell>{statement_subtask.subtask}</TableCell>
-                  <TableCell>
-                    <div
-                      dangerouslySetInnerHTML={{
-                        __html: renderMd(statement_subtask.descriptions["lv"]),
-                      }}
-                    />
-                  </TableCell>
-                  <TableCell>{statement_subtask.score}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-          <div className="mt-2 text-small">
-            Apakšuzdevumu punktu summa ={" "}
-            <span className="font-medium">
-              {statement_subtasks.reduce((a, b) => a + b.score, 0)}
-            </span>
-            .
-          </div>
-        </div>
-      )}
-      {vis_inp_st_inputs?.map((vis_inp_st_input: VisibleInputSubtask) => (
-        <div key={vis_inp_st_input.subtask}>
-          <h2 className="text-small my-1 mb-2 font-semibold">
-            {vis_inp_st_input.subtask}. apakšuzdevuma ievaddati
-          </h2>
-          <div className="flex gap-2 flex-wrap w-full max-w-full">
-            {vis_inp_st_input.inputs.map((test, i) => (
-              <div
-                key={i}
-                className="border-small border-divider p-2 flex-grow rounded-md w-[350px] max-w-full"
-              >
-                <div className="flex gap-2 flex-wrap">
-                  <div className="flex-grow basis-0 overflow-hidden min-w-[175px]">
-                    <div className="flex flex-col">
-                      {/* <p className="text-tiny text-default-700 my-0.5 mb-2 select-none">
-                        Ievaddati:
-                      </p> */}
-                      <code
-                        className="p-1.5 border-small border-divider"
-                        style={{
-                          backgroundColor: "rgba(212, 212, 216, 0.4)",
-                          whiteSpace: "pre-wrap",
-                        }}
-                      >
-                        {test.input}
-                      </code>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      ))}
+	const sections = {
+		story: renderMd(md_statement.story),
+		input: renderMd(md_statement.input),
+		output: renderMd(md_statement.output),
+		scoring: md_statement.scoring ? renderMd(md_statement.scoring) : ""
+	}
 
-      {scoringMd && (
-        <div>
-          <h2 className="text-small mb-3 mt-6 font-semibold">
-            Apakšuzdevumi un to vērtēšana
-          </h2>
-          <div className="">
-            <span dangerouslySetInnerHTML={{ __html: scoringMd }} />
-          </div>
-        </div>
-      )}
-    </div>
-  );
+	return (
+		<div className="w-full flex-grow flex flex-col gap-4 my-2 px-3 pb-4">
+			<Section title="Stāsts" content={sections.story} />
+			<Section title="Ievaddati" content={sections.input} />
+			<Section title="Izvaddati" content={sections.output} />
+
+			{examples && (
+				<div>
+					<h2 className="text-small my-1 mb-2 font-semibold">Piemēri</h2>
+					<div className="flex gap-2 flex-wrap w-full max-w-full">
+						{examples.map((example, i) => (
+							<div
+								key={example.input + example.output}
+								className="border-small border-divider p-2 flex-grow rounded-md w-[350px] max-w-full"
+							>
+								<div className="flex gap-2 flex-wrap">
+									<CodeBlock title="Ievaddati" content={example.input} />
+									<CodeBlock title="Izvaddati" content={example.output} />
+									{example.md_note && (
+										<div className="flex-grow basis-0 overflow-hidden min-w-[175px]">
+											<div className="flex flex-col">
+												<p className="text-tiny text-default-700 my-0.5 mb-1.5 select-none">
+													Piezīme:
+												</p>
+												<p className="text-sm">
+													{example.md_note}
+												</p>
+											</div>
+										</div>
+									)}
+								</div>
+							</div>
+						))}
+					</div>
+				</div>
+			)}
+
+			<div>
+				<h2 className="text-small my-1 mb-2 font-semibold">
+					Ierobežojumi un prasības
+				</h2>
+				<div>
+					Max izpildes laiks uz testu:{" "}
+					<span className="font-medium">{cpu_time_limit_seconds}</span>{" "}
+					sekundes.
+				</div>
+				<div>
+					Max atmiņas apjoms uz testu:{" "}
+					<span className="font-medium">{memory_limit_megabytes}</span>{" "}
+					megabaiti.
+				</div>
+			</div>
+
+			{statement_subtasks && statement_subtasks.length > 0 && (
+				<div>
+					<h2 className="text-small my-1 mb-2 font-semibold">
+						Apakšuzdevumi un to vērtēšana
+					</h2>
+					<div className="border-small border-divider rounded-small p-2">
+						<table className="w-full rounded-sm">
+							<tbody>
+								{statement_subtasks.map((subtask, i) => (
+									<tr key={i} className={cn({ "bg-gray-100": i % 2 === 0 })}>
+										<td className="px-2 py-1 w-[5em]">{subtask.subtask}.</td>
+										<td className="px-2 py-1">
+											<div
+												dangerouslySetInnerHTML={{
+													__html: renderMdLite(subtask.descriptions["lv"]),
+												}}
+											/>
+										</td>
+										<td className="px-2 py-1 w-[8em]">{subtask.score} p.</td>
+									</tr>
+								))}
+							</tbody>
+						</table>
+					</div>
+					<div className="mt-2">
+						Apakšuzdevumu punktu summa ={" "}
+						<span className="font-medium">
+							{statement_subtasks.reduce((a, b) => a + b.score, 0)}
+						</span>
+						.
+					</div>
+				</div>
+			)}
+
+			{vis_inp_st_inputs?.map((vis_inp_st_input: VisibleInputSubtask) => (
+				<div key={vis_inp_st_input.subtask}>
+					<h2 className="text-small my-1 mb-2 font-semibold">
+						{vis_inp_st_input.subtask}. apakšuzdevuma ievaddati
+					</h2>
+					<div className="flex gap-2 flex-wrap w-full max-w-full">
+						{vis_inp_st_input.inputs.map((test, i) => (
+							<div
+								key={i}
+								className="border-small border-divider p-2 flex-grow rounded-md w-[350px] max-w-full"
+							>
+								<div className="flex gap-2 flex-wrap">
+									<CodeBlock content={test.input} />
+								</div>
+							</div>
+						))}
+					</div>
+				</div>
+			))}
+
+			{sections.scoring && (
+				<div>
+					<h2 className="text-small mb-3 mt-6 font-semibold">
+						Apakšuzdevumi un to vērtēšana
+					</h2>
+					<div dangerouslySetInnerHTML={{ __html: sections.scoring }} className="" />
+				</div>
+			)}
+		</div>
+	);
 }
 
-function PdfView({ pdf_statement_url }: { pdf_statement_url: string }) {
-  const [pdfWidth, setPdfWidth] = useState<number | string>("100%");
-  const [pdfHeight, setPdfHeight] = useState<number | string>("100%");
-  const elementRef = React.useRef<HTMLDivElement>(null);
-  const handleResize = useCallback(
-    debounce(() => {
-      if (!elementRef.current) return;
-      setPdfWidth(elementRef.current.clientWidth);
-      setPdfHeight(elementRef.current.clientHeight);
-    }, 100),
-    [],
-  );
+function CodeBlock({ title, content }: { title?: string; content: string }) {
+	return (
+		<div className="flex-grow basis-0 overflow-hidden min-w-[175px] flex flex-col">
+			{title && (
+				<p className="text-tiny text-default-700 my-0.5 mb-2 select-none">
+					{title}
+				</p>
+			)}
+			<code
+				className="p-1.5 border-small border-divider"
+				style={{
+					backgroundColor: "rgba(212, 212, 216, 0.4)",
+					whiteSpace: "pre-wrap",
+				}}
+			>
+				{content}
+			</code>
+		</div>
+	);
+}
 
-  useEffect(() => {
-    if (!elementRef.current) return;
-    setPdfWidth(elementRef.current.clientWidth);
-    setPdfHeight(elementRef.current.clientHeight);
-    const resizeObserver = new ResizeObserver(() => {
-      handleResize();
-    });
-
-    resizeObserver.observe(elementRef.current);
-
-    return () => resizeObserver.disconnect();
-  }, [elementRef]);
-
-  return (
-    <div ref={elementRef} className="flex-grow w-full">
-      <div
-        className="absolute left-0"
-        style={{ width: pdfWidth, height: pdfHeight }}
-      >
-        {pdf_statement_url ? (
-          <object
-            aria-label="PDF statement"
-            data={pdf_statement_url}
-            height="100%"
-            width="100%"
-          />
-        ) : (
-          <p>No PDF statement available for this task.</p>
-        )}
-      </div>
-    </div>
-  );
+function Section({ title, content }: { title: string; content: string }) {
+	return (
+		<div>
+			<h2 className="text-small mb-1 font-semibold">{title}</h2>
+			<div className="text-justify">
+				<span dangerouslySetInnerHTML={{ __html: content }} />
+			</div>
+		</div>
+	);
 }
 
 type TaskHeaderProps = {
-  task_full_name: string;
-  difficulty_rating: 1 | 2 | 3 | 4 | 5;
-  illustration_img_url?: string;
-  origin_olympiad?: string;
-  origin_notes?: Record<string, string>;
-  default_pdf_statement_url?: string;
+	task_full_name: string;
+	difficulty_rating: 1 | 2 | 3 | 4 | 5;
+	illustration_img_url?: string;
+	origin_olympiad?: string;
+	origin_notes?: Record<string, string>;
+	default_pdf_statement_url?: string;
 };
 
 function TaskHeader({
-  task_full_name,
-  difficulty_rating,
-  illustration_img_url,
-  origin_olympiad,
-  origin_notes,
-  default_pdf_statement_url,
+	task_full_name,
+	difficulty_rating,
+	illustration_img_url,
+	origin_olympiad,
+	origin_notes,
+	default_pdf_statement_url,
 }: TaskHeaderProps) {
+	const cardRef = useRef<HTMLDivElement>(null);
+	const [layout, setLayout] = useState<"xs" | "narrow" | "wide">("wide");
+	const [imageLoading, setImageLoading] = useState<boolean>(true);
+	const [logoLoading, setLogoLoading] = useState<boolean>(true);
 
-  let diff = {
-    1: <Chip className="bg-green-100 text-green-800" size="sm" variant="flat">ļoti viegls</Chip>,
-    2: <Chip className="bg-sky-100 text-sky-800" size="sm" variant="flat">viegls</Chip>,
-    3: <Chip className="bg-violet-100 text-violet-800" size="sm" variant="flat">vidēji grūts</Chip>,
-    4: <Chip className="bg-yellow-100 text-yellow-800" size="sm" variant="flat">grūts</Chip>,
-    5: <Chip className="bg-red-100 text-red-800" size="sm" variant="flat">ļoti grūts</Chip>,
-  };
+	const handleCardResize = (cardWidth: number) => {
+		const wideBoundary = 550;
+		const narrowBoundary = 350;
 
-  const cardRef = useRef<HTMLDivElement>(null);
-  const [layout, setLayout] = useState<"xs" | "narrow" | "wide">("wide");
+		if (cardWidth < narrowBoundary) {
+			setLayout("xs");
+		} else if (cardWidth < wideBoundary) {
+			setLayout("narrow");
+		} else {
+			setLayout("wide");
+		}
+	};
 
-  function handleCardResize(cardWidth: number) {
-    const wideBoundary = 550;
-    const narrowBoundary = 350;
+	useEffect(() => {
+		if (!cardRef.current) return;
+		handleCardResize(cardRef.current.clientWidth);
+		const resizeObserver = new ResizeObserver(() => {
+			if (cardRef.current) {
+				handleCardResize(cardRef.current.clientWidth);
+			}
+		});
 
-    if (cardWidth < narrowBoundary) {
-      setLayout("xs");
-    } else if (cardWidth < wideBoundary) {
-      setLayout("narrow");
-    } else {
-      setLayout("wide");
-    }
-  }
+		resizeObserver.observe(cardRef.current);
 
-  useEffect(() => {
-    if (!cardRef.current) return;
-    handleCardResize(cardRef.current.clientWidth);
-    const resizeObserver = new ResizeObserver(() => {
-      if (!cardRef.current) return;
-      handleCardResize(cardRef.current.clientWidth);
-    });
+		return () => resizeObserver.disconnect();
+	}, []);
 
-    resizeObserver.observe(cardRef.current);
+	return (
+		<div className="w-full" ref={cardRef}>
+			<div className="flex flex-col p-0 sm:flex-nowrap">
+				<div className="flex flex-row">
+					<div className="h-full flex flex-row gap-3 sm:flex-nowrap flex-grow px-2.5 py-1.5">
+						{layout === "wide" && illustration_img_url && (
+							<>
+								{imageLoading && <Skeleton className="w-[120px] h-[120px] absolute rounded-md" />}
+								<div className="max-w-[120px] w-[120px] flex-none">
 
-    return () => resizeObserver.disconnect();
-  }, [cardRef]);
-
-  return (
-    <div
-      className="w-full"
-      ref={cardRef}
-    >
-      <div className="flex flex-col p-0 sm:flex-nowrap">
-        <div className="flex flex-row">
-          <div className="h-full flex flex-row gap-3 sm:flex-nowrap flex-grow px-3 py-1">
-            {layout === "wide" && illustration_img_url && (
-              <div className="max-w-28 min-h-16 min-w-16 flex pt-1">
-                <Image
-                  alt={task_full_name}
-                  className="flex-none object-cover rounded-md"
-                  disableSkeleton={true}
-                  src={illustration_img_url}
-                  // fetchPriority="high"
-                />
-              </div>
-            )}
-            <div className="flex flex-col flex-grow justify-between w-full">
-              <Skeleton isLoaded={true}>
-                <div className="flex justify-between items-center">
-                  <div className="inline-flex gap-x-4 gap-y-1 justify-between items-center flex-wrap">
-                    <h3 className="text-large font-semibold">
-                      {task_full_name}
-                    </h3>
-                    {difficulty_rating && diff[difficulty_rating]}
-                  </div>
-                  <div className="">
-                    <Dropdown placement="bottom-end">
-                      <DropdownTrigger>
-                        <Button isIconOnly size="sm" variant="light">
-                          <IconMenu2
-                            className="text-default-700"
-                            height={20}
-                            // icon="solar:sidebar-minimalistic-outline"
-                            width={20}
-                          />
-                        </Button>
-                      </DropdownTrigger>
-                      <DropdownMenu
-                        aria-label="Static Actions"
-                        disabledKeys={[
-                          ...(default_pdf_statement_url
-                            ? []
-                            : ["open-original-pdf"]),
-                        ]}
-                      >
-                        <DropdownItem
-                          key="open-original-pdf"
-                          endContent={
-                            <IconFileTypePdf className="text-default-600" />
-                          }
-                          href={default_pdf_statement_url}
-                          target="_blank"
-                        >
-                          Atvērt oriģinālo PDF
-                        </DropdownItem>
-                      </DropdownMenu>
-                    </Dropdown>
-                  </div>
-                </div>
-                <div className="flex flex-grow gap-2 mt-1">
-                  {layout === "narrow" && illustration_img_url && (
-                    <div className="max-w-[100px] min-h-16 min-w-16 flex">
-                      <Image
-                        alt={task_full_name}
-                        className="flex-none object-cover"
-                        disableSkeleton={true}
-                        src={illustration_img_url}
-                        // fetchPriority="high"
-                      />
-                    </div>
-                  )}
-                  <div className="flex flex-col flex-grow">
-                    <div className="flex justify-between max-w-72">
-                      <div
-                        className={cn("flex justify-between", {
-                          "": layout === "xs",
-                        })}
-                      >
-                        {origin_olympiad &&
-                          origin_olympiad === "LIO" && (
-                            <div className="w-16 min-w-16">
-                              <Image
-                                alt="Latvijas Informātikas olimpiādes logo"
-                                src="https://lio.lv/LIO_logo_jaunais3.png"
-                              />
-                            </div>
-                          )}
-                        {origin_notes?.lv && (
-                          <div className="text-tiny text-default-700 py-1 ms-1">
-                            {origin_notes.lv}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </Skeleton>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
+									<Image
+										disableAnimation
+										alt={task_full_name}
+										className="flex-none object-cover rounded-md"
+										src={illustration_img_url}
+										onLoad={() => setImageLoading(false)}
+										height={120}
+										width={120}
+									/>
+								</div>
+							</>
+						)}
+						<div className="flex flex-col flex-grow justify-between w-full">
+							<div className="flex justify-between items-center">
+								<div className="inline-flex gap-x-4 gap-y-1 justify-between items-center flex-wrap">
+									<h3 className="text-large font-semibold">
+										{task_full_name}
+									</h3>
+									{difficulty_rating && (
+										<TaskDifficultyChip
+											difficulty_rating={difficulty_rating}
+										/>
+									)}
+								</div>
+								<div>
+									<Dropdown placement="bottom-end" disableAnimation radius="sm">
+										<DropdownTrigger>
+											<Button isIconOnly size="sm" variant="light">
+												<IconMenu2
+													className="text-default-700"
+													height={20}
+													width={20}
+												/>
+											</Button>
+										</DropdownTrigger>
+										<DropdownMenu
+											aria-label="Static Actions"
+										// disabledKeys={
+										// 	default_pdf_statement_url ? [] : ["open-original-pdf"]
+										// }
+										>
+											<>
+												{default_pdf_statement_url && (
+													<DropdownItem
+														key="open-original-pdf"
+														endContent={
+															<IconFileTypePdf className="text-default-600" />
+														}
+														href={default_pdf_statement_url}
+														target="_blank"
+													>
+														Atvērt oriģinālo PDF
+													</DropdownItem>
+												)}
+											</>
+										</DropdownMenu>
+									</Dropdown>
+								</div>
+							</div>
+							<div className="flex flex-grow gap-2 mt-1">
+								{layout === "narrow" && illustration_img_url && (
+									<div className="max-w-[100px] min-h-16 min-w-16 flex">
+										<Image
+											alt={task_full_name}
+											className="flex-none object-cover"
+											disableSkeleton
+											src={illustration_img_url}
+										/>
+									</div>
+								)}
+								<div className="flex flex-col flex-grow">
+									<div className="flex justify-between max-w-72">
+										<div className="flex justify-between">
+											{origin_olympiad === "LIO" && (
+												<>
+													{logoLoading && <Skeleton className="w-16 h-[50px] absolute rounded-md" />}
+													<div className="w-16 min-w-16">
+														<Image
+															disableAnimation
+															alt="Latvijas Informātikas olimpiādes logo"
+															src={LIO_LOGO.src}
+															onLoad={() => setLogoLoading(false)}
+															width={64}
+														/>
+													</div>
+												</>
+											)}
+											{origin_notes?.lv && (
+												<div className="text-tiny text-default-700 ms-1">
+													{origin_notes.lv}
+												</div>
+											)}
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	);
+}
 
 function RightSide({ taskCode }: { taskCode: string }) {
-  const authContext = useContext(AuthContext);
-  const [selectedLanguage, setSelectedLanguage] = useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const router = useRouter();
+	const authContext = useContext(AuthContext);
+	const [selectedLanguage, setSelectedLanguage] = useState<string>("");
+	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const router = useRouter();
 
-  let { data: listLangsResponse } = useQuery(
-    "list-languages",
-    listProgrammingLanguages,
-  );
+	const { data: listLangsResponse } = useQuery(
+		"list-languages",
+		listProgrammingLanguages
+	);
 
-  const languages = listLangsResponse?.data;
-  const [code, setCode] = useState<string>("");
+	const languages = listLangsResponse?.data;
+	const [code, setCode] = useState<string>("");
 
-  useEffect(() => {
-    if (!languages) return;
-    if (selectedLanguage === "") {
-      for (let lang of languages) {
-        if (lang.id === "cpp17") {
-          setSelectedLanguage("cpp17");
+	useEffect(() => {
+		if (!languages) return;
+		if (selectedLanguage === "") {
+			const defaultLang = languages.find((lang) => lang.id === "cpp17");
+			setSelectedLanguage(defaultLang ? "cpp17" : languages[0].id);
+		}
+	}, [languages, selectedLanguage]);
 
-          return;
-        }
-      }
-      setSelectedLanguage(languages[0].id);
-    }
-  }, [languages]);
+	const monacoLangId =
+		languages?.find((lang) => lang.id === selectedLanguage)?.monacoId || "";
 
-  let monacoLangId = "";
+	useEffect(() => {
+		const savedText = sessionStorage.getItem(
+			`code-${taskCode}-${selectedLanguage}`
+		);
 
-  if (selectedLanguage && languages) {
-    monacoLangId =
-      languages.filter((lang) => lang.id === selectedLanguage)[0]?.monacoId ||
-      "";
-  }
-
-  useEffect(() => {
-    const savedText = sessionStorage.getItem(
-      `code-${taskCode}-${selectedLanguage}`,
-    );
-
-    if (!savedText) {
-      if (selectedLanguage === "cpp17") {
-        setCode(`#include <iostream>
+		if (savedText) {
+			setCode(savedText);
+		} else if (selectedLanguage === "cpp17") {
+			setCode(`#include <iostream>
 using namespace std;
 
 int main() {
-    
+		
 }`);
-      }
-    } else {
-      setCode(savedText);
-    }
-  }, [selectedLanguage]);
+		}
+	}, [selectedLanguage, taskCode]);
 
-  useEffect(() => {
-    sessionStorage.setItem(`code-${taskCode}-${selectedLanguage}`, code);
-  }, [code]);
-  async function submitSolution() {
-    setIsLoading(true);
-    try {
-      let response = await createSubmission(
-        code,
-        authContext.user?.username ?? "",
-        selectedLanguage,
-        taskCode,
-      );
+	useEffect(() => {
+		sessionStorage.setItem(`code-${taskCode}-${selectedLanguage}`, code);
+	}, [code, selectedLanguage, taskCode]);
 
-      await router.push(`/submissions`);
-      // await
-    } catch (error) {
-      setIsLoading(false);
-      alert(error);
-    }
-  }
+	const submitSolution = async () => {
+		setIsLoading(true);
+		try {
+			await createSubmission(
+				code,
+				authContext.user?.username ?? "",
+				selectedLanguage,
+				taskCode
+			);
+			await router.push(`/submissions`);
+		} catch (error) {
+			setIsLoading(false);
+			alert(error);
+		}
+	};
 
-  return (
-    <div className="flex flex-col flex-grow bg-white rounded-small border-small border-divider px-2 py-1 pb-2">
-      <div className="h-full w-full flex flex-col gap-2">
-        <div className="flex justify-end">
-          <LanguageSelect
-            languages={languages}
-            selectedLanguage={selectedLanguage}
-            setSelectedLanguage={setSelectedLanguage}
-          />
-        </div>
-        <div style={{ flexGrow: 1, position: "relative" }}>
-          <div style={{ width: "100%", height: "100%", position: "absolute" }}>
-            <MonacoEditor
-              language={monacoLangId}
-              options={{
-                minimap: { enabled: false },
-                fontSize: 14,
-              }}
-              theme="vs-dark"
-              value={code}
-              onChange={(value: any) => setCode(value as string)}
-            />
-          </div>
-        </div>
-        {/* <SubmitButton langId={selectedLanguage} code={code} taskCode={taskCode} /> */}
-      </div>
-      <div className="mt-2 flex justify-end gap-3">
-        {/* TODO: allow submission as anonymous person */}
-        {authContext.user !== null && (
-          <Button
-            color="primary"
-            isLoading={isLoading}
-            onClick={submitSolution}
-          >
-            Iesūtīt risinājumu
-            <IconSend size={16} />
-          </Button>
-        )}
-        {authContext.user === null && (
-          <Button isDisabled color="primary">
-            Pieslēdzieties, lai iesūtīt risinājumu!
-            <IconSend size={16} />
-          </Button>
-        )}
-      </div>
-    </div>
-  );
+	return (
+		<div className="flex flex-col flex-grow bg-white rounded-small border-small border-divider p-2">
+			<div className="h-full w-full flex flex-col gap-2">
+				<div className="flex justify-end gap-3">
+					<LanguageSelect
+						languages={languages}
+						selectedLanguage={selectedLanguage}
+						setSelectedLanguage={setSelectedLanguage}
+					/>
+					<div className="mt-2 flex justify-end gap-3">
+						{authContext.user ? (
+							<Button color="primary" size="sm" isLoading={isLoading} onClick={submitSolution}>
+								Iesūtīt risinājumu
+								<IconSend size={16} />
+							</Button>
+						) : (
+							<Button isDisabled size="sm">
+								Pieslēdzies, lai iesūtīt risinājumu!
+							</Button>
+						)}
+					</div>
+				</div>
+				<div style={{ flexGrow: 1, position: "relative" }}>
+					<div style={{ width: "100%", height: "100%", position: "absolute" }}>
+						<MonacoEditor
+							language={monacoLangId}
+							options={{
+								minimap: { enabled: false },
+								fontSize: 14,
+							}}
+							theme="vs-dark"
+							value={code}
+							onChange={(value: string | undefined) => setCode(value || "")}
+						/>
+					</div>
+				</div>
+			</div>
+		</div>
+	);
 }
 
 function ResizeBar() {
-  return (
-    <div
-      className="flex items-center justify-center w-3 h-full p-0"
-      style={{ marginLeft: 6 }}
-    >
-      <div className="flex flex-col gap-0">
-        {[...Array(3)].map((_, i) => (
-          <IconGripVertical
-            key={i}
-            className="w-5 h-5 text-gray-700"
-            stroke={1.5}
-          />
-        ))}
-      </div>
-    </div>
-  );
+	return (
+		<div
+			className="flex items-center justify-center w-3 h-full p-0"
+			style={{ marginLeft: 6 }}
+		>
+			<div className="flex flex-col gap-0">
+				{[...Array(3)].map((_, i) => (
+					<IconGripVertical
+						key={i}
+						className="w-5 h-5 text-gray-700"
+						stroke={1.5}
+					/>
+				))}
+			</div>
+		</div>
+	);
 }
 
 type LanguageSelectProps = {
-  languages: ProgrammingLanguage[] | undefined | null;
-  selectedLanguage: string;
-  setSelectedLanguage: Dispatch<SetStateAction<string>>;
+	languages: ProgrammingLanguage[] | undefined | null;
+	selectedLanguage: string;
+	setSelectedLanguage: Dispatch<SetStateAction<string>>;
 };
 
-function LanguageSelect(props: LanguageSelectProps) {
-  if (!props.languages) {
-    return null;
-  }
+function LanguageSelect({
+	languages,
+	selectedLanguage,
+	setSelectedLanguage,
+}: LanguageSelectProps) {
+	if (!languages) {
+		return null;
+	}
 
-  let disabledKeys = [
-    ...props.languages.filter((lang) => !lang.enabled).map((lang) => lang.id),
-  ];
+	const disabledKeys = languages
+		.filter((lang) => !lang.enabled)
+		.map((lang) => lang.id);
 
-  return (
-    <Select
-      className="max-w-xs"
-      disallowEmptySelection={true}
-      label="Programmēšanas valoda"
-      selectedKeys={[props.selectedLanguage]}
-      size="sm"
-      variant="underlined"
-      onSelectionChange={(
-        selectedKeys:
-          | "all"
-          | (Set<React.Key> & { anchorKey?: string; currentKey?: string })
-      ) =>
-        props.setSelectedLanguage(
-          selectedKeys === "all"
-            ? "cpp17"
-            : (selectedKeys.currentKey ?? "cpp17")
-        )
-      }
-      items={props.languages}
-      // filter out the ones that have "enabled" set to false
-      disabledKeys={disabledKeys}
-    >
-      {(x) => <SelectItem key={x.id}>{x.fullName}</SelectItem>}
-    </Select>
-  );
+	// non disabled first, then by name
+	languages.sort((a, b) => {
+		if (disabledKeys.includes(a.id) && !disabledKeys.includes(b.id)) {
+			return 1;
+		}
+		if (!disabledKeys.includes(a.id) && disabledKeys.includes(b.id)) {
+			return -1;
+		}
+		return a.fullName.localeCompare(b.fullName);
+	});
+
+	return (
+		<Select
+			className="max-w-48"
+			radius="sm"
+			classNames={{
+				popoverContent: "rounded-small border-small border-divider",
+			}}
+			disallowEmptySelection
+			// label="Programmēšanas valoda"
+			selectedKeys={[selectedLanguage]}
+			size="sm"
+			variant="underlined"
+			disableAnimation
+			onSelectionChange={(selectedKeys) => {
+				if (selectedKeys === "all") {
+					setSelectedLanguage("cpp17");
+				} else {
+					const key = Array.from(selectedKeys)[0];
+					setSelectedLanguage((key as string) || "cpp17");
+				}
+			}}
+			items={languages}
+			disabledKeys={disabledKeys}
+			selectionMode="single"
+		>
+			{(item) => <SelectItem key={item.id}>{item.fullName}</SelectItem>}
+		</Select>
+	);
 }

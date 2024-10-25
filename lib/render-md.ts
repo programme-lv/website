@@ -23,7 +23,7 @@ function rehypeAddClasses() {
           node.properties.className = ["text-xl", "font-bold", "mb-3"];
           break;
         case "p":
-          node.properties.className = ["mb-1"];
+          node.properties.className = ["mb-2"];
           break;
         case "ul":
           node.properties.className = ["list-disc", "pl-5", "mb-2"];
@@ -145,7 +145,7 @@ export function renderMdLite(md: string): string {
     .use(remarkMath)
     .use(remarkRehype)
     .use(rehypeKatex)
-    .use(rehypeAddClasses)
+    // .use(rehypeAddClasses)
     .use(rehypeRemoveImages) // Add the image removal plugin
     .use(rehypeStringify)
     .processSync(md)
