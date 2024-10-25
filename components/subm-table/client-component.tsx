@@ -17,7 +17,7 @@ export default function ClientSubmissionTable({
 }) {
   const [updates, setUpdates] = useState<SubmListWebSocketUpdate[]>([]);
   const [submissions, setSubmissions] = useState<BriefSubmission[]>(initial);
-  const { data, isLoading } = useQuery("submissions", listSubmissions, {
+  const { data } = useQuery("submissions", listSubmissions, {
     refetchInterval: 5000,
   });
 
@@ -46,7 +46,12 @@ export default function ClientSubmissionTable({
     });
   }, [data, updates]);
 
-  return <SubmissionTableServer submissions={submissions} skeleton={submissions.length ? false : true}/>;
+  return (
+    <SubmissionTableServer
+      skeleton={submissions.length ? false : true}
+      submissions={submissions}
+    />
+  );
 }
 
 // Sorting and update logic can remain the same as the original code

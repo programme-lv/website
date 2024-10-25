@@ -3,9 +3,10 @@
 import React, { Suspense, useContext, useState } from "react";
 import { useMutation } from "react-query";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Button, Input, Checkbox, Divider } from "@nextui-org/react";
+import { Button, Input, Divider } from "@nextui-org/react";
 import { Icon } from "@iconify/react";
 import Image from "next/image";
+import Link from "next/link";
 
 import { registerUser, loginUser } from "@/lib/auth";
 import Alert from "@/components/Alert";
@@ -13,7 +14,6 @@ import MountainsImage from "@/public/mountains.png";
 import LogoImage from "@/public/logo.png";
 import { setJwt } from "@/lib/jwt";
 import { AuthContext } from "@/app/providers";
-import Link from "next/link";
 
 export default function AuthCardWithBG(props: { type: "login" | "register" }) {
   const { type } = props;
@@ -29,9 +29,15 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
     >
       {/* Brand Logo */}
       <div className="absolute left-2 top-2">
-        <Link className="flex items-center p-2 bg-white rounded-md hover:bg-gray-50" href="/">
+        <Link
+          className="flex items-center p-2 bg-white rounded-md hover:bg-gray-50"
+          href="/"
+        >
           <Image alt="programme.lv logo" height={22} src={LogoImage} />
-          <p className="ms-2 me-1 dark:text-white text-medium lowercase text-default-800" style={{fontFamily:'sans-serif'}}>
+          <p
+            className="ms-2 me-1 dark:text-white text-medium lowercase text-default-800"
+            style={{ fontFamily: "sans-serif" }}
+          >
             {/* <span
               className={cn("text-small font-medium uppercase opacity-100", {
                 "w-0 opacity-0 hidden": isCompact,
@@ -140,12 +146,16 @@ function AuthForm({ type }: { type: "login" | "register" }) {
         {type === "register" ? (
           <>
             <span>Reģistrācija</span>
-            <Icon height={28} icon={"mdi:register"} className="text-default-700"/>
+            <Icon
+              className="text-default-700"
+              height={28}
+              icon={"mdi:register"}
+            />
           </>
         ) : (
           <>
             Pieslēgšanās
-            <Icon height={28} icon={"mdi:login"}  className="text-default-700"/>
+            <Icon className="text-default-700" height={28} icon={"mdi:login"} />
             {/* <IconLogin2 className="text-default-700"/> */}
           </>
         )}
@@ -300,12 +310,12 @@ function GoToLoginOrRegister({ type }: { type: "login" | "register" }) {
         <>
           Jau ir konts?&nbsp;
           <Link
+            className="text-primary-500 hover:underline"
             href={
               redirectParam
                 ? `/login?redirect=${encodeURIComponent(redirectParam)}`
                 : `/login`
             }
-            className="text-primary-500 hover:underline"
           >
             Pieslēgties
           </Link>
@@ -314,12 +324,12 @@ function GoToLoginOrRegister({ type }: { type: "login" | "register" }) {
         <>
           Nav konta?&nbsp;
           <Link
+            className="text-primary-500 hover:underline"
             href={
               redirectParam
                 ? `/register?redirect=${encodeURIComponent(redirectParam)}`
                 : `/register`
             }
-            className="text-primary-500 hover:underline"
           >
             Reģistrēties
           </Link>

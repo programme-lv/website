@@ -56,9 +56,7 @@ export function applyUpdatesToSubmissions(
         const test_group_id = update.testgroup_res_update.test_group_id;
         const new_untested_testcount =
           update.testgroup_res_update.untested_tests;
-        const old_testgroup_index = updatedSubms[
-          index
-        ].test_groups.findIndex(
+        const old_testgroup_index = updatedSubms[index].test_groups.findIndex(
           (tg) => tg.test_group_id === test_group_id,
         );
         const old_untested_testcount =

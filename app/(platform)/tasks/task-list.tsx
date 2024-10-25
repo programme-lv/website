@@ -42,7 +42,7 @@ export function TaskList(props: { tasks: Task[] }) {
               href={`/tasks/${task.published_task_id}`}
               prefetch={true}
             >
-              <TaskCard key={task.published_task_id} task={task} />
+              <TaskCard key={task.published_task_id} {...task} />
             </Link>
           ))
         ) : (
@@ -50,5 +50,5 @@ export function TaskList(props: { tasks: Task[] }) {
         )}
       </div>
     </main>
-  )
+  );
 }

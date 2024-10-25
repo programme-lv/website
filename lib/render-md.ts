@@ -72,38 +72,38 @@ function rehypeAddClasses() {
           node.properties.className = ["px-3", "py-1", "border"];
           break;
         case "img":
-            // node.properties.className = ["w-2/3"]
-            node.properties.style =
-              "margin-top: .5rem; margin-bottom: .5rem; width: 450px; object-fit:contain;";
-            // Wrap the image in a figure and add a caption
-            if (parent && parent.children) {
-              const figure: any = {
-                type: "element",
-                tagName: "figure",
-                properties: {
-                  className: ["flex", "flex-col", "items-center", "mb-4"],
+          // node.properties.className = ["w-2/3"]
+          node.properties.style =
+            "margin-top: .5rem; margin-bottom: .5rem; width: 450px; object-fit:contain;";
+          // Wrap the image in a figure and add a caption
+          if (parent && parent.children) {
+            const figure: any = {
+              type: "element",
+              tagName: "figure",
+              properties: {
+                className: ["flex", "flex-col", "items-center", "mb-4"],
+              },
+              children: [
+                {
+                  type: "element",
+                  tagName: "img",
+                  properties: node.properties,
                 },
-                children: [
-                  {
-                    type: "element",
-                    tagName: "img",
-                    properties: node.properties,
-                  },
-                  {
-                    type: "element",
-                    tagName: "figcaption",
-                    properties: { className: ["text-sm", "text-center", "mt-2"] },
-                    children: [
-                      { type: "text", value: node.properties.alt || "Image" },
-                    ],
-                  },
-                ],
-              };
-  
-              parent.children[index] = figure;
-            }
-            break;
-  
+                {
+                  type: "element",
+                  tagName: "figcaption",
+                  properties: { className: ["text-sm", "text-center", "mt-2"] },
+                  children: [
+                    { type: "text", value: node.properties.alt || "Image" },
+                  ],
+                },
+              ],
+            };
+
+            parent.children[index] = figure;
+          }
+          break;
+
         default:
           break;
       }

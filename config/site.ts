@@ -3,7 +3,7 @@ export type SiteConfig = typeof siteConfig;
 export const siteConfig = {
   name: "programme.lv",
   description:
-  "Programmēšanas uzdevumi, teorija un mācību vide skolēniem un studentiem. Pievienojies, lai nostiprinātu sevi un Latviju globālajā tehnoloģiju vidē.",
+    "Programmēšanas uzdevumi, teorija un mācību vide skolēniem un studentiem. Pievienojies, lai nostiprinātu sevi un Latviju globālajā tehnoloģiju vidē.",
   navItems: [
     // {
     //   label: "Uzdevumi",

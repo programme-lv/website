@@ -8,7 +8,6 @@ import {
   Accordion,
   Spacer,
   Chip,
-  Divider,
 } from "@nextui-org/react";
 import MonacoEditor from "@monaco-editor/react";
 import Link from "next/link";
@@ -69,6 +68,7 @@ const calculateScores = (data: any) => {
     });
   } else if (data.test_set) {
     const { wrong, accepted, untested } = data.test_set;
+
     possibleScore = wrong + accepted + untested;
     receivedScore = accepted;
   }
@@ -87,21 +87,25 @@ const determineVerdict = (testResult: TestResult): string => {
   if (testResult.memory_exceeded) return "MLE";
   if (testResult.time_exceeded) return "TLE";
   if (testResult.checker_runtime?.exit_code !== 0) return "WA";
+
   return "AC";
 };
 
 // InfoCard Component
-const InfoCard: React.FC<{ data: any; receivedScore: number; possibleScore: number }> = ({
-  data,
-  receivedScore,
-  possibleScore,
-}) => {
+const InfoCard: React.FC<{
+  data: any;
+  receivedScore: number;
+  possibleScore: number;
+}> = ({ data, receivedScore, possibleScore }) => {
   const infoCardEntries = [
     { label: "Autors", value: data.username },
     {
       label: "Uzdevums",
       value: (
-        <Link className="text-blue-600 hover:underline" href={`/tasks/${data.task_id}`}>
+        <Link
+          className="text-blue-600 hover:underline"
+          href={`/tasks/${data.task_id}`}
+        >
           {data.task_name}
         </Link>
       ),
@@ -127,7 +131,7 @@ const InfoCard: React.FC<{ data: any; receivedScore: number; possibleScore: numb
               {
                 "text-warning-500":
                   receivedScore > 0 && receivedScore < possibleScore,
-              }
+              },
             )}
           >
             {receivedScore} / {possibleScore}
@@ -139,7 +143,11 @@ const InfoCard: React.FC<{ data: any; receivedScore: number; possibleScore: numb
   ];
 
   return (
-    <Card classNames={{ base: "border-small border-divider" }} radius="sm" shadow="none">
+    <Card
+      classNames={{ base: "border-small border-divider" }}
+      radius="sm"
+      shadow="none"
+    >
       <CardBody>
         <div className="flex flex-wrap gap-x-6 gap-y-3 lg:gap-8 xl:gap-10 px-1">
           {infoCardEntries.map((entry) => (
@@ -155,14 +163,17 @@ const InfoCard: React.FC<{ data: any; receivedScore: number; possibleScore: numb
 };
 
 // SingleTestResultCard Component
-const SingleTestResultCard: React.FC<{ testResult: TestResult }> = ({ testResult }) => {
+const SingleTestResultCard: React.FC<{ testResult: TestResult }> = ({
+  testResult,
+}) => {
   const verdict = useMemo(() => determineVerdict(testResult), [testResult]);
 
   const exitSignalDescription = useMemo(() => {
     return (
-      testResult.subm_runtime?.exit_signal &&
-      EXIT_SIGNAL_DESCRIPTIONS[testResult.subm_runtime.exit_signal]
-    ) || "Unknown exit signal";
+      (testResult.subm_runtime?.exit_signal &&
+        EXIT_SIGNAL_DESCRIPTIONS[testResult.subm_runtime.exit_signal]) ||
+      "Unknown exit signal"
+    );
   }, [testResult]);
 
   const verdictColor = useMemo(() => {
@@ -188,6 +199,7 @@ const SingleTestResultCard: React.FC<{ testResult: TestResult }> = ({ testResult
       WA: "Atbilde ir nepareiza",
       RE: "Izpildes kļūda",
     };
+
     return texts[verdict] || "Nav sasniegts";
   }, [verdict]);
 
@@ -211,48 +223,67 @@ const SingleTestResultCard: React.FC<{ testResult: TestResult }> = ({ testResult
       key={testResult.test_id}
       className="p-2 border-small border-divider rounded-md"
     >
-        <TestResultHeader testResult={testResult} verdict={verdict} />
-        {/* <Spacer y={1.5} /> */}
-        {verdict === "RE" && (
-          <>
-            <div className="flex flex-col gap-4">
-              <RuntimeInfo testResult={testResult} />
-            </div>
-            <Spacer y={2} />
-            <div className="flex gap-4">
-              <OutputSection title="Izpildes kļūdas ziņojums:" content={testResult.subm_runtime?.stderr_trimmed} />
-              <OutputSection title="Izejas kods:" content={testResult.subm_runtime?.exit_code?.toString()} />
-              {testResult.subm_runtime?.exit_signal && (
-                <OutputSection
-                  title="Izejas signāls:"
-                  content={`${testResult.subm_runtime.exit_signal} : ${exitSignalDescription}`}
-                />
-              )}
-            </div>
-          </>
-        )}
-        {verdict !== "RE" && (
-          <>
-            <div className="flex flex-col gap-4">
-              <OutputSection title="Ievaddati:" content={testResult.input_trimmed} />
-              <OutputSection title="Programmas izvaddati:" content={testResult.subm_runtime?.stdout_trimmed} />
-              <OutputSection title="Atbilde:" content={testResult.answer_trimmed} />
-              <OutputSection title="Pārbaudes piezīmes:" content={testResult.checker_runtime?.stderr_trimmed} />
-            </div>
-          </>
-        )}
+      <TestResultHeader testResult={testResult} verdict={verdict} />
+      {/* <Spacer y={1.5} /> */}
+      {verdict === "RE" && (
+        <>
+          <div className="flex flex-col gap-4">
+            <RuntimeInfo testResult={testResult} />
+          </div>
+          <Spacer y={2} />
+          <div className="flex gap-4">
+            <OutputSection
+              content={testResult.subm_runtime?.stderr_trimmed}
+              title="Izpildes kļūdas ziņojums:"
+            />
+            <OutputSection
+              content={testResult.subm_runtime?.exit_code?.toString()}
+              title="Izejas kods:"
+            />
+            {testResult.subm_runtime?.exit_signal && (
+              <OutputSection
+                content={`${testResult.subm_runtime.exit_signal} : ${exitSignalDescription}`}
+                title="Izejas signāls:"
+              />
+            )}
+          </div>
+        </>
+      )}
+      {verdict !== "RE" && (
+        <>
+          <div className="flex flex-col gap-4">
+            <OutputSection
+              content={testResult.input_trimmed}
+              title="Ievaddati:"
+            />
+            <OutputSection
+              content={testResult.subm_runtime?.stdout_trimmed}
+              title="Programmas izvaddati:"
+            />
+            <OutputSection
+              content={testResult.answer_trimmed}
+              title="Atbilde:"
+            />
+            <OutputSection
+              content={testResult.checker_runtime?.stderr_trimmed}
+              title="Pārbaudes piezīmes:"
+            />
+          </div>
+        </>
+      )}
     </div>
   );
 };
 
 // TestResultHeader Component
-const TestResultHeader: React.FC<{ testResult: TestResult; verdict: string }> = ({
-  testResult,
-  verdict,
-}) => {
+const TestResultHeader: React.FC<{
+  testResult: TestResult;
+  verdict: string;
+}> = ({ testResult, verdict }) => {
   const verdictColor = cn({
     "text-success-600": verdict === "AC",
-    "text-danger-600": verdict === "WA" || verdict === "MLE" || verdict === "TLE",
+    "text-danger-600":
+      verdict === "WA" || verdict === "MLE" || verdict === "TLE",
     "text-secondary-600": verdict === "RE",
   });
 
@@ -279,6 +310,7 @@ const TestResultHeader: React.FC<{ testResult: TestResult; verdict: string }> = 
       WA: "Atbilde ir nepareiza",
       RE: "Izpildes kļūda",
     };
+
     return labels[verdict] || "Nav sasniegts";
   }, [verdict]);
 
@@ -317,7 +349,10 @@ const TestResultHeader: React.FC<{ testResult: TestResult; verdict: string }> = 
 };
 
 // OutputSection Component
-const OutputSection: React.FC<{ title: string; content?: string | null }> = ({ title, content }) => {
+const OutputSection: React.FC<{ title: string; content?: string | null }> = ({
+  title,
+  content,
+}) => {
   return (
     <div className="w-full overflow-hidden">
       <div className="flex flex-col">
@@ -372,7 +407,7 @@ const SubmissionView: React.FC = () => {
     () => getSubmission(subm_id as string),
     {
       enabled: !!subm_id,
-    }
+    },
   );
 
   const [editorHeight, setEditorHeight] = useState<number>(400); // Initial height
@@ -381,18 +416,23 @@ const SubmissionView: React.FC = () => {
     if (data) {
       return calculateScores(data);
     }
+
     return { receivedScore: 0, possibleScore: 0 };
   }, [data]);
 
   const sortedTestGroups = useMemo(() => {
     if (data?.test_groups) {
-      return [...data.test_groups].sort((a: any, b: any) => a.test_group_id - b.test_group_id);
+      return [...data.test_groups].sort(
+        (a: any, b: any) => a.test_group_id - b.test_group_id,
+      );
     }
+
     return [];
   }, [data]);
 
   const updateHeight = useCallback((editor: any) => {
     const contentHeight = Math.max(100, editor.getContentHeight());
+
     setEditorHeight(contentHeight + 10);
     editor.layout({ height: contentHeight });
   }, []);
@@ -402,7 +442,12 @@ const SubmissionView: React.FC = () => {
   }
 
   if (isError) {
-    return <div>Error loading submission: {error instanceof Error ? error.message : "Unknown error"}</div>;
+    return (
+      <div>
+        Error loading submission:{" "}
+        {error instanceof Error ? error.message : "Unknown error"}
+      </div>
+    );
   }
 
   if (!data) {
@@ -411,9 +456,17 @@ const SubmissionView: React.FC = () => {
 
   return (
     <div className="mt-3 flex flex-col flex-grow relative">
-      <InfoCard data={data} receivedScore={receivedScore} possibleScore={possibleScore} />
+      <InfoCard
+        data={data}
+        possibleScore={possibleScore}
+        receivedScore={receivedScore}
+      />
       <Spacer y={3} />
-      <Card classNames={{ base: "border-small border-divider" }} radius="sm" shadow="none">
+      <Card
+        classNames={{ base: "border-small border-divider" }}
+        radius="sm"
+        shadow="none"
+      >
         <CardBody>
           <MonacoEditor
             height={`${editorHeight}px`}
@@ -439,7 +492,11 @@ const SubmissionView: React.FC = () => {
       <Spacer y={3} />
       {data.eval_details.programming_lang.compileCmd && (
         <>
-          <Card classNames={{ base: "border-small border-divider" }} radius="sm" shadow="none">
+          <Card
+            classNames={{ base: "border-small border-divider" }}
+            radius="sm"
+            shadow="none"
+          >
             <CardBody>
               <div className="flex flex-col gap-1">
                 <p className="text-small text-default-900 select-none">
@@ -463,7 +520,12 @@ const SubmissionView: React.FC = () => {
       {sortedTestGroups.length > 0 && (
         <div className="border-small border-divider rounded-md bg-white">
           <div className="px-0 lg:px-1 p-0 py-1">
-            <Accordion fullWidth isCompact defaultExpandedKeys={["1"]} variant="light">
+            <Accordion
+              fullWidth
+              isCompact
+              defaultExpandedKeys={["1"]}
+              variant="light"
+            >
               {sortedTestGroups.map((testGroup: any) => (
                 <AccordionItem
                   key={testGroup.test_group_id}
@@ -472,37 +534,54 @@ const SubmissionView: React.FC = () => {
                     <div className="flex flex-grow justify-start gap-x-3 items-center flex-wrap">
                       <div className="ms-1 flex gap-x-2">
                         <div className="whitespace-nowrap">
-                          <span className="text-small text-default-600">Testu grupa </span>
+                          <span className="text-small text-default-600">
+                            Testu grupa{" "}
+                          </span>
                           <span className="font-mono">
                             #{String(testGroup.test_group_id).padStart(2, "0")}
                           </span>
                         </div>
                         <div>
                           <span className="whitespace-nowrap">
-                            ( <span className="font-mono">{testGroup.subtasks.join(", ")}</span>.
-                            <span className="text-small text-default-600"> apakšuzdevums</span> )
+                            ({" "}
+                            <span className="font-mono">
+                              {testGroup.subtasks.join(", ")}
+                            </span>
+                            .
+                            <span className="text-small text-default-600">
+                              {" "}
+                              apakšuzdevums
+                            </span>{" "}
+                            )
                           </span>
                         </div>
                       </div>
                       <div className="ms-1">
                         <span
                           className={`whitespace-nowrap ${
-                            testGroup.wrong_tests === 0 && testGroup.untested_tests === 0
+                            testGroup.wrong_tests === 0 &&
+                            testGroup.untested_tests === 0
                               ? "text-success-600"
                               : testGroup.wrong_tests > 0
-                              ? "text-danger-600"
-                              : "text-warning-500"
+                                ? "text-danger-600"
+                                : "text-warning-500"
                           }`}
                         >
                           <span className="font-mono">
-                            {testGroup.wrong_tests === 0 && testGroup.untested_tests === 0
+                            {testGroup.wrong_tests === 0 &&
+                            testGroup.untested_tests === 0
                               ? testGroup.test_group_score
                               : 0}
                           </span>{" "}
                           /{" "}
-                          <span className="font-mono">{testGroup.test_group_score}</span>
+                          <span className="font-mono">
+                            {testGroup.test_group_score}
+                          </span>
                         </span>
-                        <span className="text-small text-default-600"> punkti</span>
+                        <span className="text-small text-default-600">
+                          {" "}
+                          punkti
+                        </span>
                       </div>
                     </div>
                   }
@@ -513,10 +592,15 @@ const SubmissionView: React.FC = () => {
                   >
                     {data.test_results
                       .filter((testResult: TestResult) =>
-                        testResult.test_groups.includes(testGroup.test_group_id)
+                        testResult.test_groups.includes(
+                          testGroup.test_group_id,
+                        ),
                       )
                       .map((testResult: TestResult) => (
-                        <SingleTestResultCard key={testResult.test_id} testResult={testResult} />
+                        <SingleTestResultCard
+                          key={testResult.test_id}
+                          testResult={testResult}
+                        />
                       ))}
                   </div>
                 </AccordionItem>
@@ -525,7 +609,7 @@ const SubmissionView: React.FC = () => {
           </div>
         </div>
       )}
-      { data.test_set &&
+      {data.test_set &&
         data.test_results &&
         data.test_results.map((testResult: TestResult) => (
           <React.Fragment key={testResult.test_id}>

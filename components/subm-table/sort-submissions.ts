@@ -24,20 +24,20 @@ export function sortSubmissions(
   });
 
   // sort testgroups inside submissions if they exist
-  sorted.forEach((subm) => {
-    if (subm.eval_scoring_testgroups) {
-      subm.eval_scoring_testgroups.sort((a, b) => {
-        if (a.test_group_id < b.test_group_id) {
-          return -1;
-        }
-        if (a.test_group_id > b.test_group_id) {
-          return 1;
-        }
+  // sorted.forEach((subm) => {
+  //   if (subm.eval_scoring_testgroups) {
+  //     subm.eval_scoring_testgroups.sort((a, b) => {
+  //       if (a.test_group_id < b.test_group_id) {
+  //         return -1;
+  //       }
+  //       if (a.test_group_id > b.test_group_id) {
+  //         return 1;
+  //       }
 
-        return 0;
-      });
-    }
-  });
+  //       return 0;
+  //     });
+  //   }
+  // });
 
   return sorted;
 }

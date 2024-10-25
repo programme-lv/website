@@ -48,37 +48,37 @@ import {
   Example,
   MarkdownStatement,
   ProgrammingLanguage,
-  StInputs,
   SubtaskOverview,
   Task,
-  TestWithOnlyInput,
   VisibleInputSubtask,
 } from "@/types/proglv";
 import { AuthContext } from "@/app/providers";
 import "katex/dist/katex.min.css";
-import renderMd, { renderMdLite } from "@/lib/render-md";
+import renderMd from "@/lib/render-md";
 import { listProgrammingLanguages } from "@/lib/langs";
 import { createSubmission } from "@/lib/subms";
 
-export default function TaskDetailsPage(props: { task: Task | null }) {
+export default function TaskDetailsPage(props: { task: Task }) {
   const { task_id } = useParams();
   const pageRef = useRef<HTMLDivElement>(null);
 
-  const [task, setTask] = useState<Task | null>(props.task);
+  const [task, setTask] = useState<Task>(props.task);
 
-  let {
-    data: getTaskByIdData,
-    error,
-    isLoading,
-  } = useQuery(["task", task_id], () => getTaskById(task_id as string), {
-    staleTime: 30 * 1000, // 30 seconds
-  });
+  let { data: getTaskByIdData } = useQuery(
+    ["task", task_id],
+    () => getTaskById(task_id as string),
+    { staleTime: 30 * 1000 }, // 30 seconds
+  );
 
   useEffect(() => {
-    if (getTaskByIdData) {
+    if (getTaskByIdData && getTaskByIdData.data) {
       setTask(getTaskByIdData.data);
     }
   }, [getTaskByIdData]);
+
+  if (!task) {
+    return <></>;
+  }
 
   return (
     <main className="mt-3 flex-grow w-full overflow-visible relative">
@@ -108,8 +108,8 @@ export default function TaskDetailsPage(props: { task: Task | null }) {
   );
 }
 
-function LeftSide({ task }: { task: Task | null }) {
-  const [viewMode, setViewMode] = useState<"md" | "pdf" | undefined>(undefined);
+function LeftSide({ task }: { task: Task }) {
+  const [viewMode, setViewMode] = useState<"md" | undefined>(undefined);
 
   useEffect(() => {
     if (!task) return;
@@ -126,25 +126,22 @@ function LeftSide({ task }: { task: Task | null }) {
     <div
       className={cn(
         "h-full max-h-full w-full overflow-hidden rounded-small border-small border-divider p-2 bg-white",
-        { "overflow-y-auto": viewMode == "md" }
+        { "overflow-y-auto": viewMode == "md" },
       )}
     >
       <div className="h-full relative flex flex-col items-center gap-1 flex-grow">
-        <TaskInformation task={task} />
+        <TaskHeader {...task} />
 
         <Divider className="my-1" />
-        {viewMode === "pdf" && task!.default_pdf_statement_url && (
-          <PdfView pdf_statement_url={task!.default_pdf_statement_url} />
-        )}
         {viewMode === "md" && task!.default_md_statement && (
           // <Skeleton className="max-w-full flex-grow w-full" isLoaded={!!task}>
           <MdView
+            cpu_time_limit_seconds={task?.cpu_time_limit_seconds}
             examples={task!.examples}
             md_statement={task!.default_md_statement}
-            vis_inp_st_inputs={task?.visible_input_subtasks}
-            cpu_time_limit_seconds={task?.cpu_time_limit_seconds}
             memory_limit_megabytes={task?.memory_limit_megabytes}
             statement_subtasks={task?.statement_subtasks}
+            vis_inp_st_inputs={task?.visible_input_subtasks}
           />
           // </Skeleton>
         )}
@@ -263,32 +260,64 @@ function MdView({
         </div>
       </div>
       <div>
-        <h2 className="text-small my-1 mb-2 font-semibold">Ierobežojumi un prasības</h2>
-        <div>Max izpildes laiks uz testu: <span className="font-medium">{cpu_time_limit_seconds}</span> sekundes.</div>
-        <div>Max atmiņas apjoms uz testu: <span className="font-medium">{memory_limit_megabytes}</span> megabaiti.</div>
-      </div>
-      {statement_subtasks && <div>
-        <h2 className="text-small my-1 mb-2 font-semibold">Apakšuzdevumi un to vērtēšana</h2>
-        <Table aria-label="Apakšuzdevumi un to vērtēšana" shadow="none" removeWrapper={true} isCompact className="z-0" classNames={{th:"h-8"}} isStriped>
-          <TableHeader>
-            <TableColumn>#</TableColumn>
-            <TableColumn>Apraksts</TableColumn>
-            <TableColumn>Punkti</TableColumn>
-          </TableHeader>
-          <TableBody>
-            {statement_subtasks.map((statement_subtask, i) => (
-              <TableRow key={statement_subtask.subtask}>
-                <TableCell>{statement_subtask.subtask}</TableCell>
-                <TableCell><div dangerouslySetInnerHTML={{ __html: renderMd(statement_subtask.descriptions["lv"])}}/></TableCell>
-                <TableCell>{statement_subtask.score}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-        <div className="mt-2 text-small">
-        Apakšuzdevumu punktu summa = <span className="font-medium">{statement_subtasks.reduce((a, b) => a + b.score, 0)}</span>.
+        <h2 className="text-small my-1 mb-2 font-semibold">
+          Ierobežojumi un prasības
+        </h2>
+        <div>
+          Max izpildes laiks uz testu:{" "}
+          <span className="font-medium">{cpu_time_limit_seconds}</span>{" "}
+          sekundes.
         </div>
-      </div>}
+        <div>
+          Max atmiņas apjoms uz testu:{" "}
+          <span className="font-medium">{memory_limit_megabytes}</span>{" "}
+          megabaiti.
+        </div>
+      </div>
+      {statement_subtasks && (
+        <div>
+          <h2 className="text-small my-1 mb-2 font-semibold">
+            Apakšuzdevumi un to vērtēšana
+          </h2>
+          <Table
+            isCompact
+            isStriped
+            aria-label="Apakšuzdevumi un to vērtēšana"
+            className="z-0"
+            classNames={{ th: "h-8" }}
+            removeWrapper={true}
+            shadow="none"
+          >
+            <TableHeader>
+              <TableColumn>#</TableColumn>
+              <TableColumn>Apraksts</TableColumn>
+              <TableColumn>Punkti</TableColumn>
+            </TableHeader>
+            <TableBody>
+              {statement_subtasks.map((statement_subtask, i) => (
+                <TableRow key={statement_subtask.subtask}>
+                  <TableCell>{statement_subtask.subtask}</TableCell>
+                  <TableCell>
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: renderMd(statement_subtask.descriptions["lv"]),
+                      }}
+                    />
+                  </TableCell>
+                  <TableCell>{statement_subtask.score}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          <div className="mt-2 text-small">
+            Apakšuzdevumu punktu summa ={" "}
+            <span className="font-medium">
+              {statement_subtasks.reduce((a, b) => a + b.score, 0)}
+            </span>
+            .
+          </div>
+        </div>
+      )}
       {vis_inp_st_inputs?.map((vis_inp_st_input: VisibleInputSubtask) => (
         <div key={vis_inp_st_input.subtask}>
           <h2 className="text-small my-1 mb-2 font-semibold">
@@ -348,7 +377,7 @@ function PdfView({ pdf_statement_url }: { pdf_statement_url: string }) {
       setPdfWidth(elementRef.current.clientWidth);
       setPdfHeight(elementRef.current.clientHeight);
     }, 100),
-    []
+    [],
   );
 
   useEffect(() => {
@@ -385,41 +414,30 @@ function PdfView({ pdf_statement_url }: { pdf_statement_url: string }) {
   );
 }
 
-type TaskInformationProps = {
-  task: Task | null;
-  onSelectedTabChange?: (key: string) => void;
+type TaskHeaderProps = {
+  task_full_name: string;
+  difficulty_rating: 1 | 2 | 3 | 4 | 5;
+  illustration_img_url?: string;
+  origin_olympiad?: string;
+  origin_notes?: Record<string, string>;
+  default_pdf_statement_url?: string;
 };
 
-const TaskInformation: React.FC<TaskInformationProps> = ({
-  task,
-  ...props
-}) => {
-  let difficultyChips = {
-    1: (
-      <Chip className="bg-green-100 text-green-800" size="sm" variant="flat">
-        ļoti viegls
-      </Chip>
-    ),
-    2: (
-      <Chip className="bg-sky-100 text-sky-800" size="sm" variant="flat">
-        viegls
-      </Chip>
-    ),
-    3: (
-      <Chip className="bg-violet-100 text-violet-800" size="sm" variant="flat">
-        vidēji grūts
-      </Chip>
-    ),
-    4: (
-      <Chip className="bg-yellow-100 text-yellow-800" size="sm" variant="flat">
-        grūts
-      </Chip>
-    ),
-    5: (
-      <Chip className="bg-red-100 text-red-800" size="sm" variant="flat">
-        ļoti grūts
-      </Chip>
-    ),
+function TaskHeader({
+  task_full_name,
+  difficulty_rating,
+  illustration_img_url,
+  origin_olympiad,
+  origin_notes,
+  default_pdf_statement_url,
+}: TaskHeaderProps) {
+
+  let diff = {
+    1: <Chip className="bg-green-100 text-green-800" size="sm" variant="flat">ļoti viegls</Chip>,
+    2: <Chip className="bg-sky-100 text-sky-800" size="sm" variant="flat">viegls</Chip>,
+    3: <Chip className="bg-violet-100 text-violet-800" size="sm" variant="flat">vidēji grūts</Chip>,
+    4: <Chip className="bg-yellow-100 text-yellow-800" size="sm" variant="flat">grūts</Chip>,
+    5: <Chip className="bg-red-100 text-red-800" size="sm" variant="flat">ļoti grūts</Chip>,
   };
 
   const cardRef = useRef<HTMLDivElement>(null);
@@ -452,36 +470,32 @@ const TaskInformation: React.FC<TaskInformationProps> = ({
   }, [cardRef]);
 
   return (
-    <Card
+    <div
       className="w-full"
-      {...props}
       ref={cardRef}
-      classNames={{ base: "overflow-visible" }}
-      radius="none"
-      shadow="none"
     >
-      <CardBody className="flex flex-col p-0 sm:flex-nowrap">
+      <div className="flex flex-col p-0 sm:flex-nowrap">
         <div className="flex flex-row">
           <div className="h-full flex flex-row gap-3 sm:flex-nowrap flex-grow px-3 py-1">
-            {layout === "wide" && task?.illustration_img_url && (
+            {layout === "wide" && illustration_img_url && (
               <div className="max-w-28 min-h-16 min-w-16 flex pt-1">
                 <Image
-                  alt={task.task_full_name}
+                  alt={task_full_name}
                   className="flex-none object-cover rounded-md"
                   disableSkeleton={true}
-                  src={task.illustration_img_url}
-                // fetchPriority="high"
+                  src={illustration_img_url}
+                  // fetchPriority="high"
                 />
               </div>
             )}
             <div className="flex flex-col flex-grow justify-between w-full">
-              <Skeleton isLoaded={!!task}>
+              <Skeleton isLoaded={true}>
                 <div className="flex justify-between items-center">
                   <div className="inline-flex gap-x-4 gap-y-1 justify-between items-center flex-wrap">
                     <h3 className="text-large font-semibold">
-                      {task?.task_full_name || "Loading..."}
+                      {task_full_name}
                     </h3>
-                    {task && difficultyChips[task.difficulty_rating]}
+                    {difficulty_rating && diff[difficulty_rating]}
                   </div>
                   <div className="">
                     <Dropdown placement="bottom-end">
@@ -498,7 +512,7 @@ const TaskInformation: React.FC<TaskInformationProps> = ({
                       <DropdownMenu
                         aria-label="Static Actions"
                         disabledKeys={[
-                          ...(task?.default_pdf_statement_url
+                          ...(default_pdf_statement_url
                             ? []
                             : ["open-original-pdf"]),
                         ]}
@@ -508,7 +522,7 @@ const TaskInformation: React.FC<TaskInformationProps> = ({
                           endContent={
                             <IconFileTypePdf className="text-default-600" />
                           }
-                          href={task?.default_pdf_statement_url}
+                          href={default_pdf_statement_url}
                           target="_blank"
                         >
                           Atvērt oriģinālo PDF
@@ -518,14 +532,14 @@ const TaskInformation: React.FC<TaskInformationProps> = ({
                   </div>
                 </div>
                 <div className="flex flex-grow gap-2 mt-1">
-                  {layout === "narrow" && task?.illustration_img_url && (
+                  {layout === "narrow" && illustration_img_url && (
                     <div className="max-w-[100px] min-h-16 min-w-16 flex">
                       <Image
-                        alt={task.task_full_name}
+                        alt={task_full_name}
                         className="flex-none object-cover"
                         disableSkeleton={true}
-                        src={task.illustration_img_url}
-                      // fetchPriority="high"
+                        src={illustration_img_url}
+                        // fetchPriority="high"
                       />
                     </div>
                   )}
@@ -536,8 +550,8 @@ const TaskInformation: React.FC<TaskInformationProps> = ({
                           "": layout === "xs",
                         })}
                       >
-                        {task?.origin_olympiad &&
-                          task.origin_olympiad === "LIO" && (
+                        {origin_olympiad &&
+                          origin_olympiad === "LIO" && (
                             <div className="w-16 min-w-16">
                               <Image
                                 alt="Latvijas Informātikas olimpiādes logo"
@@ -545,59 +559,12 @@ const TaskInformation: React.FC<TaskInformationProps> = ({
                               />
                             </div>
                           )}
-                        {task?.origin_notes?.lv && (
+                        {origin_notes?.lv && (
                           <div className="text-tiny text-default-700 py-1 ms-1">
-                            {task.origin_notes.lv}
+                            {origin_notes.lv}
                           </div>
                         )}
                       </div>
-                    </div>
-                    {/* TODO: move this shit to statement */}
-                    <div className="flex-grow flex flex-col justify-end items-end ms-3 hidden">
-                      {/* <Skeleton isLoaded={!!task}> */}
-                      <div className="grid gap-x-2">
-                        <span
-                          className="text-small text-default-700 flex items-end justify-end"
-                          style={{ lineHeight: "24px" }}
-                        >
-                          izpildes laiks
-                        </span>
-                        <div className="flex items-end gap-1 col-start-2">
-                          <span
-                            className="text-medium text-default-900"
-                            style={{ lineHeight: "24px" }}
-                          >
-                            {task?.cpu_time_limit_seconds}
-                          </span>
-                          <span
-                            className="text-small text-default-800"
-                            style={{ lineHeight: "24px" }}
-                          >
-                            sek.
-                          </span>
-                        </div>
-                        <span
-                          className="text-small text-default-700 flex items-end justify-end"
-                          style={{ lineHeight: "24px" }}
-                        >
-                          atmiņa
-                        </span>
-                        <div className="flex items-end gap-1 col-start-2">
-                          <span
-                            className="text-medium text-default-900"
-                            style={{ lineHeight: "24px" }}
-                          >
-                            {task?.memory_limit_megabytes}
-                          </span>
-                          <span
-                            className="text-small text-default-800"
-                            style={{ lineHeight: "24px" }}
-                          >
-                            MB
-                          </span>
-                        </div>
-                      </div>
-                      {/* </Skeleton> */}
                     </div>
                   </div>
                 </div>
@@ -605,8 +572,8 @@ const TaskInformation: React.FC<TaskInformationProps> = ({
             </div>
           </div>
         </div>
-      </CardBody>
-    </Card>
+      </div>
+    </div>
   );
 };
 
@@ -618,7 +585,7 @@ function RightSide({ taskCode }: { taskCode: string }) {
 
   let { data: listLangsResponse } = useQuery(
     "list-languages",
-    listProgrammingLanguages
+    listProgrammingLanguages,
   );
 
   const languages = listLangsResponse?.data;
@@ -648,7 +615,7 @@ function RightSide({ taskCode }: { taskCode: string }) {
 
   useEffect(() => {
     const savedText = sessionStorage.getItem(
-      `code-${taskCode}-${selectedLanguage}`
+      `code-${taskCode}-${selectedLanguage}`,
     );
 
     if (!savedText) {
@@ -675,7 +642,7 @@ int main() {
         code,
         authContext.user?.username ?? "",
         selectedLanguage,
-        taskCode
+        taskCode,
       );
 
       await router.push(`/submissions`);

@@ -1,12 +1,12 @@
-import { Icon } from "@iconify/react";
-import { cn } from "./cn";
 import Image from "next/image";
 import Link from "next/link";
-import Logo from "@/public/logo.png";
-import { BsCardChecklist } from "react-icons/bs";
 import { Tooltip } from "@nextui-org/tooltip";
-import { IconChecklist, IconInbox, IconListCheck, IconListDetails } from "@tabler/icons-react";
+import { IconInbox, IconListDetails } from "@tabler/icons-react";
 import React from "react";
+
+import Logo from "@/public/logo.png";
+
+import { cn } from "./cn";
 
 type SidebarItem = {
   href: string;
@@ -32,8 +32,8 @@ const items: SidebarItem[] = [
 ];
 
 type SidebarProps = {
-  active: "tasks" | "submissions"
-}
+  active: "tasks" | "submissions";
+};
 
 export default function Sidebar(props: SidebarProps) {
   return (
@@ -49,9 +49,20 @@ export default function Sidebar(props: SidebarProps) {
         <nav className="mt-12 flex flex-col gap-8 w-full">
           {items.map((item) => (
             <Tooltip key={item.key} content={item.title} placement="right">
-              <div className={cn("flex items-center justify-center w-[38px] h-[38px] rounded-md", props.active === item.key && "bg-gray-100")}>
+              <div
+                className={cn(
+                  "flex items-center justify-center w-[38px] h-[38px] rounded-md",
+                  props.active === item.key && "bg-gray-100",
+                )}
+              >
                 <Link href={item.href}>
-                  {React.createElement(item.icon, { width: 24, className: cn("text-default-600", props.active === item.key && "text-default-800") })}
+                  {React.createElement(item.icon, {
+                    width: 24,
+                    className: cn(
+                      "text-default-600",
+                      props.active === item.key && "text-default-800",
+                    ),
+                  })}
                 </Link>
               </div>
             </Tooltip>
