@@ -2,11 +2,13 @@
 
 import React, { useRef, useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
-import { Chip } from "@nextui-org/react";
+import { Chip, Skeleton } from "@nextui-org/react";
 import accountGroup from "@iconify-icons/mdi/account-group";
 import checkCircleOutline from "@iconify-icons/mdi/check-circle-outline";
 import "katex/dist/katex.min.css"; // Import KaTeX CSS for styling
 import { renderMdLite } from "@/lib/render-md";
+import {Image} from "@nextui-org/image";
+import NextImage from "next/image";
 
 type Task = {
     published_task_id: string;
@@ -80,7 +82,8 @@ const Tooltip: React.FC<{ content: string; children: React.ReactNode }> = ({
 
 const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
     const cardRef = useRef<HTMLDivElement>(null);
-    const [isWide, setIsWide] = useState(false);
+    const [isWide, setIsWide] = useState(true);
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         const handleResize = () => {
@@ -106,13 +109,21 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
             <div className="flex flex-col p-3 sm:flex-row overflow-hidden">
                 <div className="flex gap-x-4 flex-row sm:flex-nowrap">
                     {task.illustration_img_url && isWide && (
-                        <div className="min-w-[90px] max-w-[120px] flex-shrink-0">
-                            <img
+                        <>
+                        {loading && (<Skeleton className="w-[120px] h-[120px] absolute rounded-md" />)}
+                        <div className="w-[120px] max-w-[120px] flex-shrink-0">
+                            <Image
+                                as={NextImage}
                                 alt={task.task_full_name}
+                                width={120}
+                                height={120}
+                                disableAnimation
+                                onLoad={() => setLoading(false)}
                                 className="h-full object-cover rounded-md"
                                 src={task.illustration_img_url}
                             />
                         </div>
+                        </>
                     )}
                     <div className="flex flex-col justify-between w-full">
                         <div className="flex flex-col">
@@ -195,16 +206,6 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
                         </div>
                     </div>
                 </div>
-                {/* Optional: Image for narrow view */}
-                {/* {task.illustration_img_url && !isWide && (
-                    <div className="mt-4  sm:hidden">
-                        <img
-                            alt={task.task_full_name}
-                            className="w-full object-cover rounded-md"
-                            src={task.illustration_img_url}
-                        />
-                    </div>
-                )} */}
             </div>
         </div>
     );

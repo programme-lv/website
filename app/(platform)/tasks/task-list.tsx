@@ -50,5 +50,5 @@ export function TaskList(props: { tasks: Task[] }) {
         )}
       </div>
     </main>
-  );
+  )
 }
