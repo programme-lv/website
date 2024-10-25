@@ -11,6 +11,7 @@ import React, {
 import { useParams, useRouter } from "next/navigation";
 import { Resizable } from "re-resizable";
 import {
+	IconCopy,
 	IconFileTypePdf,
 	IconGripVertical,
 	IconMenu2,
@@ -179,7 +180,7 @@ function MdView({
 								key={example.input + example.output}
 								className="border-small border-divider p-2 flex-grow rounded-md w-[350px] max-w-full"
 							>
-								<div className="flex gap-2 flex-wrap">
+								<div className="flex gap-2 gap-x-4 flex-wrap">
 									<CodeBlock title="Ievaddati" content={example.input} />
 									<CodeBlock title="Izvaddati" content={example.output} />
 									{example.md_note && (
@@ -284,6 +285,14 @@ function MdView({
 }
 
 function CodeBlock({ title, content }: { title?: string; content: string }) {
+	const [copied, setCopied] = useState(false);
+
+	const handleCopy = async () => {
+		await navigator.clipboard.writeText(content);
+		setCopied(true);
+		setTimeout(() => setCopied(false), 2000);
+	};
+
 	return (
 		<div className="flex-grow basis-0 overflow-hidden min-w-[175px] flex flex-col">
 			{title && (
@@ -291,15 +300,26 @@ function CodeBlock({ title, content }: { title?: string; content: string }) {
 					{title}
 				</p>
 			)}
-			<code
-				className="p-1.5 border-small border-divider"
-				style={{
-					backgroundColor: "rgba(212, 212, 216, 0.4)",
-					whiteSpace: "pre-wrap",
-				}}
-			>
-				{content}
-			</code>
+			<div className="relative flex flex-grow flex-col">
+				<code
+					className="p-1.5 flex-grow border-small border-divider"
+					style={{
+						backgroundColor: "rgba(212, 212, 216, 0.4)",
+						whiteSpace: "pre-wrap",
+					}}
+				>
+					{content}
+				</code>
+				<button
+					onClick={handleCopy}
+					className="absolute top-1 right-1 p-1 rounded-md"
+					title={copied ? "Nokopēts!" : "Kopēt kodu"}
+				>
+					<IconCopy
+						className="w-4 h-4 text-gray-400 hover:text-gray-800"
+					/>
+				</button>
+			</div>
 		</div>
 	);
 }

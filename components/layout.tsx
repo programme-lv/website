@@ -14,6 +14,7 @@ import Link from "next/link";
 import Sidebar from "@/components/sidebar";
 
 import User from "./navbar-user";
+import React from "react";
 
 interface BreadcrumbItem {
   label: string;
@@ -96,8 +97,8 @@ const Layout: React.FC<LayoutProps> = ({ children, breadcrumbs }) => {
                 <nav className="hidden sm:block">
                   <ol className="flex gap-x-1.5 text-sm">
                     {breadcrumbs.map((item, index) => (
-                      <>
-                      <li key={index}>
+                      <React.Fragment key={index}>
+                      <li>
                         <Link
                           className={cn("text-default-500 hover:underline",{"text-default-900":index===breadcrumbs.length-1})}
                           href={item.href}
@@ -106,7 +107,7 @@ const Layout: React.FC<LayoutProps> = ({ children, breadcrumbs }) => {
                         </Link>
                       </li>
                       {index < breadcrumbs.length - 1 && <span className="text-default-500"> / </span>}
-                      </>
+                      </React.Fragment>
                     ))}
                   </ol>
                 </nav>
