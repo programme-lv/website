@@ -24,9 +24,10 @@ interface BreadcrumbItem {
 interface LayoutProps {
   children: React.ReactNode;
   breadcrumbs: BreadcrumbItem[];
+  active: "tasks" | "submissions";
 }
 
-const Layout: React.FC<LayoutProps> = ({ children, breadcrumbs }) => {
+const Layout: React.FC<LayoutProps> = ({ children, breadcrumbs, active }) => {
   const {
     isOpen: isMobileMenuOpen,
     onOpen: onMobileMenuOpen,
@@ -64,7 +65,7 @@ const Layout: React.FC<LayoutProps> = ({ children, breadcrumbs }) => {
       </Modal>
 
       <div className="flex h-screen w-full">
-        <Sidebar active="tasks" />
+        <Sidebar active={active} />
 
         {/* Main Content Area */}
         <div
@@ -118,7 +119,7 @@ const Layout: React.FC<LayoutProps> = ({ children, breadcrumbs }) => {
           </header>
 
           {/* Main Content */}
-          <div className="flex-1 flex">{children}</div>
+          <div className="flex-1 flex flex-col">{children}</div>
         </div>
       </div>
     </>

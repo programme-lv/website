@@ -28,7 +28,7 @@ export default function SubmissionTableServer({
   const router = useRouter();
 
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto w-full h-full min-w-full mt-3">
       <Table
         aria-label="Submission Table"
         className="border-small border-divider rounded-small"

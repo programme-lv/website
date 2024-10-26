@@ -26,7 +26,7 @@ export default async function TaskPageServerComponent({
   ];
 
   return (
-    <Layout breadcrumbs={breadcrumbs}>
+    <Layout breadcrumbs={breadcrumbs} active="tasks">
       <Toaster/>
       <TaskDetailsPage task={task} />
     </Layout>

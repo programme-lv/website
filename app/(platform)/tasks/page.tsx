@@ -13,7 +13,7 @@ export default async function TaskListServerComponent() {
   const breadcrumbs = [{ label: "Uzdevumi", href: "/tasks" }];
 
   return (
-    <Layout breadcrumbs={breadcrumbs}>
+    <Layout breadcrumbs={breadcrumbs} active="tasks">
       <TaskList tasks={tasks.data ?? []} />
     </Layout>
   );
