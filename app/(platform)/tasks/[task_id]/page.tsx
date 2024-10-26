@@ -4,13 +4,16 @@ import Layout from "@/components/layout";
 import { getTaskById } from "@/lib/tasks";
 
 import TaskDetailsPage from "./task-page";
+import { Toaster } from 'react-hot-toast';
 
 export default async function TaskPageServerComponent({
   params,
 }: {
   params: { task_id: string };
 }) {
-  const response = await getTaskById(params.task_id);
+  const {task_id} = await params;
+
+  const response = await getTaskById(task_id);
   const task = response.data;
 
   if (!task) {
@@ -19,11 +22,12 @@ export default async function TaskPageServerComponent({
 
   const breadcrumbs = [
     { label: "Uzdevumi", href: "/tasks" },
-    { label: task.task_full_name, href: `/tasks/${params.task_id}` },
+    { label: task.task_full_name, href: `/tasks/${task_id}` },
   ];
 
   return (
     <Layout breadcrumbs={breadcrumbs}>
+      <Toaster/>
       <TaskDetailsPage task={task} />
     </Layout>
   );

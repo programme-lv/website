@@ -49,6 +49,8 @@ import { listProgrammingLanguages } from "@/lib/langs";
 import { createSubmission } from "@/lib/subms";
 import TaskDifficultyChip from "@/components/task-difficulty-chip";
 import LIO_LOGO from "@/public/lio-logo.png";
+import { toNamespacedPath } from "path";
+import toast from "react-hot-toast";
 
 export default function TaskDetailsPage(props: { task: Task }) {
 	const { task_id } = useParams();
@@ -81,7 +83,7 @@ export default function TaskDetailsPage(props: { task: Task }) {
 				className="hidden xl:flex w-full h-full max-h-full max-w-full gap-4 absolute"
 			>
 				<Resizable
-					defaultSize={{ width: "50%" }}
+					defaultSize={{ width: "60%" }}
 					enable={{ right: true }}
 					handleComponent={{ right: <ResizeBar /> }}
 					maxWidth={"70%"}
@@ -291,6 +293,7 @@ function CodeBlock({ title, content }: { title?: string; content: string }) {
 		await navigator.clipboard.writeText(content);
 		setCopied(true);
 		setTimeout(() => setCopied(false), 2000);
+		toast.success("Kods nokopēts!");
 	};
 
 	return (
@@ -310,15 +313,13 @@ function CodeBlock({ title, content }: { title?: string; content: string }) {
 				>
 					{content}
 				</code>
-				<button
-					onClick={handleCopy}
-					className="absolute top-1 right-1 p-1 rounded-md"
+				<IconCopy
+					width={16}
+					height={16}
+					className="text-gray-400 hover:text-gray-700 cursor-pointer absolute top-1 right-1 m-1 rounded-md"
 					title={copied ? "Nokopēts!" : "Kopēt kodu"}
-				>
-					<IconCopy
-						className="w-4 h-4 text-gray-400 hover:text-gray-800"
-					/>
-				</button>
+					onClick={handleCopy}
+				/>
 			</div>
 		</div>
 	);

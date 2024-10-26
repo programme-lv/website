@@ -42,7 +42,7 @@ export default function Sidebar(props: SidebarProps) {
         <div className="flex items-center px-3 justify-center gap-0">
           <div className="flex h-8 w-8 items-center justify-center rounded-full">
             <Link href="/tasks">
-              <Image alt="programme.lv logo" height={40} src={Logo} />
+              <Image loading="eager"  alt="programme.lv logo" width={32} height={25.24} src={Logo.src}/>
             </Link>
           </div>
         </div>
