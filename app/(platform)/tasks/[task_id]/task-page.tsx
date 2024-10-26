@@ -188,7 +188,7 @@ function MdView({
 						{examples.map((example, i) => (
 							<div
 								key={example.input + example.output}
-								className="border-small border-divider p-2 flex-grow rounded-md w-[350px] max-w-full"
+								className="border-small border-default-300 p-2 flex-grow rounded-md w-[350px] max-w-full"
 							>
 								<div className="flex gap-2 gap-x-4 flex-wrap">
 									<CodeBlockWithTitle title="Ievaddati" content={example.input} />

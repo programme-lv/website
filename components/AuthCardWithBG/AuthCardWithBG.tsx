@@ -146,23 +146,17 @@ function AuthForm({ type }: { type: "login" | "register" }) {
         {type === "register" ? (
           <>
             <span>Reģistrācija</span>
-            <Icon
-              className="text-default-700"
-              height={28}
-              icon={"mdi:register"}
-            />
           </>
         ) : (
           <>
             Pieslēgšanās
-            <Icon className="text-default-700" height={28} icon={"mdi:login"} />
-            {/* <IconLogin2 className="text-default-700"/> */}
           </>
         )}
       </p>
       <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
         <Input
           isRequired
+          classNames={{inputWrapper: "border-small border-default-300"}}
           isDisabled={
             loginMutation.isLoading ||
             registerMutation.isLoading ||
@@ -179,6 +173,7 @@ function AuthForm({ type }: { type: "login" | "register" }) {
             <div className="flex flex-col md:flex-row gap-3">
               <Input
                 className="flex-1"
+                classNames={{inputWrapper: "border-small border-default-300"}}
                 isDisabled={
                   loginMutation.isLoading ||
                   registerMutation.isLoading ||
@@ -192,6 +187,7 @@ function AuthForm({ type }: { type: "login" | "register" }) {
               />
               <Input
                 className="flex-1"
+                classNames={{inputWrapper: "border-small border-default-300"}}
                 isDisabled={
                   loginMutation.isLoading ||
                   registerMutation.isLoading ||
@@ -206,6 +202,7 @@ function AuthForm({ type }: { type: "login" | "register" }) {
             </div>
             <Input
               isRequired
+              classNames={{inputWrapper: "border-small border-default-300"}}
               isDisabled={
                 loginMutation.isLoading ||
                 registerMutation.isLoading ||
@@ -224,6 +221,7 @@ function AuthForm({ type }: { type: "login" | "register" }) {
           <Input
             isRequired
             className="flex-1"
+            classNames={{inputWrapper: "border-small border-default-300"}}
             endContent={
               <button type="button" onMouseDown={toggleVisibility}>
                 {isVisible ? (
@@ -255,6 +253,7 @@ function AuthForm({ type }: { type: "login" | "register" }) {
             <Input
               isRequired
               className="flex-1"
+              classNames={{inputWrapper: "border-small border-default-300"}}
               isDisabled={
                 loginMutation.isLoading ||
                 registerMutation.isLoading ||
