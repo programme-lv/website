@@ -49,8 +49,7 @@ import { listProgrammingLanguages } from "@/lib/langs";
 import { createSubmission } from "@/lib/subms";
 import TaskDifficultyChip from "@/components/task-difficulty-chip";
 import LIO_LOGO from "@/public/lio-logo.png";
-import { toNamespacedPath } from "path";
-import toast from "react-hot-toast";
+import CodeBlock from "@/components/code-block";
 
 export default function TaskDetailsPage(props: { task: Task }) {
 	const { task_id } = useParams();
@@ -129,6 +128,15 @@ function LeftSide({ task }: { task: Task }) {
 	);
 }
 
+function CodeBlockWithTitle({ title, content }: { title: string; content: string }) {
+    return (
+        <div className="flex-grow basis-0 overflow-hidden min-w-[175px] flex flex-col">
+            <p className="text-tiny text-default-700 my-0.5 mb-2 select-none">{title}</p>
+            <CodeBlock content={content} />
+        </div>
+    )
+}
+
 function MdView({
 	md_statement,
 	examples,
@@ -183,8 +191,8 @@ function MdView({
 								className="border-small border-divider p-2 flex-grow rounded-md w-[350px] max-w-full"
 							>
 								<div className="flex gap-2 gap-x-4 flex-wrap">
-									<CodeBlock title="Ievaddati" content={example.input} />
-									<CodeBlock title="Izvaddati" content={example.output} />
+									<CodeBlockWithTitle title="Ievaddati" content={example.input} />
+									<CodeBlockWithTitle title="Izvaddati" content={example.output} />
 									{example.md_note && (
 										<div className="flex-grow basis-0 overflow-hidden min-w-[175px]">
 											<div className="flex flex-col">
@@ -286,44 +294,6 @@ function MdView({
 	);
 }
 
-function CodeBlock({ title, content }: { title?: string; content: string }) {
-	const [copied, setCopied] = useState(false);
-
-	const handleCopy = async () => {
-		await navigator.clipboard.writeText(content);
-		setCopied(true);
-		setTimeout(() => setCopied(false), 2000);
-		toast.success("Kods nokopēts!");
-	};
-
-	return (
-		<div className="flex-grow basis-0 overflow-hidden min-w-[175px] flex flex-col">
-			{title && (
-				<p className="text-tiny text-default-700 my-0.5 mb-2 select-none">
-					{title}
-				</p>
-			)}
-			<div className="relative flex flex-grow flex-col">
-				<code
-					className="p-1.5 flex-grow border-small border-divider"
-					style={{
-						backgroundColor: "rgba(212, 212, 216, 0.4)",
-						whiteSpace: "pre-wrap",
-					}}
-				>
-					{content}
-				</code>
-				<IconCopy
-					width={16}
-					height={16}
-					className="text-gray-400 hover:text-gray-700 cursor-pointer absolute top-1 right-1 m-1 rounded-md"
-					title={copied ? "Nokopēts!" : "Kopēt kodu"}
-					onClick={handleCopy}
-				/>
-			</div>
-		</div>
-	);
-}
 
 function Section({ title, content }: { title: string; content: string }) {
 	return (

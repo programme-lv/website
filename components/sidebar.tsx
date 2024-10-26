@@ -67,7 +67,7 @@ export default function Sidebar(props: SidebarProps) {
                   {React.createElement(item.icon, {
                     width: 24,
                     className: cn(
-                      "text-default-600",
+                      "text-default-600 hover:text-default-800",
                       props.active === item.key && "text-default-800",
                     ),
                   })}
