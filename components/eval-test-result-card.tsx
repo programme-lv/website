@@ -15,15 +15,15 @@ import CodeBlock from "@/components/code-block";
 
 const determineVerdict = (testResult: TestResult): string => {
     if (
-      testResult.subm_runtime?.exit_code !== 0 ||
-      testResult.subm_runtime?.stderr_trimmed?.trim().length > 0 ||
-      testResult.subm_runtime?.exit_signal
+      testResult.subm_exec_info?.exit_code !== 0 ||
+      testResult.subm_exec_info?.stderr_trimmed?.trim().length > 0 ||
+      testResult.subm_exec_info?.exit_signal
     ) {
       return "RE";
     }
     if (testResult.memory_exceeded) return "MLE";
     if (testResult.time_exceeded) return "TLE";
-    if (testResult.checker_runtime?.exit_code !== 0) return "WA";
+    if (testResult.checker_exec_info?.exit_code !== 0) return "WA";
   
     return "AC";
   };
@@ -33,8 +33,8 @@ export default function EvalTestResultCard({ testResult }: { testResult: TestRes
   
     const exitSignalDescription = useMemo(() => {
       return (
-        (testResult.subm_runtime?.exit_signal &&
-          EXIT_SIGNAL_DESCRIPTIONS[testResult.subm_runtime.exit_signal]) ||
+        (testResult.subm_exec_info?.exit_signal &&
+          EXIT_SIGNAL_DESCRIPTIONS[testResult.subm_exec_info.exit_signal]) ||
         "Unknown exit signal"
       );
     }, [testResult]);
@@ -57,7 +57,7 @@ export default function EvalTestResultCard({ testResult }: { testResult: TestRes
     return (
       <div
         key={testResult.test_id}
-        className="p-2 border-small border-divider rounded-md bg-white"
+        className="p-2 border-small border-default-300 rounded-md"
       >
         <TestResultHeader testResult={testResult} verdict={verdict} />
         {/* <Spacer y={1.5} /> */}
@@ -69,16 +69,16 @@ export default function EvalTestResultCard({ testResult }: { testResult: TestRes
             <Spacer y={2} />
             <div className="flex gap-4">
               <OutputSection
-                content={testResult.subm_runtime?.stderr_trimmed}
+                content={testResult.subm_exec_info?.stderr_trimmed}
                 title="Izpildes kļūdas ziņojums:"
               />
               <OutputSection
-                content={testResult.subm_runtime?.exit_code?.toString()}
+                content={testResult.subm_exec_info?.exit_code?.toString()}
                 title="Izejas kods:"
               />
-              {testResult.subm_runtime?.exit_signal && (
+              {testResult.subm_exec_info?.exit_signal && (
                 <OutputSection
-                  content={`${testResult.subm_runtime.exit_signal} : ${exitSignalDescription}`}
+                  content={`${testResult.subm_exec_info.exit_signal} : ${exitSignalDescription}`}
                   title="Izejas signāls:"
                 />
               )}
@@ -93,7 +93,7 @@ export default function EvalTestResultCard({ testResult }: { testResult: TestRes
                 title="Ievaddati:"
               />
               <OutputSection
-                content={testResult.subm_runtime?.stdout_trimmed}
+                content={testResult.subm_exec_info?.stdout_trimmed}
                 title="Programmas izvaddati:"
               />
               <OutputSection
@@ -101,7 +101,7 @@ export default function EvalTestResultCard({ testResult }: { testResult: TestRes
                 title="Atbilde:"
               />
               <OutputSection
-                content={testResult.checker_runtime?.stderr_trimmed}
+                content={testResult.checker_exec_info?.stderr_trimmed}
                 title="Pārbaudes piezīmes:"
               />
             </div>
@@ -159,24 +159,24 @@ export default function EvalTestResultCard({ testResult }: { testResult: TestRes
           </Chip>
         </div>
         <div className="flex gap-x-3 gap-y-1 items-center flex-wrap">
-          {testResult.subm_runtime?.cpu_time_millis && (
+          {testResult.subm_exec_info?.cpu_time_millis && (
             <div className="flex gap-1 items-center">
               <p className="text-small text-default-700 whitespace-nowrap">
                 Izpildes laiks:
               </p>
-              <CodeBlock
-                content={testResult.subm_runtime.cpu_time_millis + "ms"}
-              />
+              <span className="text-sm">
+                {testResult.subm_exec_info.cpu_time_millis} ms
+              </span>
             </div>
           )}
-          {testResult.subm_runtime?.mem_kibi_bytes && (
+          {testResult.subm_exec_info?.mem_kibi_bytes && (
             <div className="flex gap-1 items-center">
               <p className="text-small text-default-700 whitespace-nowrap">
                 Patērētā atmiņa:
               </p>
-              <CodeBlock
-                content={(testResult.subm_runtime.mem_kibi_bytes / 1024).toFixed(2) + " MB"}
-              />
+              <span className="text-sm">
+                {(testResult.subm_exec_info.mem_kibi_bytes / 1024).toFixed(2)} MB
+              </span>
             </div>
           )}
         </div>
@@ -206,23 +206,23 @@ export default function EvalTestResultCard({ testResult }: { testResult: TestRes
 const RuntimeInfo: React.FC<{ testResult: TestResult }> = ({ testResult }) => {
     return (
       <div className="flex flex-col gap-2">
-        {testResult.subm_runtime?.cpu_time_millis && (
+        {testResult.subm_exec_info?.cpu_time_millis && (
           <div className="flex gap-1 items-center">
             <p className="text-small text-default-700 whitespace-nowrap">
               Izpildes laiks:
             </p>
             <CodeBlock
-              content={testResult.subm_runtime.cpu_time_millis + "ms"}
+              content={testResult.subm_exec_info.cpu_time_millis + "ms"}
             />
           </div>
         )}
-        {testResult.subm_runtime?.mem_kibi_bytes && (
+        {testResult.subm_exec_info?.mem_kibi_bytes && (
           <div className="flex gap-1 items-center">
             <p className="text-small text-default-700 whitespace-nowrap">
               Patērētā atmiņa:
             </p>
             <CodeBlock
-              content={(testResult.subm_runtime.mem_kibi_bytes / 1024).toFixed(2) + " MB"}
+              content={(testResult.subm_exec_info.mem_kibi_bytes / 1024).toFixed(2) + " MB"}
             />
           </div>
         )}

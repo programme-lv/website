@@ -136,8 +136,8 @@ type TestResult = {
   memory_exceeded: boolean;
   subtasks: number[];
   test_groups: number[];
-  subm_runtime?: RuntimeData;
-  checker_runtime?: RuntimeData;
+  subm_exec_info?: RuntimeData;
+  checker_exec_info?: RuntimeData;
 };
 
 type RuntimeData = {

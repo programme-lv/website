@@ -18,7 +18,7 @@ import SubmInfoHeader from "@/components/subm-info-header";
 import ReadonlyMonacoCode from "@/components/ro-monaco-code";
 import CodeBlock from "@/components/code-block";
 import EvalTestResultCard from "@/components/eval-test-result-card";
-import EvalTestgroupAccordion from "@/components/eval-testgroup-accordion";
+import EvalTestgroupAccordion from "@/components/eval-group-accordion";
 
 // Helper Functions
 const calculateScores = (data: any) => {
