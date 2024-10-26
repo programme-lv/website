@@ -94,12 +94,12 @@ const TaskCard: React.FC<TaskCardProps> = (task: TaskCardProps) => {
                   <div
                     dangerouslySetInnerHTML={{
                       __html: renderMdLite(
-                        task.default_md_statement.story
+                        (task.default_md_statement.story)
                           .replace(/\n/g, " ")
-                          .substring(0, 300),
+                          .substring(0, 600),
                       ),
                     }}
-                    className={cn("text-sm text-gray-500", "line-clamp-2")}
+                    className={"text-sm text-gray-500 line-clamp-2"} 
                   />
                 </div>
               )}
