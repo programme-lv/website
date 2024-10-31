@@ -1,4 +1,4 @@
-export const revalidate = 60 * 2; // 2 minutes
+// export const revalidate = 60 * 2; // 2 minutes
 
 import Layout from "@/components/layout";
 import { getTaskById } from "@/lib/tasks";
@@ -9,7 +9,7 @@ import { Toaster } from 'react-hot-toast';
 export default async function TaskPageServerComponent({
   params,
 }: {
-  params: { task_id: string };
+  params: Promise<any>;
 }) {
   const {task_id} = await params;
 
