@@ -5,11 +5,15 @@ import EvalTestResultCard from "./eval-test-result-card";
 type EvalTestgroupAccordionProps = {
     testGroups: TestGroup[];
     testResults: TestResult[];
+    time_lim: number;
+    mem_lim: number;
 };
 
 export default function EvalTestgroupAccordion({
     testGroups,
     testResults,
+    time_lim,
+    mem_lim,
 }: EvalTestgroupAccordionProps) {
     return (
         <Accordion
@@ -76,6 +80,8 @@ export default function EvalTestgroupAccordion({
                                     <EvalTestResultCard
                                         key={testResult.test_id}
                                         testResult={testResult}
+                                        time_lim={time_lim}
+                                        mem_lim={mem_lim}
                                     />
                                 ))}
                         </div>

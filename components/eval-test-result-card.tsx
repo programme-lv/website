@@ -7,7 +7,6 @@ import {
   Spacer,
   Chip,
 } from "@nextui-org/react";
-import { cn } from "@/components/cn";
 import { TestResult } from "@/types/proglv";
 import { EXIT_SIGNAL_DESCRIPTIONS } from "@/lib/constants";
 import CodeBlock from "@/components/code-block";
@@ -26,9 +25,15 @@ const determineVerdict = (testResult: TestResult): string => {
     if (testResult.checker_exec_info?.exit_code !== 0) return "WA";
   
     return "AC";
-  };
+};
 
-export default function EvalTestResultCard({ testResult }: { testResult: TestResult }) {
+type EvalTestResultCardProps = {
+    testResult: TestResult;
+    time_lim: number;
+    mem_lim: number;
+}
+
+export default function EvalTestResultCard({ testResult, time_lim, mem_lim }: EvalTestResultCardProps) {
     const verdict = useMemo(() => determineVerdict(testResult), [testResult]);
   
     const exitSignalDescription = useMemo(() => {
@@ -48,7 +53,7 @@ export default function EvalTestResultCard({ testResult }: { testResult: TestRes
           shadow="none"
         >
           <CardBody>
-            <TestResultHeader testResult={testResult} verdict={verdict} />
+            <TestResultHeader testResult={testResult} verdict={verdict} time_lim={time_lim} mem_lim={mem_lim} />
           </CardBody>
         </Card>
       );
@@ -59,7 +64,7 @@ export default function EvalTestResultCard({ testResult }: { testResult: TestRes
         key={testResult.test_id}
         className="p-2 border-small border-default-300 rounded-md"
       >
-        <TestResultHeader testResult={testResult} verdict={verdict} />
+        <TestResultHeader testResult={testResult} verdict={verdict} time_lim={time_lim} mem_lim={mem_lim} />
         {/* <Spacer y={1.5} /> */}
         {verdict === "RE" && (
           <>
@@ -116,14 +121,9 @@ export default function EvalTestResultCard({ testResult }: { testResult: TestRes
   const TestResultHeader: React.FC<{
     testResult: TestResult;
     verdict: string;
-  }> = ({ testResult, verdict }) => {
-    const verdictColor = cn({
-      "text-success-600": verdict === "AC",
-      "text-danger-600":
-        verdict === "WA" || verdict === "MLE" || verdict === "TLE",
-      "text-secondary-600": verdict === "RE",
-    });
-  
+    time_lim: number;
+    mem_lim: number;
+  }> = ({ testResult, verdict, time_lim, mem_lim }) => {
     const chipColor = useMemo(() => {
       switch (verdict) {
         case "AC":
@@ -165,9 +165,12 @@ export default function EvalTestResultCard({ testResult }: { testResult: TestRes
               <p className="text-small text-default-700 whitespace-nowrap">
                 Izpildes laiks:
               </p>
-              <span className="text-sm">
+              {verdict !== "TLE" && <span className="text-sm">
                 {testResult.subm_exec_info.cpu_time_millis} ms
-              </span>
+              </span>}
+              {verdict === "TLE" && <span className="text-sm">
+                ≥ {time_lim} ms
+              </span>}
             </div>
           )}
           {testResult.subm_exec_info?.mem_kibi_bytes && (
@@ -175,9 +178,12 @@ export default function EvalTestResultCard({ testResult }: { testResult: TestRes
               <p className="text-small text-default-700 whitespace-nowrap">
                 Patērētā atmiņa:
               </p>
-              <span className="text-sm">
+              {verdict !== "MLE" && <span className="text-sm">
                 {(testResult.subm_exec_info.mem_kibi_bytes / 1024).toFixed(2)} MB
-              </span>
+              </span>}
+              {verdict === "MLE" && <span className="text-sm">
+                ≥ {mem_lim} MB
+              </span>}
             </div>
           )}
         </div>

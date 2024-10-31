@@ -147,14 +147,14 @@ const SubmissionView: React.FC = () => {
         {sortedTestGroups.length > 0 && (
           <div className="border-small border-divider rounded-md bg-white">
             <div className="px-0 lg:px-1 p-0 py-1">
-              <EvalTestgroupAccordion testGroups={sortedTestGroups} testResults={data.test_results} />
+              <EvalTestgroupAccordion testGroups={sortedTestGroups} testResults={data.test_results} time_lim={data.eval_details.cpu_time_limit_millis} mem_lim={data.eval_details.memory_limit_kibi_bytes} />
             </div>
           </div>
         )}
         {data.test_set && !sortedTestGroups.length &&
           data.test_results.map((testResult: TestResult) => (
             <React.Fragment key={testResult.test_id}>
-              <EvalTestResultCard testResult={testResult} />
+              <EvalTestResultCard testResult={testResult} time_lim={data.eval_details.cpu_time_limit_millis} mem_lim={data.eval_details.memory_limit_kibi_bytes} />
               <Spacer y={2} />
             </React.Fragment>
           ))}
