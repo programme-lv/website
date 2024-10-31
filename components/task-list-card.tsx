@@ -1,4 +1,5 @@
 "use client";
+import lio_logo from "@/public/lio-logo.png";
 
 import React, { useRef, useEffect, useState } from "react";
 import { Skeleton } from "@nextui-org/react";
@@ -31,7 +32,8 @@ type TaskCardProps = {
 const TaskCard: React.FC<TaskCardProps> = (task: TaskCardProps) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const [isWide, setIsWide] = useState(true);
-  const [loading, setLoading] = useState(true);
+  const [illstrImgLoading, setIllstrImgLoading] = useState(true);
+  const [olympLogoLoading, setOlympLogoLoading] = useState(true);
 
   useEffect(() => {
     const handleResize = () => {
@@ -60,7 +62,7 @@ const TaskCard: React.FC<TaskCardProps> = (task: TaskCardProps) => {
         <div className="flex gap-x-4 flex-row sm:flex-nowrap">
           {task.illustration_img_url && isWide && (
             <>
-              {loading && (
+              {illstrImgLoading && (
                 <Skeleton className="w-[120px] h-[120px] absolute rounded-md" />
               )}
               <div className="w-[120px] max-w-[120px] flex-shrink-0">
@@ -72,7 +74,7 @@ const TaskCard: React.FC<TaskCardProps> = (task: TaskCardProps) => {
                   height={120}
                   src={task.illustration_img_url}
                   width={120}
-                  onLoad={() => setLoading(false)}
+                  onLoad={() => setIllstrImgLoading(false)}
                 />
               </div>
             </>
@@ -108,11 +110,16 @@ const TaskCard: React.FC<TaskCardProps> = (task: TaskCardProps) => {
             <div className="flex justify-between items-center mt-1">
               <div className="flex items-center">
                 {task.origin_olympiad === "LIO" && (
-                  <div className="w-[3em] min-w-[3em]">
-                    <img
+                  <div className="w-[48px] h-[37px] min-w-[48px]">
+                    {olympLogoLoading && (
+                      <Skeleton className="w-[48px] h-[37px] absolute rounded-sm" />
+                    )}
+                    <Image
                       alt="Latvijas informātikas olimpiādes logo"
                       className="h-auto"
-                      src="https://lio.lv/LIO_logo_jaunais3.png"
+                      src={lio_logo.src}
+                      radius="sm"
+                      onLoad={() => setOlympLogoLoading(false)}
                     />
                   </div>
                 )}

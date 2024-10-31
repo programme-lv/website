@@ -1,4 +1,5 @@
 "use client";
+import bg from "@/public/webb.png";
 import {
   Button,
   cn,
@@ -69,8 +70,8 @@ const Layout: React.FC<LayoutProps> = ({ children, breadcrumbs, active }) => {
 
         {/* Main Content Area */}
         <div
-          className="w-full flex flex-1 flex-col p-2 overflow-y-scroll bg-default-100"
-          // style={{ backgroundColor: "#f8f8f8" }}
+          className="w-full flex flex-1 flex-col p-2 overflow-y-scroll bg-default-50"
+          // style={{ backgroundImage: `url(${bg.src})` }}
         >
           {/* Header */}
           <header className="flex items-center justify-between gap-1 rounded-small border-small border-divider px-2 md:px-4 py-2 bg-white h-[50px]">
