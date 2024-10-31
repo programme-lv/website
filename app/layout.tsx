@@ -44,6 +44,7 @@ export default function RootLayout({
             attribute: "class",
             defaultTheme: "light",
             forcedTheme: "light",
+            children: children,
           }}
         >
           {/* <NextTopLoader showAtBottom={false} zIndex={1600} /> */}
