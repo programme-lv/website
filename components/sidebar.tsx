@@ -4,7 +4,7 @@ import { Tooltip } from "@nextui-org/tooltip";
 import { IconInbox, IconListDetails } from "@tabler/icons-react";
 import React from "react";
 
-import Logo from "@/public/logo.png";
+import Logo from "@/public/logo-reversed.png";
 
 import { cn } from "./cn";
 
