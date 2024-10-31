@@ -4,8 +4,6 @@ import React, { useMemo } from "react";
 import {
   Card,
   CardBody,
-  AccordionItem,
-  Accordion,
   Spacer,
 } from "@nextui-org/react";
 import { useParams } from "next/navigation";

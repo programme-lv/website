@@ -63,19 +63,20 @@ export default function EvalTestResultCard({ testResult }: { testResult: TestRes
         {/* <Spacer y={1.5} /> */}
         {verdict === "RE" && (
           <>
-            <div className="flex flex-col gap-4">
-              <RuntimeInfo testResult={testResult} />
-            </div>
             <Spacer y={2} />
             <div className="flex gap-4">
-              <OutputSection
-                content={testResult.subm_exec_info?.stderr_trimmed}
-                title="Izpildes kļūdas ziņojums:"
-              />
-              <OutputSection
-                content={testResult.subm_exec_info?.exit_code?.toString()}
-                title="Izejas kods:"
-              />
+              {testResult.subm_exec_info?.stderr_trimmed && (
+                <OutputSection
+                  content={testResult.subm_exec_info?.stderr_trimmed}
+                  title="Izpildes kļūdas ziņojums:"
+                />
+              )}
+              {testResult.subm_exec_info?.exit_code !== 0 && (
+                <OutputSection
+                  content={testResult.subm_exec_info?.exit_code?.toString()}
+                  title="Izejas kods:"
+                />
+              )}
               {testResult.subm_exec_info?.exit_signal && (
                 <OutputSection
                   content={`${testResult.subm_exec_info.exit_signal} : ${exitSignalDescription}`}

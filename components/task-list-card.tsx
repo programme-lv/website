@@ -76,7 +76,6 @@ const TaskCard: React.FC<TaskCardProps> = (task: TaskCardProps) => {
                 <Image
                   disableAnimation
                   alt={task.task_full_name}
-                  as={NextImage}
                   className="h-full object-cover rounded-md"
                   height={120}
                   src={task.illustration_img_url}
