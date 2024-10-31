@@ -40,9 +40,9 @@ export default function Sidebar(props: SidebarProps) {
     <>
       <div className="relative h-full flex-col !border-r-small border-divider p-6 transition-width w-14 items-center px-2 py-4 hidden md:flex">
         <div className="flex items-center px-3 justify-center gap-0">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full">
+          <div className="flex mt-1 w-[32px] items-center justify-center rounded-full">
             <Link href="/tasks">
-              <Image loading="eager"  alt="programme.lv logo" width={32} height={25.24} src={Logo.src}/>
+              <Image loading="eager"  alt="programme.lv logo" width={32} height={32*(606/769)} src={Logo.src} />
             </Link>
           </div>
         </div>

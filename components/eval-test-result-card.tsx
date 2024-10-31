@@ -90,7 +90,7 @@ export default function EvalTestResultCard({ testResult }: { testResult: TestRes
             <div className="flex flex-col gap-4">
               <OutputSection
                 content={testResult.input_trimmed}
-                title="Ievaddati:"
+                title="Testa ievaddati:"
               />
               <OutputSection
                 content={testResult.subm_exec_info?.stdout_trimmed}
@@ -98,7 +98,7 @@ export default function EvalTestResultCard({ testResult }: { testResult: TestRes
               />
               <OutputSection
                 content={testResult.answer_trimmed}
-                title="Atbilde:"
+                title="Žūrijas atbilde:"
               />
               <OutputSection
                 content={testResult.checker_exec_info?.stderr_trimmed}
