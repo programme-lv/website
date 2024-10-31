@@ -55,7 +55,14 @@ const TaskCard: React.FC<TaskCardProps> = (task: TaskCardProps) => {
     <div
       ref={cardRef}
       className={
-        "w-full bg-white border border-divider rounded-md hover:border-blue-500"
+        cn(
+        "w-full bg-white border border-divider rounded-md hover:border-blue-500",
+        {"hover:border-green-500": task.difficulty_rating === 1},
+        {"hover:border-blue-500": task.difficulty_rating === 2},
+        {"hover:border-violet-500": task.difficulty_rating === 3},
+        {"hover:border-yellow-500": task.difficulty_rating === 4},
+        {"hover:border-red-500": task.difficulty_rating === 5}
+        )
       }
     >
       <div className={cn("flex flex-col p-3 sm:flex-row overflow-hidden", {"px-4":!task.illustration_img_url} )}>
