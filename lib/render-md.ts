@@ -8,6 +8,7 @@ import remarkGfm from "remark-gfm";
 import { Node } from "unist";
 import { Element } from "hast";
 import { visit } from "unist-util-visit";
+import { MdImg } from "@/types/proglv";
 
 // Plugin to add Tailwind classes
 function rehypeAddClasses() {
@@ -74,14 +75,15 @@ function rehypeAddClasses() {
         case "img":
           // node.properties.className = ["w-2/3"]
           node.properties.style =
-            "margin-top: .5rem; margin-bottom: .5rem; width: 450px; object-fit:contain;";
+            "margin-top: .3rem; margin-bottom: .3rem; width: 450px; object-fit:contain;";
+          // node.properties.loading = "lazy";
           // Wrap the image in a figure and add a caption
           if (parent && parent.children) {
             const figure: any = {
               type: "element",
               tagName: "figure",
               properties: {
-                className: ["flex", "flex-col", "items-center", "mb-4"],
+                className: ["flex", "flex-col", "items-center", "mb-2"],
               },
               children: [
                 {
@@ -111,6 +113,29 @@ function rehypeAddClasses() {
   };
 }
 
+// assigns them the correct urls, widths
+function rehypeFixImages(images: MdImg[]) {
+  return (tree: Node) => {
+    visit(tree, "element", (node: Element, index, parent: Element) => {
+      if (node.tagName === "img") {
+        const img = images.find((i) => i.img_uuid === node.properties.src);
+        if (img) {
+          node.properties.src = img.http_url;
+          const aspect_ratio = img.width_px / img.height_px;
+          if (img.width_em) {
+            node.properties.style += `width: ${img.width_em}ch;`;
+            node.properties.style += `aspect-ratio: ${aspect_ratio};`;
+
+          } else {
+            node.properties.style += `width: ${img.width_px}px;`;
+            node.properties.style += `aspect-ratio: ${aspect_ratio};`;
+          }
+        }
+      }
+    });
+  };
+}
+
 // Plugin to remove images
 function rehypeRemoveImages() {
   return (tree: Node) => {
@@ -122,7 +147,7 @@ function rehypeRemoveImages() {
   };
 }
 
-export default function renderMd(md: string): string {
+export default function renderMd(md: string, images: MdImg[] = []): string {
   const result = unified()
     .use(remarkParse)
     .use(remarkGfm)
@@ -130,6 +155,7 @@ export default function renderMd(md: string): string {
     .use(remarkRehype)
     .use(rehypeKatex)
     .use(rehypeAddClasses)
+    .use(() => rehypeFixImages(images))
     .use(rehypeStringify)
     .processSync(md)
     .toString();

@@ -53,6 +53,15 @@ type MarkdownStatement = {
   output: string;
   notes?: string;
   scoring?: string;
+  images?: MdImg[];
+};
+
+type MdImg = {
+  img_uuid: string;
+  http_url: string;
+  width_em: number;
+  width_px: number;
+  height_px: number;
 };
 
 type TestGroup = {
@@ -229,4 +238,5 @@ export type {
   VisibleInputSubtask,
   SubtaskOverview,
   TestGroup,
+  MdImg,
 };

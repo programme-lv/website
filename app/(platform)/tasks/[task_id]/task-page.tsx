@@ -61,7 +61,7 @@ export default function TaskDetailsPage(props: { task: Task }) {
 	const { data: getTaskByIdData } = useQuery(
 		["task", task_id],
 		() => getTaskById(task_id as string),
-		{ staleTime: 30 * 1000 } // 30 seconds
+		{ staleTime: 30 * 10000 } // 300 seconds
 	);
 
 	useEffect(() => {
@@ -169,10 +169,10 @@ function MdView({
 	// }, [md_statement]);
 
 	const sections = {
-		story: renderMd(md_statement.story),
-		input: renderMd(md_statement.input),
-		output: renderMd(md_statement.output),
-		scoring: md_statement.scoring ? renderMd(md_statement.scoring) : ""
+		story: renderMd(md_statement.story, md_statement.images),
+		input: renderMd(md_statement.input, md_statement.images),
+		output: renderMd(md_statement.output, md_statement.images),
+		scoring: md_statement.scoring ? renderMd(md_statement.scoring, md_statement.images) : ""
 	}
 
 	return (
