@@ -1,4 +1,4 @@
-// export const revalidate = 60 * 2; // 2 minutes
+export const revalidate = 120; // 2 minutes
 
 import Layout from "@/components/layout";
 import { getTaskById } from "@/lib/tasks";
