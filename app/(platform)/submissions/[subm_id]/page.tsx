@@ -5,6 +5,7 @@ import {
   Card,
   CardBody,
   Spacer,
+  Spinner,
 } from "@nextui-org/react";
 import { useParams } from "next/navigation";
 import { useQuery } from "react-query";
@@ -90,7 +91,9 @@ const SubmissionView: React.FC = () => {
   if (isLoading) {
     return (
       <Layout breadcrumbs={breadcrumbs} active="submissions">
-        <div>Loading...</div>
+        <div className="flex-grow flex justify-center items-center">
+          <Spinner />
+        </div>
       </Layout>
     );
   }

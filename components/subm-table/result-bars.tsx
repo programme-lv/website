@@ -1,4 +1,4 @@
-import { TestGroup } from "@/types/proglv";
+import { TestGroup, TestSet } from "@/types/proglv";
 
 export function ErrorScoringBar() {
   return (
@@ -21,7 +21,72 @@ export function ErrorScoringBar() {
   );
 }
 
-export function TestgroupScoringBar({
+    // Start of Selection
+    export function TestSetScoringBar({
+      testset,
+    }: {
+      testset: TestSet;
+    }) {
+      let total_test_count = testset.accepted + testset.wrong + testset.untested;
+      let green = total_test_count > 0 ? testset.accepted / total_test_count : 0;
+      let red = total_test_count > 0 ? testset.wrong / total_test_count : 0;
+      let gray = total_test_count > 0 ? testset.untested / total_test_count : 0;
+    
+      return (
+        <div className="flex justify-center flex-col items-center w-full min-w-36">
+          <div className="flex justify-between w-full items-center h-3 mb-1">
+            {green > 0 && (
+              <span className="text-teal-600 text-tiny">
+                {`${(green * 100).toFixed(0)}%`}
+              </span>
+            )}
+            {red > 0 && (
+              <span className="text-red-500 text-tiny">
+                {`${(red * 100).toFixed(0)}%`}
+              </span>
+            )}
+            {gray > 0 && (
+              <span className="text-gray-500 text-tiny">
+                {`${(gray * 100).toFixed(0)}%`}
+              </span>
+            )}
+          </div>
+          <div className="relative pt-1 w-full">
+            <div className="overflow-hidden h-1.5 text-xs flex rounded">
+              {green > 0 && (
+                <div
+                  className="flex flex-col text-center whitespace-nowrap text-white justify-center transition-all duration-1000 ease-in-out"
+                  style={{
+                    width: `${(green * 100).toFixed(0)}%`,
+                    background: "linear-gradient(90deg, #38b2ac, #2c7a7b)",
+                  }}
+                />
+              )}
+              {red > 0 && (
+                <div
+                  className="flex flex-col text-center whitespace-nowrap text-white justify-center transition-all duration-1000 ease-in-out"
+                  style={{
+                    width: `${(red * 100).toFixed(0)}%`,
+                    background: "linear-gradient(90deg, #f56565, #c53030)",
+                  }}
+                />
+              )}
+              {gray > 0 && (
+                <div
+                  className="flex flex-col text-center whitespace-nowrap text-white justify-center transition-all duration-1000 ease-in-out"
+                  style={{
+                    width: `${(gray * 100).toFixed(0)}%`,
+                    background: "linear-gradient(90deg, #a0aec0, #718096)",
+                  }}
+                />
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+export function TestGroupScoringBar({
   testgroups,
 }: {
   testgroups: TestGroup[];

@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 
 import { BriefSubmission } from "@/types/proglv";
 
-import { ErrorScoringBar, TestgroupScoringBar } from "./result-bars";
+import { ErrorScoringBar, TestGroupScoringBar, TestSetScoringBar } from "./result-bars";
 import { statusTranslations } from "./helpful-constants";
 
 export default function SubmissionTableServer({
@@ -129,7 +129,10 @@ function renderCell(row: BriefSubmission, columnKey: string) {
         return <ErrorScoringBar />;
       }
       if (row.test_groups && row.test_groups.length > 0) {
-        return <TestgroupScoringBar testgroups={row.test_groups} />;
+        return <TestGroupScoringBar testgroups={row.test_groups} />;
+      }
+      if (row.test_set) {
+        return <TestSetScoringBar testset={row.test_set} />;
       }
       // if (row.eval_scoring_tests) {
       //   return (

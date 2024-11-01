@@ -239,4 +239,5 @@ export type {
   SubtaskOverview,
   TestGroup,
   MdImg,
+  TestSet,
 };
