@@ -24,7 +24,7 @@ const calculateScores = (data: any) => {
   let receivedScore = 0;
   let possibleScore = 0;
 
-  if (data.test_groups) {
+  if (data.test_groups && data.test_groups.length > 0) {
     data.test_groups.forEach((testGroup: any) => {
       possibleScore += testGroup.test_group_score;
       if (testGroup.wrong_tests === 0 && testGroup.untested_tests === 0) {
@@ -91,9 +91,7 @@ const SubmissionView: React.FC = () => {
   if (isLoading) {
     return (
       <Layout breadcrumbs={breadcrumbs} active="submissions">
-        <div className="flex-grow flex justify-center items-center">
-          <Spinner />
-        </div>
+        <></>
       </Layout>
     );
   }

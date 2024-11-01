@@ -46,23 +46,19 @@ export default function EvalTestResultCard({ testResult, time_lim, mem_lim }: Ev
   
     if (testResult.reached === false) {
       return (
-        <Card
+        <div
           key={`${testResult.test_id}-not-reached`}
-          className="border-small border-divider"
-          radius="sm"
-          shadow="none"
+          className="border-small border-divider rounded-sm"
         >
-          <CardBody>
             <TestResultHeader testResult={testResult} verdict={verdict} time_lim={time_lim} mem_lim={mem_lim} />
-          </CardBody>
-        </Card>
+        </div>
       );
     }
   
     return (
       <div
         key={testResult.test_id}
-        className="p-2 border-small border-default-300 rounded-md"
+        className="p-2 border-small border-default-300 rounded-md bg-white"
       >
         <TestResultHeader testResult={testResult} verdict={verdict} time_lim={time_lim} mem_lim={mem_lim} />
         {/* <Spacer y={1.5} /> */}
