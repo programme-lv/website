@@ -237,16 +237,16 @@ function MdView({
 						<table className="w-full rounded-sm">
 							<tbody>
 								{statement_subtasks.map((subtask, i) => (
-									<tr key={i} className={cn({ "bg-gray-100": i % 2 === 0 })}>
-										<td className="px-2 py-1 w-[5em]">{subtask.subtask}.</td>
-										<td className="px-2 py-1">
+									<tr key={i} className={cn({"border-b border-divider": i !== statement_subtasks.length - 1}, { "bg-gray-50": i % 2 === 0 })}>
+										<td className="px-2 py-1.5 w-[5em]">{subtask.subtask}.</td>
+										<td className="px-2 py-1.5">
 											<div
 												dangerouslySetInnerHTML={{
 													__html: renderMdLite(subtask.descriptions["lv"]),
 												}}
 											/>
 										</td>
-										<td className="px-2 py-1 w-[8em]">{subtask.score} p.</td>
+										<td className="px-2 py-1.5 w-[8em]"><span className="font-medium">{subtask.score}</span> p.</td>
 									</tr>
 								))}
 							</tbody>

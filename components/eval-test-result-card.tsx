@@ -70,8 +70,9 @@ export default function EvalTestResultCard({
 				time_lim={time_lim}
 				mem_lim={mem_lim}
 			/>
+			<div className="mt-3"></div>
 			{verdict === "RE" && (
-				<div className="flex flex-col gap-4">
+				<div className="flex flex-col gap-3">
 					{testResult.subm_exec_info?.stderr_trimmed && (
 						<OutputSection
 							content={testResult.subm_exec_info?.stderr_trimmed}
@@ -93,7 +94,7 @@ export default function EvalTestResultCard({
 				</div>
 			)}
 			{verdict !== "RE" && (
-				<div className="flex flex-col gap-4">
+				<div className="flex flex-col gap-3">
 					<OutputSection
 						content={testResult.input_trimmed}
 						title="Testa ievaddati:"
@@ -203,7 +204,7 @@ const OutputSection: React.FC<{ title: string; content?: string | null }> = ({
 	return (
 		<div className="w-full overflow-hidden">
 			<div className="flex flex-col text-small">
-				<p className="text-tiny text-default-700 select-none">{title}</p>
+				<p className="text-tiny text-default-700 select-none mb-0.5">{title}</p>
 				<CodeBlock content={content || "N/A"} />
 			</div>
 		</div>

@@ -15,9 +15,9 @@ export default function CodeBlock({ content }: { content: string }) {
     return (
         <div className="relative flex flex-grow flex-col">
             <code
-                className="p-1.5 flex-grow border-small border-divider min-h-8"
+                className="p-2 flex-grow border-small border-divider min-h-8 rounded-sm bg-gray-100"
                 style={{
-                    backgroundColor: "rgba(212, 212, 216, 0.4)",
+                    // backgroundColor: "rgba(212, 212, 216, 0.4)",
                     whiteSpace: "pre-wrap",
                 }}
             >

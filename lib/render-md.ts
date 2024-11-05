@@ -43,6 +43,7 @@ function rehypeAddClasses() {
             "min-w-full",
             "divide-y",
             "divide-gray-200",
+            "border-2"
           ];
           break;
         case "thead":
@@ -62,15 +63,13 @@ function rehypeAddClasses() {
           node.properties.className = [
             "px-3",
             "py-1",
-            "text-left",
-            "text-small",
             "font-medium",
-            "text-default-800",
             "border",
+            "border-divider",
           ];
           break;
         case "td":
-          node.properties.className = ["px-3", "py-1", "border"];
+          node.properties.className = ["px-3", "py-1", "border", "border-divider"];
           break;
         case "img":
           // node.properties.className = ["w-2/3"]
