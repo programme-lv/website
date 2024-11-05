@@ -126,12 +126,7 @@ type EvalDetails = {
   memory_limit_kibi_bytes: number;
   programming_lang: ProgrammingLang;
   system_information: string;
-  compile_cpu_time_millis: number;
-  compile_mem_kibi_bytes: number;
-  compile_wall_time: number;
-  compile_exit_code: number;
-  compile_stdout_trimmed: string;
-  compile_stderr_trimmed: string;
+  compile_exec_info?: RuntimeData;
 };
 
 type TestResult = {

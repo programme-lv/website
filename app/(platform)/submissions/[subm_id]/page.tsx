@@ -5,7 +5,6 @@ import {
   Card,
   CardBody,
   Spacer,
-  Spinner,
 } from "@nextui-org/react";
 import { useParams } from "next/navigation";
 import { useQuery } from "react-query";
@@ -104,6 +103,7 @@ const SubmissionView: React.FC = () => {
     );
   }
 
+  const reached_tests = data.test_results.filter((test: TestResult) => test.reached);
 
   return (
     <Layout breadcrumbs={breadcrumbs} active="submissions">
@@ -124,7 +124,7 @@ const SubmissionView: React.FC = () => {
           lang_monaco_id={data.p_lang_monaco_id}
         />
         <Spacer y={3} />
-        {data.eval_details.programming_lang.compileCmd && (
+        {data.eval_details.compile_exec_info && (
           <>
             <Card
               classNames={{ base: "border-small border-divider" }}
@@ -137,7 +137,7 @@ const SubmissionView: React.FC = () => {
                     Kompilācijas izvaddati:
                   </p>
                   <CodeBlock
-                    content={data.eval_details.compile_stdout_trimmed + data.eval_details.compile_stderr_trimmed || ""}
+                    content={data.eval_details.compile_exec_info.stdout_trimmed+ data.eval_details.compile_exec_info.stderr_trimmed|| ""}
                   />
                 </div>
               </CardBody>
@@ -145,20 +145,24 @@ const SubmissionView: React.FC = () => {
             <Spacer y={3} />
           </>
         )}
-        {sortedTestGroups.length > 0 && (
-          <div className="border-small border-divider rounded-md bg-white">
-            <div className="px-0 lg:px-1 p-0 py-1">
-              <EvalTestgroupAccordion testGroups={sortedTestGroups} testResults={data.test_results} time_lim={data.eval_details.cpu_time_limit_millis} mem_lim={data.eval_details.memory_limit_kibi_bytes} />
-            </div>
-          </div>
+        {(!data.eval_details.compile_exec_info || data.eval_details.compile_exec_info.exit_code === 0) && (
+          <>
+            {sortedTestGroups.length > 0 && (
+              <div className="border-small border-divider rounded-md bg-white">
+                <div className="px-0 lg:px-1 p-0 py-1">
+                  <EvalTestgroupAccordion testGroups={sortedTestGroups} testResults={reached_tests} time_lim={data.eval_details.cpu_time_limit_millis} mem_lim={data.eval_details.memory_limit_kibi_bytes} />
+                </div>
+              </div>
+            )}
+            {data.test_set && !sortedTestGroups.length &&
+              reached_tests.map((testResult: TestResult) => (
+                <React.Fragment key={testResult.test_id}>
+                  <EvalTestResultCard testResult={testResult} time_lim={data.eval_details.cpu_time_limit_millis} mem_lim={data.eval_details.memory_limit_kibi_bytes} />
+                  <Spacer y={2} />
+                </React.Fragment>
+              ))}
+          </>
         )}
-        {data.test_set && !sortedTestGroups.length &&
-          data.test_results.map((testResult: TestResult) => (
-            <React.Fragment key={testResult.test_id}>
-              <EvalTestResultCard testResult={testResult} time_lim={data.eval_details.cpu_time_limit_millis} mem_lim={data.eval_details.memory_limit_kibi_bytes} />
-              <Spacer y={2} />
-            </React.Fragment>
-          ))}
         <Spacer y={2} />
       </div>
     </Layout>
