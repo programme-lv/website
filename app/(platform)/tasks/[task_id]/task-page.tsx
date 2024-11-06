@@ -172,16 +172,20 @@ function MdView({
 		story: renderMd(md_statement.story, md_statement.images),
 		input: renderMd(md_statement.input, md_statement.images),
 		output: renderMd(md_statement.output, md_statement.images),
-		scoring: md_statement.scoring ? renderMd(md_statement.scoring, md_statement.images) : ""
+		scoring: md_statement.scoring ? renderMd(md_statement.scoring, md_statement.images) : "",
+		talk: md_statement.talk ? renderMd(md_statement.talk, md_statement.images) : "",
+		example: md_statement.example ? renderMd(md_statement.example, md_statement.images) : ""
 	}
 
 	return (
 		<div className="w-full flex-grow flex flex-col gap-4 my-2 px-3 pb-4">
 			<Section title="Stāsts" content={sections.story} />
-			<Section title="Ievaddati" content={sections.input} />
-			<Section title="Izvaddati" content={sections.output} />
+			{sections.input && <Section title="Ievaddati" content={sections.input} />}
+			{sections.output && <Section title="Izvaddati" content={sections.output} />}
+			{sections.talk && <Section title="Komunikācija" content={sections.talk} />}
+			{sections.example && <Section title="Piemērs" content={sections.example} />}
 
-			{examples && (
+			{examples && !sections.example && (
 				<div>
 					<h2 className="text-small my-1 mb-2 font-semibold">Piemēri</h2>
 					<div className="flex gap-2 flex-wrap w-full max-w-full">

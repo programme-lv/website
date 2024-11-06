@@ -40,10 +40,11 @@ function rehypeAddClasses() {
           break;
         case "table":
           node.properties.className = [
-            "min-w-full",
+            // "w-full",
+            "m-auto",
             "divide-y",
             "divide-gray-200",
-            "border-2"
+            "my-2"
           ];
           break;
         case "thead":
@@ -63,7 +64,7 @@ function rehypeAddClasses() {
           node.properties.className = [
             "px-3",
             "py-1",
-            "font-medium",
+            "font-normal",
             "border",
             "border-divider",
           ];

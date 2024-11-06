@@ -53,6 +53,8 @@ type MarkdownStatement = {
   output: string;
   notes?: string;
   scoring?: string;
+  talk?: string;
+  example?: string;
   images?: MdImg[];
 };
 
