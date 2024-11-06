@@ -65,12 +65,12 @@ const Layout: React.FC<LayoutProps> = ({ children, breadcrumbs, active }) => {
         </ModalContent>
       </Modal>
 
-      <div className="flex h-screen w-full">
+      <div className="flex min-h-screen w-full">
         <Sidebar active={active} />
 
         {/* Main Content Area */}
         <div
-          className="w-full flex flex-1 flex-col p-2 overflow-y-scroll bg-default-50"
+          className="w-full flex flex-col p-2 overflow-y-hidden"
           // style={{ backgroundImage: `url(${bg.src})` }}
         >
           {/* Header */}

@@ -31,11 +31,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html suppressHydrationWarning lang="en">
+    <html suppressHydrationWarning lang="en" style={{ backgroundColor: "rgb(250,250,250)" }}>
       <head />
       <body
         className={clsx(
-          "min-h-screen bg-background font-sans antialiased",
+          "min-h-screen font-sans antialiased",
           fontSans.variable,
         )}
       >
@@ -47,21 +47,7 @@ export default function RootLayout({
             children: children,
           }}
         >
-          {/* <NextTopLoader showAtBottom={false} zIndex={1600} /> */}
-          {/* <Navbar />
-          <main className="container mx-auto max-w-7xl pt-16 px-6 flex-grow"> */}
           {children}
-          {/* </main>
-          <footer className="w-full flex items-center justify-center py-3">
-          </footer> */}
-          {/* <div className="relative flex flex-col h-screen">
-            <Navbar />
-            <main className="container mx-auto max-w-7xl pt-16 px-6 flex-grow">
-              {children}
-            </main>
-            <footer className="w-full flex items-center justify-center py-3">
-            </footer>
-          </div> */}
         </Providers>
       </body>
     </html>

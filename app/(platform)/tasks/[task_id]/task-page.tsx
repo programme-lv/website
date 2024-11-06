@@ -216,17 +216,18 @@ function MdView({
 				</div>
 			)}
 
-			<div>
+			<div className="font-light">
 				<h2 className="text-small my-1 mb-2 font-semibold">
 					Ierobežojumi un prasības
 				</h2>
 				<div>
-					Max izpildes laiks uz testu:{" "}
+					Maksimālais <span className="font-medium">izpildes laiks</span> uz testu:{" "}
 					<span className="font-medium">{cpu_time_limit_seconds}</span>{" "}
 					sekundes.
 				</div>
+				<div className="my-0.5"/>
 				<div>
-					Max atmiņas apjoms uz testu:{" "}
+					Maksimālais <span className="font-medium">atmiņas apjoms</span> uz testu:{" "}
 					<span className="font-medium">{memory_limit_megabytes}</span>{" "}
 					megabaiti.
 				</div>
@@ -242,7 +243,7 @@ function MdView({
 							<tbody>
 								{statement_subtasks.map((subtask, i) => (
 									<tr key={i} className={cn({"border-b border-divider": i !== statement_subtasks.length - 1}, { "bg-gray-50": i % 2 === 0 })}>
-										<td className="px-2 py-1.5 w-[5em]">{subtask.subtask}.</td>
+										<td className="px-2 py-1.5 max-w-[5em] min-w-[2em] border-r border-gray-200 text-center">{subtask.subtask}.</td>
 										<td className="px-2 py-1.5">
 											<div
 												dangerouslySetInnerHTML={{
@@ -250,13 +251,13 @@ function MdView({
 												}}
 											/>
 										</td>
-										<td className="px-2 py-1.5 w-[8em]"><span className="font-medium">{subtask.score}</span> p.</td>
+										<td className="px-2 py-1.5 max-w-[6em] min-w-[4em] border-l border-gray-200"><span className="font-medium">{subtask.score}</span> p.</td>
 									</tr>
 								))}
 							</tbody>
 						</table>
 					</div>
-					<div className="mt-2">
+					<div className="mt-2 text-small text-right">
 						Apakšuzdevumu punktu summa ={" "}
 						<span className="font-medium">
 							{statement_subtasks.reduce((a, b) => a + b.score, 0)}

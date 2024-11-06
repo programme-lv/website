@@ -38,7 +38,7 @@ type SidebarProps = {
 export default function Sidebar(props: SidebarProps) {
   return (
     <>
-      <div className="relative h-full flex-col !border-r-small border-divider p-6 transition-width w-14 items-center px-2 py-4 hidden md:flex">
+      <div className="relative flex-col bg-white !border-r-small border-divider p-6 transition-width w-14 items-center px-2 py-4 hidden md:flex">
         <div className="flex items-center px-3 justify-center gap-0">
           <div className="flex mt-1 w-[32px] items-center justify-center rounded-full">
             <Link href="/tasks">
