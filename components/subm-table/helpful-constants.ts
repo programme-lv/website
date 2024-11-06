@@ -1,11 +1,11 @@
 export const statusTranslations: Record<string, string> = {
-  waiting: "Gaida rindā",
-  received: "Sagatavo datus",
-  compiling: "Tiek kompilēts",
-  testing: "Tiek testēts",
+  waiting: "Gaida",
+  received: "Sagatavo",
+  compiling: "Kompilē",
+  testing: "Testē",
   finished: "Izvērtēts",
   error: "Servera kļūda",
-  compile_error: "Kompilācijas kļūda",
+  compile_error: "Kļūda",
   runtime_error: "Izpildes kļūda",
   checker_error: "Servera kļūda",
 };
