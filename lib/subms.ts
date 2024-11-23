@@ -58,7 +58,7 @@ export const createSubmission = async (
   return data;
 };
 
-export const subscribeToSubmissionUpdates = (
+export const subscribeToSubmUpdates = (
   onUpdate: (update: SubmListWebSocketUpdate) => void,
 ) => {
   const eventSource = new EventSource(`${API_HOST}/subm-updates`);

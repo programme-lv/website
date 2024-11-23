@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 
-import { subscribeToSubmissionUpdates, listSubmissions } from "@/lib/subms";
+import { subscribeToSubmUpdates, listSubmissions } from "@/lib/subms";
 import { BriefSubmission, SubmListWebSocketUpdate } from "@/types/proglv";
 
 import { applyUpdatesToSubmissions } from "./apply-updates";
@@ -22,7 +22,7 @@ export default function ClientSubmissionTable({
   });
 
   useEffect(() => {
-    const unsubscribe = subscribeToSubmissionUpdates(
+    const unsubscribe = subscribeToSubmUpdates(
       (update: SubmListWebSocketUpdate) => {
         setUpdates((prev) => {
           if (prev.length >= 10000) prev.shift();

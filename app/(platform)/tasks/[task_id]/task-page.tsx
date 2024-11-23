@@ -243,7 +243,7 @@ function MdView({
 							<tbody>
 								{statement_subtasks.map((subtask, i) => (
 									<tr key={i} className={cn({"border-b border-divider": i !== statement_subtasks.length - 1}, { "bg-gray-50": i % 2 === 0 })}>
-										<td className="px-2 py-1.5 max-w-[5em] min-w-[2em] border-r border-gray-200 text-center">{subtask.subtask}.</td>
+										<td className="px-2 py-1.5 max-w-[3em] min-w-[2em] border-r border-gray-200 text-center">{subtask.subtask}.</td>
 										<td className="px-2 py-1.5">
 											<div
 												dangerouslySetInnerHTML={{
