@@ -1,6 +1,6 @@
 import { cn } from "@nextui-org/react";
 import BlueLink from "./blue-link";
-import { statusTranslations } from "./subm-table/helpful-constants";
+import { statusTranslations } from "./submission-table";
 
 
 function Score({ received, possible }: { received: number, possible: number }) {

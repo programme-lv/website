@@ -1,7 +1,6 @@
 export const revalidate = 60; // 1 minute
 
 import Layout from "@/components/layout";
-import SubmissionTableServer from "@/components/subm-table/server-component";
 import SubmissionTable from "@/components/submission-table";
 
 
