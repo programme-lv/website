@@ -36,26 +36,26 @@ export default function SubmissionTable({ submissions, skeleton }: SubmissionTab
                 <col width="120px" />
             </colgroup>
             <thead>
-                <tr className="border-b border-gray-300 text-gray-700">
-                    <th className="p-2.5 text-left font-medium">Datums & laiks</th>
-                    <th className="p-2.5 text-left font-medium">Autors</th>
-                    <th className="p-2.5 text-left font-medium">Uzdevums</th>
-                    <th className="p-2.5 text-left font-medium">Valoda</th>
-                    <th className="p-2.5 text-left font-medium">Rezultāts</th>
-                    <th className="p-2.5 text-left font-medium">Statuss</th>
-                    <th className="p-2.5 text-left font-medium">Iesūtījums</th>
+                <tr className="border-b border-gray-300 text-gray-900 text-sm">
+                    <th className="p-2 text-left font-medium">Datums & laiks</th>
+                    <th className="p-2 text-left font-medium">Autors</th>
+                    <th className="p-2 text-left font-medium">Uzdevums</th>
+                    <th className="p-2 text-left font-medium">Valoda</th>
+                    <th className="p-2 text-left font-medium">Rezultāts</th>
+                    <th className="p-2 text-left font-medium">Statuss</th>
+                    <th className="p-2 text-left font-medium">Iesūtījums</th>
                 </tr>
             </thead>
             <tbody>
                 {Array.from({length: 30}).map((_, i) => (
                     <tr key={i} className={cn({"border-b border-divider": i !== 29}, { "bg-gray-50": i % 2 === 0 })}>
-                        <td className="p-2.5 animate-pulse"><div className="bg-gray-300 rounded-sm w-full h-full text-gray-300">.</div></td>
-                        <td className="p-2.5 animate-pulse"><div className="bg-gray-300 rounded-sm w-full h-full text-gray-300">.</div></td>
-                        <td className="p-2.5 animate-pulse"><div className="bg-gray-300 rounded-sm w-full h-full text-gray-300">.</div></td>
-                        <td className="p-2.5 animate-pulse"><div className="bg-gray-300 rounded-sm w-full h-full text-gray-300">.</div></td>
-                        <td className="p-2.5 animate-pulse"><div className="bg-gray-300 rounded-sm w-full h-full text-gray-300">.</div></td>
-                        <td className="p-2.5 animate-pulse"><div className="bg-gray-300 rounded-sm w-full h-full text-gray-300">.</div></td>
-                        <td className="p-2.5 animate-pulse"><div className="bg-gray-300 rounded-sm w-full h-full text-gray-300">.</div></td>
+                        <td className="p-2.5 py-2.5 animate-pulse"><div className="bg-gray-300 rounded-sm w-full h-full text-gray-300">.</div></td>
+                        <td className="p-2.5 py-2.5 animate-pulse"><div className="bg-gray-300 rounded-sm w-full h-full text-gray-300">.</div></td>
+                        <td className="p-2.5 py-2.5 animate-pulse"><div className="bg-gray-300 rounded-sm w-full h-full text-gray-300">.</div></td>
+                        <td className="p-2.5 py-2.5 animate-pulse"><div className="bg-gray-300 rounded-sm w-full h-full text-gray-300">.</div></td>
+                        <td className="p-2.5 py-2.5 animate-pulse"><div className="bg-gray-300 rounded-sm w-full h-full text-gray-300">.</div></td>
+                        <td className="p-2.5 py-2.5 animate-pulse"><div className="bg-gray-300 rounded-sm w-full h-full text-gray-300">.</div></td>
+                        <td className="p-2.5 py-2.5 animate-pulse"><div className="bg-gray-300 rounded-sm w-full h-full text-gray-300">.</div></td>
                     </tr>
                 ))}
             </tbody>
@@ -75,30 +75,30 @@ export default function SubmissionTable({ submissions, skeleton }: SubmissionTab
                 <col width="120px" />
             </colgroup>
             <thead>
-                <tr className="border-b border-gray-300 text-gray-700">
-                    <th className="p-2.5 text-left font-medium">Datums & laiks</th>
-                    <th className="p-2.5 text-left font-medium">Autors</th>
-                    <th className="p-2.5 text-left font-medium">Uzdevums</th>
-                    <th className="p-2.5 text-left font-medium">Valoda</th>
-                    <th className="p-2.5 text-left font-medium">Rezultāts</th>
-                    <th className="p-2.5 text-left font-medium">Statuss</th>
-                    <th className="p-2.5 text-left font-medium">Iesūtījums</th>
+                <tr className="border-b border-gray-300 text-gray-900 text-sm">
+                    <th className="p-2 text-left font-medium">Datums & laiks</th>
+                    <th className="p-2 text-left font-medium">Autors</th>
+                    <th className="p-2 text-left font-medium">Uzdevums</th>
+                    <th className="p-2 text-left font-medium">Valoda</th>
+                    <th className="p-2 text-left font-medium">Rezultāts</th>
+                    <th className="p-2 text-left font-medium">Statuss</th>
+                    <th className="p-2 text-left font-medium">Iesūtījums</th>
                 </tr>
             </thead>
             <tbody>
                 {submissions.map((subm, i) => (
-                    <tr key={i} className={cn({"border-b border-divider": i !== submissions.length - 1}, { "bg-gray-50": i % 2 === 0 })}>
-                        <td className="p-2.5"><SubmTableDateTimeCell dateTime={subm.created_at} /></td>
-                        <td className="p-2.5 text-green-800 font-medium">{subm.username}</td>
-                        <td className="p-2.5">
+                    <tr key={i} className={cn({"border-b border-divider ": i !== submissions.length - 1}, { "bg-gray-50": i % 2 === 0 })}>
+                        <td className="p-2 py-2.5"><SubmTableDateTimeCell dateTime={subm.created_at} /></td>
+                        <td className="p-2 py-2.5 text-green-800 font-medium">{subm.username}</td>
+                        <td className="p-2 py-2.5">
                             <Link href={`/tasks/${subm.task_id}`} className="text-blue-900 hover:underline decoration-blue-600/20 underline-offset-2  hover:decoration-blue-900/90">
                                 {subm.task_name}
                             </Link>
                         </td>
-                        <td className="p-2.5">{subm.p_lang_display_name}</td>
-                        <td className="p-2.5"><SubmTableResultCell {...subm} /></td>
-                        <td className="p-2.5">{statusTranslations[subm.eval_status] ?? subm.eval_status}</td>
-                        <td className="p-2.5">
+                        <td className="p-2 py-2.5">{subm.p_lang_display_name}</td>
+                        <td className="p-2 py-2.5"><SubmTableResultCell {...subm} /></td>
+                        <td className="p-2 py-2.5">{statusTranslations[subm.eval_status] ?? subm.eval_status}</td>
+                        <td className="p-2 py-2.5">
                             <Link href={`/submissions/${subm.subm_uuid}`} className="text-blue-900 hover:underline underline-offset-2 hover:decoration-blue-900/90">
                                 {subm.subm_uuid.slice(0, 8)}
                             </Link>
