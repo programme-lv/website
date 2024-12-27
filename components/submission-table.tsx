@@ -1,4 +1,4 @@
-import { BriefSubmission, TestGroup, TestSet } from "@/types/proglv";
+import { Submission, TestGroup, TestSet } from "@/types/proglv";
 import { TestGroupScoringBar, TestSetScoringBar, ErrorScoringBar } from "./subm-table-score-bars";
 import { cn } from "./cn";
 import Link from "next/link";
@@ -17,7 +17,7 @@ export const statusTranslations: Record<string, string> = {
   };
 
 type SubmissionTableProps = {
-    submissions: BriefSubmission[];
+    submissions: Submission[];
     skeleton: boolean;
 }
 
@@ -95,9 +95,9 @@ export default function SubmissionTable({ submissions, skeleton }: SubmissionTab
                                 {subm.task_name}
                             </Link>
                         </td>
-                        <td className="p-2 py-2.5 border-r">{subm.p_lang_display_name}</td>
-                        <td className="p-2 py-2.5 border-r"><SubmTableResultCell {...subm} /></td>
-                        <td className="p-2 py-2.5 border-r">{statusTranslations[subm.eval_status] ?? subm.eval_status}</td>
+                        <td className="p-2 py-2.5 border-r">{subm.pr_lang.display}</td>
+                        <td className="p-2 py-2.5 border-r"><SubmTableResultCell {...subm.curr_eval} /></td>
+                        <td className="p-2 py-2.5 border-r">{statusTranslations[subm.curr_eval.eval_stage] ?? subm.curr_eval.eval_stage}</td>
                         <td className="p-2 py-2.5">
                             <Link href={`/submissions/${subm.subm_uuid}`} className="text-blue-900 hover:underline underline-offset-2 hover:decoration-blue-900/90">
                                 {subm.subm_uuid.slice(0, 8)}
@@ -144,13 +144,13 @@ function SubmTableDateTimeCell({dateTime}: {dateTime: string}) {
 }
 
 type SubmTableResultCellProps = {
-    eval_status: string;
+    eval_stage: string;
     test_groups?: TestGroup[];
     test_set?: TestSet;
 }
 
-function SubmTableResultCell({ eval_status, test_groups, test_set }: SubmTableResultCellProps) {
-    if (eval_status.includes("error")) {
+function SubmTableResultCell({ eval_stage, test_groups, test_set }: SubmTableResultCellProps) {
+    if (eval_stage.includes("error")) {
         return <ErrorScoringBar />;
     }
     if (test_groups && test_groups.length > 0) {

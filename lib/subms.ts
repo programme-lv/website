@@ -1,13 +1,9 @@
-import {
-  BriefSubmission,
-  FullSubmission,
-  SubmListWebSocketUpdate,
-} from "@/types/proglv";
+import { Submission, SubmListWebSocketUpdate } from "@/types/proglv";
 
 import { getJwt } from "./jwt";
 import { API_HOST } from "./config";
 
-export const listSubmissions = async (): Promise<BriefSubmission[]> => {
+export const listSubmissions = async (): Promise<Submission[]> => {
   const response = await fetch(`${API_HOST}/submissions`, {
     method: "GET",
     headers: {
@@ -32,7 +28,7 @@ export const createSubmission = async (
   username: string,
   programmingLangId: string,
   taskCodeId: string,
-): Promise<BriefSubmission> => {
+): Promise<Submission> => {
   const jwt = getJwt();
 
   const response = await fetch(`${API_HOST}/submissions`, {
@@ -85,7 +81,7 @@ export const subscribeToSubmUpdates = (
 
 export const getSubmission = async (
   submUuid: string,
-): Promise<FullSubmission> => {
+): Promise<Submission> => {
   const response = await fetch(`${API_HOST}/submissions/${submUuid}`, {
     method: "GET",
     headers: {

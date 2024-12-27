@@ -67,12 +67,9 @@ type MdImg = {
 };
 
 type TestGroup = {
-  test_group_id: number;
-  test_group_score: number;
-  accepted_tests: number;
-  wrong_tests: number;
-  untested_tests: number;
+  points: number;
   subtasks: number[];
+  tg_tests: number[];
 };
 
 type TestSet = {
@@ -82,28 +79,9 @@ type TestSet = {
 };
 
 type Subtask = {
-  subtask_id: number;
-  subtask_score: number;
-  accepted_tests: number;
-  wrong_tests: number;
-  untested_tests: number;
+  points: number;
   description: string;
-};
-
-type BriefSubmission = {
-  subm_uuid: string;
-  username: string;
-  created_at: string;
-  eval_uuid: string;
-  eval_status: string;
-  test_groups: TestGroup[];
-  test_set: TestSet;
-  subtasks: Subtask[];
-  p_lang_id: string;
-  p_lang_display_name: string;
-  p_lang_monaco_id: string;
-  task_name: string;
-  task_id: string;
+  st_tests: number[];
 };
 
 type ProgrammingLang = {
@@ -156,12 +134,6 @@ type RuntimeData = {
   exit_signal: number | null;
 };
 
-type FullSubmission = BriefSubmission & {
-  subm_content: string;
-  test_results: TestResult[];
-  eval_details: EvalDetails;
-};
-
 type ProgrammingLanguage = {
   id: string;
   fullName: string;
@@ -208,16 +180,42 @@ type TestsResUpdate = {
 };
 
 type SubmListWebSocketUpdate =
-  | { subm_created: BriefSubmission }
-  | { state_update: EvalStateUpdate }
-  | { testgroup_res_update: TestgroupResUpdate }
-  | { tests_score_update: TestsResUpdate };
+  | { subm_created: Submission }
+  // | { state_update: EvalStateUpdate }
+  // | { testgroup_res_update: TestgroupResUpdate }
+  // | { tests_score_update: TestsResUpdate };
+
+type Submission = {
+  subm_uuid: string;
+  content: string;
+  username: string;
+  curr_eval: SubmEval;
+  pr_lang: PrLang;
+  task_name: string;
+  task_id: string;
+  created_at: string;
+};
+
+type PrLang = {
+  short_id: string;
+  display: string;
+  monaco_id: string;
+};
+
+type SubmEval = {
+  eval_uuid: string;
+  eval_stage: string;
+  score_unit: string;
+  eval_error: string;
+  error_msg: string;
+  subtasks: Subtask[];
+  test_groups: TestGroup[];
+};
 
 export type {
   ProgrammingLanguage,
   Evaluation,
   TaskReference,
-  BriefSubmission,
   User,
   Task,
   MarkdownStatement,
@@ -226,7 +224,6 @@ export type {
   SubmListWebSocketUpdate,
   EvalStateUpdate,
   TestgroupResUpdate,
-  FullSubmission,
   ProgrammingLang,
   EvalDetails,
   TestResult,
@@ -237,4 +234,7 @@ export type {
   TestGroup,
   MdImg,
   TestSet,
+  Submission,
+  PrLang,
+  SubmEval,
 };

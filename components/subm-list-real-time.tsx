@@ -4,9 +4,8 @@ import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 
 import { subscribeToSubmUpdates, listSubmissions } from "@/lib/subms";
-import { BriefSubmission, SubmListWebSocketUpdate } from "@/types/proglv";
+import { Submission, SubmListWebSocketUpdate } from "@/types/proglv";
 import SubmissionTable from "./submission-table";
-import { applyUpdatesToSubmissions } from "@/lib/apply-upd-to-subm-list";
 
 /**
  * RealTimeSubmTable Component
@@ -19,14 +18,14 @@ import { applyUpdatesToSubmissions } from "@/lib/apply-upd-to-subm-list";
 export default function RealTimeSubmTable({
   initial,
 }: {
-  initial: BriefSubmission[];
+  initial: Submission[];
 }) {
   // State to hold incoming WebSocket updates
   const [updates, setUpdates] = useState<SubmListWebSocketUpdate[]>([]);
-  
+
   // State to manage the list of submissions
-  const [submissions, setSubmissions] = useState<BriefSubmission[]>(initial);
-  
+  const [submissions, setSubmissions] = useState<Submission[]>(initial);
+
   // Fetch submissions data with a polling interval of 5 seconds
   const { data } = useQuery("submissions", listSubmissions, {
     refetchInterval: 5000,
@@ -83,12 +82,10 @@ export default function RealTimeSubmTable({
  * Sorts the array of submissions first by creation date in descending order,
  * and then by submission UUID in descending order if dates are identical.
  *
- * @param submissions - Array of BriefSubmission objects to be sorted
- * @returns A new array of sorted BriefSubmission objects
+ * @param submissions - Array of Submission objects to be sorted
+ * @returns A new array of sorted Submission objects
  */
-export function sortSubmissions(
-  submissions: BriefSubmission[],
-): BriefSubmission[] {
+function sortSubmissions(submissions: Submission[]): Submission[] {
   const sorted = submissions.sort((a, b) => {
     const dateA = new Date(a.created_at);
     const dateB = new Date(b.created_at);
@@ -102,4 +99,12 @@ export function sortSubmissions(
   });
 
   return sorted;
+}
+
+function applyUpdatesToSubmissions(
+  submissions: Submission[],
+  updates: SubmListWebSocketUpdate[],
+): Submission[] {
+  console.log(updates)
+  return submissions;
 }
