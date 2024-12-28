@@ -1,5 +1,5 @@
-import { Submission, Subtask, TestGroup, TestSet, Verdict } from "@/types/proglv";
-import { TestGroupScoringBar, SubmListScoreBar, ErrorScoringBar } from "./subm-table-score-bars";
+import { Submission, Subtask, TestGroup, Verdict } from "@/types/proglv";
+import { SubmListScoreBar } from "./subm-table-score-bars";
 import { cn } from "./cn";
 import Link from "next/link";
 
