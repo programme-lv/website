@@ -28,7 +28,7 @@ export default function RealTimeSubmTable({
 
   // Fetch submissions data with a polling interval of 5 seconds
   const { data } = useQuery("submissions", listSubmissions, {
-    refetchInterval: 5000,
+    refetchInterval: 2000,
   });
 
   /**
@@ -105,6 +105,6 @@ function applyUpdatesToSubmissions(
   submissions: Submission[],
   updates: SubmListWebSocketUpdate[],
 ): Submission[] {
-  console.log(updates)
+  console.log("updates", updates)
   return submissions;
 }

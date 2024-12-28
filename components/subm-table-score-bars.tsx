@@ -22,50 +22,52 @@ export function ErrorScoringBar() {
 }
 
 // Start of Selection
-export function TestSetScoringBar({
-    accepted,
-    wrong,
-    untested,
+export function SubmListScoreBar({
+    green,
+    red,
+    gray,
+    yellow,
 }: {
-    accepted: number;
-    wrong: number;
-    untested: number;
+    green: number;
+    red: number;
+    gray: number;
+    yellow: number;
 }) {
-    let total_test_count = accepted + wrong + untested;
-    let green = total_test_count > 0 ? accepted / total_test_count : 0;
-    let red = total_test_count > 0 ? wrong / total_test_count : 0;
-    let gray = total_test_count > 0 ? untested / total_test_count : 0;
+    let total = green + red + gray + yellow;
+    let green_percent = total > 0 ? green / total : 0;
+    let red_percent = total > 0 ? red / total : 0;
+    let gray_percent = total > 0 ? gray / total : 0;
+    let yellow_percent = total > 0 ? yellow / total : 0;
 
     return (
         <div className="flex justify-center flex-col items-center w-full min-w-12">
-            {/* <div className="flex justify-between w-full items-center h-3">
-                <span className="text-teal-600 text-tiny">
-                    {green > 0 ? `${(green * 100).toFixed(0)}%` : ""}
-                </span>
-                <span className="text-red-500 text-tiny">
-                    {red > 0 ? `${(red * 100).toFixed(0)}%` : ""}
-                </span>
-            </div> */}
             <div className="relative pt-1 w-full">
                 <div className="overflow-hidden h-1.5 text-xs flex rounded">
                     <div
                         className="flex flex-col text-center whitespace-nowrap text-white justify-center transition-all duration-1000 ease-in-out"
                         style={{
-                            width: `${(green * 100).toFixed(0)}%`,
+                            width: `${(green_percent * 100).toFixed(0)}%`,
                             background: "linear-gradient(90deg, #38b2ac, #2c7a7b)",
                         }}
                     />
                     <div
                         className="flex flex-col text-center whitespace-nowrap text-white justify-center transition-all duration-1000 ease-in-out"
                         style={{
-                            width: `${(red * 100).toFixed(0)}%`,
+                            width: `${(yellow_percent * 100).toFixed(0)}%`,
+                            background: "linear-gradient(90deg, #ecc94b, #d69e2e)",
+                        }}
+                    />
+                    <div
+                        className="flex flex-col text-center whitespace-nowrap text-white justify-center transition-all duration-1000 ease-in-out"
+                        style={{
+                            width: `${(red_percent * 100).toFixed(0)}%`,
                             background: "linear-gradient(90deg, #f56565, #c53030)",
                         }}
                     />
                     <div
                         className="flex flex-col text-center whitespace-nowrap text-white justify-center transition-all duration-1000 ease-in-out"
                         style={{
-                            width: `${(gray * 100).toFixed(0)}%`,
+                            width: `${(gray_percent * 100).toFixed(0)}%`,
                             background: "linear-gradient(90deg, #a0aec0, #718096)",
                         }}
                     />

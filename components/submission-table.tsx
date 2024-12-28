@@ -1,5 +1,5 @@
-import { Submission, Subtask, TestGroup, TestSet } from "@/types/proglv";
-import { TestGroupScoringBar, TestSetScoringBar, ErrorScoringBar } from "./subm-table-score-bars";
+import { Submission, Subtask, TestGroup, TestSet, Verdict } from "@/types/proglv";
+import { TestGroupScoringBar, SubmListScoreBar, ErrorScoringBar } from "./subm-table-score-bars";
 import { cn } from "./cn";
 import Link from "next/link";
 
@@ -167,19 +167,48 @@ type SubmTableResultCellProps = {
     score_unit: string;
     subtasks: Subtask[];
     test_groups: TestGroup[];
-    test_verdicts: string[];
+    test_verdicts: Verdict[];
 }
 
 function SubmTableResultBarCell({ score_unit, eval_stage, test_groups, test_verdicts }: SubmTableResultCellProps) {
     if (score_unit === "test") {
-        console.log(test_verdicts);
         let accepted = test_verdicts.filter(v => v === "ac").length;
         let untested = test_verdicts.filter(v => v === "q").length;
-        let wrong = test_verdicts.length - accepted - untested;
-        return <TestSetScoringBar accepted={accepted} wrong={wrong} untested={untested} />;
+        let testing = test_verdicts.filter(v => v === "t").length;
+        let wrong = test_verdicts.length - accepted - untested - testing;
+        return <SubmListScoreBar green={accepted} red={wrong} gray={untested} yellow={testing} />;
     }
     if (score_unit === "group") {
-
+        // let accepted_groups = []; // list of test group indices where all tests are accepted
+        let accepted_points=0; // sum of test group points where all tests are accepted
+        // let wrong_groups = []; // list of test group indices where at least one test is wrong
+        let wrong_points = 0; // sum of test group points where at least one test is wrong
+        // let untested_groups = []; // list of test group indices where all tests are in queue
+        let untested_points=0; // sum of test group points where all tests are in queue
+        // let testing_groups = []; // list of test group indices where at least one test is testing but the group is not in other categories
+        let testing_points=0; // sum of test group points where at least one test is testing
+        for (let i = 0; i < test_groups.length; i++) {
+            let group = test_groups[i];
+            let tests = group.tg_tests;
+            let tests_accepted = tests.filter(t => test_verdicts[t-1] === "ac").length;
+            let tests_untested = tests.filter(t => test_verdicts[t-1] === "q").length;
+            let tests_testing = tests.filter(t => test_verdicts[t-1] === "t").length;
+            let tests_wrong = tests.length - tests_accepted - tests_untested - tests_testing;
+            if (tests_accepted === tests.length) {
+                // accepted_groups.push(i);
+                accepted_points += group.points;
+            } else if (tests_wrong > 0) {
+                // wrong_groups.push(i);
+                wrong_points += group.points;
+            } else if (tests_untested === tests.length) {
+                // untested_groups.push(i);
+                untested_points += group.points;
+            } else {
+                // testing_groups.push(i);
+                testing_points += group.points;
+            }
+        }
+        return <SubmListScoreBar green={accepted_points} red={wrong_points} gray={untested_points} yellow={testing_points} />;
     }
     if (score_unit === "subtask") {
 
@@ -199,7 +228,32 @@ function SubmTableResultFractionCell({ score_unit, eval_stage, test_groups, test
         </div>;
     }
     if (score_unit === "group") {
-
+        let accepted_points = 0;
+        let wrong_points = 0;
+        let untested_points = 0;
+        let testing_points = 0;
+        for (let i = 0; i < test_groups.length; i++) {
+            let group = test_groups[i];
+            let tests = group.tg_tests;
+            let tests_accepted = tests.filter(t => test_verdicts[t-1] === "ac").length;
+            let tests_untested = tests.filter(t => test_verdicts[t-1] === "q").length;
+            let tests_testing = tests.filter(t => test_verdicts[t-1] === "t").length;
+            let tests_wrong = tests.length - tests_accepted - tests_untested - tests_testing;
+            if (tests_accepted === tests.length) {
+                accepted_points += group.points;
+            } else if (tests_wrong > 0) {
+                wrong_points += group.points;
+            } else if (tests_untested === tests.length) {
+                untested_points += group.points;
+            } else {
+                testing_points += group.points;
+            }
+        }
+        return <div className="flex flex-wrap gap-x-1 gap-y-1 min-w-20">
+            <span>{accepted_points}</span>
+            <span>/</span>
+            <span>{accepted_points + wrong_points + untested_points + testing_points}</span>
+        </div>;
     }
     if (score_unit === "subtask") {
 

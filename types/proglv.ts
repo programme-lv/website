@@ -210,8 +210,10 @@ type SubmEval = {
   error_msg: string;
   subtasks: Subtask[];
   test_groups: TestGroup[];
-  test_verdicts: string[];
+  test_verdicts: Verdict[];
 };
+
+type Verdict = "ac" | "wa" | "tle" | "mle" | "re" | "ig" | "t" | "q" | "";
 
 export type {
   ProgrammingLanguage,
@@ -239,4 +241,5 @@ export type {
   PrLang,
   SubmEval,
   Subtask,
+  Verdict,
 };
