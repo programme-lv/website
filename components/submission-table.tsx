@@ -89,7 +89,7 @@ export default function SubmissionTable({ submissions, skeleton }: SubmissionTab
             </thead>
             <tbody>
                 {submissions.map((subm, i) => (
-                    <tr key={i} className={cn({ "border-b border-divider ": i !== submissions.length - 1 }, { "bg-gray-50": i % 2 === 0 })}>
+                    <tr key={subm.subm_uuid} className={cn({ "border-b border-divider ": i !== submissions.length - 1 }, { "bg-gray-50": i % 2 === 0 })}>
                         <td className="p-2 py-2.5 border-r"><SubmTableDateTimeCell dateTime={subm.created_at} /></td>
                         <td className="p-2 py-2.5 border-r text-green-800 font-medium">{subm.username}</td>
                         <td className="p-2 py-2.5 border-r">

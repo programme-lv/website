@@ -31,7 +31,7 @@ import {
 	Image,
 } from "@nextui-org/react";
 import MonacoEditor from "@monaco-editor/react";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 
 import { getTaskById } from "@/lib/tasks";
 import {
@@ -476,6 +476,7 @@ function TaskHeader({
 
 function RightSide({ taskCode }: { taskCode: string }) {
 	const authContext = useContext(AuthContext);
+	const queryClient = useQueryClient();
 	const [selectedLanguage, setSelectedLanguage] = useState<string>("");
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const router = useRouter();
@@ -529,6 +530,7 @@ int main() {
 				selectedLanguage,
 				taskCode
 			);
+			await queryClient.invalidateQueries("submissions");
 			await router.push(`/submissions`);
 		} catch (error) {
 			setIsLoading(false);

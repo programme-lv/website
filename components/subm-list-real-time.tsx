@@ -29,6 +29,12 @@ export default function RealTimeSubmTable({
   // Fetch submissions data with a polling interval of 5 seconds
   const { data } = useQuery("submissions", listSubmissions, {
     refetchInterval: 2000,
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
+    staleTime: 0,        // Consider data stale immediately
+    enabled: true,       // Always enable the query
+    initialData: initial, // Provide initial data to prevent flash of loading state
+    refetchOnReconnect: true,
   });
 
   /**
@@ -56,15 +62,18 @@ export default function RealTimeSubmTable({
    * It merges the updates with the current submissions and sorts them.
    */
   useEffect(() => {
-    setSubmissions((prevSubms) => {
-      const updatedSubms = applyUpdatesToSubmissions(
-        data ?? prevSubms, // Use fetched data or previous submissions as fallback
-        updates, // Apply incoming updates
-      );
-
-      return sortSubmissions(updatedSubms); // Sort the updated submissions
-    });
+    if (data) {  // Only update when we have fresh data
+      setSubmissions((prevSubms) => {
+        const updatedSubms = applyUpdatesToSubmissions(
+          data,           // Always use the fresh data instead of fallback
+          updates
+        );
+        return sortSubmissions(updatedSubms);
+      });
+    }
   }, [data, updates]);
+
+  console.log("submissions", submissions)
 
   return (
     <SubmissionTable
@@ -106,5 +115,14 @@ function applyUpdatesToSubmissions(
   updates: SubmListWebSocketUpdate[],
 ): Submission[] {
   console.log("updates", updates)
-  return submissions;
+  for(let update of updates) {
+    if (update.subm_created) {
+      // append the newly created submission if it is not in the list
+      if (!submissions.some(s => s.subm_uuid === update.subm_created.subm_uuid)) {
+        console.log("appending new submission", update.subm_created)
+        submissions.push(update.subm_created);
+      }
+    }
+  }
+  return [...submissions];
 }
