@@ -51,15 +51,15 @@ export function SubmListScoreBar({
                     <div
                         className="flex flex-col text-center whitespace-nowrap text-white justify-center"
                         style={{
-                            width: `${(yellow_percent * 100).toFixed(0)}%`,
-                            background: "linear-gradient(90deg, #ecc94b, #d69e2e)",
+                            width: `${(red_percent * 100).toFixed(0)}%`,
+                            background: "linear-gradient(90deg, #f56565, #c53030)",
                         }}
                     />
                     <div
                         className="flex flex-col text-center whitespace-nowrap text-white justify-center"
                         style={{
-                            width: `${(red_percent * 100).toFixed(0)}%`,
-                            background: "linear-gradient(90deg, #f56565, #c53030)",
+                            width: `${(yellow_percent  * 100).toFixed(0)}%`,
+                            background: "linear-gradient(90deg, #ecc94b, #d69e2e)",
                         }}
                     />
                     <div
