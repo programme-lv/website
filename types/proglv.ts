@@ -179,11 +179,17 @@ type TestsResUpdate = {
   untested: number;
 };
 
-type SubmListWebSocketUpdate =
+type SubmListSseUpdate =
   | { subm_created: Submission }
+  | { eval_update: SubmEvalUpdate };
   // | { state_update: EvalStateUpdate }
   // | { testgroup_res_update: TestgroupResUpdate }
   // | { tests_score_update: TestsResUpdate };
+
+type SubmEvalUpdate = {
+  subm_uuid: string;
+  new_eval: SubmEval;
+};
 
 type Submission = {
   subm_uuid: string;
@@ -224,7 +230,7 @@ export type {
   MarkdownStatement,
   Example,
   StInputs,
-  SubmListWebSocketUpdate,
+  SubmListSseUpdate as SubmListWebSocketUpdate,
   EvalStateUpdate,
   TestgroupResUpdate,
   ProgrammingLang,
@@ -242,4 +248,5 @@ export type {
   SubmEval,
   Subtask,
   Verdict,
+  SubmEvalUpdate
 };

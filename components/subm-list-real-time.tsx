@@ -116,11 +116,18 @@ function applyUpdatesToSubmissions(
 ): Submission[] {
   console.log("updates", updates)
   for(let update of updates) {
-    if (update.subm_created) {
-      // append the newly created submission if it is not in the list
-      if (!submissions.some(s => s.subm_uuid === update.subm_created.subm_uuid)) {
-        console.log("appending new submission", update.subm_created)
-        submissions.push(update.subm_created);
+    if ('subm_created' in update && update.subm_created !== null) {  // Check for null
+      const newSubmission = update.subm_created;  // No need for type assertion
+      if (!submissions.some(s => s.subm_uuid === newSubmission.subm_uuid)) {
+        console.log("appending new submission", newSubmission)
+        submissions.push(newSubmission);
+      }
+    }
+    else if ('eval_update' in update) {  // Simplified condition
+      const { subm_uuid, new_eval } = update.eval_update;  // Destructure for cleaner code
+      const index = submissions.findIndex(s => s.subm_uuid === subm_uuid);
+      if (index !== -1) {
+        submissions[index].curr_eval = new_eval;
       }
     }
   }
