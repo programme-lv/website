@@ -37,13 +37,13 @@ export default function SubmissionTable({ submissions, skeleton }: SubmissionTab
             </colgroup>
             <thead>
                 <tr className="border-b border-gray-300 text-gray-900 text-sm">
-                    <th className="p-2 text-left font-medium border-r">Datums & laiks</th>
-                    <th className="p-2 text-left font-medium border-r">Autors</th>
-                    <th className="p-2 text-left font-medium border-r">Uzdevums</th>
-                    <th className="p-2 text-left font-medium border-r">Valoda</th>
-                    <th className="p-2 text-left font-medium border-r">Rezultāts</th>
-                    <th className="p-2 text-left font-medium border-r">Statuss</th>
-                    <th className="p-2 text-left font-medium">Iesūtījums</th>
+                    <th className="p-2 text-left font-normal border-r">Datums & laiks</th>
+                    <th className="p-2 text-left font-normal border-r">Autors</th>
+                    <th className="p-2 text-left font-normal border-r">Uzdevums</th>
+                    <th className="p-2 text-left font-normal border-r">Valoda</th>
+                    <th className="p-2 text-left font-normal border-r">Rezultāts</th>
+                    <th className="p-2 text-left font-normal border-r">Statuss</th>
+                    <th className="p-2 text-left font-normal">Iesūtījums</th>
                 </tr>
             </thead>
             <tbody>
@@ -76,13 +76,13 @@ export default function SubmissionTable({ submissions, skeleton }: SubmissionTab
             </colgroup>
             <thead>
                 <tr className="border-b border-gray-300 text-gray-900 text-sm">
-                    <th className="p-2 text-left font-medium border-r">Datums & laiks</th>
-                    <th className="p-2 text-left font-medium border-r">Autors</th>
-                    <th className="p-2 text-left font-medium border-r">Uzdevums</th>
-                    <th className="p-2 text-left font-medium border-r">Valoda</th>
-                    <th className="p-2 text-left font-medium border-r">Rezultāts</th>
-                    <th className="p-2 text-left font-medium border-r">Statuss</th>
-                    <th className="p-2 text-left font-medium">Iesūtījums</th>
+                    <th className="p-2 text-left font-normal border-r">Datums & laiks</th>
+                    <th className="p-2 text-left font-normal border-r">Autors</th>
+                    <th className="p-2 text-left font-normal border-r">Uzdevums</th>
+                    <th className="p-2 text-left font-normal border-r">Valoda</th>
+                    <th className="p-2 text-left font-normal border-r">Rezultāts</th>
+                    <th className="p-2 text-left font-normal border-r">Statuss</th>
+                    <th className="p-2 text-left font-normal">Iesūtījums</th>
                 </tr>
             </thead>
             <tbody>
