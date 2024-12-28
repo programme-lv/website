@@ -1,4 +1,4 @@
-import { Submission, TestGroup, TestSet } from "@/types/proglv";
+import { Submission, Subtask, TestGroup, TestSet } from "@/types/proglv";
 import { TestGroupScoringBar, TestSetScoringBar, ErrorScoringBar } from "./subm-table-score-bars";
 import { cn } from "./cn";
 import Link from "next/link";
@@ -14,7 +14,7 @@ export const statusTranslations: Record<string, string> = {
     runtime_error: "Izpildes kļūda",
     checker_error: "Servera kļūda",
     internal_error: "Servera kļūda",
-  };
+};
 
 type SubmissionTableProps = {
     submissions: Submission[];
@@ -27,51 +27,53 @@ export default function SubmissionTable({ submissions, skeleton }: SubmissionTab
         return (
             <table className="w-full rounded-sm table-fixed">
                 <colgroup>
-                <col width="200px"/>
-                <col width="140px"/>
-                <col width="140px"/>
-                <col width="120px"/>
-                <col width="160px"/>
-                <col width="160px" />
-                <col width="120px" />
-            </colgroup>
-            <thead>
-                <tr className="border-b border-gray-300 text-gray-900 text-sm">
-                    <th className="p-2 text-left font-normal border-r">Datums & laiks</th>
-                    <th className="p-2 text-left font-normal border-r">Autors</th>
-                    <th className="p-2 text-left font-normal border-r">Uzdevums</th>
-                    <th className="p-2 text-left font-normal border-r">Valoda</th>
-                    <th className="p-2 text-left font-normal border-r">Rezultāts</th>
-                    <th className="p-2 text-left font-normal border-r">Statuss</th>
-                    <th className="p-2 text-left font-normal">Iesūtījums</th>
-                </tr>
-            </thead>
-            <tbody>
-                {Array.from({length: 30}).map((_, i) => (
-                    <tr key={i} className={cn({"border-b border-divider": i !== 29}, { "bg-gray-50": i % 2 === 0 })}>
-                        <td className="p-2.5 py-2.5 animate-pulse border-r"><div className="bg-gray-300 rounded-sm w-full h-full text-gray-300">.</div></td>
-                        <td className="p-2.5 py-2.5 animate-pulse border-r"><div className="bg-gray-300 rounded-sm w-full h-full text-gray-300">.</div></td>
-                        <td className="p-2.5 py-2.5 animate-pulse border-r"><div className="bg-gray-300 rounded-sm w-full h-full text-gray-300">.</div></td>
-                        <td className="p-2.5 py-2.5 animate-pulse border-r"><div className="bg-gray-300 rounded-sm w-full h-full text-gray-300">.</div></td>
-                        <td className="p-2.5 py-2.5 animate-pulse border-r"><div className="bg-gray-300 rounded-sm w-full h-full text-gray-300">.</div></td>
-                        <td className="p-2.5 py-2.5 animate-pulse border-r"><div className="bg-gray-300 rounded-sm w-full h-full text-gray-300">.</div></td>
-                        <td className="p-2.5 py-2.5 animate-pulse"><div className="bg-gray-300 rounded-sm w-full h-full text-gray-300">.</div></td>
+                    <col width="200px" />
+                    <col width="140px" />
+                    <col width="140px" />
+                    <col width="120px" />
+                    <col width="120px" />
+                    <col width="80px" />
+                    <col width="160px" />
+                    <col width="120px" />
+                </colgroup>
+                <thead>
+                    <tr className="border-b border-gray-300 text-gray-900 text-sm">
+                        <th className="p-2 text-left font-normal border-r">Datums & laiks</th>
+                        <th className="p-2 text-left font-normal border-r">Autors</th>
+                        <th className="p-2 text-left font-normal border-r">Uzdevums</th>
+                        <th className="p-2 text-left font-normal border-r">Valoda</th>
+                        <th className="p-2 text-left font-normal border-r">Rezultāts</th>
+                        <th className="p-2 text-left font-normal border-r">Statuss</th>
+                        <th className="p-2 text-left font-normal">Iesūtījums</th>
                     </tr>
-                ))}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {Array.from({ length: 30 }).map((_, i) => (
+                        <tr key={i} className={cn({ "border-b border-divider": i !== 29 }, { "bg-gray-50": i % 2 === 0 })}>
+                            <td className="p-2.5 py-2.5 animate-pulse border-r"><div className="bg-gray-300 rounded-sm w-full h-full text-gray-300">.</div></td>
+                            <td className="p-2.5 py-2.5 animate-pulse border-r"><div className="bg-gray-300 rounded-sm w-full h-full text-gray-300">.</div></td>
+                            <td className="p-2.5 py-2.5 animate-pulse border-r"><div className="bg-gray-300 rounded-sm w-full h-full text-gray-300">.</div></td>
+                            <td className="p-2.5 py-2.5 animate-pulse border-r"><div className="bg-gray-300 rounded-sm w-full h-full text-gray-300">.</div></td>
+                            <td className="p-2.5 py-2.5 animate-pulse border-r"><div className="bg-gray-300 rounded-sm w-full h-full text-gray-300">.</div></td>
+                            <td className="p-2.5 py-2.5 animate-pulse border-r"><div className="bg-gray-300 rounded-sm w-full h-full text-gray-300">.</div></td>
+                            <td className="p-2.5 py-2.5 animate-pulse"><div className="bg-gray-300 rounded-sm w-full h-full text-gray-300">.</div></td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
         );
     }
 
     return (
         <table className="w-full rounded-sm table-fixed">
             <colgroup>
-                <col width="200px"/>
-                <col width="140px"/>
-                <col width="140px"/>
-                <col width="120px"/>
-                <col width="160px"/>
-                <col width="160px" />
+                <col width="200px" />
+                <col width="140px" />
+                <col width="140px" />
+                <col width="120px" />
+                <col width="120px" />
+                <col width="80px" />
+                <col width="120px" />
                 <col width="120px" />
             </colgroup>
             <thead>
@@ -80,14 +82,14 @@ export default function SubmissionTable({ submissions, skeleton }: SubmissionTab
                     <th className="p-2 text-left font-normal border-r">Autors</th>
                     <th className="p-2 text-left font-normal border-r">Uzdevums</th>
                     <th className="p-2 text-left font-normal border-r">Valoda</th>
-                    <th className="p-2 text-left font-normal border-r">Rezultāts</th>
+                    <th className="p-2 text-left font-normal border-r" colSpan={2}>Rezultāts</th>
                     <th className="p-2 text-left font-normal border-r">Statuss</th>
                     <th className="p-2 text-left font-normal">Iesūtījums</th>
                 </tr>
             </thead>
             <tbody>
                 {submissions.map((subm, i) => (
-                    <tr key={i} className={cn({"border-b border-divider ": i !== submissions.length - 1}, { "bg-gray-50": i % 2 === 0 })}>
+                    <tr key={i} className={cn({ "border-b border-divider ": i !== submissions.length - 1 }, { "bg-gray-50": i % 2 === 0 })}>
                         <td className="p-2 py-2.5 border-r"><SubmTableDateTimeCell dateTime={subm.created_at} /></td>
                         <td className="p-2 py-2.5 border-r text-green-800 font-medium">{subm.username}</td>
                         <td className="p-2 py-2.5 border-r">
@@ -96,7 +98,24 @@ export default function SubmissionTable({ submissions, skeleton }: SubmissionTab
                             </Link>
                         </td>
                         <td className="p-2 py-2.5 border-r">{subm.pr_lang.display}</td>
-                        <td className="p-2 py-2.5 border-r"><SubmTableResultCell {...subm.curr_eval} /></td>
+                        <td className="p-2 py-2.5 border-r">
+                            <SubmTableResultBarCell
+                                eval_stage={subm.curr_eval.eval_stage}
+                                score_unit={subm.curr_eval.score_unit}
+                                subtasks={subm.curr_eval.subtasks}
+                                test_groups={subm.curr_eval.test_groups}
+                                test_verdicts={subm.curr_eval.test_verdicts}
+                            />
+                        </td>
+                        <td className="p-2 py-2.5 border-r">
+                            <SubmTableResultFractionCell
+                                eval_stage={subm.curr_eval.eval_stage}
+                                score_unit={subm.curr_eval.score_unit}
+                                subtasks={subm.curr_eval.subtasks}
+                                test_groups={subm.curr_eval.test_groups}
+                                test_verdicts={subm.curr_eval.test_verdicts}
+                            />
+                        </td>
                         <td className="p-2 py-2.5 border-r">{statusTranslations[subm.curr_eval.eval_stage] ?? subm.curr_eval.eval_stage}</td>
                         <td className="p-2 py-2.5">
                             <Link href={`/submissions/${subm.subm_uuid}`} className="text-blue-900 hover:underline underline-offset-2 hover:decoration-blue-900/90">
@@ -129,7 +148,7 @@ export default function SubmissionTable({ submissions, skeleton }: SubmissionTab
 </tbody>
 </table> */}
 
-function SubmTableDateTimeCell({dateTime}: {dateTime: string}) {
+function SubmTableDateTimeCell({ dateTime }: { dateTime: string }) {
     let date = new Date(dateTime).toLocaleString("lv").split(" ")[0];
     let time = new Date(dateTime).toLocaleString("lv").split(" ")[1];
     if (date.split(".")[0].length < 2) {
@@ -145,19 +164,45 @@ function SubmTableDateTimeCell({dateTime}: {dateTime: string}) {
 
 type SubmTableResultCellProps = {
     eval_stage: string;
-    test_groups?: TestGroup[];
-    test_set?: TestSet;
+    score_unit: string;
+    subtasks: Subtask[];
+    test_groups: TestGroup[];
+    test_verdicts: string[];
 }
 
-function SubmTableResultCell({ eval_stage, test_groups, test_set }: SubmTableResultCellProps) {
-    if (eval_stage.includes("error")) {
-        return <ErrorScoringBar />;
+function SubmTableResultBarCell({ score_unit, eval_stage, test_groups, test_verdicts }: SubmTableResultCellProps) {
+    if (score_unit === "test") {
+        console.log(test_verdicts);
+        let accepted = test_verdicts.filter(v => v === "ac").length;
+        let untested = test_verdicts.filter(v => v === "q").length;
+        let wrong = test_verdicts.length - accepted - untested;
+        return <TestSetScoringBar accepted={accepted} wrong={wrong} untested={untested} />;
     }
-    if (test_groups && test_groups.length > 0) {
-        return <TestGroupScoringBar testgroups={test_groups} />;
+    if (score_unit === "group") {
+
     }
-    if (test_set) {
-        return <TestSetScoringBar testset={test_set} />;
+    if (score_unit === "subtask") {
+
+    }
+    return <></>;
+}
+
+function SubmTableResultFractionCell({ score_unit, eval_stage, test_groups, test_verdicts }: SubmTableResultCellProps) {
+    if (score_unit === "test") {
+        let accepted = test_verdicts.filter(v => v === "ac").length;
+        let untested = test_verdicts.filter(v => v === "q").length;
+        let wrong = test_verdicts.length - accepted - untested;
+        return <div className="flex flex-wrap gap-x-1 gap-y-1 min-w-20">
+            <span>{accepted}</span>
+            <span>/</span>
+            <span>{accepted + wrong + untested}</span>
+        </div>;
+    }
+    if (score_unit === "group") {
+
+    }
+    if (score_unit === "subtask") {
+
     }
     return <></>;
 }

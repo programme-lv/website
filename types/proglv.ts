@@ -210,6 +210,7 @@ type SubmEval = {
   error_msg: string;
   subtasks: Subtask[];
   test_groups: TestGroup[];
+  test_verdicts: string[];
 };
 
 export type {
@@ -237,4 +238,5 @@ export type {
   Submission,
   PrLang,
   SubmEval,
+  Subtask,
 };

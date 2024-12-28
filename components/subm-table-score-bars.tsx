@@ -23,25 +23,29 @@ export function ErrorScoringBar() {
 
 // Start of Selection
 export function TestSetScoringBar({
-    testset,
+    accepted,
+    wrong,
+    untested,
 }: {
-    testset: TestSet;
+    accepted: number;
+    wrong: number;
+    untested: number;
 }) {
-    let total_test_count = testset.accepted + testset.wrong + testset.untested;
-    let green = total_test_count > 0 ? testset.accepted / total_test_count : 0;
-    let red = total_test_count > 0 ? testset.wrong / total_test_count : 0;
-    let gray = total_test_count > 0 ? testset.untested / total_test_count : 0;
+    let total_test_count = accepted + wrong + untested;
+    let green = total_test_count > 0 ? accepted / total_test_count : 0;
+    let red = total_test_count > 0 ? wrong / total_test_count : 0;
+    let gray = total_test_count > 0 ? untested / total_test_count : 0;
 
     return (
-        <div className="flex justify-center flex-col items-center w-full min-w-36">
-            <div className="flex justify-between w-full items-center h-3">
+        <div className="flex justify-center flex-col items-center w-full min-w-12">
+            {/* <div className="flex justify-between w-full items-center h-3">
                 <span className="text-teal-600 text-tiny">
                     {green > 0 ? `${(green * 100).toFixed(0)}%` : ""}
                 </span>
                 <span className="text-red-500 text-tiny">
                     {red > 0 ? `${(red * 100).toFixed(0)}%` : ""}
                 </span>
-            </div>
+            </div> */}
             <div className="relative pt-1 w-full">
                 <div className="overflow-hidden h-1.5 text-xs flex rounded">
                     <div
