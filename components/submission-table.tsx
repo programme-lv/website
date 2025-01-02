@@ -91,7 +91,7 @@ export default function SubmissionTable({ submissions, skeleton }: SubmissionTab
                 {submissions.map((subm, i) => (
                     <tr key={subm.subm_uuid} className={cn({ "border-b border-divider ": i !== submissions.length - 1 }, { "bg-gray-50": i % 2 === 0 })}>
                         <td className="p-2 py-2.5 border-r"><SubmTableDateTimeCell dateTime={subm.created_at} /></td>
-                        <td className="p-2 py-2.5 border-r text-green-800 font-medium">{subm.username}</td>
+                        <td className="p-2 py-2.5 border-r">{subm.username}</td>
                         <td className="p-2 py-2.5 border-r">
                             <Link href={`/tasks/${subm.task_id}`} className="text-blue-900 hover:underline decoration-blue-600/20 underline-offset-2  hover:decoration-blue-900/90">
                                 {subm.task_name}
@@ -99,6 +99,7 @@ export default function SubmissionTable({ submissions, skeleton }: SubmissionTab
                         </td>
                         <td className="p-2 py-2.5 border-r">{subm.pr_lang.display}</td>
                         <td className="p-2 py-2.5 border-r">
+                            {subm.curr_eval && (
                             <SubmTableResultBarCell
                                 eval_stage={subm.curr_eval.eval_stage}
                                 score_unit={subm.curr_eval.score_unit}
@@ -106,17 +107,20 @@ export default function SubmissionTable({ submissions, skeleton }: SubmissionTab
                                 test_groups={subm.curr_eval.test_groups}
                                 test_verdicts={subm.curr_eval.test_verdicts}
                             />
+                            )}
                         </td>
                         <td className="p-2 py-2.5 border-r">
+                            {subm.curr_eval && (
                             <SubmTableResultFractionCell
                                 eval_stage={subm.curr_eval.eval_stage}
                                 score_unit={subm.curr_eval.score_unit}
                                 subtasks={subm.curr_eval.subtasks}
                                 test_groups={subm.curr_eval.test_groups}
-                                test_verdicts={subm.curr_eval.test_verdicts}
-                            />
+                                    test_verdicts={subm.curr_eval.test_verdicts}
+                                />
+                            )}
                         </td>
-                        <td className="p-2 py-2.5 border-r">{statusTranslations[subm.curr_eval.eval_stage] ?? subm.curr_eval.eval_stage}</td>
+                        <td className="p-2 py-2.5 border-r">{subm.curr_eval ? statusTranslations[subm.curr_eval.eval_stage] ?? subm.curr_eval.eval_stage : "..."}</td>
                         <td className="p-2 py-2.5">
                             <Link href={`/submissions/${subm.subm_uuid}`} className="text-blue-900 hover:underline underline-offset-2 hover:decoration-blue-900/90">
                                 {subm.subm_uuid.slice(0, 8)}

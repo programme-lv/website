@@ -73,8 +73,6 @@ export default function RealTimeSubmTable({
     }
   }, [data, updates]);
 
-  console.log("submissions", submissions)
-
   return (
     <SubmissionTable
       skeleton={submissions.length ? false : true} // Show loading skeleton if no submissions are present
@@ -114,12 +112,10 @@ function applyUpdatesToSubmissions(
   submissions: Submission[],
   updates: SubmListWebSocketUpdate[],
 ): Submission[] {
-  console.log("updates", updates)
   for(let update of updates) {
     if ('subm_created' in update && update.subm_created !== null) {  // Check for null
       const newSubmission = update.subm_created;  // No need for type assertion
       if (!submissions.some(s => s.subm_uuid === newSubmission.subm_uuid)) {
-        console.log("appending new submission", newSubmission)
         submissions.push(newSubmission);
       }
     }
