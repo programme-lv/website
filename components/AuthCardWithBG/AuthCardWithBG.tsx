@@ -10,8 +10,8 @@ import Link from "next/link";
 
 import { registerUser, loginUser } from "@/lib/auth";
 import Alert from "@/components/Alert";
-import MountainsImage from "@/public/mountains.png";
-import LogoImage from "@/public/logo.png";
+import MountainsImage from "@/public/mountains.jpg";
+import LogoImage from "@/public/emoji-logo.png";
 import { setJwt } from "@/lib/jwt";
 import { AuthContext } from "@/app/providers";
 
