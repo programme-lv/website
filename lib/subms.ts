@@ -97,3 +97,20 @@ export const getSubmission = async (
 
   return data.data;
 };
+
+export const getExec = async (execUuid: string): Promise<Execution> => {
+  const response = await fetch(`${API_HOST}/exec/${execUuid}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Error fetching execution");
+  }
+
+  const data = await response.json();
+
+  return data.data;
+};
