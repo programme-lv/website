@@ -211,7 +211,7 @@ type PrLang = {
 type SubmEval = {
   eval_uuid: string;
   eval_stage: string;
-  score_unit: string;
+  score_unit: "test" | "group";
   eval_error: string;
   error_msg: string;
   subtasks: Subtask[];
