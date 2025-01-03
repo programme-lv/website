@@ -4,7 +4,7 @@ import { Tooltip } from "@nextui-org/tooltip";
 import { IconInbox, IconListDetails } from "@tabler/icons-react";
 import React from "react";
 
-import Logo from "@/public/logo-reversed.png";
+import Logo from "@/public/emoji-logo.png";
 
 import { cn } from "./cn";
 
@@ -40,9 +40,9 @@ export default function Sidebar(props: SidebarProps) {
     <>
       <div className="relative flex-col bg-white !border-r-small border-divider transition-width w-14 items-center ml-2 my-2 rounded-small px-2 py-2 hidden md:flex">
         <div className="flex items-center px-3 justify-center gap-0">
-          <div className="flex mt-1 w-[32px] items-center justify-center rounded-full">
+          <div className="flex mt-1 w-[30px] items-center justify-center rounded-full">
             <Link href="/tasks">
-              <Image loading="eager"  alt="programme.lv logo" width={32} height={32*(606/769)} src={Logo.src} />
+              <Image loading="eager"  alt="programme.lv logo" width={30} height={30} src={Logo.src} />
             </Link>
           </div>
         </div>
