@@ -10,7 +10,7 @@ import Link from "next/link";
 
 import { registerUser, loginUser } from "@/lib/auth";
 import Alert from "@/components/Alert";
-import MountainsImage from "@/public/mountains.jpg";
+import WinterForest from "@/public/winter-forest.jpg";
 import LogoImage from "@/public/emoji-logo.png";
 import { setJwt } from "@/lib/jwt";
 import { AuthContext } from "@/app/providers";
@@ -22,7 +22,7 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
     <div
       className="flex min-h-screen relative w-screen items-center justify-center overflow-hidden bg-content1 p-2 pt-16 pb-16 lg:px-8"
       style={{
-        backgroundImage: `url(${MountainsImage.src})`,
+        backgroundImage: `url(${WinterForest.src})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
@@ -51,11 +51,11 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
       </div>
 
       {/* Testimonial */}
-      <div className="absolute bottom-10 right-10 hidden md:block">
+      {/* <div className="absolute bottom-10 right-10 hidden md:block">
         <p className="max-w-xl text-right text-white/60">
           Kur programmēšana kļūst par piedzīvojumu!
         </p>
-      </div>
+      </div> */}
 
       {/* Auth Form */}
       <Suspense>
