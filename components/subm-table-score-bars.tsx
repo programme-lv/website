@@ -25,17 +25,20 @@ export function SubmListScoreBar({
     red,
     gray,
     yellow,
+    purple,
 }: {
     green: number;
     red: number;
     gray: number;
     yellow: number;
+    purple?: number;
 }) {
-    let total = green + red + gray + yellow;
+    let total = green + red + gray + yellow + (purple ?? 0);
     let green_percent = total > 0 ? green / total : 0;
     let red_percent = total > 0 ? red / total : 0;
     let gray_percent = total > 0 ? gray / total : 0;
     let yellow_percent = total > 0 ? yellow / total : 0;
+    let purple_percent = total > 0 ? (purple ?? 0) / total : 0;
 
     return (
         <div className="flex justify-center flex-col items-center w-full min-w-12">
@@ -67,6 +70,13 @@ export function SubmListScoreBar({
                         style={{
                             width: `${(gray_percent * 100).toFixed(0)}%`,
                             background: "linear-gradient(90deg, #a0aec0, #718096)",
+                        }}
+                    />
+                    <div
+                        className="flex flex-col text-center whitespace-nowrap text-white justify-center"
+                        style={{
+                            width: `${(purple_percent * 100).toFixed(0)}%`,
+                            background: "linear-gradient(90deg, #9F7AEA, #6B46C1)",
                         }}
                     />
                 </div>

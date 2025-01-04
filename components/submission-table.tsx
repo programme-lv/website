@@ -17,6 +17,11 @@ export const statusTranslations: Record<string, string> = {
     internal_error: "Servera kļūda",
 };
 
+export const errorTranslations: Record<string, string> = {
+    "compilation": "Kompilācijas kļūda",
+    "internal": "Servera kļūda",
+};
+
 type SubmissionTableProps = {
     submissions: Submission[];
     skeleton: boolean;
@@ -105,6 +110,7 @@ export default function SubmissionTable({ submissions, skeleton }: SubmissionTab
                                     score_unit={subm.curr_eval.score_unit}
                                     test_groups={subm.curr_eval.test_groups}
                                     test_verdicts={subm.curr_eval.test_verdicts}
+                                    has_error={!!subm.curr_eval.eval_error}
                                 />
                             )}
                         </td>
@@ -114,10 +120,11 @@ export default function SubmissionTable({ submissions, skeleton }: SubmissionTab
                                     score_unit={subm.curr_eval.score_unit}
                                     test_groups={subm.curr_eval.test_groups}
                                     test_verdicts={subm.curr_eval.test_verdicts}
+                                    has_error={!!subm.curr_eval.eval_error}
                                 />
                             )}
                         </td>
-                        <td className="p-2 py-2.5 border-r">{subm.curr_eval ? statusTranslations[subm.curr_eval.eval_stage] ?? subm.curr_eval.eval_stage : "..."}</td>
+                        <td className="p-2 py-2.5 border-r">{subm.curr_eval ? (errorTranslations[subm.curr_eval.eval_error] ?? statusTranslations[subm.curr_eval.eval_stage]) ?? ( subm.curr_eval.eval_error ? subm.curr_eval.eval_error : subm.curr_eval.eval_stage) : "..."}</td>
                         <td className="p-2 py-2.5">
                             <Link href={`/submissions/${subm.subm_uuid}`} className="text-blue-900 hover:underline underline-offset-2 hover:decoration-blue-900/90">
                                 {subm.subm_uuid.slice(0, 8)}
@@ -148,9 +155,13 @@ type SubmTableResultCellProps = {
     score_unit: string;
     test_groups: TestGroup[];
     test_verdicts: Verdict[];
+    has_error: boolean;
 }
 
-function SubmTableResultBarCell({ score_unit, test_groups, test_verdicts }: SubmTableResultCellProps) {
+function SubmTableResultBarCell({ score_unit, test_groups, test_verdicts, has_error }: SubmTableResultCellProps) {
+    if(has_error) {
+        return <SubmListScoreBar green={0} red={0} gray={0} yellow={0} purple={1} />;
+    }
     if (score_unit === "test") {
         const { accepted, untested, wrong, testing } = calculateTestScores(test_verdicts);
         return <SubmListScoreBar green={accepted} red={wrong} gray={untested} yellow={testing} />;
@@ -163,7 +174,7 @@ function SubmTableResultBarCell({ score_unit, test_groups, test_verdicts }: Subm
 }
 
 
-function SubmTableResultFractionCell({ score_unit, test_groups, test_verdicts }: SubmTableResultCellProps) {
+function SubmTableResultFractionCell({ score_unit, test_groups, test_verdicts, has_error }: SubmTableResultCellProps) {
     if (score_unit === "test") {
         const { accepted, untested, wrong } = calculateTestScores(test_verdicts);
         return <div className="flex flex-wrap gap-x-1 gap-y-1 min-w-20">
