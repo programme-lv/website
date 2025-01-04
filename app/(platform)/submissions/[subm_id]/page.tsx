@@ -163,7 +163,7 @@ function TestResults({ subm, exec }: { subm: Submission, exec: Execution }) {
     component.push(
       <React.Fragment key={i}>
         <EvalTestResultCard mem_lim_kib={exec.params.mem_kib} cpu_lim_ms={exec.params.cpu_ms}
-          test_id={i + 1} verdict={subm.curr_eval.test_verdicts[i]} test_inp={exec.test_res[i].inp || "N/A"} test_ans={exec.test_res[i].ans || "N/A"}
+          test_id={i + 1} verdict={subm.curr_eval.test_verdicts[i]} test_ans={exec.test_res[i].ans || "N/A"}
           subm_exec={exec.test_res[i].subm_rd} tlib_exec={exec.test_res[i].tlib_rd}
         />
         <Spacer y={2} />
@@ -268,7 +268,6 @@ function TestGroupResults({ subm, exec }: { subm: Submission, exec: Execution })
                               cpu_lim_ms={props.cpu_lim_ms}
                               test_id={testResult.id}
                               verdict={props.tg_test_verdicts[testResult.id - 1]}
-                              test_inp={testResult.inp || "N/A"}
                               test_ans={testResult.ans || "N/A"}
                               subm_exec={testResult.subm_rd}
                               tlib_exec={testResult.tlib_rd}

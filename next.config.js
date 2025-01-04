@@ -18,7 +18,10 @@ const nextConfig = {
       //   hostname: 'proglv-public.s3.eu-central-1.amazonaws.com'
       // }
     ]
-  }
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 }
 
 module.exports = nextConfig

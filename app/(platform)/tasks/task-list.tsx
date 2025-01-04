@@ -10,15 +10,10 @@ import TaskCard from "@/components/task-list-card";
 import { Task } from "@/types/task";
 
 export function TaskList(props: { tasks: Task[] }) {
-  let {
-    data: listTasksData,
-    error,
-    isLoading,
-  } = useQuery("list-tasks", listTasks, {
-    staleTime: 30 * 1000, // 30 seconds
-  });
+  const listTasksData = useQuery(["tasks"], listTasks);
+  const error = listTasksData.error;
 
-  let data = listTasksData ? (listTasksData.data ?? []) : props.tasks;
+  let data = listTasksData.data ? (listTasksData.data.data ?? []) : props.tasks;
 
   // sort by difficulty
   data = data?.sort(

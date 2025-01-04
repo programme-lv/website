@@ -7,26 +7,24 @@ import CodeBlock from "@/components/code-block";
 import { RunData } from "@/types/exec";
 import { Verdict } from "@/types/proglv";
 
-type EvalTestResultCardProps = {
+interface EvalTestResultCardProps {
+	mem_lim_kib: number;
+	cpu_lim_ms: number;
 	test_id: number;
 	verdict: Verdict;
 	subm_exec: RunData | null;
 	tlib_exec: RunData | null;
-	test_inp: string;
 	test_ans: string;
-	cpu_lim_ms: number;
-	mem_lim_kib: number;
-};
+}
 
 export default function EvalTestResultCard({
 	test_id,
 	verdict,
 	subm_exec,
-	tlib_exec,
-	test_inp,
 	test_ans,
 	cpu_lim_ms,
 	mem_lim_kib,
+	tlib_exec,
 }: EvalTestResultCardProps) {
 	const exitSignalDescription = useMemo(() => {
 		return (

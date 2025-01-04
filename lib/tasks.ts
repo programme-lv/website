@@ -1,5 +1,4 @@
-import { Task } from "@/types/proglv";
-
+import { Task } from "@/types/task";
 import { ApiResponse } from "./api-response";
 import { API_HOST } from "./config";
 

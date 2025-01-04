@@ -33,12 +33,12 @@ export function SubmListScoreBar({
     yellow: number;
     purple?: number;
 }) {
-    let total = green + red + gray + yellow + (purple ?? 0);
-    let green_percent = total > 0 ? green / total : 0;
-    let red_percent = total > 0 ? red / total : 0;
-    let gray_percent = total > 0 ? gray / total : 0;
-    let yellow_percent = total > 0 ? yellow / total : 0;
-    let purple_percent = total > 0 ? (purple ?? 0) / total : 0;
+    const total = green + red + gray + yellow + (purple ?? 0);
+    const green_percent = total > 0 ? green / total : 0;
+    const red_percent = total > 0 ? red / total : 0;
+    const gray_percent = total > 0 ? gray / total : 0;
+    const yellow_percent = total > 0 ? yellow / total : 0;
+    const purple_percent = total > 0 ? (purple ?? 0) / total : 0;
 
     return (
         <div className="flex justify-center flex-col items-center w-full min-w-12">

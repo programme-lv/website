@@ -138,15 +138,16 @@ export default function SubmissionTable({ submissions, skeleton }: SubmissionTab
 }
 
 function SubmTableDateTimeCell({ dateTime }: { dateTime: string }) {
-    let date = new Date(dateTime).toLocaleString("lv").split(" ")[0];
-    let time = new Date(dateTime).toLocaleString("lv").split(" ")[1];
+    const time = new Date(dateTime);
+    let date = time.toLocaleString("lv").split(" ")[0];
+    let timeStr = time.toLocaleString("lv").split(" ")[1];
     if (date.split(".")[0].length < 2) {
         date = "0" + date;
     }
     return (
         <div className="flex flex-wrap gap-x-2 gap-y-1 min-w-20">
             <span>{date}</span>
-            <span>{time}</span>
+            <span>{timeStr}</span>
         </div>
     )
 }
