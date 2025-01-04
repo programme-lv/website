@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Card, CardBody, Spacer } from "@nextui-org/react";
+import { Accordion, AccordionItem, Card, CardBody, Spacer } from "@nextui-org/react";
 import { useParams } from "next/navigation";
 import { useQuery } from "react-query";
 
@@ -11,9 +11,9 @@ import SubmInfoHeader from "@/components/subm-info-header";
 import ReadonlyMonacoCode from "@/components/ro-monaco-code";
 import { calculateGroupScores, calculateTestScores } from "@/lib/score-subm";
 import CodeBlock from "@/components/code-block";
-import { Submission } from "@/types/proglv";
+import { Submission, Verdict } from "@/types/proglv";
 import EvalTestResultCard from "@/components/eval-test-result-card";
-import { Execution } from "@/types/exec";
+import { Execution, TestRes } from "@/types/exec";
 
 
 export default function SubmissionPage() {
@@ -30,19 +30,6 @@ export default function SubmissionPage() {
       enabled: !!submData?.curr_eval?.eval_uuid,
     }
   );
-
-  console.log(execData);
-  console.log(submData);
-  console.log(submIsLoading);
-  console.log(execIsLoading);
-  console.log(execIsError);
-  console.log(execError);
-
-  console.log(submIsError);
-  console.log(submError);
-
-  console.log(submData?.curr_eval.eval_uuid);
-
 
   if (submIsError) {
     return (
@@ -144,13 +131,8 @@ export default function SubmissionPage() {
         )}
         {(!execData.subm_comp || execData.subm_comp.exit === 0) && (
           <>
-            {/* {submData.curr_eval.test_groups.length > 0 && (
-              <div className="border-small border-divider rounded-md bg-white">
-                <div className="px-0 lg:px-1 p-0 py-1">
-                  <EvalTestgroupAccordion testGroups={sortedTestGroups} testResults={reached_tests} time_lim={data.eval_details.cpu_time_limit_millis} mem_lim={data.eval_details.memory_limit_kibi_bytes} />
-                </div>
-              </div>
-            )} */}
+            {submData.curr_eval.score_unit === "group" &&
+              <TestGroupResults subm={submData} exec={execData} />}
             {submData.curr_eval.score_unit === "test" &&
               <TestResults subm={submData} exec={execData} />}
           </>
@@ -181,4 +163,112 @@ function TestResults({ subm, exec }: { subm: Submission, exec: Execution }) {
   }
 
   return (<>{component}</>);
+}
+function TestGroupResults({ subm, exec }: { subm: Submission, exec: Execution }) {
+  let tg_props: { [tg_id: number]: {
+    cpu_lim_ms: number,
+    mem_lim_kib: number,
+    tg_id: number,
+    tg_subtasks: number[],
+    tg_points: number,
+    tg_test_verdicts: Verdict[],
+    tg_test_results: TestRes[],
+  } } = {};
+
+  for (let i = 0; i < subm.curr_eval.test_groups.length; i++) {
+    // to get tg test verdicts we need to take the indices in test group from subm.curr_eval.test_groups
+    const tg_test_ids = subm.curr_eval.test_groups[i].tg_tests;
+    const tg_test_verdicts = tg_test_ids.map(tg_test_id => subm.curr_eval.test_verdicts[tg_test_id - 1]);
+    const tg_test_results = tg_test_ids.map(tg_test_id => exec.test_res[tg_test_id - 1]);
+
+    tg_props[i] = {
+      cpu_lim_ms: exec.params.cpu_ms,
+      mem_lim_kib: exec.params.mem_kib,
+      tg_id: i+1,
+      tg_subtasks: subm.curr_eval.test_groups[i].subtasks,
+      tg_points: subm.curr_eval.test_groups[i].points,
+      tg_test_verdicts: tg_test_verdicts,
+      tg_test_results: tg_test_results,
+    };
+  }
+
+  return (
+    <div className="border-small border-divider rounded-small bg-white">
+    <Accordion
+        fullWidth
+        isCompact
+        defaultExpandedKeys={["1"]}
+        variant="light"
+    >
+      {subm.curr_eval.test_groups.map((tg, index) => {
+        const props = tg_props[index];
+        const { accepted, untested, wrong, testing } = calculateTestScores(props.tg_test_verdicts);
+
+        const scoreColor =
+            wrong === 0 && untested === 0
+                ? "text-success-700"
+                : wrong > 0
+                    ? "text-danger-600"
+                    : "text-warning-500";
+
+        const displayedScore = wrong === 0 && untested === 0 ? props.tg_points : 0;
+
+        return (
+          <AccordionItem
+              key={props.tg_id}
+              classNames={{ startContent: "w-[80%]" }}
+              startContent={
+                  <div className="flex flex-grow justify-start gap-x-3 items-center flex-wrap">
+                      <div className="ms-1 flex gap-x-2">
+                          <div className="whitespace-nowrap">
+                              <span className="text-small text-default-600">Testu grupa </span>
+                              <span className="font-mono">
+                                  #{String(props.tg_id).padStart(2, "0")}
+                              </span>
+                          </div>
+                          <div>
+                              <span className="whitespace-nowrap">
+                                  <span className="text-small text-default-600">(</span>
+                                  <span className="font-mono">{props.tg_subtasks.join(", ")}.</span>
+                                  <span className="text-small text-default-600"> apakšuzd.</span>
+                                  <span className="text-small text-default-600">)</span>
+                              </span>
+                          </div>
+                      </div>
+                      <div>
+                          <span className={`whitespace-nowrap`}>
+                              <span className={`font-mono inline-block ${scoreColor}`}>
+                                  {String(displayedScore).padStart(2, "0")}
+                              </span>
+                              <span className="text-default-600 text-sm"> no </span>
+                              <span className={`font-mono inline-block`}>
+                                  {String(props.tg_points).padStart(2, "0")}
+                              </span>
+                          </span>
+                          <span className="text-small text-default-600"> p.</span>
+                      </div>
+                  </div>
+              }
+          >
+              <div className="overflow-x-auto flex flex-col gap-2 pb-2 max-w-full w-full relative rounded-none">
+                  {props.tg_test_results
+                      .map((testResult: TestRes) => (
+                          <EvalTestResultCard
+                              key={testResult.id}
+                              mem_lim_kib={props.mem_lim_kib}
+                              cpu_lim_ms={props.cpu_lim_ms}
+                              test_id={testResult.id}
+                              verdict={props.tg_test_verdicts[testResult.id - 1]}
+                              test_inp={testResult.inp || "N/A"}
+                              test_ans={testResult.ans || "N/A"}
+                              subm_exec={testResult.subm_rd}
+                              tlib_exec={testResult.tlib_rd}
+                          />
+                      ))}
+              </div>
+          </AccordionItem>
+        );
+      })}
+    </Accordion></div>
+  )
 }

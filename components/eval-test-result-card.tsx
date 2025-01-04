@@ -219,7 +219,7 @@ const OutputSection: React.FC<{ title: string; content?: string | null }> = ({
 		<div className="w-full overflow-hidden">
 			<div className="flex flex-col text-small">
 				<p className="text-tiny text-default-700 select-none mb-0.5">{title}</p>
-				<CodeBlock content={content || "N/A"} />
+				<CodeBlock content={content ?? "N/A"} />
 			</div>
 		</div>
 	);
