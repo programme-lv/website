@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import {Card, CardBody, Spacer} from "@nextui-org/react";
+import { Card, CardBody, Spacer } from "@nextui-org/react";
 import { useParams } from "next/navigation";
 import { useQuery } from "react-query";
 
@@ -21,12 +21,12 @@ export default function SubmissionPage() {
   const { data: submData, isLoading: submIsLoading, isError: submIsError, error: submError } = useQuery(
     ["submission", subm_id],
     () => getSubmission(subm_id as string),
-    {enabled: !!subm_id},
+    { enabled: !!subm_id },
   );
   const { data: execData, isLoading: execIsLoading, isError: execIsError, error: execError } = useQuery(
     ["exec", submData?.curr_eval?.eval_uuid],
     () => getExec(submData?.curr_eval?.eval_uuid as string),
-    { 
+    {
       enabled: !!submData?.curr_eval?.eval_uuid,
     }
   );
@@ -39,7 +39,7 @@ export default function SubmissionPage() {
   console.log(execError);
 
   console.log(submIsError);
-  console.log(submError); 
+  console.log(submError);
 
   console.log(submData?.curr_eval.eval_uuid);
 
@@ -134,7 +134,7 @@ export default function SubmissionPage() {
                     Kompilācijas izvaddati:
                   </p>
                   <CodeBlock
-                    content={execData.subm_comp.out+ execData.subm_comp.err|| ""}
+                    content={execData.subm_comp.out + execData.subm_comp.err || ""}
                   />
                 </div>
               </CardBody>
@@ -151,7 +151,7 @@ export default function SubmissionPage() {
                 </div>
               </div>
             )} */}
-            { submData.curr_eval.score_unit === "test" &&
+            {submData.curr_eval.score_unit === "test" &&
               <TestResults subm={submData} exec={execData} />}
           </>
         )}
@@ -161,20 +161,24 @@ export default function SubmissionPage() {
   );
 };
 
-function TestResults({subm, exec}: {subm: Submission, exec: Execution}) {
-  // let's do just the first test now
-  return (
-    <>
-    <EvalTestResultCard mem_lim_kib={exec.params.mem_kib} cpu_lim_ms={exec.params.cpu_ms}
-    test_id={1} verdict={subm.curr_eval.test_verdicts[0]} test_inp={exec.test_res[0].inp || "N/A"} test_ans={exec.test_res[0].ans || "N/A"}
-    subm_exec={exec.test_res[0].subm_rd} tlib_exec={exec.test_res[0].tlib_rd}
-    />
-    </>
-  );
+function TestResults({ subm, exec }: { subm: Submission, exec: Execution }) {
+  const eval_tc = subm.curr_eval.test_verdicts; // evaluation test count
+  const exec_tc = exec.test_res; // execution test count
+  const test_count = Math.min(eval_tc.length, exec_tc.length);
+
+  let component = [];
+
+  for (let i = 0; i < test_count; i++) {
+    component.push(
+      <React.Fragment key={i}>
+        <EvalTestResultCard mem_lim_kib={exec.params.mem_kib} cpu_lim_ms={exec.params.cpu_ms}
+          test_id={i + 1} verdict={subm.curr_eval.test_verdicts[i]} test_inp={exec.test_res[i].inp || "N/A"} test_ans={exec.test_res[i].ans || "N/A"}
+          subm_exec={exec.test_res[i].subm_rd} tlib_exec={exec.test_res[i].tlib_rd}
+        />
+        <Spacer y={2} />
+      </React.Fragment>
+    )
+  }
+
+  return (<>{component}</>);
 }
-{/* submData.curr_eval.test_verdicts.map((testResult: TestResult) => (
-  <React.Fragment key={testResult.test_id}>
-    <EvalTestResultCard testResult={testResult} time_lim={data.eval_details.cpu_time_limit_millis} mem_lim={data.eval_details.memory_limit_kibi_bytes} />
-    <Spacer y={2} />
-  </React.Fragment>
-))} */}
