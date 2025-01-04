@@ -8,7 +8,7 @@ import remarkGfm from "remark-gfm";
 import { Node } from "unist";
 import { Element } from "hast";
 import { visit } from "unist-util-visit";
-import { MdImg } from "@/types/proglv";
+import { MdImg } from "@/types/task";
 
 // Plugin to add Tailwind classes
 function rehypeAddClasses() {

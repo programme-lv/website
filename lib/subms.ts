@@ -72,6 +72,10 @@ export const subscribeToSubmUpdates = (
 
   eventSource.onerror = (error) => {
     if (eventSource.readyState === EventSource.CLOSED) {
+      console.log("SSE connection closed, attempting to reconnect in 1s...");
+      setTimeout(() => {
+        subscribeToSubmUpdates(onUpdate);
+      }, 1000);
     }
   };
 

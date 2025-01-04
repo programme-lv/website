@@ -6,7 +6,6 @@ import { Skeleton } from "@nextui-org/react";
 
 import "katex/dist/katex.min.css"; // Import KaTeX CSS for styling
 import { Image } from "@nextui-org/image";
-import NextImage from "next/image";
 
 import { renderMdLite } from "@/lib/render-md";
 import TaskDifficultyChip from "./task-difficulty-chip";

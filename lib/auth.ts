@@ -31,8 +31,8 @@ type LoginUserInput = {
 export const loginUser = async (
   input: LoginUserInput,
 ): Promise<ApiResponse<string>> => {
-  let username = input.username;
-  let password = input.password;
+  const username = input.username;
+  const password = input.password;
   const response = await fetch(`${API_HOST}/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },

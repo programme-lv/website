@@ -40,6 +40,15 @@ export default function SubmissionPage() {
     );
   }
 
+  if (execIsError) {
+    return (
+      <div>
+        Error loading execution:{" "}
+        {execError instanceof Error ? execError.message : "Unknown error"}
+      </div>
+    );
+  }
+
   const breadcrumbs = [
     { label: "Iesūtījumi", href: "/submissions" },
     { label: subm_id as string, href: `/submissions/${subm_id}` },
@@ -148,7 +157,7 @@ function TestResults({ subm, exec }: { subm: Submission, exec: Execution }) {
   const exec_tc = exec.test_res; // execution test count
   const test_count = Math.min(eval_tc.length, exec_tc.length);
 
-  let component = [];
+  const component = [];
 
   for (let i = 0; i < test_count; i++) {
     component.push(
@@ -165,7 +174,7 @@ function TestResults({ subm, exec }: { subm: Submission, exec: Execution }) {
   return (<>{component}</>);
 }
 function TestGroupResults({ subm, exec }: { subm: Submission, exec: Execution }) {
-  let tg_props: { [tg_id: number]: {
+  const tg_props: { [tg_id: number]: {
     cpu_lim_ms: number,
     mem_lim_kib: number,
     tg_id: number,
@@ -202,10 +211,10 @@ function TestGroupResults({ subm, exec }: { subm: Submission, exec: Execution })
     >
       {subm.curr_eval.test_groups.map((tg, index) => {
         const props = tg_props[index];
-        const { accepted, untested, wrong, testing } = calculateTestScores(props.tg_test_verdicts);
+        const { untested, wrong, testing } = calculateTestScores(props.tg_test_verdicts);
 
         const scoreColor =
-            wrong === 0 && untested === 0
+            wrong === 0 && untested === 0 && testing === 0
                 ? "text-success-700"
                 : wrong > 0
                     ? "text-danger-600"

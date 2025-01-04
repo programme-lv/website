@@ -174,7 +174,7 @@ function SubmTableResultBarCell({ score_unit, test_groups, test_verdicts, has_er
 }
 
 
-function SubmTableResultFractionCell({ score_unit, test_groups, test_verdicts, has_error }: SubmTableResultCellProps) {
+function SubmTableResultFractionCell({ score_unit, test_groups, test_verdicts }: SubmTableResultCellProps) {
     if (score_unit === "test") {
         const { accepted, untested, wrong } = calculateTestScores(test_verdicts);
         return <div className="flex flex-wrap gap-x-1 gap-y-1 min-w-20">

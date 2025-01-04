@@ -15,12 +15,12 @@ export function calculateGroupScores(test_groups: TestGroup[], test_verdicts: Ve
     let testing_points = 0;
 
     for (let i = 0; i < test_groups.length; i++) {
-        let group = test_groups[i];
-        let tests = group.tg_tests;
-        let tests_accepted = tests.filter(t => test_verdicts[t-1] === "ac").length;
-        let tests_untested = tests.filter(t => test_verdicts[t-1] === "q").length;
-        let tests_testing = tests.filter(t => test_verdicts[t-1] === "t").length;
-        let tests_wrong = tests.length - tests_accepted - tests_untested - tests_testing;
+        const group = test_groups[i];
+        const tests = group.tg_tests;
+        const tests_accepted = tests.filter(t => test_verdicts[t-1] === "ac").length;
+        const tests_untested = tests.filter(t => test_verdicts[t-1] === "q").length;
+        const tests_testing = tests.filter(t => test_verdicts[t-1] === "t").length;
+        const tests_wrong = tests.length - tests_accepted - tests_untested - tests_testing;
 
         if (tests_accepted === tests.length) {
             accepted_points += group.points;

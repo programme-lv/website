@@ -6,8 +6,8 @@ import Link from "next/link";
 
 import Alert from "@/components/Alert";
 import { listTasks } from "@/lib/tasks";
-import { Task } from "@/types/proglv";
 import TaskCard from "@/components/task-list-card";
+import { Task } from "@/types/task";
 
 export function TaskList(props: { tasks: Task[] }) {
   let {
