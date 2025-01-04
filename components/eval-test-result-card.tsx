@@ -1,138 +1,152 @@
 "use client";
 
 import React, { useMemo } from "react";
-import { Spacer, Chip } from "@nextui-org/react";
-import { TestResult } from "@/types/proglv";
+import { Chip } from "@nextui-org/react";
 import { EXIT_SIGNAL_DESCRIPTIONS } from "@/lib/constants";
 import CodeBlock from "@/components/code-block";
-
-const determineVerdict = (testResult: TestResult): string => {
-	if (
-		testResult.subm_exec_info?.exit_code !== 0 ||
-		testResult.subm_exec_info?.stderr_trimmed?.trim().length > 0 ||
-		testResult.subm_exec_info?.exit_signal
-	) {
-		return "RE";
-	}
-
-	if (testResult.memory_exceeded) return "MLE";
-	if (testResult.time_exceeded) return "TLE";
-	if (testResult.checker_exec_info?.exit_code !== 0) return "WA";
-
-	return "AC";
-};
+import { RunData } from "@/types/exec";
+import { Verdict } from "@/types/proglv";
 
 type EvalTestResultCardProps = {
-	testResult: TestResult;
-	time_lim: number;
-	mem_lim: number;
+	test_id: number;
+	verdict: Verdict;
+	subm_exec: RunData | null;
+	tlib_exec: RunData | null;
+	test_inp: string;
+	test_ans: string;
+	cpu_lim_ms: number;
+	mem_lim_kib: number;
 };
 
 export default function EvalTestResultCard({
-	testResult,
-	time_lim,
-	mem_lim,
+	test_id,
+	verdict,
+	subm_exec,
+	tlib_exec,
+	test_inp,
+	test_ans,
+	cpu_lim_ms,
+	mem_lim_kib,
 }: EvalTestResultCardProps) {
-	const verdict = useMemo(() => determineVerdict(testResult), [testResult]);
-
 	const exitSignalDescription = useMemo(() => {
 		return (
-			(testResult.subm_exec_info?.exit_signal &&
-				EXIT_SIGNAL_DESCRIPTIONS[testResult.subm_exec_info.exit_signal]) ||
+			(subm_exec?.signal &&
+				EXIT_SIGNAL_DESCRIPTIONS[subm_exec.signal]) ||
 			"Unknown exit signal"
 		);
-	}, [testResult]);
+	}, [subm_exec]);
 
-	if (testResult.reached === false) {
+
+	if (verdict === "re") {
 		return (
+
 			<div
-				key={testResult.test_id}
+				key={test_id}
 				className="p-3 border-small border-default-300 rounded-md bg-white"
 			>
 				<TestResultHeader
-					testResult={testResult}
+					subm_exec={subm_exec}
+					tlib_exec={tlib_exec}
+					test_id={test_id}
 					verdict={verdict}
-					time_lim={time_lim}
-					mem_lim={mem_lim}
+					time_lim={cpu_lim_ms}
+					mem_lim={mem_lim_kib}
 				/>
-			</div>
-		);
-	}
-
-	return (
-		<div
-			key={testResult.test_id}
-			className="p-3 border-small border-default-300 rounded-md bg-white"
-		>
-			<TestResultHeader
-				testResult={testResult}
-				verdict={verdict}
-				time_lim={time_lim}
-				mem_lim={mem_lim}
-			/>
-			<div className="mt-3"></div>
-			{verdict === "RE" && (
+				<div className="mt-3"></div>
 				<div className="flex flex-col gap-3">
-					{testResult.subm_exec_info?.stderr_trimmed && (
+					{subm_exec?.err && (
 						<OutputSection
-							content={testResult.subm_exec_info?.stderr_trimmed}
+							content={subm_exec?.err}
 							title="Izpildes kļūdas ziņojums:"
 						/>
 					)}
-					{testResult.subm_exec_info?.exit_code !== 0 && (
+					{subm_exec?.exit !== 0 && (
 						<OutputSection
-							content={testResult.subm_exec_info?.exit_code?.toString()}
+							content={subm_exec?.exit?.toString()}
 							title="Izejas kods:"
 						/>
 					)}
-					{testResult.subm_exec_info?.exit_signal && (
+					{subm_exec?.signal && (
 						<OutputSection
-							content={`${testResult.subm_exec_info.exit_signal} : ${exitSignalDescription}`}
+							content={`${subm_exec.signal} : ${exitSignalDescription}`}
 							title="Izejas signāls:"
 						/>
 					)}
 				</div>
-			)}
-			{verdict !== "RE" && (
+			</div>
+		)
+
+	} else {
+		return (
+			<div
+				key={test_id}
+				className="p-3 border-small border-default-300 rounded-md bg-white"
+			>
+				<TestResultHeader
+					test_id={test_id}
+					verdict={verdict}
+					time_lim={cpu_lim_ms}
+					mem_lim={mem_lim_kib}
+					subm_exec={subm_exec}
+					tlib_exec={tlib_exec}
+				/>
+				<div className="mt-3"></div>
 				<div className="flex flex-col gap-3">
 					<OutputSection
-						content={testResult.input_trimmed}
+						content={subm_exec?.in}
 						title="Testa ievaddati:"
 					/>
 					<OutputSection
-						content={testResult.subm_exec_info?.stdout_trimmed}
+						content={subm_exec?.out}
 						title="Programmas izvaddati:"
 					/>
-					<OutputSection
-						content={testResult.answer_trimmed}
-						title="Žūrijas atbilde:"
-					/>
-					<OutputSection
-						content={testResult.checker_exec_info?.stderr_trimmed}
-						title="Pārbaudes piezīmes:"
-					/>
+					{test_ans && (
+						<OutputSection
+							content={test_ans}
+							title="Žūrijas atbilde:"
+						/>
+					)}
+					{tlib_exec?.err && (
+						<OutputSection
+							content={tlib_exec?.err}
+							title="Pārbaudes piezīmes:"
+						/>
+					)}
 				</div>
-			)}
-		</div>
-	);
+			</div>
+
+		)
+	}
+
+}
+
+type TestResultHeaderProps = {
+	test_id: number;
+	verdict: Verdict;
+	time_lim: number;
+	mem_lim: number;
+	subm_exec: RunData | null;
+	tlib_exec: RunData | null;
 }
 
 // TestResultHeader Component
-const TestResultHeader: React.FC<{
-	testResult: TestResult;
-	verdict: string;
-	time_lim: number;
-	mem_lim: number;
-}> = ({ testResult, verdict, time_lim, mem_lim }) => {
+const TestResultHeader: React.FC<TestResultHeaderProps> = ({
+	test_id,
+	verdict,
+	time_lim,
+	mem_lim,
+	subm_exec,
+	tlib_exec,
+}) => {
 	const chipColor = useMemo(() => {
 		switch (verdict) {
-			case "AC":
+			case "ac":
 				return "success";
-			case "RE":
+			case "re":
 				return "secondary";
-			case "WA":
-			case "MLE":
-			case "TLE":
+			case "wa":
+			case "mle":
+			case "tle":
 				return "danger";
 			default:
 				return "default";
@@ -141,11 +155,11 @@ const TestResultHeader: React.FC<{
 
 	const chipLabel = useMemo(() => {
 		const labels: Record<string, string> = {
-			AC: "Atbilde ir pareiza",
-			MLE: "Pārsniegts atmiņas limits",
-			TLE: "Pārsniegts izpildes laiks",
-			WA: "Atbilde ir nepareiza",
-			RE: "Izpildes kļūda",
+			ac: "Atbilde ir pareiza",
+			mle: "Pārsniegts atmiņas limits",
+			tle: "Pārsniegts izpildes laiks",
+			wa: "Atbilde ir nepareiza",
+			re: "Izpildes kļūda",
 		};
 
 		return labels[verdict] || "Nav sasniegts";
@@ -154,39 +168,39 @@ const TestResultHeader: React.FC<{
 	return (
 		<div className="flex gap-4 flex-wrap">
 			<div className="flex gap-2 items-center">
-				<span className="text-sm">Tests</span> #{testResult.test_id}
+				<span className="text-sm">Tests</span> #{test_id}
 				<Chip color={chipColor} size="sm" variant="flat">
 					{chipLabel}
 				</Chip>
 			</div>
 			<div className="flex gap-x-3 gap-y-1 items-center flex-wrap">
-				{testResult.subm_exec_info?.cpu_time_millis && (
+				{subm_exec?.cpu_ms && (
 					<div className="flex gap-1 items-center">
 						<p className="text-small text-default-700 whitespace-nowrap">
 							Izpildes laiks:
 						</p>
-						{verdict !== "TLE" && (
+						{verdict !== "tle" && (
 							<span className="text-sm">
-								{testResult.subm_exec_info.cpu_time_millis} ms
+								{subm_exec.cpu_ms} ms
 							</span>
 						)}
-						{verdict === "TLE" && (
+						{verdict === "tle" && (
 							<span className="text-sm">≥ {time_lim} ms</span>
 						)}
 					</div>
 				)}
-				{testResult.subm_exec_info?.mem_kibi_bytes && (
+				{subm_exec?.mem_kib && (
 					<div className="flex gap-1 items-center">
 						<p className="text-small text-default-700 whitespace-nowrap">
 							Patērētā atmiņa:
 						</p>
-						{verdict !== "MLE" && (
+						{verdict !== "mle" && (
 							<span className="text-sm">
-								{(testResult.subm_exec_info.mem_kibi_bytes / 1024).toFixed(2)}{" "}
+								{(subm_exec.mem_kib / 1024).toFixed(2)}{" "}
 								MB
 							</span>
 						)}
-						{verdict === "MLE" && (
+						{verdict === "mle" && (
 							<span className="text-sm">≥ {mem_lim} MB</span>
 						)}
 					</div>
@@ -212,27 +226,27 @@ const OutputSection: React.FC<{ title: string; content?: string | null }> = ({
 };
 
 // RuntimeInfo Component
-const RuntimeInfo: React.FC<{ testResult: TestResult }> = ({ testResult }) => {
+const RuntimeInfo: React.FC<{ subm_exec: RunData }> = ({ subm_exec }) => {
 	return (
 		<div className="flex flex-col gap-2">
-			{testResult.subm_exec_info?.cpu_time_millis && (
+			{subm_exec?.cpu_ms && (
 				<div className="flex gap-1 items-center">
 					<p className="text-small text-default-700 whitespace-nowrap">
 						Izpildes laiks:
 					</p>
 					<CodeBlock
-						content={testResult.subm_exec_info.cpu_time_millis + "ms"}
+						content={subm_exec.cpu_ms + "ms"}
 					/>
 				</div>
 			)}
-			{testResult.subm_exec_info?.mem_kibi_bytes && (
+			{subm_exec?.mem_kib && (
 				<div className="flex gap-1 items-center">
 					<p className="text-small text-default-700 whitespace-nowrap">
 						Patērētā atmiņa:
 					</p>
 					<CodeBlock
 						content={
-							(testResult.subm_exec_info.mem_kibi_bytes / 1024).toFixed(2) +
+							(subm_exec.mem_kib / 1024).toFixed(2) +
 							" MB"
 						}
 					/>

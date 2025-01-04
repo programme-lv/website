@@ -62,3 +62,11 @@ interface Execution {
     created_at: string;         // ISO 8601 formatted date string
     subm_comp: RunData | null;  // Submitted code compilation runtime data
 }
+
+export type {
+    Execution,
+    RunData,
+    TestRes,
+    PrLang,
+    TesterParams,
+};

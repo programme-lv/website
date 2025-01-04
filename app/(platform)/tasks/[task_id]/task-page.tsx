@@ -37,11 +37,10 @@ import { getTaskById } from "@/lib/tasks";
 import {
 	Example,
 	MarkdownStatement,
-	ProgrammingLanguage,
 	SubtaskOverview,
 	Task,
 	VisibleInputSubtask,
-} from "@/types/proglv";
+} from "@/types/task";
 import { AuthContext } from "@/app/providers";
 import "katex/dist/katex.min.css";
 import renderMd, { renderMdLite } from "@/lib/render-md";
@@ -50,6 +49,7 @@ import { createSubmission } from "@/lib/subms";
 import TaskDifficultyChip from "@/components/task-difficulty-chip";
 import LIO_LOGO from "@/public/lio-logo.png";
 import CodeBlock from "@/components/code-block";
+import { ProgrammingLanguage } from "@/types/proglv";
 
 export default function TaskDetailsPage(props: { task: Task }) {
 	const { task_id } = useParams();

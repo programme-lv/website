@@ -3,69 +3,6 @@ type TaskReference = {
   code: string;
 };
 
-type Task = {
-  published_task_id: string;
-  task_full_name: string;
-  memory_limit_megabytes: number;
-  cpu_time_limit_seconds: number;
-  origin_olympiad: string;
-  lv_pdf_statement_sha: string;
-  illustration_img_url?: string;
-  difficulty_rating: 1 | 2 | 3 | 4 | 5;
-  default_md_statement?: MarkdownStatement;
-  examples?: Example[];
-  default_pdf_statement_url?: string;
-  origin_notes?: Record<string, string>;
-  visible_input_subtasks?: VisibleInputSubtask[];
-  statement_subtasks?: SubtaskOverview[];
-};
-
-type SubtaskOverview = {
-  subtask: number;
-  score: number;
-  descriptions: Record<string, string>;
-};
-
-type StInputs = {
-  subtask: number;
-  inputs: string[];
-};
-
-type VisibleInputSubtask = {
-  subtask: number;
-  inputs: TestWithOnlyInput[];
-};
-
-type TestWithOnlyInput = {
-  test_id: number;
-  input: string;
-};
-
-type Example = {
-  input: string;
-  output: string;
-  md_note?: string;
-};
-
-type MarkdownStatement = {
-  story: string;
-  input: string;
-  output: string;
-  notes?: string;
-  scoring?: string;
-  talk?: string;
-  example?: string;
-  images?: MdImg[];
-};
-
-type MdImg = {
-  img_uuid: string;
-  http_url: string;
-  width_em: number;
-  width_px: number;
-  height_px: number;
-};
-
 type TestGroup = {
   points: number;
   subtasks: number[];
@@ -95,43 +32,6 @@ type ProgrammingLang = {
   monacoId: string;
   compiledFilename: string;
   enabled: boolean;
-};
-
-type EvalDetails = {
-  eval_uuid: string;
-  created_at_rfc3339: string;
-  error_msg: string | null;
-  eval_stage: string;
-  cpu_time_limit_millis: number;
-  memory_limit_kibi_bytes: number;
-  programming_lang: ProgrammingLang;
-  system_information: string;
-  compile_exec_info?: RuntimeData;
-};
-
-type TestResult = {
-  test_id: number;
-  reached: boolean;
-  ignored: boolean;
-  finished: boolean;
-  input_trimmed: string | null;
-  answer_trimmed: string | null;
-  time_exceeded: boolean;
-  memory_exceeded: boolean;
-  subtasks: number[];
-  test_groups: number[];
-  subm_exec_info?: RuntimeData;
-  checker_exec_info?: RuntimeData;
-};
-
-type RuntimeData = {
-  cpu_time_millis: number;
-  mem_kibi_bytes: number;
-  wall_time: number;
-  exit_code: number;
-  stdout_trimmed: string;
-  stderr_trimmed: string;
-  exit_signal: number | null;
 };
 
 type ProgrammingLanguage = {
@@ -226,22 +126,12 @@ export type {
   Evaluation,
   TaskReference,
   User,
-  Task,
-  MarkdownStatement,
-  Example,
-  StInputs,
   SubmListSseUpdate as SubmListWebSocketUpdate,
   EvalStateUpdate,
   TestgroupResUpdate,
   ProgrammingLang,
-  EvalDetails,
-  TestResult,
   TestsResUpdate,
-  TestWithOnlyInput,
-  VisibleInputSubtask,
-  SubtaskOverview,
   TestGroup,
-  MdImg,
   TestSet,
   Submission,
   PrLang,

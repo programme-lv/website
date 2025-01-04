@@ -11,6 +11,9 @@ import SubmInfoHeader from "@/components/subm-info-header";
 import ReadonlyMonacoCode from "@/components/ro-monaco-code";
 import { calculateGroupScores, calculateTestScores } from "@/lib/score-subm";
 import CodeBlock from "@/components/code-block";
+import { Submission } from "@/types/proglv";
+import EvalTestResultCard from "@/components/eval-test-result-card";
+import { Execution } from "@/types/exec";
 
 
 export default function SubmissionPage() {
@@ -67,6 +70,14 @@ export default function SubmissionPage() {
     return (
       <Layout breadcrumbs={breadcrumbs} active="submissions">
         <div>No submission data was found.</div>
+      </Layout>
+    );
+  }
+
+  if (!submData.curr_eval) {
+    return (
+      <Layout breadcrumbs={breadcrumbs} active="submissions">
+        <div>No evaluation data was found.</div>
       </Layout>
     );
   }
@@ -131,26 +142,39 @@ export default function SubmissionPage() {
             <Spacer y={3} />
           </>
         )}
-        {/* {(!data.eval_details.compile_exec_info || data.eval_details.compile_exec_info.exit_code === 0) && (
+        {(!execData.subm_comp || execData.subm_comp.exit === 0) && (
           <>
-            {sortedTestGroups.length > 0 && (
+            {/* {submData.curr_eval.test_groups.length > 0 && (
               <div className="border-small border-divider rounded-md bg-white">
                 <div className="px-0 lg:px-1 p-0 py-1">
                   <EvalTestgroupAccordion testGroups={sortedTestGroups} testResults={reached_tests} time_lim={data.eval_details.cpu_time_limit_millis} mem_lim={data.eval_details.memory_limit_kibi_bytes} />
                 </div>
               </div>
-            )}
-            {data.test_set && !sortedTestGroups.length &&
-              reached_tests.map((testResult: TestResult) => (
-                <React.Fragment key={testResult.test_id}>
-                  <EvalTestResultCard testResult={testResult} time_lim={data.eval_details.cpu_time_limit_millis} mem_lim={data.eval_details.memory_limit_kibi_bytes} />
-                  <Spacer y={2} />
-                </React.Fragment>
-              ))}
+            )} */}
+            { submData.curr_eval.score_unit === "test" &&
+              <TestResults subm={submData} exec={execData} />}
           </>
-        )} */}
+        )}
         <Spacer y={2} />
       </div>
     </Layout>
   );
 };
+
+function TestResults({subm, exec}: {subm: Submission, exec: Execution}) {
+  // let's do just the first test now
+  return (
+    <>
+    <EvalTestResultCard mem_lim_kib={exec.params.mem_kib} cpu_lim_ms={exec.params.cpu_ms}
+    test_id={1} verdict={subm.curr_eval.test_verdicts[0]} test_inp={exec.test_res[0].inp || "N/A"} test_ans={exec.test_res[0].ans || "N/A"}
+    subm_exec={exec.test_res[0].subm_rd} tlib_exec={exec.test_res[0].tlib_rd}
+    />
+    </>
+  );
+}
+{/* submData.curr_eval.test_verdicts.map((testResult: TestResult) => (
+  <React.Fragment key={testResult.test_id}>
+    <EvalTestResultCard testResult={testResult} time_lim={data.eval_details.cpu_time_limit_millis} mem_lim={data.eval_details.memory_limit_kibi_bytes} />
+    <Spacer y={2} />
+  </React.Fragment>
+))} */}

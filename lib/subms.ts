@@ -2,6 +2,7 @@ import { Submission, SubmListWebSocketUpdate } from "@/types/proglv";
 
 import { getJwt } from "./jwt";
 import { API_HOST } from "./config";
+import { Execution } from "@/types/exec";
 
 export const listSubmissions = async (): Promise<Submission[]> => {
   const response = await fetch(`${API_HOST}/submissions`, {
