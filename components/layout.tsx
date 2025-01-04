@@ -15,6 +15,7 @@ import Sidebar from "@/components/sidebar";
 
 import User from "./navbar-user";
 import React from "react";
+import { IconInbox, IconListDetails } from "@tabler/icons-react";
 
 interface BreadcrumbItem {
   label: string;
@@ -39,18 +40,22 @@ const Layout: React.FC<LayoutProps> = ({ children, breadcrumbs, active }) => {
     <>
       {/* Mobile Navigation Modal */}
       <Modal
-        disableAnimation
         backdrop="blur"
         className="mx-2"
         isOpen={isMobileMenuOpen}
         placement="center"
         onOpenChange={onMobileMenuOpenChange}
+        hideCloseButton={true}
       >
         <ModalContent>
           <ModalHeader className="flex flex-col gap-1 -mb-2">
             Navigācijas izvēlne
           </ModalHeader>
           <ModalBody>
+            <div className="flex flex-col gap-8 mt-6 mb-10 mx-8">
+              <Link href="/tasks" className="flex items-center gap-2" onClick={onMobileMenuClose}><IconListDetails />Uzdevumi </Link>
+              <Link href="/submissions" className="flex items-center gap-2" onClick={onMobileMenuClose}><IconInbox />Iesūtījumi </Link>
+            </div>
             {/* <div className="bg-white">
               <Sidebar
                 defaultSelectedKey={defaultSelectedKey}
@@ -86,10 +91,10 @@ const Layout: React.FC<LayoutProps> = ({ children, breadcrumbs, active }) => {
                     onPress={onMobileMenuOpen}
                   >
                     <Icon
-                      className="text-default-500"
-                      height={24}
+                      className="text-default-800"
+                      height={26}
                       icon="solar:hamburger-menu-outline"
-                      width={24}
+                      width={26}
                     />
                   </Button>
                 </div>
