@@ -9,7 +9,7 @@ export const statusTranslations: Record<string, string> = {
     received: "Sagatavo",
     compiling: "Kompilē",
     testing: "Testē",
-    finished: "Izvērtēts",
+    finished: "Novērtēts",
     error: "Servera kļūda",
     compile_error: "Kompilācijas kļūda",
     runtime_error: "Izpildes kļūda",

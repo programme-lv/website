@@ -555,7 +555,7 @@ int main() {
 							</Button>
 						) : (
 							<Button isDisabled size="sm">
-								Pieslēdzies, lai iesūtīt risinājumu!
+								Pieslēdzies, lai iesūtītu risinājumu!
 							</Button>
 						)}
 					</div>
