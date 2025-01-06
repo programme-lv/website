@@ -9,7 +9,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { registerUser, loginUser } from "@/lib/auth";
-import Alert from "@/components/Alert";
+import Alert from "@/components/alert";
 import WinterForest from "@/public/winter-forest.jpg";
 import LogoImage from "@/public/emoji-logo.png";
 import { setJwt } from "@/lib/jwt";

@@ -4,7 +4,7 @@ import React from "react";
 import { useQuery } from "react-query";
 import Link from "next/link";
 
-import Alert from "@/components/Alert";
+import Alert from "@/components/alert";
 import { listTasks } from "@/lib/tasks";
 import TaskCard from "@/components/task-list-card";
 import { Task } from "@/types/task";
