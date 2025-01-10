@@ -261,13 +261,13 @@ function TestGroupResults({ subm, exec }: { subm: Submission, exec: Execution })
           >
               <div className="overflow-x-auto flex flex-col gap-2 pb-2 max-w-full w-full relative rounded-none">
                   {props.tg_test_results
-                      .map((testResult: TestRes) => (
+                      .map((testResult: TestRes, index: number) => (
                           <EvalTestResultCard
                               key={testResult.id}
                               mem_lim_kib={props.mem_lim_kib}
                               cpu_lim_ms={props.cpu_lim_ms}
                               test_id={testResult.id}
-                              verdict={props.tg_test_verdicts[testResult.id - 1]}
+                              verdict={props.tg_test_verdicts[index]}
                               test_ans={testResult.ans || "N/A"}
                               subm_exec={testResult.subm_rd}
                               tlib_exec={testResult.tlib_rd}
