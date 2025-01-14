@@ -129,7 +129,7 @@ const TaskCard: React.FC<TaskCardProps> = (task: TaskCardProps) => {
                   </div>
                 )}
                 {task.origin_notes && task.origin_notes["lv"] && (
-                  <div className="text-xs text-gray-700 ms-2 max-w-xs">
+                  <div className="text-xs text-gray-700 ms-2 max-w-[22em]">
                     {task.origin_notes["lv"]}
                   </div>
                 )}
