@@ -131,7 +131,7 @@ function LeftSide({ task }: { task: Task }) {
 function CodeBlockWithTitle({ title, content }: { title: string; content: string }) {
     return (
         <div className="flex-grow basis-0 overflow-hidden min-w-[175px] flex flex-col">
-            <p className="text-tiny text-default-700 my-0.5 mb-2 select-none">{title}</p>
+            <p className="text-small text-default-700 my-0.5 mb-2 select-none">{title}</p>
             <CodeBlock content={content} />
         </div>
     )
@@ -200,7 +200,7 @@ function MdView({
 									{example.md_note && (
 										<div className="flex-grow basis-0 overflow-hidden min-w-[175px]">
 											<div className="flex flex-col">
-												<p className="text-tiny text-default-700 my-0.5 mb-1.5 select-none">
+												<p className="text-small text-default-700 my-0.5 mb-1.5 select-none">
 													Piezīme:
 												</p>
 												<p className="text-sm">
@@ -441,7 +441,7 @@ function TaskHeader({
 									</div>
 								)}
 								<div className="flex flex-col flex-grow">
-									<div className="flex justify-between max-w-72">
+									<div className="flex justify-between max-w-[24em]">
 										<div className="flex justify-between">
 											{origin_olympiad === "LIO" && (
 												<>
@@ -458,7 +458,7 @@ function TaskHeader({
 												</>
 											)}
 											{origin_notes?.lv && (
-												<div className="text-tiny text-default-700 ms-1">
+												<div className="text-small text-default-700 ms-1">
 													{origin_notes.lv}
 												</div>
 											)}
