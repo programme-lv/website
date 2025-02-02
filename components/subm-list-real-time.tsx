@@ -126,7 +126,13 @@ function applyUpdatesToSubmissions(
         // Update status and score info
         submissions[index].status = evalData.eval_stage;
         if (evalData.eval_error) {
-          submissions[index].status = evalData.eval_error;
+          if (evalData.eval_error === "compilation") {
+            submissions[index].status = "compile_error";
+          } else if (evalData.eval_error === "internal") {
+            submissions[index].status = "internal_error";
+          } else {
+            submissions[index].status = evalData.eval_error;
+          }
         }
         submissions[index].score_info = evalData.score_info;
       }

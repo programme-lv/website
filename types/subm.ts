@@ -10,8 +10,8 @@ type ScoreInfo = {
     yellow: number;
     purple: number;
   };
-  received_score: number;
-  possible_score: number;
+  received: number;
+  possible: number;
   max_cpu_ms: number;
   max_mem_mib: number;
 };
@@ -24,13 +24,13 @@ type SubmEval = {
   eval_error: string;
   subtasks: Subtask[];
   test_groups: TestGroup[];
-  verdicts: string; // q,ac,wa,tle,mle,re,ig -> "QAWTMRI"
+  verdicts: Verdict[]; // q,ac,wa,tle,mle,re,ig -> "QAWTMRI"
   score_info: ScoreInfo;
 };
 
 // verdict is a string of characters, each character is a verdict
 // q,ac,wa,tle,mle,re,ig -> "QAWTMRI"
-type Verdict = "Q" | "A" | "W" | "T" | "M" | "R" | "I";
+export type Verdict = "Q" | "A" | "W" | "T" | "M" | "R" | "I";
 
 type Subtask = {
   points: number;
@@ -41,7 +41,7 @@ type Subtask = {
 type TestGroup = {
   points: number;
   subtasks: number[];
-  tg_tests: number[][];
+  tg_tests: [number, number][]; // [start, end]
 };
 
 export type SubmListEntry = {
@@ -54,4 +54,21 @@ export type SubmListEntry = {
   score_info: ScoreInfo;
   status: string;
   created_at: string;
+};
+
+export type DetailedSubmView = {
+  subm_uuid: string;
+  content: string;
+  username: string;
+  curr_eval: SubmEval;
+  pr_lang: PrLang;
+  task_id: string;
+  task_name: string;
+  created_at: string;
+};
+
+export type PrLang = {
+  short_id: string;
+  display: string;
+  monaco_id: string;
 };

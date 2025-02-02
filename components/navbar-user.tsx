@@ -14,8 +14,10 @@ import { useContext, useEffect } from "react";
 
 import { removeJwt } from "@/lib/jwt";
 import { AuthContext } from "@/app/providers";
+import { useRouter } from "next/navigation";
 
 export default function User() {
+  const router = useRouter();
   const authContext = useContext(AuthContext);
   const user = authContext.user;
 
@@ -38,6 +40,9 @@ export default function User() {
             radius="full"
             size="sm"
             variant="flat"
+            onPress={() => {
+              router.push(`/login${redirectParam}`);
+            }}
           >
             Pieslēgties
           </Button>
@@ -64,7 +69,7 @@ export default function User() {
             <DropdownItem
               key="logout"
               color="warning"
-              onClick={() => {
+              onPress={() => {
                 removeJwt();
                 sessionStorage.clear();
                 authContext.refresh();

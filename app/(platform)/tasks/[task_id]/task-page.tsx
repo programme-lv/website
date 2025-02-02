@@ -549,7 +549,7 @@ int main() {
 					/>
 					<div className="mt-2 flex justify-end gap-3">
 						{authContext.user ? (
-							<Button color="primary" size="sm" isLoading={isLoading} onClick={submitSolution}>
+							<Button color="primary" size="sm" isLoading={isLoading} onPress={submitSolution}>
 								Iesūtīt risinājumu
 								<IconSend size={16} />
 							</Button>

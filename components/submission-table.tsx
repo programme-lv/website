@@ -1,8 +1,6 @@
-import { Subtask, TestGroup, Verdict } from "@/types/proglv";
 import { SubmListScoreBar } from "./subm-table-score-bars";
 import { cn } from "./cn";
 import Link from "next/link";
-import { calculateGroupScores, calculateTestScores } from "@/lib/score-subm";
 import { SubmListEntry } from "@/types/subm";
 
 export const statusTranslations: Record<string, string> = {
@@ -19,8 +17,8 @@ export const statusTranslations: Record<string, string> = {
 };
 
 export const errorTranslations: Record<string, string> = {
-    "compilation": "Kompilācijas kļūda",
-    "internal": "Servera kļūda",
+    compile_error: "Kompilācijas kļūda",
+    internal_error: "Servera kļūda",
 };
 
 type SubmissionTableProps = {
@@ -56,7 +54,7 @@ export default function SubmissionTable({ submissions, skeleton }: SubmissionTab
                 </thead>
                 <tbody>
                     {Array.from({ length: 30 }).map((_, i) => (
-                        <tr key={i} className={cn({ "border-b border-divider": i !== 29 }, { "bg-gray-50": i % 2 === 0 })}>
+                        <tr key={i} className={cn(" h-[76px]",{ "border-b border-divider": i !== 29 }, { "bg-gray-50": i % 2 === 0 })}>
                             <td className="p-2.5 py-2.5 animate-pulse border-r"><div className="bg-gray-300 rounded-sm w-full h-full text-gray-300">.</div></td>
                             <td className="p-2.5 py-2.5 animate-pulse border-r"><div className="bg-gray-300 rounded-sm w-full h-full text-gray-300">.</div></td>
                             <td className="p-2.5 py-2.5 animate-pulse border-r"><div className="bg-gray-300 rounded-sm w-full h-full text-gray-300">.</div></td>
@@ -96,7 +94,7 @@ export default function SubmissionTable({ submissions, skeleton }: SubmissionTab
             </thead>
             <tbody>
                 {submissions.map((subm, i) => (
-                    <tr key={subm.subm_uuid} className={cn({ "border-b border-divider ": i !== submissions.length - 1 }, { "bg-gray-50": i % 2 === 0 })}>
+                    <tr key={subm.subm_uuid} className={cn("h-[76px]",{ "border-b border-divider": i !== submissions.length - 1 }, { "bg-gray-50": i % 2 === 0 })}>
                         <td className="p-2 py-2.5 border-r"><SubmTableDateTimeCell dateTime={subm.created_at} /></td>
                         <td className="p-2 py-2.5 border-r">{subm.username}</td>
                         <td className="p-2 py-2.5 border-r">
@@ -116,13 +114,13 @@ export default function SubmissionTable({ submissions, skeleton }: SubmissionTab
                         </td>
                         <td className="p-2 py-2.5 border-r">
                             <div className="flex flex-wrap gap-x-1 gap-y-1 min-w-20">
-                                <span>{subm.score_info.received_score}</span>
+                                <span>{subm.score_info.received}</span>
                                 <span>/</span>
-                                <span>{subm.score_info.possible_score}</span>
+                                <span>{subm.score_info.possible}</span>
                             </div>
                         </td>
                         {/* <td className="p-2 py-2.5 border-r">{subm.curr_eval ? (errorTranslations[subm.curr_eval.eval_error] ?? statusTranslations[subm.curr_eval.eval_stage]) ?? ( subm.curr_eval.eval_error ? subm.curr_eval.eval_error : subm.curr_eval.eval_stage) : "..."}</td> */}
-                        <td className="p-2 py-2.5 border-r">{subm.status}</td>
+                        <td className="p-2 py-2.5 border-r">{statusTranslations[subm.status] ?? subm.status}</td>
                         <td className="p-2 py-2.5">
                             <Link href={`/submissions/${subm.subm_uuid}`} className="text-blue-900 hover:underline underline-offset-2 hover:decoration-blue-900/90">
                                 {subm.subm_uuid.slice(0, 8)}

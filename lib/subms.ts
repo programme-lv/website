@@ -2,7 +2,7 @@
 import { getJwt } from "./jwt";
 import { API_HOST } from "./config";
 import { Execution } from "@/types/exec";
-import { SubmListEntry, SubmListSseUpdate } from "@/types/subm";
+import { DetailedSubmView, SubmListEntry, SubmListSseUpdate } from "@/types/subm";
 
 export const listSubmissions = async (): Promise<SubmListEntry[]> => {
   const response = await fetch(`${API_HOST}/subm`, {
@@ -86,7 +86,7 @@ export const subscribeToSubmUpdates = (
 
 export const getSubmission = async (
   submUuid: string,
-): Promise<SubmListEntry> => {
+): Promise<DetailedSubmView> => {
   const response = await fetch(`${API_HOST}/subm/${submUuid}`, {
     method: "GET",
     headers: {

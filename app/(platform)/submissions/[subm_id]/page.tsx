@@ -9,23 +9,23 @@ import { getExec, getSubmission } from "@/lib/subms";
 import Layout from "@/components/layout";
 import SubmInfoHeader from "@/components/subm-info-header";
 import ReadonlyMonacoCode from "@/components/ro-monaco-code";
-import { calculateGroupScores, calculateTestScores } from "@/lib/score-subm";
 import CodeBlock from "@/components/code-block";
-import { Submission, Verdict } from "@/types/proglv";
 import EvalTestResultCard from "@/components/eval-test-result-card";
 import { Execution, TestRes } from "@/types/exec";
+import { DetailedSubmView } from "@/types/subm";
+import { Verdict } from "@/types/subm";
 
 
 export default function SubmissionPage() {
   const { subm_id } = useParams();
   const { data: submData, isLoading: submIsLoading, isError: submIsError, error: submError } = useQuery(
     ["submission", subm_id],
-    () => getSubmission(subm_id as string),
+    () => getSubmission(subm_id as string) as Promise<DetailedSubmView>,
     { enabled: !!subm_id },
   );
   const { data: execData, isLoading: execIsLoading, isError: execIsError, error: execError } = useQuery(
     ["exec", submData?.curr_eval?.eval_uuid],
-    () => getExec(submData?.curr_eval?.eval_uuid as string),
+    () => getExec(submData?.curr_eval?.eval_uuid as string) as Promise<Execution>,
     {
       enabled: !!submData?.curr_eval?.eval_uuid,
     }
@@ -86,21 +86,12 @@ export default function SubmissionPage() {
     );
   }
 
-  let possible = 0;
-  let received = 0;
-  if (submData.curr_eval.score_unit === "test") {
-    const { accepted, untested, wrong, testing } = calculateTestScores(submData.curr_eval.test_verdicts);
-    possible = accepted + untested + testing + wrong;
-    received = accepted;
-  } else if (submData.curr_eval.score_unit === "group") {
-    const { accepted_points, wrong_points, untested_points, testing_points } = calculateGroupScores(submData.curr_eval.test_groups, submData.curr_eval.test_verdicts);
-    possible = accepted_points + wrong_points + untested_points + testing_points;
-    received = accepted_points;
-  }
+  let possible = submData.curr_eval.score_info.possible;
+  let received = submData.curr_eval.score_info.received;
 
   return (
     <Layout breadcrumbs={breadcrumbs} active="submissions">
-      <div className="mt-3 flex flex-col flex-grow relative">
+      <div className="m-3 flex flex-col flex-grow relative">
         <SubmInfoHeader
           possible={possible}
           received={received}
@@ -152,10 +143,10 @@ export default function SubmissionPage() {
   );
 };
 
-function TestResults({ subm, exec }: { subm: Submission, exec: Execution }) {
-  const eval_tc = subm.curr_eval.test_verdicts; // evaluation test count
-  const exec_tc = exec.test_res; // execution test count
-  const test_count = Math.min(eval_tc.length, exec_tc.length);
+function TestResults({ subm, exec }: { subm: DetailedSubmView, exec: Execution }) {
+  const eval_tc = subm.curr_eval.verdicts.length; // evaluation test count
+  const exec_tc = exec.test_res.length; // execution test count
+  const test_count = Math.min(eval_tc, exec_tc);
 
   const component = [];
 
@@ -163,7 +154,7 @@ function TestResults({ subm, exec }: { subm: Submission, exec: Execution }) {
     component.push(
       <React.Fragment key={i}>
         <EvalTestResultCard mem_lim_kib={exec.params.mem_kib} cpu_lim_ms={exec.params.cpu_ms}
-          test_id={i + 1} verdict={subm.curr_eval.test_verdicts[i]} test_ans={exec.test_res[i].ans || "N/A"}
+          test_id={i + 1} verdict={subm.curr_eval.verdicts[i]} test_ans={exec.test_res[i].ans || "N/A"}
           subm_exec={exec.test_res[i].subm_rd} tlib_exec={exec.test_res[i].tlib_rd}
         />
         <Spacer y={2} />
@@ -173,7 +164,7 @@ function TestResults({ subm, exec }: { subm: Submission, exec: Execution }) {
 
   return (<>{component}</>);
 }
-function TestGroupResults({ subm, exec }: { subm: Submission, exec: Execution }) {
+function TestGroupResults({ subm, exec }: { subm: DetailedSubmView, exec: Execution }) {
   const tg_props: { [tg_id: number]: {
     cpu_lim_ms: number,
     mem_lim_kib: number,
@@ -186,9 +177,17 @@ function TestGroupResults({ subm, exec }: { subm: Submission, exec: Execution })
 
   for (let i = 0; i < subm.curr_eval.test_groups.length; i++) {
     // to get tg test verdicts we need to take the indices in test group from subm.curr_eval.test_groups
-    const tg_test_ids = subm.curr_eval.test_groups[i].tg_tests;
-    const tg_test_verdicts = tg_test_ids.map(tg_test_id => subm.curr_eval.test_verdicts[tg_test_id - 1]);
-    const tg_test_results = tg_test_ids.map(tg_test_id => exec.test_res[tg_test_id - 1]);
+    const tg_test_id_ranges = subm.curr_eval.test_groups[i].tg_tests as [number, number][]; // [start, end]
+    const tg_test_ids = [];
+    for (let j = 0; j < tg_test_id_ranges.length; j++) {
+      const tg_test_id_range = tg_test_id_ranges[j];
+      for (let k = tg_test_id_range[0]; k <= tg_test_id_range[1]; k++) {
+        tg_test_ids.push(k);
+      }
+    }
+    console.log(i,tg_test_ids);
+    const tg_test_verdicts = tg_test_ids.map((tg_test_id: number) => subm.curr_eval.verdicts[tg_test_id - 1]);
+    const tg_test_results = tg_test_ids.map((tg_test_id: number) => exec.test_res[tg_test_id - 1]);
 
     tg_props[i] = {
       cpu_lim_ms: exec.params.cpu_ms,
@@ -211,7 +210,8 @@ function TestGroupResults({ subm, exec }: { subm: Submission, exec: Execution })
     >
       {subm.curr_eval.test_groups.map((tg, index) => {
         const props = tg_props[index];
-        const { untested, wrong, testing } = calculateTestScores(props.tg_test_verdicts);
+        // const { untested, wrong, testing } = calculateTestScores(props.tg_test_verdicts);
+        const { wrong, untested, testing } = { wrong: 0, untested: 0, testing: 0 };
 
         const scoreColor =
             wrong === 0 && untested === 0 && testing === 0

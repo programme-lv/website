@@ -79,20 +79,6 @@ type TestsResUpdate = {
   untested: number;
 };
 
-
-type SubmEval = {
-  eval_uuid: string;
-  eval_stage: string;
-  score_unit: "test" | "group";
-  eval_error: string;
-  error_msg: string;
-  subtasks: Subtask[];
-  test_groups: TestGroup[];
-  test_verdicts: Verdict[];
-};
-
-type Verdict = "ac" | "wa" | "tle" | "mle" | "re" | "ig" | "t" | "q" | "";
-
 export type {
   ProgrammingLanguage,
   Evaluation,
@@ -104,7 +90,5 @@ export type {
   TestsResUpdate,
   TestGroup,
   TestSet,
-  SubmEval,
   Subtask,
-  Verdict,
 };

@@ -5,7 +5,7 @@ import { Chip } from "@nextui-org/react";
 import { EXIT_SIGNAL_DESCRIPTIONS } from "@/lib/constants";
 import CodeBlock from "@/components/code-block";
 import { RunData } from "@/types/exec";
-import { Verdict } from "@/types/proglv";
+import { Verdict } from "@/types/subm";
 
 interface EvalTestResultCardProps {
 	mem_lim_kib: number;
@@ -35,7 +35,7 @@ export default function EvalTestResultCard({
 	}, [subm_exec]);
 
 
-	if (verdict === "re") {
+	if (verdict === "R") {
 		return (
 
 			<div
@@ -138,13 +138,13 @@ const TestResultHeader: React.FC<TestResultHeaderProps> = ({
 }) => {
 	const chipColor = useMemo(() => {
 		switch (verdict) {
-			case "ac":
+			case "A":
 				return "success";
-			case "re":
+			case "R":
 				return "secondary";
-			case "wa":
-			case "mle":
-			case "tle":
+			case "W":
+			case "M":
+			case "T":
 				return "danger";
 			default:
 				return "default";
@@ -153,11 +153,11 @@ const TestResultHeader: React.FC<TestResultHeaderProps> = ({
 
 	const chipLabel = useMemo(() => {
 		const labels: Record<string, string> = {
-			ac: "Atbilde ir pareiza",
-			mle: "Pārsniegts atmiņas limits",
-			tle: "Pārsniegts izpildes laiks",
-			wa: "Atbilde ir nepareiza",
-			re: "Izpildes kļūda",
+			A: "Atbilde ir pareiza",
+			M: "Pārsniegts atmiņas limits",
+			T: "Pārsniegts izpildes laiks",
+			W: "Atbilde ir nepareiza",
+			R: "Izpildes kļūda",
 		};
 
 		return labels[verdict] || "Nav sasniegts";
@@ -177,12 +177,12 @@ const TestResultHeader: React.FC<TestResultHeaderProps> = ({
 						<p className="text-small text-default-700 whitespace-nowrap">
 							Izpildes laiks:
 						</p>
-						{verdict !== "tle" && (
+						{verdict !== "T" && (
 							<span className="text-sm">
 								{subm_exec.cpu_ms} ms
 							</span>
 						)}
-						{verdict === "tle" && (
+						{verdict === "T" && (
 							<span className="text-sm">≥ {time_lim} ms</span>
 						)}
 					</div>
@@ -192,13 +192,13 @@ const TestResultHeader: React.FC<TestResultHeaderProps> = ({
 						<p className="text-small text-default-700 whitespace-nowrap">
 							Patērētā atmiņa:
 						</p>
-						{verdict !== "mle" && (
+						{verdict !== "M" && (
 							<span className="text-sm">
 								{(subm_exec.mem_kib / 1024).toFixed(2)}{" "}
 								MB
 							</span>
 						)}
-						{verdict === "mle" && (
+						{verdict === "M" && (
 							<span className="text-sm">≥ {mem_lim} MB</span>
 						)}
 					</div>
