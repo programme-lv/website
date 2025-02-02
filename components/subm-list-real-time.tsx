@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 
 import { subscribeToSubmUpdates, listSubmissions } from "@/lib/subms";
-import { Submission, SubmListWebSocketUpdate } from "@/types/proglv";
+import { SubmListEntry, SubmListSseUpdate } from "@/types/subm";
 import SubmissionTable from "./submission-table";
 
 /**
@@ -18,13 +18,13 @@ import SubmissionTable from "./submission-table";
 export default function RealTimeSubmTable({
   initial,
 }: {
-  initial: Submission[];
+  initial: SubmListEntry[];
 }) {
   // State to hold incoming WebSocket updates
-  const [updates, setUpdates] = useState<SubmListWebSocketUpdate[]>([]);
+  const [updates, setUpdates] = useState<SubmListSseUpdate[]>([]);
 
   // State to manage the list of submissions
-  const [submissions, setSubmissions] = useState<Submission[]>(initial);
+  const [submissions, setSubmissions] = useState<SubmListEntry[]>(initial);
 
   // Fetch submissions data with a polling interval of 5 seconds
   const { data } = useQuery("submissions", listSubmissions, {
@@ -44,7 +44,7 @@ export default function RealTimeSubmTable({
    */
   useEffect(() => {
     const unsubscribe = subscribeToSubmUpdates(
-      (update: SubmListWebSocketUpdate) => {
+      (update: SubmListSseUpdate) => {
         setUpdates((prev) => {
           if (prev.length >= 10000) prev.shift(); // Remove the oldest update if limit is reached
           return [...prev, update]; // Append the new update
@@ -92,7 +92,7 @@ export default function RealTimeSubmTable({
  * @param submissions - Array of Submission objects to be sorted
  * @returns A new array of sorted Submission objects
  */
-function sortSubmissions(submissions: Submission[]): Submission[] {
+function sortSubmissions(submissions: SubmListEntry[]): SubmListEntry[] {
   const sorted = submissions.sort((a, b) => {
     const dateA = new Date(a.created_at);
     const dateB = new Date(b.created_at);
@@ -109,9 +109,9 @@ function sortSubmissions(submissions: Submission[]): Submission[] {
 }
 
 function applyUpdatesToSubmissions(
-  submissions: Submission[],
-  updates: SubmListWebSocketUpdate[],
-): Submission[] {
+  submissions: SubmListEntry[],
+  updates: SubmListSseUpdate[],
+): SubmListEntry[] {
   for(let update of updates) {
     if ('subm_created' in update && update.subm_created !== null) {  // Check for null
       const newSubmission = update.subm_created;  // No need for type assertion
@@ -120,10 +120,15 @@ function applyUpdatesToSubmissions(
       }
     }
     else if ('eval_update' in update) {  // Simplified condition
-      const { subm_uuid, new_eval } = update.eval_update;  // Destructure for cleaner code
-      const index = submissions.findIndex(s => s.subm_uuid === subm_uuid);
+      const evalData = update.eval_update;  // Get the SubmEval object
+      const index = submissions.findIndex(s => s.subm_uuid === evalData.subm_uuid);
       if (index !== -1) {
-        submissions[index].curr_eval = new_eval;
+        // Update status and score info
+        submissions[index].status = evalData.eval_stage;
+        if (evalData.eval_error) {
+          submissions[index].status = evalData.eval_error;
+        }
+        submissions[index].score_info = evalData.score_info;
       }
     }
   }

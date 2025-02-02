@@ -1,11 +1,11 @@
-import { Submission, SubmListWebSocketUpdate } from "@/types/proglv";
 
 import { getJwt } from "./jwt";
 import { API_HOST } from "./config";
 import { Execution } from "@/types/exec";
+import { SubmListEntry, SubmListSseUpdate } from "@/types/subm";
 
-export const listSubmissions = async (): Promise<Submission[]> => {
-  const response = await fetch(`${API_HOST}/submissions`, {
+export const listSubmissions = async (): Promise<SubmListEntry[]> => {
+  const response = await fetch(`${API_HOST}/subm`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -29,10 +29,10 @@ export const createSubmission = async (
   username: string,
   programmingLangId: string,
   taskCodeId: string,
-): Promise<Submission> => {
+): Promise<SubmListEntry> => {
   const jwt = getJwt();
 
-  const response = await fetch(`${API_HOST}/submissions`, {
+  const response = await fetch(`${API_HOST}/subm`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -56,13 +56,13 @@ export const createSubmission = async (
 };
 
 export const subscribeToSubmUpdates = (
-  onUpdate: (update: SubmListWebSocketUpdate) => void,
+  onUpdate: (update: SubmListSseUpdate) => void,
 ) => {
   const eventSource = new EventSource(`${API_HOST}/subm-updates`);
 
   eventSource.onmessage = (event) => {
     try {
-      const data: SubmListWebSocketUpdate = JSON.parse(event.data);
+      const data: SubmListSseUpdate = JSON.parse(event.data);
 
       onUpdate(data);
     } catch (error) {
@@ -86,8 +86,8 @@ export const subscribeToSubmUpdates = (
 
 export const getSubmission = async (
   submUuid: string,
-): Promise<Submission> => {
-  const response = await fetch(`${API_HOST}/submissions/${submUuid}`, {
+): Promise<SubmListEntry> => {
+  const response = await fetch(`${API_HOST}/subm/${submUuid}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

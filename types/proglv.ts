@@ -79,34 +79,6 @@ type TestsResUpdate = {
   untested: number;
 };
 
-type SubmListSseUpdate =
-  | { subm_created: Submission }
-  | { eval_update: SubmEvalUpdate };
-  // | { state_update: EvalStateUpdate }
-  // | { testgroup_res_update: TestgroupResUpdate }
-  // | { tests_score_update: TestsResUpdate };
-
-type SubmEvalUpdate = {
-  subm_uuid: string;
-  new_eval: SubmEval;
-};
-
-type Submission = {
-  subm_uuid: string;
-  content: string;
-  username: string;
-  curr_eval: SubmEval;
-  pr_lang: PrLang;
-  task_name: string;
-  task_id: string;
-  created_at: string;
-};
-
-type PrLang = {
-  short_id: string;
-  display: string;
-  monaco_id: string;
-};
 
 type SubmEval = {
   eval_uuid: string;
@@ -126,17 +98,13 @@ export type {
   Evaluation,
   TaskReference,
   User,
-  SubmListSseUpdate as SubmListWebSocketUpdate,
   EvalStateUpdate,
   TestgroupResUpdate,
   ProgrammingLang,
   TestsResUpdate,
   TestGroup,
   TestSet,
-  Submission,
-  PrLang,
   SubmEval,
   Subtask,
   Verdict,
-  SubmEvalUpdate
 };
