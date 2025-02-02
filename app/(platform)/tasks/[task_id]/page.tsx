@@ -28,7 +28,12 @@ export default async function TaskPageServerComponent({
   return (
     <Layout breadcrumbs={breadcrumbs} active="tasks">
       <Toaster/>
-      <TaskDetailsPage task={task} />
+
+      <div className="flex min-h-screen absolute pt-14 w-full left-0 md:pl-16 top-0 pointer-events-none overflow-hidden">
+        {/* <div className="px-3 flex flex-grow"> */}
+          <TaskDetailsPage task={task} />
+        {/* </div> */}
+      </div>
     </Layout>
   );
 }

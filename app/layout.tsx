@@ -31,12 +31,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html suppressHydrationWarning lang="en" style={{ backgroundColor: "rgb(250,250,250)" }}>
+    <html suppressHydrationWarning lang="en" style={{ backgroundColor: "rgb(250,250,250)", fontFamily: "serif", fontSize: "1.1rem" }}>
       <head />
       <body
         className={clsx(
-          "min-h-screen font-sans antialiased",
-          fontSans.variable,
+          "min-h-screen antialiased",
         )}
       >
         <Providers

@@ -75,7 +75,7 @@ export default function TaskDetailsPage(props: { task: Task }) {
 	}
 
 	return (
-		<main className="mt-3 flex-grow w-full overflow-visible relative">
+		<main className="m-3 flex-grow w-full overflow-visible relative pointer-events-auto">
 			{/* Desktop View */}
 			<div
 				ref={pageRefXL}

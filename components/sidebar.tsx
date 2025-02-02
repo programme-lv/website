@@ -38,15 +38,15 @@ type SidebarProps = {
 export default function Sidebar(props: SidebarProps) {
   return (
     <>
-      <div className="relative flex-col bg-white !border-r-small border-divider transition-width w-14 items-center ml-2 my-2 rounded-small px-2 py-2 hidden md:flex">
+      <div className="fixed flex-col bg-white !border-r-small border-divider h-full min-w-16 hidden md:flex">
         <div className="flex items-center px-3 justify-center gap-0">
-          <div className="flex mt-1 w-[30px] items-center justify-center rounded-full">
+          <div className="flex mt-4 items-center">
             <Link href="/tasks">
-              <Image loading="eager"  alt="programme.lv logo" width={26} height={26} src={Logo.src} />
+              <Image loading="eager" alt="programme.lv logo" width={30} height={30} src={Logo.src} />
             </Link>
           </div>
         </div>
-        <nav className="mt-12 flex flex-col gap-8 w-full">
+        <nav className="mt-12 flex flex-col items-center gap-8 w-full">
           {items.map((item) => (
             <Tooltip
               disableAnimation
@@ -67,7 +67,7 @@ export default function Sidebar(props: SidebarProps) {
                   {React.createElement(item.icon, {
                     width: 24,
                     className: cn(
-                      "text-default-600 hover:text-default-800",
+                      "hover:text-default-800",
                       props.active === item.key && "text-default-800",
                     ),
                   })}

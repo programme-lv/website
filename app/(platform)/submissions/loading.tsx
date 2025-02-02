@@ -9,11 +9,13 @@ export default async function SubmissionListServerComponent() {
 
   return (
     <Layout breadcrumbs={breadcrumbs} active="submissions">
-      <div className="overflow-x-auto w-full h-full min-w-full mt-3 p-3 border-small border-divider rounded-small bg-white">
-      <SubmissionTable
-        skeleton={true}
-        submissions={[]}
-      />
+      <div className="px-3">
+        <div className="overflow-x-auto w-full h-full min-w-full mt-3 p-3 border-small border-divider rounded-small bg-white">
+        <SubmissionTable
+          skeleton={true}
+          submissions={[]}
+        />
+        </div>
       </div>
     </Layout>
   );
