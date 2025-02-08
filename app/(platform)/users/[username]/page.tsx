@@ -24,7 +24,7 @@ export default async function TaskPageServerComponent({
   }
 
   const breadcrumbs = [
-    { label: "Uzdevumi", href: "/tasks" },
+    { label: "Lietotāji" },
     { label: username, href: `/users/${username}` },
   ];
 

@@ -10,7 +10,7 @@ import Link from "next/link";
 
 import { registerUser, loginUser } from "@/lib/auth";
 import Alert from "@/components/alert";
-import WinterForest from "@/public/winter-forest.jpg";
+import WinterMountains from "@/public/winter-mountains.jpg";
 import LogoImage from "@/public/emoji-logo.png";
 import { setJwt } from "@/lib/jwt";
 import { AuthContext } from "@/app/providers";
@@ -22,7 +22,7 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
     <div
       className="flex min-h-screen relative w-screen items-center justify-center overflow-hidden bg-content1 p-2 pt-16 pb-16 lg:px-8"
       style={{
-        backgroundImage: `url(${WinterForest.src})`,
+        backgroundImage: `url(${WinterMountains.src})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}

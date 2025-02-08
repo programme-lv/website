@@ -8,7 +8,7 @@ import {
   DropdownMenu,
   DropdownTrigger,
 } from "@nextui-org/react";
-import { IconChevronRight, IconLogout } from "@tabler/icons-react";
+import { IconChevronRight, IconLogout, IconUser } from "@tabler/icons-react";
 import Link from "next/link";
 import { useContext, useEffect } from "react";
 
@@ -66,6 +66,20 @@ export default function User() {
             </button>
           </DropdownTrigger>
           <DropdownMenu aria-label="Profile Actions" variant="flat">
+            <DropdownItem
+              key="profile"
+              className="flex gap-2 items-center justify-between"
+              onPress={() => {
+                router.push(`/users/${user.username}`);
+              }}
+            >
+              <div className="flex gap-2 items-center justify-between">
+                <span>Profils</span>
+                <span>
+                  <IconUser size={16} />
+                </span>
+              </div>
+            </DropdownItem>
             <DropdownItem
               key="logout"
               color="warning"

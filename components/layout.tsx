@@ -19,7 +19,7 @@ import { IconInbox, IconListDetails } from "@tabler/icons-react";
 
 interface BreadcrumbItem {
   label: string;
-  href: string;
+  href?: string;
 }
 
 interface LayoutProps {
@@ -83,12 +83,18 @@ const Breadcrumbs = ({ items }: { items: BreadcrumbItem[] }) => (
       {items.map((item, index) => (
         <React.Fragment key={index}>
           <li>
-            <Link
-              className={cn("text-default-500 hover:underline",{"text-default-900":index===items.length-1})}
-              href={item.href}
-            >
-              {item.label}
-            </Link>
+            {item.href ? (
+              <Link
+                className={cn("text-default-500 hover:underline",{"text-default-900":index===items.length-1})}
+                href={item.href}
+              >
+                {item.label}
+              </Link>
+            ) : (
+              <span className="text-default-500">
+                {item.label}
+              </span>
+            )}
           </li>
           {index < items.length - 1 && <span className="text-default-500"> / </span>}
         </React.Fragment>
