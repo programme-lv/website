@@ -12,7 +12,6 @@ export default async function TaskPageServerComponent({
   params: Promise<any>;
 }) {
   const {task_id} = await params;
-
   const response = await getTaskById(task_id);
   const task = response.data;
 

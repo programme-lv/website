@@ -1,32 +1,51 @@
-export const revalidate = 120; // 2 minutes
+"use client";
 
 import { cn } from "@/components/cn";
 import Layout from "@/components/layout";
 import { TextLink } from "@/components/text-link";
 import { getMaxScorePerTask } from "@/lib/subms";
-import { getTaskById } from "@/lib/tasks";
-import { MaxScore } from "@/types/scores";
-import Link from "next/link";
-
+import { useQuery } from "react-query";
 import { Toaster } from 'react-hot-toast';
+import { use } from 'react';
 
-export default async function TaskPageServerComponent({
+export default function UserPage({
   params,
 }: {
-  params: Promise<any>;
+  params: Promise<{ username: string }>;
 }) {
-  const {username} = await params;
-
-  const response = await getMaxScorePerTask(username);
-
-  if (!response) {
-    return <div>{JSON.stringify(response)}</div>;
-  }
+  const { username } = use(params);
+  const { data: response, isLoading, error } = useQuery(['userScores', username], () => getMaxScorePerTask(username), {
+    enabled: !!username,
+  });
 
   const breadcrumbs = [
     { label: "Lietotāji" },
     { label: username, href: `/users/${username}` },
   ];
+
+  if (isLoading) {
+    return (
+      <Layout breadcrumbs={breadcrumbs} active="tasks">
+        <div className="m-3">
+          <div className="bg-white p-3 rounded-small border-small border-divider">
+            <p>Loading...</p>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
+
+  if (error || !response) {
+    return (
+      <Layout breadcrumbs={breadcrumbs} active="tasks">
+        <div className="m-3">
+          <div className="bg-white p-3 rounded-small border-small border-divider">
+            <p>Error loading user data</p>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout breadcrumbs={breadcrumbs} active="tasks">
