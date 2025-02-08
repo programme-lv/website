@@ -3,6 +3,7 @@ import { getJwt } from "./jwt";
 import { API_HOST } from "./config";
 import { Execution } from "@/types/exec";
 import { DetailedSubmView, SubmListEntry, SubmListSseUpdate } from "@/types/subm";
+import { MaxScore, MaxScorePerTask } from "@/types/scores";
 
 export const listSubmissions = async (): Promise<SubmListEntry[]> => {
   const response = await fetch(`${API_HOST}/subm`, {
@@ -113,6 +114,23 @@ export const getExec = async (execUuid: string): Promise<Execution> => {
 
   if (!response.ok) {
     throw new Error("Error fetching execution");
+  }
+
+  const data = await response.json();
+
+  return data.data;
+};
+
+export const getMaxScorePerTask = async (username: string): Promise<MaxScorePerTask> => {
+  const response = await fetch(`${API_HOST}/subm/scores/${username}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Error fetching max scores");
   }
 
   const data = await response.json();
