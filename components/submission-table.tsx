@@ -1,7 +1,7 @@
 import { SubmListScoreBar } from "./subm-table-score-bars";
 import { cn } from "./cn";
-import Link from "next/link";
 import { SubmListEntry } from "@/types/subm";
+import { TextLink } from "./text-link";
 
 export const statusTranslations: Record<string, string> = {
     waiting: "Gaida",
@@ -96,11 +96,11 @@ export default function SubmissionTable({ submissions, skeleton }: SubmissionTab
                 {submissions.map((subm, i) => (
                     <tr key={subm.subm_uuid} className={cn("h-[76px]",{ "border-b border-divider": i !== submissions.length - 1 }, { "bg-gray-50": i % 2 === 0 })}>
                         <td className="p-2 py-2.5 border-r"><SubmTableDateTimeCell dateTime={subm.created_at} /></td>
-                        <td className="p-2 py-2.5 border-r">{subm.username}</td>
+                        <td className="p-2 py-2.5 border-r"><TextLink href={`/users/${subm.username}`}>{subm.username}</TextLink></td>
                         <td className="p-2 py-2.5 border-r">
-                            <Link href={`/tasks/${subm.task_id}`} className="text-blue-900 hover:underline decoration-blue-600/20 underline-offset-2  hover:decoration-blue-900/90">
+                            <TextLink href={`/tasks/${subm.task_id}`}>
                                 {subm.task_name}
-                            </Link>
+                            </TextLink>
                         </td>
                         <td className="p-2 py-2.5 border-r">{subm.pr_lang_name}</td>
                         <td className="p-2 py-2.5 border-r">
@@ -122,9 +122,9 @@ export default function SubmissionTable({ submissions, skeleton }: SubmissionTab
                         {/* <td className="p-2 py-2.5 border-r">{subm.curr_eval ? (errorTranslations[subm.curr_eval.eval_error] ?? statusTranslations[subm.curr_eval.eval_stage]) ?? ( subm.curr_eval.eval_error ? subm.curr_eval.eval_error : subm.curr_eval.eval_stage) : "..."}</td> */}
                         <td className="p-2 py-2.5 border-r">{statusTranslations[subm.status] ?? subm.status}</td>
                         <td className="p-2 py-2.5">
-                            <Link href={`/submissions/${subm.subm_uuid}`} className="text-blue-900 hover:underline underline-offset-2 hover:decoration-blue-900/90">
+                            <TextLink href={`/submissions/${subm.subm_uuid}`}>
                                 {subm.subm_uuid.slice(0, 8)}
-                            </Link>
+                            </TextLink>
                         </td>
                     </tr>
                 ))}
