@@ -64,7 +64,8 @@ export default async function TaskPageServerComponent({
               <thead>
                 <tr className="border-b border-gray-300 text-gray-900 text-sm">
                   <th className="p-2 text-left font-normal border-r">Uzdevums</th>
-                  <th className="p-2 text-left font-normal">Punkti</th>
+                  <th className="p-2 text-left font-normal border-r">Punkti</th>
+                  <th className="p-2 text-left font-normal">Iesūtīts</th>
                 </tr>
               </thead>
               <tbody>
