@@ -31,7 +31,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html suppressHydrationWarning lang="en" style={{ backgroundColor: "rgb(250,250,250)", fontFamily: "'Ubuntu', 'Ubuntu Sans', sans-serif", fontSize: "1.1rem" }}>
+    <html suppressHydrationWarning lang="en" style={{ backgroundColor: "rgb(250,250,250)", fontFamily: "'Ubuntu Sans','Ubuntu', sans-serif", fontSize: "1.1rem" }}>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
