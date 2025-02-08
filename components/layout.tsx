@@ -104,7 +104,7 @@ const Header = ({
   breadcrumbs: BreadcrumbItem[];
   onMobileMenuOpen: () => void;
 }) => (
-  <header className="flex items-center justify-between gap-1 border-b-small border-divider px-2 md:px-4 py-2 bg-white min-h-14">
+  <header className="flex items-center justify-between gap-1 border-b-small border-divider px-2 md:px-5 py-2 bg-white min-h-14">
     <div className="flex items-center justify-between w-full flex-wrap">
       <div className="flex gap-2 items-center">
         <MobileMenuButton onOpen={onMobileMenuOpen} />
