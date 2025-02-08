@@ -185,7 +185,6 @@ function TestGroupResults({ subm, exec }: { subm: DetailedSubmView, exec: Execut
         tg_test_ids.push(k);
       }
     }
-    console.log(i,tg_test_ids);
     const tg_test_verdicts = tg_test_ids.map((tg_test_id: number) => subm.curr_eval.verdicts[tg_test_id - 1]);
     const tg_test_results = tg_test_ids.map((tg_test_id: number) => exec.test_res[tg_test_id - 1]);
 

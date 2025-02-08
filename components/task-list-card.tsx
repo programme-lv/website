@@ -63,7 +63,6 @@ function TaskCard(props: TaskCardProps) {
   }, []);
 
   const solve_state = getSolveState(props.user_max_score);
-  console.log(solve_state)
 
   return (
     <div
