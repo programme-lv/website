@@ -532,9 +532,14 @@ int main() {
 			);
 			await queryClient.invalidateQueries("submissions");
 			await router.push(`/submissions`);
-		} catch (error) {
+		} catch (error: any) {
 			setIsLoading(false);
-			alert(error);
+			const data = error.response?.data;
+			if ('message' in data) {
+				alert(data.message);
+			} else {
+				alert("Kļūda iesūtot risinājumu. Lūdzu, mēģiniet vēlreiz!");
+			}
 		}
 	};
 

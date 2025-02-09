@@ -1,4 +1,3 @@
-
 import { getJwt } from "./jwt";
 import { API_HOST } from "./config";
 import { Execution } from "@/types/exec";
@@ -16,10 +15,11 @@ export const listSubmissions = async (): Promise<SubmListEntry[]> => {
     },
   });
 
-  if (!response.ok) {
-    throw new Error("Error fetching submissions");
-  }
   const data = await response.json();
+
+  if (!response.ok) {
+    throw { response: { data } };
+  }
 
   return data.data;
 };
@@ -47,11 +47,11 @@ export const createSubmission = async (
     }),
   });
 
-  if (!response.ok) {
-    throw new Error(await response.json());
-  }
-
   const data = await response.json();
+
+  if (!response.ok) {
+    throw { response: { data } };
+  }
 
   return data;
 };
@@ -64,7 +64,6 @@ export const subscribeToSubmUpdates = (
   eventSource.onmessage = (event) => {
     try {
       const data: SubmListSseUpdate = JSON.parse(event.data);
-
       onUpdate(data);
     } catch (error) {
       alert("Error parsing SSE data:" + JSON.stringify(error));
@@ -95,11 +94,11 @@ export const getSubmission = async (
     },
   });
 
-  if (!response.ok) {
-    throw new Error("Error fetching submission");
-  }
-
   const data = await response.json();
+
+  if (!response.ok) {
+    throw { response: { data } };
+  }
 
   return data.data;
 };
@@ -112,11 +111,11 @@ export const getExec = async (execUuid: string): Promise<Execution> => {
     },
   });
 
-  if (!response.ok) {
-    throw new Error("Error fetching execution");
-  }
-
   const data = await response.json();
+
+  if (!response.ok) {
+    throw { response: { data } };
+  }
 
   return data.data;
 };
@@ -129,11 +128,11 @@ export const getMaxScorePerTask = async (username: string): Promise<MaxScorePerT
     },
   });
 
-  if (!response.ok) {
-    throw new Error("Error fetching max scores");
-  }
-
   const data = await response.json();
+
+  if (!response.ok) {
+    throw { response: { data } };
+  }
 
   return data.data;
 };
