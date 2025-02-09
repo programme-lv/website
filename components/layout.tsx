@@ -140,7 +140,7 @@ const Layout: React.FC<LayoutProps> = ({ children, breadcrumbs, active }) => {
       <div className="min-h-screen w-full">
         <Sidebar active={active} />
 
-        <div className="overflow-auto md:ml-16 min-h-screen">
+        <div className="md:ml-16">
           <Header
             breadcrumbs={breadcrumbs}
             onMobileMenuOpen={onMobileMenuOpen}
