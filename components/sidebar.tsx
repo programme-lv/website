@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Tooltip } from "@nextui-org/tooltip";
+import { Tooltip } from "@heroui/tooltip";
 import { IconInbox, IconListDetails } from "@tabler/icons-react";
 import React from "react";
 

@@ -7,7 +7,7 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { IconChevronRight, IconLogout, IconUser } from "@tabler/icons-react";
 import Link from "next/link";
 import { useContext, useEffect } from "react";

@@ -29,7 +29,7 @@ import {
 	Skeleton,
 	cn,
 	Image,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import MonacoEditor from "@monaco-editor/react";
 import { useQuery, useQueryClient } from "react-query";
 

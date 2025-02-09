@@ -3,7 +3,7 @@
 import React, { Suspense, useContext, useState } from "react";
 import { useMutation } from "react-query";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Button, Input, Divider } from "@nextui-org/react";
+import { Button, Input, Divider } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import Image from "next/image";
 import Link from "next/link";

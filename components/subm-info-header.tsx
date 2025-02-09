@@ -1,4 +1,4 @@
-import { cn } from "@nextui-org/react";
+import { cn } from "@heroui/react";
 import BlueLink from "./blue-link";
 import { statusTranslations } from "./submission-table";
 

@@ -2,10 +2,10 @@
 import lio_logo from "@/public/lio-logo.png";
 
 import React, { useRef, useEffect, useState } from "react";
-import { Skeleton } from "@nextui-org/react";
+import { Skeleton } from "@heroui/react";
 
 import "katex/dist/katex.min.css"; // Import KaTeX CSS for styling
-import { Image } from "@nextui-org/image";
+import { Image } from "@heroui/image";
 
 import { renderMdLite } from "@/lib/render-md";
 import TaskDifficultyChip from "./task-difficulty-chip";
@@ -65,7 +65,7 @@ function TaskCard(props: TaskCardProps) {
   const solve_state = getSolveState(props.user_max_score);
 
   return (
-    <div
+    (<div
       ref={cardRef}
       className={
         cn("relative",
@@ -157,7 +157,7 @@ function TaskCard(props: TaskCardProps) {
           </div>
         </div>
       </div>
-    </div>
+    </div>)
   );
 };
 

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Accordion, AccordionItem, Card, CardBody, Spacer } from "@nextui-org/react";
+import { Accordion, AccordionItem, Card, CardBody, Spacer } from "@heroui/react";
 import { useParams } from "next/navigation";
 import { useQuery } from "react-query";
 

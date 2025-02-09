@@ -1,4 +1,4 @@
-import { Chip } from "@nextui-org/react";
+import { Chip } from "@heroui/react";
 
 export default function TaskDifficultyChip({ difficulty_rating }: { difficulty_rating: 1 | 2 | 3 | 4 | 5 }) {
     switch (difficulty_rating) {

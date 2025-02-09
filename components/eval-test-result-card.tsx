@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo } from "react";
-import { Chip } from "@nextui-org/react";
+import { Chip } from "@heroui/react";
 import { EXIT_SIGNAL_DESCRIPTIONS } from "@/lib/constants";
 import CodeBlock from "@/components/code-block";
 import { RunData } from "@/types/exec";
