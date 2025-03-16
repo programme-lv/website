@@ -10,7 +10,7 @@ import {
 } from "@heroui/react";
 import { IconChevronRight, IconLogout, IconUser } from "@tabler/icons-react";
 import Link from "next/link";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import { removeJwt } from "@/lib/jwt";
 import { AuthContext } from "@/app/providers";
@@ -21,11 +21,11 @@ export default function User() {
   const authContext = useContext(AuthContext);
   const user = authContext.user;
 
-  let redirectParam = "";
+  const [redirectParam, setRedirectParam] = useState("");
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      redirectParam = `?redirect=${encodeURIComponent(window.location.pathname)}`;
+      setRedirectParam(`?redirect=${encodeURIComponent(window.location.pathname)}`);
     }
   }, []);
 
