@@ -32,12 +32,14 @@ export default function SubmissionTable({ submissions, skeleton }: SubmissionTab
         return (
             <table className="w-full rounded-sm table-fixed">
                 <colgroup>
-                    <col width="200px" />
+                    <col width="190px" />
                     <col width="140px" />
                     <col width="140px" />
                     <col width="120px" />
                     <col width="120px" />
                     <col width="80px" />
+                    <col width="100px" />
+                    <col width="100px" />
                     <col width="120px" />
                     <col width="120px" />
                 </colgroup>
@@ -48,6 +50,8 @@ export default function SubmissionTable({ submissions, skeleton }: SubmissionTab
                         <th className="p-2 text-left font-normal border-r">Uzdevums</th>
                         <th className="p-2 text-left font-normal border-r">Valoda</th>
                         <th className="p-2 text-left font-normal border-r" colSpan={2}>Rezultāts</th>
+                        <th className="p-2 text-left font-normal border-r">CPU laiks</th>
+                        <th className="p-2 text-left font-normal border-r">Atmiņa</th>
                         <th className="p-2 text-left font-normal border-r">Statuss</th>
                         <th className="p-2 text-left font-normal">Iesūtījums</th>
                     </tr>
@@ -72,12 +76,14 @@ export default function SubmissionTable({ submissions, skeleton }: SubmissionTab
     return (
         <table className="w-full rounded-sm table-fixed">
             <colgroup>
-                <col width="200px" />
+                <col width="190px" />
                 <col width="140px" />
                 <col width="140px" />
                 <col width="120px" />
                 <col width="120px" />
                 <col width="80px" />
+                <col width="100px" />
+                <col width="100px" />
                 <col width="120px" />
                 <col width="120px" />
             </colgroup>
@@ -88,6 +94,8 @@ export default function SubmissionTable({ submissions, skeleton }: SubmissionTab
                     <th className="p-2 text-left font-normal border-r">Uzdevums</th>
                     <th className="p-2 text-left font-normal border-r">Valoda</th>
                     <th className="p-2 text-left font-normal border-r" colSpan={2}>Rezultāts</th>
+                    <th className="p-2 text-left font-normal border-r">CPU laiks [s]</th>
+                    <th className="p-2 text-left font-normal border-r">Atmiņa [MiB]</th>
                     <th className="p-2 text-left font-normal border-r">Statuss</th>
                     <th className="p-2 text-left font-normal">Iesūtījums</th>
                 </tr>
@@ -119,6 +127,8 @@ export default function SubmissionTable({ submissions, skeleton }: SubmissionTab
                                 <span>{subm.score_info.possible}</span>
                             </div>
                         </td>
+                        <td className="p-2 py-2.5 border-r">{(subm.score_info.max_cpu_ms / 1000).toFixed(2)}</td>
+                        <td className="p-2 py-2.5 border-r">{(subm.score_info.max_mem_kib / 1024).toFixed(1)}</td>
                         {/* <td className="p-2 py-2.5 border-r">{subm.curr_eval ? (errorTranslations[subm.curr_eval.eval_error] ?? statusTranslations[subm.curr_eval.eval_stage]) ?? ( subm.curr_eval.eval_error ? subm.curr_eval.eval_error : subm.curr_eval.eval_stage) : "..."}</td> */}
                         <td className="p-2 py-2.5 border-r">{statusTranslations[subm.status] ?? subm.status}</td>
                         <td className="p-2 py-2.5">

@@ -13,7 +13,7 @@ type ScoreInfo = {
   received: number;
   possible: number;
   max_cpu_ms: number;
-  max_mem_mib: number;
+  max_mem_kib: number;
 };
 
 type SubmEval = {
