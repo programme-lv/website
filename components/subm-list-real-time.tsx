@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
-import { Pagination } from "@heroui/react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
 import { subscribeToSubmUpdates, listSubmissions } from "@/lib/subms";
@@ -17,11 +16,12 @@ import SubmissionTable from "./submission-table";
  * Props:
  * - initial: An array of initial BriefSubmission objects to populate the table.
  * - initialPagination: Initial pagination state
- * - onPageChange: Callback function when page changes
+ * - currentPage: Current page number
  */
 export default function RealTimeSubmTable({
   initial,
   initialPagination,
+  currentPage,
 }: {
   initial: SubmListEntry[];
   initialPagination: {
@@ -30,6 +30,7 @@ export default function RealTimeSubmTable({
     limit: number;
     hasMore: boolean;
   };
+  currentPage: number;
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -44,15 +45,22 @@ export default function RealTimeSubmTable({
 
   // State to manage the list of submissions
   const [submissions, setSubmissions] = useState<SubmListEntry[]>(initialSubmissions);
-  
-  // Current page calculation
-  const currentPage = Math.floor(initialPagination.offset / initialPagination.limit) + 1;
-  const totalPages = Math.max(1, Math.ceil(initialPagination.total / initialPagination.limit));
 
-  // Calculate display range
-  const startItem = submissions.length > 0 ? initialPagination.offset + 1 : 0;
-  const endItem = Math.min(initialPagination.offset + submissions.length, initialPagination.total || 0);
-  const totalItems = initialPagination.total || 0;
+  // Detect page changes
+  useEffect(() => {
+    // Reset updates when page changes
+    setUpdates([]);
+    
+    // Set loading state when page changes
+    setIsChangingPage(true);
+    
+    // Reset loading state after a short delay
+    const timer = setTimeout(() => {
+      setIsChangingPage(false);
+    }, 500);
+    
+    return () => clearTimeout(timer);
+  }, [currentPage]);
 
   // Fetch submissions data with a polling interval of 2 seconds
   const { data, isLoading, refetch } = useQuery(
@@ -117,58 +125,11 @@ export default function RealTimeSubmTable({
     }
   }, [data, updates, initialPagination.offset]);
 
-  // Handle page change
-  const handlePageChange = (page: number) => {
-    // Set loading state
-    setIsChangingPage(true);
-    
-    // Create new URLSearchParams
-    const params = new URLSearchParams(searchParams.toString());
-    
-    // Update or add the page parameter
-    params.set('page', page.toString());
-    
-    // Keep the limit parameter if it exists
-    if (params.has('limit')) {
-      params.set('limit', params.get('limit')!);
-    } else {
-      params.set('limit', initialPagination.limit.toString());
-    }
-    
-    // Navigate to the new URL
-    router.push(`${pathname}?${params.toString()}`);
-    
-    // Clear updates when changing pages
-    setUpdates([]);
-  };
-
   return (
     <>
-      <div className="flex justify-between items-center mb-4">
-        <div className="text-sm text-gray-500">
-          {isChangingPage || isLoading ? (
-            "Ielādē iesūtījumus..."
-          ) : totalItems === 0 ? (
-            "Nav iesūtījumu"
-          ) : (
-            `Rāda ${startItem}-${endItem} no ${totalItems} iesūtījumiem`
-          )}
-        </div>
-        {totalPages > 1 && (
-          <Pagination 
-            initialPage={currentPage} 
-            total={totalPages} 
-            onChange={handlePageChange}
-            className="text-sm"
-            showControls
-            color="primary"
-            variant="bordered"
-            size="sm"
-            isDisabled={isChangingPage || isLoading}
-            page={currentPage}
-          />
-        )}
-      </div>
+      {isChangingPage && (
+        <div className="text-sm text-gray-500 mb-4">Ielādē iesūtījumus...</div>
+      )}
       <SubmissionTable
         skeleton={(submissions.length === 0 || isChangingPage || isLoading)} // Show loading skeleton if no submissions are present or changing page
         submissions={submissions} // Pass the submissions data to the table component
