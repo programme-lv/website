@@ -14,6 +14,8 @@ type ScoreInfo = {
   possible: number;
   max_cpu_ms: number;
   max_mem_kib: number;
+  exceeded_cpu: boolean;
+  exceeded_mem: boolean;
 };
 
 type SubmEval = {

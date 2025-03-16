@@ -127,8 +127,8 @@ export default function SubmissionTable({ submissions, skeleton }: SubmissionTab
                                 <span>{subm.score_info.possible}</span>
                             </div>
                         </td>
-                        <td className="p-2 py-2.5 border-r">{(subm.score_info.max_cpu_ms / 1000).toFixed(2)}</td>
-                        <td className="p-2 py-2.5 border-r">{(subm.score_info.max_mem_kib / 1024).toFixed(1)}</td>
+                        <td className="p-2 py-2.5 border-r">{subm.score_info.exceeded_cpu ? <span>&gt; {subm.score_info.max_cpu_ms / 1000}</span> : <span>{(subm.score_info.max_cpu_ms / 1000).toFixed(2)}</span>}</td>
+                        <td className="p-2 py-2.5 border-r">{subm.score_info.exceeded_mem ? <span>&gt; {subm.score_info.max_mem_kib / 1024}</span> : <span>{(subm.score_info.max_mem_kib / 1024).toFixed(1)}</span>}</td>
                         {/* <td className="p-2 py-2.5 border-r">{subm.curr_eval ? (errorTranslations[subm.curr_eval.eval_error] ?? statusTranslations[subm.curr_eval.eval_stage]) ?? ( subm.curr_eval.eval_error ? subm.curr_eval.eval_error : subm.curr_eval.eval_stage) : "..."}</td> */}
                         <td className="p-2 py-2.5 border-r">{statusTranslations[subm.status] ?? subm.status}</td>
                         <td className="p-2 py-2.5">
