@@ -1,6 +1,6 @@
 "use client"; // Declare this as a client-side component
 
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
@@ -32,9 +32,6 @@ export default function RealTimeSubmTable({
   };
   currentPage: number;
 }) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
   const [isChangingPage, setIsChangingPage] = useState(false);
 
   // Ensure initial is always an array
@@ -45,23 +42,6 @@ export default function RealTimeSubmTable({
 
   // State to manage the list of submissions
   const [submissions, setSubmissions] = useState<SubmListEntry[]>(initialSubmissions);
-
-  // Detect page changes
-  useEffect(() => {
-    // Reset updates when page changes
-    setUpdates([]);
-    
-    // Set loading state when page changes, but don't immediately show skeleton
-    // This prevents the table width from changing during page transitions
-    setIsChangingPage(true);
-    
-    // Reset loading state after a short delay
-    const timer = setTimeout(() => {
-      setIsChangingPage(false);
-    }, 500);
-    
-    return () => clearTimeout(timer);
-  }, [currentPage]);
 
   // Fetch submissions data with a polling interval of 2 seconds
   const { data, isLoading, refetch } = useQuery(
