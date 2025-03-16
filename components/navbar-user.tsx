@@ -32,21 +32,19 @@ export default function User() {
   return (
     <div className="flex items-center gap-3">
       {!user && (
-        <Link href={`/login${redirectParam}`}>
-          <Button
-            className="font-medium gap-1 ps-4"
-            color="primary"
-            endContent={<IconChevronRight size={14} />}
-            radius="md"
-            size="sm"
-            variant="solid"
-            onPress={() => {
-              router.push(`/login${redirectParam}`);
-            }}
-          >
-            Pieslēgties
-          </Button>
-        </Link>
+        <Button
+          className="font-medium gap-1 ps-4"
+          color="primary"
+          endContent={<IconChevronRight size={14} />}
+          radius="md"
+          size="sm"
+          variant="solid"
+          onPress={() => {
+            router.push(`/login${redirectParam}`);
+          }}
+        >
+          Pieslēgties
+        </Button>
       )}
       {user && (
         <Dropdown placement="bottom-end">
