@@ -65,7 +65,7 @@ export default function RealTimeSubmTable({
       staleTime: 0,        // Consider data stale immediately
       enabled: true,       // Always enable the query
       initialData: {
-        data: initialSubmissions,
+        page: initialSubmissions,
         pagination: initialPagination
       }, // Provide initial data to prevent flash of loading state
       refetchOnReconnect: true,
@@ -104,7 +104,7 @@ export default function RealTimeSubmTable({
    */
   useEffect(() => {
     if (data) {  // Only update when we have fresh data
-      const dataArray = Array.isArray(data.data) ? data.data : [];
+      const dataArray = Array.isArray(data.page) ? data.page : [];
       
       setSubmissions((prevSubms) => {
         const updatedSubms = applyUpdatesToSubmissions(

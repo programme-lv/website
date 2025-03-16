@@ -24,45 +24,12 @@ export const listSubmissions = async (
       throw { response: { data: errorData } };
     }
 
-    const data = await response.json();
+    const parsedData = await response.json();
 
-    // For now, until the backend is updated, we'll transform the response
-    // to match the PaginatedSubmListResponse type
-    if (!data.pagination) {
-      return {
-        data: Array.isArray(data.data) ? data.data : [],
-        pagination: {
-          total: Array.isArray(data.data) ? data.data.length : 0,
-          offset,
-          limit,
-          hasMore: false
-        }
-      };
-    }
-
-    // Ensure data.data is always an array
-    if (!Array.isArray(data.data)) {
-      data.data = [];
-    }
-
-    // Ensure pagination values are valid numbers
-    if (typeof data.pagination.total !== 'number' || isNaN(data.pagination.total)) {
-      data.pagination.total = 0;
-    }
-
-    return data;
+    return parsedData.data;
   } catch (error) {
     console.error("Error fetching submissions:", error);
-    // Return a valid empty response on error
-    return {
-      data: [],
-      pagination: {
-        total: 0,
-        offset,
-        limit,
-        hasMore: false
-      }
-    };
+    throw error;
   }
 };
 

@@ -74,7 +74,7 @@ export type PrLang = {
 };
 
 export type PaginatedSubmListResponse = {
-  data: SubmListEntry[];
+  page: SubmListEntry[];
   pagination: {
     total: number;
     offset: number;
