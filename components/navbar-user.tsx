@@ -34,12 +34,12 @@ export default function User() {
       {!user && (
         <Link href={`/login${redirectParam}`}>
           <Button
-            className="bg-blue-700 font-medium text-background gap-1 ps-4"
-            color="secondary"
+            className="font-medium gap-1 ps-4"
+            color="primary"
             endContent={<IconChevronRight size={14} />}
-            radius="full"
+            radius="md"
             size="sm"
-            variant="flat"
+            variant="solid"
             onPress={() => {
               router.push(`/login${redirectParam}`);
             }}

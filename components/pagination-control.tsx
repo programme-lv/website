@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Pagination } from "@heroui/react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
@@ -19,6 +19,11 @@ export default function PaginationControl({
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [isChangingPage, setIsChangingPage] = useState(false);
+  
+  // Reset isChangingPage when currentPage changes
+  useEffect(() => {
+    setIsChangingPage(false);
+  }, [currentPage]);
   
   const handlePageChange = async (page: number) => {
     // Set loading state
@@ -39,22 +44,25 @@ export default function PaginationControl({
     
     // Navigate to the new URL
     await router.push(`${pathname}?${params.toString()}`);
-
-    setIsChangingPage(false);
+    
+    // We don't need to reset isChangingPage here as the useEffect will handle it
+    // when the currentPage prop changes after navigation
   };
 
   return (
-    <Pagination 
-      initialPage={currentPage} 
-      total={totalPages} 
-      onChange={handlePageChange}
-      className="text-sm bg-white rounded-small p-2 border-small border-divider m-0"
-      showControls
-      color="primary"
-      variant="flat"
-      size="sm"
-      page={currentPage}
-      isDisabled={isChangingPage}
-    />
+    <div className="min-h-[40px] min-w-[200px]"> {/* Add fixed minimum dimensions */}
+      <Pagination 
+        initialPage={currentPage} 
+        total={totalPages} 
+        onChange={handlePageChange}
+        className="text-sm bg-white rounded-small p-2 border-small border-divider m-0"
+        showControls
+        color="primary"
+        variant="flat"
+        size="sm"
+        page={currentPage}
+        isDisabled={isChangingPage}
+      />
+    </div>
   );
 } 

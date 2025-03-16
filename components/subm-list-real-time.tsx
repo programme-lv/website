@@ -51,7 +51,8 @@ export default function RealTimeSubmTable({
     // Reset updates when page changes
     setUpdates([]);
     
-    // Set loading state when page changes
+    // Set loading state when page changes, but don't immediately show skeleton
+    // This prevents the table width from changing during page transitions
     setIsChangingPage(true);
     
     // Reset loading state after a short delay
@@ -78,6 +79,7 @@ export default function RealTimeSubmTable({
       }, // Provide initial data to prevent flash of loading state
       refetchOnReconnect: true,
       onSettled: () => {
+        // Ensure loading state is reset when data fetching completes
         setIsChangingPage(false);
       }
     }
@@ -127,13 +129,12 @@ export default function RealTimeSubmTable({
 
   return (
     <>
-      {isChangingPage && (
-        <div className="text-sm text-gray-500 mb-4">Ielādē iesūtījumus...</div>
-      )}
-      <SubmissionTable
-        skeleton={(submissions.length === 0 || isChangingPage || isLoading)} // Show loading skeleton if no submissions are present or changing page
-        submissions={submissions} // Pass the submissions data to the table component
-      />
+      <div className="w-full">
+        <SubmissionTable
+          skeleton={(submissions.length === 0 || (isChangingPage && isLoading))} // Only show skeleton if no submissions OR both changing page AND loading
+          submissions={submissions} // Pass the submissions data to the table component
+        />
+      </div>
     </>
   );
 }

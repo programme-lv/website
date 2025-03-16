@@ -38,7 +38,7 @@ export default function SubmissionTable({ submissions, skeleton }: SubmissionTab
                     <col width="120px" />
                     <col width="120px" />
                     <col width="80px" />
-                    <col width="160px" />
+                    <col width="120px" />
                     <col width="120px" />
                 </colgroup>
                 <thead>
@@ -47,7 +47,7 @@ export default function SubmissionTable({ submissions, skeleton }: SubmissionTab
                         <th className="p-2 text-left font-normal border-r">Autors</th>
                         <th className="p-2 text-left font-normal border-r">Uzdevums</th>
                         <th className="p-2 text-left font-normal border-r">Valoda</th>
-                        <th className="p-2 text-left font-normal border-r">Rezultāts</th>
+                        <th className="p-2 text-left font-normal border-r" colSpan={2}>Rezultāts</th>
                         <th className="p-2 text-left font-normal border-r">Statuss</th>
                         <th className="p-2 text-left font-normal">Iesūtījums</th>
                     </tr>
@@ -59,7 +59,7 @@ export default function SubmissionTable({ submissions, skeleton }: SubmissionTab
                             <td className="p-2.5 py-2.5 animate-pulse border-r"><div className="bg-gray-300 rounded-sm w-full h-full text-gray-300">.</div></td>
                             <td className="p-2.5 py-2.5 animate-pulse border-r"><div className="bg-gray-300 rounded-sm w-full h-full text-gray-300">.</div></td>
                             <td className="p-2.5 py-2.5 animate-pulse border-r"><div className="bg-gray-300 rounded-sm w-full h-full text-gray-300">.</div></td>
-                            <td className="p-2.5 py-2.5 animate-pulse border-r"><div className="bg-gray-300 rounded-sm w-full h-full text-gray-300">.</div></td>
+                            <td className="p-2.5 py-2.5 animate-pulse border-r" colSpan={2}><div className="bg-gray-300 rounded-sm w-full h-full text-gray-300">.</div></td>
                             <td className="p-2.5 py-2.5 animate-pulse border-r"><div className="bg-gray-300 rounded-sm w-full h-full text-gray-300">.</div></td>
                             <td className="p-2.5 py-2.5 animate-pulse"><div className="bg-gray-300 rounded-sm w-full h-full text-gray-300">.</div></td>
                         </tr>
