@@ -4,7 +4,7 @@ import React, { Suspense, useContext, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-import WinterMountains from "@/public/winter-mountains.jpg";
+import EasterIsland from "@/public/easter-island.jpg";
 import LogoImage from "@/public/emoji-logo.png";
 import AuthForm from "./auth-form";
 
@@ -15,7 +15,7 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
     <div
       className="flex min-h-screen relative w-screen items-center justify-center overflow-hidden bg-content1 p-2 pt-16 pb-16 lg:px-8"
       style={{
-        backgroundImage: `url(${WinterMountains.src})`,
+        backgroundImage: `url(${EasterIsland.src})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
