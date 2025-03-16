@@ -131,7 +131,7 @@ export default function RealTimeSubmTable({
     <>
       <div className="w-full">
         <SubmissionTable
-          skeleton={(submissions.length === 0 || (isChangingPage && isLoading))} // Only show skeleton if no submissions OR both changing page AND loading
+          skeleton={(submissions.length === 0 || (isChangingPage || isLoading))}
           submissions={submissions} // Pass the submissions data to the table component
         />
       </div>
