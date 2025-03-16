@@ -2,6 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
+import { Pagination } from "@heroui/react";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
 import { subscribeToSubmUpdates, listSubmissions } from "@/lib/subms";
 import { SubmListEntry, SubmListSseUpdate } from "@/types/subm";
@@ -14,28 +16,64 @@ import SubmissionTable from "./submission-table";
  *
  * Props:
  * - initial: An array of initial BriefSubmission objects to populate the table.
+ * - initialPagination: Initial pagination state
+ * - onPageChange: Callback function when page changes
  */
 export default function RealTimeSubmTable({
   initial,
+  initialPagination,
 }: {
   initial: SubmListEntry[];
+  initialPagination: {
+    total: number;
+    offset: number;
+    limit: number;
+    hasMore: boolean;
+  };
 }) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const [isChangingPage, setIsChangingPage] = useState(false);
+
+  // Ensure initial is always an array
+  const initialSubmissions = Array.isArray(initial) ? initial : [];
+
   // State to hold incoming WebSocket updates
   const [updates, setUpdates] = useState<SubmListSseUpdate[]>([]);
 
   // State to manage the list of submissions
-  const [submissions, setSubmissions] = useState<SubmListEntry[]>(initial);
+  const [submissions, setSubmissions] = useState<SubmListEntry[]>(initialSubmissions);
+  
+  // Current page calculation
+  const currentPage = Math.floor(initialPagination.offset / initialPagination.limit) + 1;
+  const totalPages = Math.max(1, Math.ceil(initialPagination.total / initialPagination.limit));
 
-  // Fetch submissions data with a polling interval of 5 seconds
-  const { data } = useQuery("submissions", listSubmissions, {
-    refetchInterval: 2000,
-    refetchOnWindowFocus: true,
-    refetchOnMount: true,
-    staleTime: 0,        // Consider data stale immediately
-    enabled: true,       // Always enable the query
-    initialData: initial, // Provide initial data to prevent flash of loading state
-    refetchOnReconnect: true,
-  });
+  // Calculate display range
+  const startItem = submissions.length > 0 ? initialPagination.offset + 1 : 0;
+  const endItem = Math.min(initialPagination.offset + submissions.length, initialPagination.total || 0);
+  const totalItems = initialPagination.total || 0;
+
+  // Fetch submissions data with a polling interval of 2 seconds
+  const { data, isLoading, refetch } = useQuery(
+    ["submissions", initialPagination.offset, initialPagination.limit],
+    () => listSubmissions(initialPagination.offset, initialPagination.limit),
+    {
+      refetchInterval: 2000,
+      refetchOnWindowFocus: true,
+      refetchOnMount: true,
+      staleTime: 0,        // Consider data stale immediately
+      enabled: true,       // Always enable the query
+      initialData: {
+        data: initialSubmissions,
+        pagination: initialPagination
+      }, // Provide initial data to prevent flash of loading state
+      refetchOnReconnect: true,
+      onSettled: () => {
+        setIsChangingPage(false);
+      }
+    }
+  );
 
   /**
    * useEffect hook to subscribe to submission updates via WebSocket.
@@ -45,16 +83,19 @@ export default function RealTimeSubmTable({
   useEffect(() => {
     const unsubscribe = subscribeToSubmUpdates(
       (update: SubmListSseUpdate) => {
-        setUpdates((prev) => {
-          if (prev.length >= 10000) prev.shift(); // Remove the oldest update if limit is reached
-          return [...prev, update]; // Append the new update
-        });
+        // Only process real-time updates if we're on the first page
+        if (initialPagination.offset === 0 || 'eval_update' in update) {
+          setUpdates((prev) => {
+            if (prev.length >= 10000) prev.shift(); // Remove the oldest update if limit is reached
+            return [...prev, update]; // Append the new update
+          });
+        }
       },
     );
 
     // Cleanup subscription when the component unmounts
     return () => unsubscribe();
-  }, []);
+  }, [initialPagination.offset]);
 
   /**
    * useEffect hook to apply updates to the submissions list whenever
@@ -63,21 +104,76 @@ export default function RealTimeSubmTable({
    */
   useEffect(() => {
     if (data) {  // Only update when we have fresh data
+      const dataArray = Array.isArray(data.data) ? data.data : [];
+      
       setSubmissions((prevSubms) => {
         const updatedSubms = applyUpdatesToSubmissions(
-          data,           // Always use the fresh data instead of fallback
-          updates
+          dataArray,           // Always use the fresh data instead of fallback
+          updates,
+          initialPagination.offset
         );
         return sortSubmissions(updatedSubms);
       });
     }
-  }, [data, updates]);
+  }, [data, updates, initialPagination.offset]);
+
+  // Handle page change
+  const handlePageChange = (page: number) => {
+    // Set loading state
+    setIsChangingPage(true);
+    
+    // Create new URLSearchParams
+    const params = new URLSearchParams(searchParams.toString());
+    
+    // Update or add the page parameter
+    params.set('page', page.toString());
+    
+    // Keep the limit parameter if it exists
+    if (params.has('limit')) {
+      params.set('limit', params.get('limit')!);
+    } else {
+      params.set('limit', initialPagination.limit.toString());
+    }
+    
+    // Navigate to the new URL
+    router.push(`${pathname}?${params.toString()}`);
+    
+    // Clear updates when changing pages
+    setUpdates([]);
+  };
 
   return (
-    <SubmissionTable
-      skeleton={submissions.length ? false : true} // Show loading skeleton if no submissions are present
-      submissions={submissions} // Pass the submissions data to the table component
-    />
+    <>
+      <div className="flex justify-between items-center mb-4">
+        <div className="text-sm text-gray-500">
+          {isChangingPage || isLoading ? (
+            "Ielādē iesūtījumus..."
+          ) : totalItems === 0 ? (
+            "Nav iesūtījumu"
+          ) : (
+            `Rāda ${startItem}-${endItem} no ${totalItems} iesūtījumiem`
+          )}
+        </div>
+        {totalPages > 1 && (
+          <Pagination 
+            initialPage={currentPage} 
+            total={totalPages} 
+            onChange={handlePageChange}
+            className="text-sm"
+            showControls
+            color="primary"
+            variant="bordered"
+            size="sm"
+            isDisabled={isChangingPage || isLoading}
+            page={currentPage}
+          />
+        )}
+      </div>
+      <SubmissionTable
+        skeleton={(submissions.length === 0 || isChangingPage || isLoading)} // Show loading skeleton if no submissions are present or changing page
+        submissions={submissions} // Pass the submissions data to the table component
+      />
+    </>
   );
 }
 
@@ -111,12 +207,16 @@ function sortSubmissions(submissions: SubmListEntry[]): SubmListEntry[] {
 function applyUpdatesToSubmissions(
   submissions: SubmListEntry[],
   updates: SubmListSseUpdate[],
+  offset: number = 0
 ): SubmListEntry[] {
   for(let update of updates) {
     if ('subm_created' in update && update.subm_created !== null) {  // Check for null
-      const newSubmission = update.subm_created;  // No need for type assertion
-      if (!submissions.some(s => s.subm_uuid === newSubmission.subm_uuid)) {
-        submissions.push(newSubmission);
+      // Only add new submissions if we're on the first page
+      if (offset === 0) {
+        const newSubmission = update.subm_created;  // No need for type assertion
+        if (!submissions.some(s => s.subm_uuid === newSubmission.subm_uuid)) {
+          submissions.push(newSubmission);
+        }
       }
     }
     else if ('eval_update' in update) {  // Simplified condition

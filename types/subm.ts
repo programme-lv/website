@@ -72,3 +72,13 @@ export type PrLang = {
   display: string;
   monaco_id: string;
 };
+
+export type PaginatedSubmListResponse = {
+  data: SubmListEntry[];
+  pagination: {
+    total: number;
+    offset: number;
+    limit: number; // number of items per page
+    hasMore: boolean;
+  };
+};

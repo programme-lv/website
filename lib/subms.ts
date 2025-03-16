@@ -1,27 +1,69 @@
 import { getJwt } from "./jwt";
 import { API_HOST } from "./config";
 import { Execution } from "@/types/exec";
-import { DetailedSubmView, SubmListEntry, SubmListSseUpdate } from "@/types/subm";
+import { DetailedSubmView, SubmListEntry, SubmListSseUpdate, PaginatedSubmListResponse } from "@/types/subm";
 import { MaxScore, MaxScorePerTask } from "@/types/scores";
 
-export const listSubmissions = async (): Promise<SubmListEntry[]> => {
-  const response = await fetch(`${API_HOST}/subm`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Headers": "*",
-      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-      "Access-Control-Allow-Origin": "*",
-    },
-  });
+export const listSubmissions = async (
+  offset: number = 0,
+  limit: number = 30
+): Promise<PaginatedSubmListResponse> => {
+  try {
+    const response = await fetch(`${API_HOST}/subm?offset=${offset}&limit=${limit}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Headers": "*",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+        "Access-Control-Allow-Origin": "*",
+      },
+    });
 
-  const data = await response.json();
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw { response: { data: errorData } };
+    }
 
-  if (!response.ok) {
-    throw { response: { data } };
+    const data = await response.json();
+
+    // For now, until the backend is updated, we'll transform the response
+    // to match the PaginatedSubmListResponse type
+    if (!data.pagination) {
+      return {
+        data: Array.isArray(data.data) ? data.data : [],
+        pagination: {
+          total: Array.isArray(data.data) ? data.data.length : 0,
+          offset,
+          limit,
+          hasMore: false
+        }
+      };
+    }
+
+    // Ensure data.data is always an array
+    if (!Array.isArray(data.data)) {
+      data.data = [];
+    }
+
+    // Ensure pagination values are valid numbers
+    if (typeof data.pagination.total !== 'number' || isNaN(data.pagination.total)) {
+      data.pagination.total = 0;
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Error fetching submissions:", error);
+    // Return a valid empty response on error
+    return {
+      data: [],
+      pagination: {
+        total: 0,
+        offset,
+        limit,
+        hasMore: false
+      }
+    };
   }
-
-  return data.data;
 };
 
 // New function to create a submission
