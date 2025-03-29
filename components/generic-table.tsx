@@ -18,6 +18,7 @@ type GenericTableProps<T> = {
   skeleton?: boolean;
   skeletonRowCount?: number;
   className?: string;
+  rowHeight?: "normal" | "compact"; // Add rowHeight prop
 };
 
 export default function GenericTable<T>({ 
@@ -26,9 +27,10 @@ export default function GenericTable<T>({
   keyExtractor, 
   skeleton = false, 
   skeletonRowCount = 5,
-  className = ""
+  className = "",
+  rowHeight = "normal" // Default to normal height
 }: GenericTableProps<T>) {
-  // Preprocess the columns to handle spanning correctly
+  // Process columns to handle colSpans correctly
   const processedColumns = React.useMemo(() => {
     const result = [...columns];
     
@@ -48,6 +50,9 @@ export default function GenericTable<T>({
     
     return result;
   }, [columns]);
+
+  // Define row height based on prop
+  const rowHeightClass = rowHeight === "compact" ? "h-[50px]" : "h-[76px]";
 
   return (
     <table className={cn("rounded-sm table-fixed", className)}>
@@ -80,7 +85,7 @@ export default function GenericTable<T>({
       <tbody>
         {skeleton ? (
           Array.from({ length: skeletonRowCount }).map((_, i) => (
-            <tr key={`skeleton-${i}`} className={cn("h-[76px]", { "border-b border-divider": i !== skeletonRowCount - 1 }, { "bg-gray-50": i % 2 === 0 })}>
+            <tr key={`skeleton-${i}`} className={cn(rowHeightClass, { "border-b border-divider": i !== skeletonRowCount - 1 }, { "bg-gray-50": i % 2 === 0 })}>
               {columns.map((col, j) => (
                 <td 
                   key={`skeleton-cell-${i}-${j}`} 
@@ -94,7 +99,7 @@ export default function GenericTable<T>({
           ))
         ) : (
           data.map((item, i) => (
-            <tr key={keyExtractor(item)} className={cn("h-[76px]", { "border-b border-divider": i !== data.length - 1 }, { "bg-gray-50": i % 2 === 0 })}>
+            <tr key={keyExtractor(item)} className={cn(rowHeightClass, { "border-b border-divider": i !== data.length - 1 }, { "bg-gray-50": i % 2 === 0 })}>
               {columns.map((col, j) => (
                 <td 
                   key={`cell-${keyExtractor(item)}-${col.key}`} 
