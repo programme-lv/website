@@ -1,7 +1,8 @@
 import { SubmListScoreBar } from "./subm-table-score-bars";
-import { cn } from "./cn";
 import { SubmListEntry } from "@/types/subm";
 import { TextLink } from "./text-link";
+import GenericTable, { Column } from "./generic-table";
+import { DateTimeCell } from "./datetime-cell";
 
 export const statusTranslations: Record<string, string> = {
     waiting: "Gaida",
@@ -23,139 +24,108 @@ export const errorTranslations: Record<string, string> = {
 
 type SubmissionTableProps = {
     submissions: SubmListEntry[];
-    skeleton: boolean;
+    skeleton?: boolean;
 }
 
-export default function SubmissionTable({ submissions, skeleton }: SubmissionTableProps) {
-
-    if (skeleton) {
-        return (
-            <table className="w-full rounded-sm table-fixed">
-                <colgroup>
-                    <col width="190px" />
-                    <col width="140px" />
-                    <col width="140px" />
-                    <col width="120px" />
-                    <col width="120px" />
-                    <col width="80px" />
-                    <col width="100px" />
-                    <col width="100px" />
-                    <col width="120px" />
-                    <col width="120px" />
-                </colgroup>
-                <thead>
-                    <tr className="border-b border-gray-300 text-gray-900 text-sm">
-                        <th className="p-2 text-left font-normal border-r">Datums & laiks</th>
-                        <th className="p-2 text-left font-normal border-r">Autors</th>
-                        <th className="p-2 text-left font-normal border-r">Uzdevums</th>
-                        <th className="p-2 text-left font-normal border-r">Valoda</th>
-                        <th className="p-2 text-left font-normal border-r" colSpan={2}>Rezultāts</th>
-                        <th className="p-2 text-left font-normal border-r">CPU laiks</th>
-                        <th className="p-2 text-left font-normal border-r">Atmiņa</th>
-                        <th className="p-2 text-left font-normal border-r">Statuss</th>
-                        <th className="p-2 text-left font-normal">Iesūtījums</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {Array.from({ length: 30 }).map((_, i) => (
-                        <tr key={i} className={cn(" h-[76px]",{ "border-b border-divider": i !== 29 }, { "bg-gray-50": i % 2 === 0 })}>
-                            <td className="p-2.5 py-2.5 animate-pulse border-r"><div className="bg-gray-300 rounded-sm w-full h-full text-gray-300">.</div></td>
-                            <td className="p-2.5 py-2.5 animate-pulse border-r"><div className="bg-gray-300 rounded-sm w-full h-full text-gray-300">.</div></td>
-                            <td className="p-2.5 py-2.5 animate-pulse border-r"><div className="bg-gray-300 rounded-sm w-full h-full text-gray-300">.</div></td>
-                            <td className="p-2.5 py-2.5 animate-pulse border-r"><div className="bg-gray-300 rounded-sm w-full h-full text-gray-300">.</div></td>
-                            <td className="p-2.5 py-2.5 animate-pulse border-r" colSpan={2}><div className="bg-gray-300 rounded-sm w-full h-full text-gray-300">.</div></td>
-                            <td className="p-2.5 py-2.5 animate-pulse border-r"><div className="bg-gray-300 rounded-sm w-full h-full text-gray-300">.</div></td>
-                            <td className="p-2.5 py-2.5 animate-pulse border-r"><div className="bg-gray-300 rounded-sm w-full h-full text-gray-300">.</div></td>
-                            <td className="p-2.5 py-2.5 animate-pulse border-r"><div className="bg-gray-300 rounded-sm w-full h-full text-gray-300">.</div></td>
-                            <td className="p-2.5 py-2.5 animate-pulse"><div className="bg-gray-300 rounded-sm w-full h-full text-gray-300">.</div></td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        );
-    }
+export default function SubmissionTable({ submissions, skeleton = false }: SubmissionTableProps) {
+    const columns: Column<SubmListEntry>[] = [
+        {
+            key: "created_at",
+            header: "Datums & laiks",
+            width: "190px",
+            render: (item) => <DateTimeCell dateTime={item.created_at} showTime={true} />
+        },
+        {
+            key: "username",
+            header: "Autors",
+            width: "140px",
+            render: (item) => <TextLink href={`/users/${item.username}`}>{item.username}</TextLink>
+        },
+        {
+            key: "task_name",
+            header: "Uzdevums",
+            width: "140px",
+            render: (item) => <TextLink href={`/tasks/${item.task_id}`}>{item.task_name}</TextLink>
+        },
+        {
+            key: "pr_lang_name",
+            header: "Valoda",
+            width: "120px",
+            render: (item) => item.pr_lang_name
+        },
+        {
+            key: "score_bar",
+            header: "Rezultāts",
+            width: "120px",
+            headerColSpan: 2,
+            render: (item) => (
+                <SubmListScoreBar
+                    green={item.score_info.score_bar.green}
+                    red={item.score_info.score_bar.red}
+                    gray={item.score_info.score_bar.gray}
+                    yellow={item.score_info.score_bar.yellow}
+                    purple={item.score_info.score_bar.purple}
+                />
+            )
+        },
+        {
+            key: "score",
+            header: "",
+            width: "80px",
+            render: (item) => (
+                <div className="flex flex-wrap gap-x-1 gap-y-1 min-w-20">
+                    <span>{item.score_info.received}</span>
+                    <span>/</span>
+                    <span>{item.score_info.possible}</span>
+                </div>
+            )
+        },
+        {
+            key: "cpu_time",
+            header: "CPU laiks [s]",
+            width: "120px",
+            render: (item) => (
+                item.score_info.exceeded_cpu ? 
+                <span>&gt; {item.score_info.max_cpu_ms / 1000}</span> : 
+                <span>{(item.score_info.max_cpu_ms / 1000).toFixed(2)}</span>
+            )
+        },
+        {
+            key: "memory",
+            header: "Atmiņa [MiB]",
+            width: "120px",
+            render: (item) => (
+                item.score_info.exceeded_mem ? 
+                <span>&gt; {item.score_info.max_mem_kib / 1024}</span> : 
+                <span>{(item.score_info.max_mem_kib / 1024).toFixed(1)}</span>
+            )
+        },
+        {
+            key: "status",
+            header: "Statuss",
+            width: "120px",
+            render: (item) => statusTranslations[item.status] ?? item.status
+        },
+        {
+            key: "subm_uuid",
+            header: "Iesūtījums",
+            width: "120px",
+            render: (item) => (
+                <TextLink href={`/submissions/${item.subm_uuid}`}>
+                    {item.subm_uuid.slice(0, 8)}
+                </TextLink>
+            )
+        }
+    ];
 
     return (
-        <table className="w-full rounded-sm table-fixed">
-            <colgroup>
-                <col width="190px" />
-                <col width="140px" />
-                <col width="140px" />
-                <col width="120px" />
-                <col width="120px" />
-                <col width="80px" />
-                <col width="100px" />
-                <col width="100px" />
-                <col width="120px" />
-                <col width="120px" />
-            </colgroup>
-            <thead>
-                <tr className="border-b border-gray-300 text-gray-900 text-sm">
-                    <th className="p-2 text-left font-normal border-r">Datums & laiks</th>
-                    <th className="p-2 text-left font-normal border-r">Autors</th>
-                    <th className="p-2 text-left font-normal border-r">Uzdevums</th>
-                    <th className="p-2 text-left font-normal border-r">Valoda</th>
-                    <th className="p-2 text-left font-normal border-r" colSpan={2}>Rezultāts</th>
-                    <th className="p-2 text-left font-normal border-r">CPU laiks [s]</th>
-                    <th className="p-2 text-left font-normal border-r">Atmiņa [MiB]</th>
-                    <th className="p-2 text-left font-normal border-r">Statuss</th>
-                    <th className="p-2 text-left font-normal">Iesūtījums</th>
-                </tr>
-            </thead>
-            <tbody>
-                {submissions.map((subm, i) => (
-                    <tr key={subm.subm_uuid} className={cn("h-[76px]",{ "border-b border-divider": i !== submissions.length - 1 }, { "bg-gray-50": i % 2 === 0 })}>
-                        <td className="p-2 py-2.5 border-r"><SubmTableDateTimeCell dateTime={subm.created_at} /></td>
-                        <td className="p-2 py-2.5 border-r"><TextLink href={`/users/${subm.username}`}>{subm.username}</TextLink></td>
-                        <td className="p-2 py-2.5 border-r">
-                            <TextLink href={`/tasks/${subm.task_id}`}>
-                                {subm.task_name}
-                            </TextLink>
-                        </td>
-                        <td className="p-2 py-2.5 border-r">{subm.pr_lang_name}</td>
-                        <td className="p-2 py-2.5 border-r">
-                            <SubmListScoreBar
-                                green={subm.score_info.score_bar.green}
-                                red={subm.score_info.score_bar.red}
-                                gray={subm.score_info.score_bar.gray}
-                                yellow={subm.score_info.score_bar.yellow}
-                                purple={subm.score_info.score_bar.purple}
-                            />
-                        </td>
-                        <td className="p-2 py-2.5 border-r">
-                            <div className="flex flex-wrap gap-x-1 gap-y-1 min-w-20">
-                                <span>{subm.score_info.received}</span>
-                                <span>/</span>
-                                <span>{subm.score_info.possible}</span>
-                            </div>
-                        </td>
-                        <td className="p-2 py-2.5 border-r">{subm.score_info.exceeded_cpu ? <span>&gt; {subm.score_info.max_cpu_ms / 1000}</span> : <span>{(subm.score_info.max_cpu_ms / 1000).toFixed(2)}</span>}</td>
-                        <td className="p-2 py-2.5 border-r">{subm.score_info.exceeded_mem ? <span>&gt; {subm.score_info.max_mem_kib / 1024}</span> : <span>{(subm.score_info.max_mem_kib / 1024).toFixed(1)}</span>}</td>
-                        {/* <td className="p-2 py-2.5 border-r">{subm.curr_eval ? (errorTranslations[subm.curr_eval.eval_error] ?? statusTranslations[subm.curr_eval.eval_stage]) ?? ( subm.curr_eval.eval_error ? subm.curr_eval.eval_error : subm.curr_eval.eval_stage) : "..."}</td> */}
-                        <td className="p-2 py-2.5 border-r">{statusTranslations[subm.status] ?? subm.status}</td>
-                        <td className="p-2 py-2.5">
-                            <TextLink href={`/submissions/${subm.subm_uuid}`}>
-                                {subm.subm_uuid.slice(0, 8)}
-                            </TextLink>
-                        </td>
-                    </tr>
-                ))}
-            </tbody>
-        </table>
-    )
-}
-
-function SubmTableDateTimeCell({ dateTime }: { dateTime: string }) {
-    const time = new Date(dateTime);
-    let date = time.toLocaleString("lv").split(" ")[0];
-    let timeStr = time.toLocaleString("lv").split(" ")[1];
-    if (date.split(".")[0].length < 2) {
-        date = "0" + date;
-    }
-    return (
-        <div className="flex flex-wrap gap-x-2 gap-y-1 min-w-20">
-            <span>{date}</span>
-            <span>{timeStr}</span>
-        </div>
-    )
+        <GenericTable
+            data={submissions}
+            columns={columns}
+            keyExtractor={(item) => item.subm_uuid}
+            skeleton={skeleton}
+            skeletonRowCount={30}
+            className="w-full"
+        />
+    );
 }
