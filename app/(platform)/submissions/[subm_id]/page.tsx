@@ -14,6 +14,8 @@ import TestDetailsModal, { full_verdicts, verdict_colors } from "@/components/te
 import { Execution, TestRes } from "@/types/exec";
 import { DetailedSubmView } from "@/types/subm";
 import GenericTable, { Column } from "@/components/generic-table";
+import { renderMdLite } from "@/lib/render-md";
+import "katex/dist/katex.min.css";
 
 
 export default function SubmissionPage() {
@@ -149,8 +151,10 @@ function TestResultTable({ subm, exec }: { subm: DetailedSubmView, exec: Executi
     onOpen();
   };
 
+  const testgroups = subm.curr_eval.test_groups.map((tg, idx) => ({...tg, id:idx+1}));
+  const test_results = exec.test_res.map(x=>({...x, id:x.id+1}));
 
-  const columns: Column<typeof exec.test_res[0]>[] = [
+  const columns: Column<typeof test_results[0]>[] = [
     {
       key: "id",
       header: "Tests #",
@@ -162,24 +166,18 @@ function TestResultTable({ subm, exec }: { subm: DetailedSubmView, exec: Executi
       header: "Grupa",
       width: "110px",
       render: (test) => {
-        const tgIndices = subm.curr_eval.test_groups
-          .map((tg, i) => {
-            const inGroup = tg.tg_tests.some(
-              ([start, end]) => start <= test.id && end >= test.id
-            );
-            return inGroup ? i + 1 : null;
-          })
-          .filter(x => x !== null);
-        return tgIndices.map(x => `${x}.`).join(", ");
+
+        const tgs = testgroups.filter(tg=>tg.tg_tests.some(x=>x[0]<=test.id&&x[1]>=test.id));
+        return tgs.map(x => `${x.id}.`).join(", ");
       }
     },
     {
       key: "verdict",
       header: "Vērtējums",
       width: "170px",
-      render: (_, index) => (
-        <span className={`whitespace-nowrap ${verdict_colors[subm.curr_eval.verdicts[index]] || ''}`}>
-          {full_verdicts[subm.curr_eval.verdicts[index]] || 'Nezināms'}
+      render: (test) => (
+        <span className={`whitespace-nowrap ${verdict_colors[subm.curr_eval.verdicts[test.id-1]] || ''}`}>
+          {full_verdicts[subm.curr_eval.verdicts[test.id-1]] || 'Nezināms'}
         </span>
       )
     },
@@ -214,21 +212,31 @@ function TestResultTable({ subm, exec }: { subm: DetailedSubmView, exec: Executi
   ];
 
   return (
-    <>
-      <GenericTable
-        data={exec.test_res}
-        columns={columns}
-        keyExtractor={(test) => test.id.toString()}
-        className="w-full max-w-[650px]"
-        rowHeight="compact"
-      />
-      
+    <div>
+      <div className="flex flex-col gap-4">
+
+        {subm.curr_eval.subtasks.map((subtask, i)=>(
+          <div key={subtask.description}>
+            <p className="font-normal text-default-foreground pl-1">
+              {i+1}. apakšuzdevums: "<span dangerouslySetInnerHTML={{ __html: renderMdLite(subtask.description).replaceAll("<p>", "").replaceAll("</p>", "") }} />"
+            </p>
+            <GenericTable
+              data={test_results.filter(test=>subtask.st_tests.some(x=>x[0]<=test.id&&x[1]>=test.id))}
+              columns={columns}
+              keyExtractor={(test) => subtask.description + "_" + test.id.toString()}
+              className="w-full max-w-[650px]"
+              rowHeight="compact"
+            />
+          </div>
+        ))}
+      </div>
+
       <TestDetailsModal
         isOpen={isOpen}
         onOpenChange={onOpenChange}
         test={selectedTest}
         submission={subm}
       />
-    </>
+    </div>
   );
 }
