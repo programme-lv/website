@@ -15,11 +15,11 @@ import {
 } from "react";
 
 import { User } from "@/types/proglv";
-import { whoami } from "@/lib/auth";
+import whoami from "@/lib/user/whoami";
 
 type AuthContextType = {
-  user: User | null | undefined;
-  setUser: Dispatch<SetStateAction<User | null | undefined>>;
+  user: User | null;
+  setUser: Dispatch<SetStateAction<User | null>>;
 };
 
 export const AuthContext = createContext<AuthContextType>({
@@ -30,14 +30,15 @@ export const AuthContext = createContext<AuthContextType>({
 export interface ProvidersProps {
   children: ReactNode;
   themeProps?: ThemeProviderProps;
+  propsUser: User | null;
 }
 
 const queryClient = new QueryClient();
 
-export function Providers({ children, themeProps }: ProvidersProps) {
+export function Providers({ children, themeProps, propsUser }: ProvidersProps) {
   const router = useRouter();
 
-  const [user, setUser] = useState<User | null | undefined>(undefined);
+  const [user, setUser] = useState<User | null>(propsUser);
 
   const refreshUser = async () => {
     const res = await whoami();

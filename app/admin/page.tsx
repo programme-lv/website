@@ -9,6 +9,7 @@ export default async function TaskListServerComponent() {
   if (!admin) {
     return <div>Jums nav piekļuves pie šīs lapas</div>
   }
+
   const tasks = await listTasks();
 
   return (

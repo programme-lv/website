@@ -1,11 +1,9 @@
 import "@/styles/globals.css";
 import { Metadata, Viewport } from "next";
 import clsx from "clsx";
-
 import { siteConfig } from "@/config/site";
-import { fontSans } from "@/config/fonts";
-
 import { Providers } from "./providers";
+import whoami from "@/lib/user/whoami";
 
 export const metadata: Metadata = {
   title: {
@@ -25,11 +23,15 @@ export const viewport: Viewport = {
   ],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+
+  const res = await whoami();
+  const user = res.data;
+
   return (
     <html suppressHydrationWarning lang="en" style={{ backgroundColor: "rgb(250,250,250)", fontFamily: "'Ubuntu Sans','Ubuntu', sans-serif", fontSize: "1.1rem" }}>
       <head>
@@ -44,6 +46,7 @@ export default function RootLayout({
         )}
       >
         <Providers
+          propsUser={user}
           themeProps={{
             attribute: "class",
             defaultTheme: "light",

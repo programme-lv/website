@@ -53,27 +53,3 @@ export const logoutUser = async (): Promise<ApiResponse<User>> => {
   return response.json();
 };
 
-export const getUserRole = async (): Promise<
-  ApiResponse<"guest" | "user" | "admin">
-> => {
-  const response = await fetch(`${API_HOST}/role`, {
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-  });
-
-  return response.json();
-};
-
-
-export const whoami = async (): Promise<ApiResponse<User | null>> => {
-  const response = await fetch(`${API_HOST}/whoami`, {
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-  });
-
-  return response.json();
-};
