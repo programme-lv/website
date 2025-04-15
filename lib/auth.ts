@@ -33,7 +33,7 @@ export const loginUser = async (
 ): Promise<ApiResponse<string>> => {
   const username = input.username;
   const password = input.password;
-  const response = await fetch(`${API_HOST}/auth/login`, {
+  const response = await fetch(`${API_HOST}/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username, password }),
