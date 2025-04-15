@@ -2,7 +2,6 @@ import { User } from "@/types/proglv";
 
 import { ApiResponse } from "./api-response";
 import { API_HOST } from "./config";
-import { getJwt } from "./jwt";
 
 type RegisterUserInput = {
   username: string;
@@ -18,6 +17,7 @@ export const registerUser = async (
   const response = await fetch(`${API_HOST}/users`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
+    credentials: "include",
     body: JSON.stringify(input),
   });
 
@@ -31,13 +31,23 @@ type LoginUserInput = {
 
 export const loginUser = async (
   input: LoginUserInput
-): Promise<ApiResponse<string>> => {
+): Promise<ApiResponse<User>> => {
   const username = input.username;
   const password = input.password;
   const response = await fetch(`${API_HOST}/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
+    credentials: "include",
     body: JSON.stringify({ username, password }),
+  });
+
+  return response.json();
+};
+
+export const logoutUser = async (): Promise<ApiResponse<User>> => {
+  const response = await fetch(`${API_HOST}/logout`, {
+    method: "POST",
+    credentials: "include",
   });
 
   return response.json();
@@ -46,12 +56,23 @@ export const loginUser = async (
 export const getUserRole = async (): Promise<
   ApiResponse<"guest" | "user" | "admin">
 > => {
-  const jwt = getJwt()
   const response = await fetch(`${API_HOST}/role`, {
     headers: {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${jwt}`,
     },
+    credentials: "include",
+  });
+
+  return response.json();
+};
+
+
+export const whoami = async (): Promise<ApiResponse<User>> => {
+  const response = await fetch(`${API_HOST}/whoami`, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
   });
 
   return response.json();

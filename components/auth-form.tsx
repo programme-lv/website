@@ -5,11 +5,11 @@ import { useSearchParams } from "next/navigation";
 import { AuthContext } from "@/app/providers";
 import { registerUser, loginUser } from "@/lib/auth";
 import Alert from "@/components/alert";
-import { setJwt } from "@/lib/jwt";
 import { Button, Input, Divider } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import Link from "next/link";
 import { Suspense } from "react";
+import { User } from "@/types/proglv";
 
 export default function AuthForm({ type }: { type: "login" | "register" }) {
   const searchParams = useSearchParams();
@@ -32,7 +32,6 @@ export default function AuthForm({ type }: { type: "login" | "register" }) {
     },
     onSuccess: async (response) => {
       if (response.status === "success") {
-        authContext.refresh();
         setIsRedirecting(true);
         loginMutation.mutate({ username, password });
       } else {
@@ -50,11 +49,18 @@ export default function AuthForm({ type }: { type: "login" | "register" }) {
     },
     onSuccess: async (response) => {
       if (response.status === "success") {
-        const token = response.data;
+        const user = response.data;
 
-        setJwt(token);
-        authContext.refresh();
+        authContext.setUser({
+          uuid: user.uuid,
+          username: user.username,
+          email: user.email,
+          firstname: user.firstname,
+          lastname: user.lastname,
+        } as User)
+
         setIsRedirecting(true);
+
         if (redirectParam) router.push(redirectParam);
         else router.push("/tasks");
       } else {

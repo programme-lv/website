@@ -1,4 +1,3 @@
-import { getJwt } from "./jwt";
 import { API_HOST } from "./config";
 import { Execution } from "@/types/exec";
 import { DetailedSubmView, SubmListEntry, SubmListSseUpdate, PaginatedSubmListResponse } from "@/types/subm";
@@ -40,14 +39,12 @@ export const createSubmission = async (
   programmingLangId: string,
   taskCodeId: string,
 ): Promise<SubmListEntry> => {
-  const jwt = getJwt();
-
   const response = await fetch(`${API_HOST}/subm`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${jwt}`,
     },
+    credentials: "include",
     body: JSON.stringify({
       submission,
       username,

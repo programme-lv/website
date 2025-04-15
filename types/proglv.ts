@@ -52,8 +52,8 @@ type User = {
   uuid: string;
   username: string;
   email: string;
-  firstname: string;
-  lastname: string;
+  firstname: string | null;
+  lastname: string | null;
 };
 
 type EvalStateUpdate = {

@@ -9,12 +9,11 @@ import {
   DropdownTrigger,
 } from "@heroui/react";
 import { IconChevronRight, IconLogout, IconUser } from "@tabler/icons-react";
-import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
 
-import { removeJwt } from "@/lib/jwt";
 import { AuthContext } from "@/app/providers";
 import { useRouter } from "next/navigation";
+import { loginUser, logoutUser } from "@/lib/auth";
 
 export default function User() {
   const router = useRouter();
@@ -81,10 +80,14 @@ export default function User() {
             <DropdownItem
               key="logout"
               color="warning"
-              onPress={() => {
-                removeJwt();
+              onPress={async () => {
                 sessionStorage.clear();
-                authContext.refresh();
+                const res = await logoutUser();
+                if (res.status === "success") {
+                  authContext.setUser(null);
+                } else {
+                  alert("Kļūda: " + res.message);
+                }
               }}
             >
               <div className="flex gap-2 items-center justify-between">
