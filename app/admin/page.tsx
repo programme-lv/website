@@ -1,9 +1,14 @@
 export const dynamic = 'force-dynamic'
 
+import { isAdmin } from "@/lib/dal";
 import { listTasks } from "@/lib/tasks";
 import Link from "next/link";
 
 export default async function TaskListServerComponent() {
+  const admin = await isAdmin()
+  if (!admin) {
+    return <div>Jums nav piekļuves pie šīs lapas</div>
+  }
   const tasks = await listTasks();
 
   return (

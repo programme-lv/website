@@ -2,6 +2,7 @@ import { User } from "@/types/proglv";
 
 import { ApiResponse } from "./api-response";
 import { API_HOST } from "./config";
+import { getJwt } from "./jwt";
 
 type RegisterUserInput = {
   username: string;
@@ -12,7 +13,7 @@ type RegisterUserInput = {
 };
 
 export const registerUser = async (
-  input: RegisterUserInput,
+  input: RegisterUserInput
 ): Promise<ApiResponse<User>> => {
   const response = await fetch(`${API_HOST}/users`, {
     method: "POST",
@@ -29,7 +30,7 @@ type LoginUserInput = {
 };
 
 export const loginUser = async (
-  input: LoginUserInput,
+  input: LoginUserInput
 ): Promise<ApiResponse<string>> => {
   const username = input.username;
   const password = input.password;
@@ -37,6 +38,20 @@ export const loginUser = async (
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username, password }),
+  });
+
+  return response.json();
+};
+
+export const getUserRole = async (): Promise<
+  ApiResponse<"guest" | "user" | "admin">
+> => {
+  const jwt = getJwt()
+  const response = await fetch(`${API_HOST}/role`, {
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${jwt}`,
+    },
   });
 
   return response.json();
