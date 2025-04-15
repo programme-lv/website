@@ -67,7 +67,7 @@ export const getUserRole = async (): Promise<
 };
 
 
-export const whoami = async (): Promise<ApiResponse<User>> => {
+export const whoami = async (): Promise<ApiResponse<User | null>> => {
   const response = await fetch(`${API_HOST}/whoami`, {
     headers: {
       "Content-Type": "application/json",
