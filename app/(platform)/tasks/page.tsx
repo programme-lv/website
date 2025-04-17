@@ -2,7 +2,7 @@ export const revalidate = 120; // 2 minutes
 
 import React from "react";
 
-import { listTasks } from "@/lib/tasks";
+import { listTasks } from "@/lib/task/tasks";
 import Layout from "@/components/layout";
 
 import { TaskList } from "./task-list";

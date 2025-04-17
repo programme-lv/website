@@ -1,6 +1,6 @@
 import { Task } from "@/types/task";
-import { ApiResponse } from "./api-response";
-import { API_HOST } from "./config";
+import { ApiResponse } from "../api-response";
+import { API_HOST } from "../config";
 
 export const getTaskById = async (
   taskId: string,
@@ -37,3 +37,32 @@ export const listTasks = async (): Promise<ApiResponse<Task[]>> => {
 
   return response.json();
 };
+
+export type UpdateStatementRequest = {
+  story: string;
+  input: string;
+  output: string;
+  notes: string;
+  scoring: string;
+  talk: string;
+  example: string;
+};
+
+export const updateTaskStatement = async (
+  taskId: string,
+  data: UpdateStatementRequest
+): Promise<ApiResponse<null>> => {
+  const response = await fetch(`${API_HOST}/tasks/${taskId}/statements/lv`, {
+    method: "PUT",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Error updating task statement for ID: ${taskId}`);
+  }
+
+  console.log(response);
+  return response.json();
+};
+

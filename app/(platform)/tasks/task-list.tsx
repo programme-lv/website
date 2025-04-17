@@ -5,7 +5,7 @@ import { useQuery } from "react-query";
 import Link from "next/link";
 
 import Alert from "@/components/alert";
-import { listTasks } from "@/lib/tasks";
+import { listTasks } from "@/lib/task/tasks";
 import TaskCard from "@/components/task-list-card";
 import { Task } from "@/types/task";
 import { AuthContext } from "@/app/providers";

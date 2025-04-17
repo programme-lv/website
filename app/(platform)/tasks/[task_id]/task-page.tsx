@@ -33,7 +33,7 @@ import {
 import MonacoEditor from "@monaco-editor/react";
 import { useQuery, useQueryClient } from "react-query";
 
-import { getTaskById } from "@/lib/tasks";
+import { getTaskById } from "@/lib/task/tasks";
 import {
 	Example,
 	MarkdownStatement,

@@ -1,7 +1,7 @@
 export const revalidate = 120; // 2 minutes
 
 import Layout from "@/components/layout";
-import { getTaskById } from "@/lib/tasks";
+import { getTaskById } from "@/lib/task/tasks";
 
 import TaskDetailsPage from "./task-page";
 import { Toaster } from 'react-hot-toast';
