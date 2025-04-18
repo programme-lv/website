@@ -71,7 +71,7 @@ export default function SubmissionTable({ submissions, skeleton = false }: Submi
         {
             key: "score",
             header: "",
-            width: "80px",
+            width: "100px",
             render: (item) => (
                 <div className="flex flex-wrap gap-x-1 gap-y-1 min-w-20">
                     <span>{item.score_info.received}</span>
@@ -87,7 +87,7 @@ export default function SubmissionTable({ submissions, skeleton = false }: Submi
             render: (item) => (
                 item.score_info.exceeded_cpu ? 
                 <span>&gt; {item.score_info.max_cpu_ms / 1000}</span> : 
-                <span>{(item.score_info.max_cpu_ms / 1000).toFixed(2)}</span>
+                <span>{(item.score_info.max_cpu_ms / 1000).toFixed(3)}</span>
             )
         },
         {

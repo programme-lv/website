@@ -9,6 +9,7 @@ export type Column<T> = {
   colSpan?: number;
   headerColSpan?: number;
   skipRender?: boolean; // Used for columns that are spanned by others
+  align?: "left" | "right" | "center";
 };
 
 type GenericTableProps<T> = {
@@ -73,7 +74,7 @@ export default function GenericTable<T>({
             return (
               <th 
                 key={`header-${col.key}`} 
-                className={cn("p-2 text-left font-normal", { "border-r": i !== columns.length - 1 })}
+                className={cn("p-2 text-left font-medium", { "border-r": i !== columns.length - 1 })}
                 colSpan={col.headerColSpan}
               >
                 {col.header}
@@ -103,7 +104,7 @@ export default function GenericTable<T>({
               {columns.map((col, j) => (
                 <td 
                   key={`cell-${keyExtractor(item)}-${col.key}`} 
-                  className={cn("p-2 py-2.5", { "border-r": j !== columns.length - 1 })}
+                  className={cn("p-2 py-2.5", { "border-r": j !== columns.length - 1 }, { "text-right": col.align === "right" }, { "text-center": col.align === "center" })}
                   colSpan={col.colSpan}
                 >
                   {col.render(item, i)}
