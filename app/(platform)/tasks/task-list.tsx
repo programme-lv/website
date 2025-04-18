@@ -38,16 +38,16 @@ export function TaskList(props: { tasks: Task[] }) {
         {tasks && tasks.length > 0 ? (
           tasks.map((task) => (
             <Link
-              key={task.published_task_id}
+              key={task.short_task_id}
               className="contents"
-              href={`/tasks/${task.published_task_id}`}
+              href={`/tasks/${task.short_task_id}`}
               prefetch={true}
             >
               {userMaxScores && (
-                <TaskCard key={task.published_task_id} {...task} user_max_score={userMaxScores[task.published_task_id]}/>
+                <TaskCard key={task.short_task_id} {...task} user_max_score={userMaxScores[task.short_task_id]}/>
               )}
               {!userMaxScores && (
-                <TaskCard key={task.published_task_id} {...task} />
+                <TaskCard key={task.short_task_id} {...task} />
               )}
             </Link>
           ))

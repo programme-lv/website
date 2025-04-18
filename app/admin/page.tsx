@@ -24,7 +24,7 @@ export default async function AdminPage() {
             {
               key: "id",
               header: "Uzdevuma ID",
-              render: (task) => task.published_task_id
+              render: (task) => task.short_task_id
             },
             {
               key: "name",
@@ -35,7 +35,7 @@ export default async function AdminPage() {
               key: "action",
               header: "Darbība",
               render: (task) => (
-                <Link href={`/admin/task/${task.published_task_id}`}>
+                <Link href={`/admin/task/${task.short_task_id}`}>
                   <button className="bg-blue-500 text-sm text-white p-2 rounded">
                     Rediģēt
                   </button>
@@ -43,7 +43,7 @@ export default async function AdminPage() {
               ),
             }
           ]}
-          keyExtractor={(task) => task.published_task_id}
+          keyExtractor={(task) => task.short_task_id}
           className="w-full"
         />
       </div>

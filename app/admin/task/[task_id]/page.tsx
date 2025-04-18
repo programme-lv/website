@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic'
 import { getTaskById } from "@/lib/task/tasks";
 import TaskEditForm from "./TaskEditForm";
 import { isAdmin } from "@/lib/dal";

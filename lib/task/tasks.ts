@@ -4,6 +4,7 @@ import { Task } from "@/types/task";
 import { ApiResponse } from "../api-response";
 import { API_HOST } from "../config";
 import { cookies } from "next/headers";
+import { revalidateTag } from "next/cache";
 
 export const getTaskById = async (
   taskId: string,
@@ -16,6 +17,9 @@ export const getTaskById = async (
       "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
       "Access-Control-Allow-Origin": "*",
     },
+    next: {
+      tags: [`task-${taskId}`]
+    }
   });
 
   if (!response.ok) {
@@ -62,13 +66,17 @@ export const updateTaskStatement = async (
       "Cookie": (await cookies()).toString(),
     },
     body: JSON.stringify(data),
+    next: {
+      tags: [`task-${taskId}`]
+    }
   });
 
   if (!response.ok) {
     throw new Error(`Error updating task statement for ID: ${taskId}`);
   }
 
-  console.log(response);
+  revalidateTag(`task-${taskId}`);
+
   return response.json();
 };
 
@@ -81,8 +89,37 @@ export const uploadTaskImage = async (taskId: string, image: File): Promise<ApiR
     headers: {
       "Cookie": (await cookies()).toString(),
     },
+    next: {
+      tags: [`task-${taskId}`]
+    },
     body: formData,
   });
 
+  revalidateTag(`task-${taskId}`);
+
   return response.json();
 };
+
+
+export const deleteTaskImage = async (taskId: string, s3Uri: string): Promise<ApiResponse<null>> => {
+  // URL encode the S3 URI since it may contain characters like '/'
+  const encodedS3Uri = encodeURIComponent(s3Uri);
+
+  const response = await fetch(`${API_HOST}/tasks/${taskId}/images/${encodedS3Uri}`, {
+    method: "DELETE",
+    headers: {
+      "Cookie": (await cookies()).toString(),
+    },
+    next: {
+      tags: [`task-${taskId}`]
+    }
+  });
+
+  if (!response.ok) {
+    throw new Error(`Error deleting task image for task ID: ${taskId}, S3 URI: ${s3Uri}`);
+  } 
+
+  revalidateTag(`task-${taskId}`);
+
+  return response.json();
+}

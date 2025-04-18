@@ -2,10 +2,11 @@
 
 import { useState, useRef } from "react";
 import { MarkdownStatement, Task } from "@/types/task";
-import { updateTaskStatement, UpdateStatementRequest, uploadTaskImage } from "@/lib/task/tasks";
+import { updateTaskStatement, UpdateStatementRequest, uploadTaskImage, deleteTaskImage } from "@/lib/task/tasks";
 import { useRouter } from "next/navigation";
 import { TextLink } from "@/components/text-link";
 import GenericTable from "@/components/generic-table";
+import { revalidatePath } from "next/cache";
 
 interface TaskEditFormProps {
   task: Task;
@@ -53,10 +54,10 @@ export default function TaskEditForm({ task }: TaskEditFormProps) {
         example: formData.example || "",
       };
 
-      await updateTaskStatement(task.published_task_id, data);
+      await updateTaskStatement(task.short_task_id, data);
 
       // Refresh the page to show updated data
-      router.refresh();
+      await router.refresh();
 
       alert("Task statement updated successfully!");
     } catch (err) {
@@ -80,13 +81,13 @@ export default function TaskEditForm({ task }: TaskEditFormProps) {
       setIsUploadingImage(true);
       setUploadError(null);
       
-      const response = await uploadTaskImage(task.published_task_id, file);
+      const response = await uploadTaskImage(task.short_task_id, file);
       if(response.status !== "success") {
         alert("Failed to upload image: " + response.message);
         return;
       }
 
-      router.refresh();
+      await router.refresh();
 
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
@@ -104,9 +105,31 @@ export default function TaskEditForm({ task }: TaskEditFormProps) {
   };
 
   const handleDeleteImage = async (s3Uri: string) => {
-    // prompt for confirmation
-    // then call the delete endpoint
-    alert("not implemented");
+    if (!confirm("Are you sure you want to delete this image?")) {
+      return;
+    }
+
+    try {
+      setIsUploadingImage(true); // Reuse the loading state for deletion
+      setUploadError(null);
+      
+      const response = await deleteTaskImage(task.short_task_id, s3Uri);
+      if(response.status !== "success") {
+        alert("Failed to delete image: " + response.message);
+        return;
+      }
+
+      await router.refresh();
+      
+      alert("Image deleted successfully!");
+    } catch (err) {
+      console.error("Error deleting image:", err);
+      setUploadError(
+        err instanceof Error ? err.message : "An unknown error occurred"
+      );
+    } finally {
+      setIsUploadingImage(false);
+    }
   }
 
   return (
@@ -226,7 +249,7 @@ export default function TaskEditForm({ task }: TaskEditFormProps) {
           </div>
         </div>
         
-        <div className="p-2 bg-white">
+        <div className="p-2 bg-white max-w-2xl">
           <GenericTable
             data={task.statement_images || []}
             className="w-full"
@@ -247,13 +270,14 @@ export default function TaskEditForm({ task }: TaskEditFormProps) {
               {
                 key: "url",
                 header: "URL",
+                width: "100px",
                 render: (item) => (
                   <TextLink
                     href={item.http_url}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    this
+                    here
                   </TextLink>
                 ),
               },
@@ -261,11 +285,13 @@ export default function TaskEditForm({ task }: TaskEditFormProps) {
                 key: "width",
                 header: "Width [px]",
                 render: (item) => item.width_px,
+                width: "100px",
               },
               {
                 key: "height",
                 header: "Height [px]",
                 render: (item) => item.height_px,
+                width: "100px",
               },
               {
                 key: "delete",
@@ -275,6 +301,7 @@ export default function TaskEditForm({ task }: TaskEditFormProps) {
                     Delete
                   </button>
                 ),
+                width: "100px",
               }
             ]}
             keyExtractor={(item) => item.http_url}

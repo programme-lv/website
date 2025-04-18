@@ -1,5 +1,5 @@
 type Task = {
-    published_task_id: string;
+    short_task_id: string;
     task_full_name: string;
     memory_limit_megabytes: number;
     cpu_time_limit_seconds: number;
