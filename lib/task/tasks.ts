@@ -56,7 +56,7 @@ export const updateTaskStatement = async (
   data: UpdateStatementRequest
 ): Promise<ApiResponse<null>> => {
   const response = await fetch(`${API_HOST}/tasks/${taskId}/statements/lv`, {
-    method: "PUT",
+    method: "PATCH",
     headers: {
       "Content-Type": "application/json",
       "Cookie": (await cookies()).toString(),
