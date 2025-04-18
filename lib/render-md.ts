@@ -5,6 +5,8 @@ import remarkRehype from "remark-rehype";
 import rehypeKatex from "rehype-katex";
 import rehypeStringify from "rehype-stringify";
 import remarkGfm from "remark-gfm";
+import rehypeRaw from 'rehype-raw'
+import rehypeSanitize from 'rehype-sanitize'
 import { Node } from "unist";
 import { Element } from "hast";
 import { visit } from "unist-util-visit";
@@ -96,7 +98,7 @@ function rehypeAddClasses() {
                   tagName: "figcaption",
                   properties: { className: ["text-sm", "text-center", "mt-2"] },
                   children: [
-                    { type: "text", value: node.properties.alt || "Image" },
+                    { type: "text", value: node.properties.alt || "" },
                   ],
                 },
               ],
@@ -149,7 +151,9 @@ export default function renderMd(md: string, images: StatementImage[] = []): str
     .use(remarkParse)
     .use(remarkGfm)
     .use(remarkMath)
-    .use(remarkRehype)
+    .use(remarkRehype, {allowDangerousHtml: true})
+    .use(rehypeRaw)
+    .use(rehypeSanitize)
     .use(rehypeKatex)
     .use(rehypeAddClasses)
     .use(() => rehypeFixImages(images))
@@ -166,7 +170,9 @@ export function renderMdLite(md: string): string {
     .use(remarkParse)
     .use(remarkGfm)
     .use(remarkMath)
-    .use(remarkRehype)
+    .use(remarkRehype, {allowDangerousHtml: true})
+    .use(rehypeRaw)
+    .use(rehypeSanitize)
     .use(rehypeKatex)
     // .use(rehypeAddClasses)
     .use(rehypeRemoveImages) // Add the image removal plugin
