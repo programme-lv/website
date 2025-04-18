@@ -77,7 +77,7 @@ function rehypeAddClasses() {
         case "img":
           // node.properties.className = ["w-2/3"]
           node.properties.style =
-            "margin-top: .3rem; margin-bottom: .3rem; width: 450px; object-fit:contain;";
+            "margin-top: .3rem; margin-bottom: .3rem; object-fit:contain;";
           // node.properties.loading = "lazy";
           // Wrap the image in a figure and add a caption
           if (parent && parent.children) {
@@ -124,10 +124,13 @@ function rehypeFixImages(images: StatementImage[]) {
         if (img) {
           node.properties.src = img.http_url;
           const aspect_ratio = img.width_px / img.height_px;
-          // if (img.width_em) {
-          //   node.properties.style += `width: ${img.width_em}ch;`;
-          //   node.properties.style += `aspect-ratio: ${aspect_ratio};`;
-          node.properties.style += `width: ${img.width_px}px;`;
+
+          // add width if not already present
+          if(!node.properties.width) {
+            node.properties.style += `width: ${img.width_px}px;`;
+          }
+
+          // always add aspect ratio of the image to prevent layout shift
           node.properties.style += `aspect-ratio: ${aspect_ratio};`;
         }
       }

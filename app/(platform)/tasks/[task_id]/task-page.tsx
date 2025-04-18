@@ -7,6 +7,7 @@ import React, {
 	Dispatch,
 	SetStateAction,
 	useContext,
+	useMemo,
 } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Resizable } from "re-resizable";
@@ -105,7 +106,7 @@ export default function TaskDetailsPage(props: { task: Task }) {
 	);
 }
 
-function LeftSide({ task }: { task: Task }) {
+const LeftSide = React.memo(function LeftSideInner({ task }: { task: Task }) {
 	return (
 		<div
 			className="h-full max-h-full w-full overflow-hidden rounded-small border-small border-divider p-2 bg-white overflow-y-auto"
@@ -128,7 +129,7 @@ function LeftSide({ task }: { task: Task }) {
 			</div>
 		</div>
 	);
-}
+});
 
 function CodeBlockWithTitle({ title, content }: { title: string; content: string }) {
     return (
@@ -139,7 +140,27 @@ function CodeBlockWithTitle({ title, content }: { title: string; content: string
     )
 }
 
-function MdView({
+type Sections = {
+	story: string;
+	input: string;
+	output: string;
+	scoring: string;
+	talk: string;
+	example: string;
+}
+
+function renderSections(md_statement: MarkdownStatement, statement_images: StatementImage[]): Sections {
+	return {
+		story: renderMd(md_statement.story, statement_images),
+		input: renderMd(md_statement.input, statement_images),
+		output: renderMd(md_statement.output, statement_images),
+		scoring: md_statement.scoring ? renderMd(md_statement.scoring, statement_images) : "",
+		talk: md_statement.talk ? renderMd(md_statement.talk, statement_images) : "",
+		example: md_statement.example ? renderMd(md_statement.example, statement_images) : ""
+	}
+}
+
+const MdView = React.memo(function MdViewInner({
 	md_statement,
 	examples,
 	vis_inp_st_inputs,
@@ -156,30 +177,8 @@ function MdView({
 	statement_subtasks?: SubtaskOverview[];
 	statement_images?: StatementImage[];
 }) {
-	// const [sections, setSections] = useState({
-	// 	story: md_statement.story,
-	// 	input: md_statement.input,
-	// 	output: md_statement.output,
-	// 	scoring: md_statement.scoring ? md_statement.scoring : ""
-	// });
-
-	// useEffect(() => {
-	// 	setSections({
-	// 		story: renderMd(md_statement.story),
-	// 		input: renderMd(md_statement.input), 
-	// 		output: renderMd(md_statement.output),
-	// 		scoring: md_statement.scoring ? renderMd(md_statement.scoring) : ""
-	// 	});
-	// }, [md_statement]);
-
-	const sections = {
-		story: renderMd(md_statement.story, statement_images),
-		input: renderMd(md_statement.input, statement_images),
-		output: renderMd(md_statement.output, statement_images),
-		scoring: md_statement.scoring ? renderMd(md_statement.scoring, statement_images) : "",
-		talk: md_statement.talk ? renderMd(md_statement.talk, statement_images) : "",
-		example: md_statement.example ? renderMd(md_statement.example, statement_images) : ""
-	}
+	const sections = useMemo(() => renderSections(md_statement, statement_images ?? []), [JSON.stringify(md_statement), JSON.stringify(statement_images)]);
+	const subtaskDescriptions = useMemo(() => statement_subtasks?.map((subtask) => renderMdLite(subtask.descriptions["lv"])) ?? [], [JSON.stringify(statement_subtasks)]);
 
 	return (
 		<div className="w-full flex-grow flex flex-col gap-4 my-2 px-3 pb-4">
@@ -251,7 +250,7 @@ function MdView({
 										<td className="px-2 py-1.5">
 											<div
 												dangerouslySetInnerHTML={{
-													__html: renderMdLite(subtask.descriptions["lv"]),
+													__html: subtaskDescriptions[i],
 												}}
 											/>
 										</td>
@@ -301,8 +300,7 @@ function MdView({
 			)}
 		</div>
 	);
-}
-
+});
 
 function Section({ title, content }: { title: string; content: string }) {
 	return (
