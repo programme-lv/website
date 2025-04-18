@@ -48,7 +48,7 @@ export default function RealTimeSubmTable({
     ["submissions", initialPagination.offset, initialPagination.limit],
     () => listSubmissions(initialPagination.offset, initialPagination.limit),
     {
-      refetchInterval: 2000,
+      refetchInterval: 10000,
       refetchOnWindowFocus: true,
       refetchOnMount: true,
       staleTime: 0,        // Consider data stale immediately
