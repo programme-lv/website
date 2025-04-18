@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { MarkdownStatement, Task } from "@/types/task";
-import { updateTaskStatement, UpdateStatementRequest } from "@/lib/task/tasks";
+import { updateTaskStatement, UpdateStatementRequest, uploadTaskImage } from "@/lib/task/tasks";
 import { useRouter } from "next/navigation";
 import { TextLink } from "@/components/text-link";
 import GenericTable from "@/components/generic-table";
@@ -14,7 +14,10 @@ interface TaskEditFormProps {
 export default function TaskEditForm({ task }: TaskEditFormProps) {
   const router = useRouter();
   const [isSubmittingStatement, setIsSubmittingStatement] = useState(false);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const task_md = task.default_md_statement;
   const [formData, setFormData] = useState<Partial<MarkdownStatement>>({
     story: task_md?.story || "",
@@ -63,6 +66,40 @@ export default function TaskEditForm({ task }: TaskEditFormProps) {
       );
     } finally {
       setIsSubmittingStatement(false);
+    }
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || e.target.files.length === 0) return;
+    
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append("image", file);
+    
+    try {
+      setIsUploadingImage(true);
+      setUploadError(null);
+      
+      const response = await uploadTaskImage(task.published_task_id, file);
+      if(response.status !== "success") {
+        alert("Failed to upload image: " + response.message);
+        return;
+      }
+
+      router.refresh();
+
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+      
+      alert("Image uploaded successfully!");
+    } catch (err) {
+      console.error("Error uploading image:", err);
+      setUploadError(
+        err instanceof Error ? err.message : "An unknown error occurred"
+      );
+    } finally {
+      setIsUploadingImage(false);
     }
   };
 
@@ -154,6 +191,35 @@ export default function TaskEditForm({ task }: TaskEditFormProps) {
         </div>
 
         <h2 className="text-lg font-bold mb-4">Statement Images</h2>
+        
+        {uploadError && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            {uploadError}
+          </div>
+        )}
+        
+        <div className="mb-4">
+          <div className="flex items-center">
+            <input
+              ref={fileInputRef}
+              type="file"
+              id="image-upload"
+              accept="image/jpeg,image/png,image/gif,image/webp,image/svg+xml,image/bmp,image/tiff"
+              onChange={handleImageUpload}
+              className="hidden"
+            />
+            <label
+              htmlFor="image-upload"
+              className={`p-2 text-sm bg-green-500 text-white rounded hover:bg-green-600 cursor-pointer ${isUploadingImage ? "opacity-70 cursor-not-allowed" : ""}`}
+            >
+              {isUploadingImage ? "Uploading..." : "Upload New Image"}
+            </label>
+            <span className="ml-2 text-sm text-gray-600">
+              Supported formats: JPG, PNG, GIF, WebP, SVG, BMP, TIFF
+            </span>
+          </div>
+        </div>
+        
         <div className="p-2 bg-white">
           <GenericTable
             data={task.statement_images || []}

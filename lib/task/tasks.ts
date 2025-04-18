@@ -72,3 +72,17 @@ export const updateTaskStatement = async (
   return response.json();
 };
 
+export const uploadTaskImage = async (taskId: string, image: File): Promise<ApiResponse<null>> => {
+  const formData = new FormData();
+  formData.append("image", image);
+
+  const response = await fetch(`${API_HOST}/tasks/${taskId}/images`, {
+    method: "POST",
+    headers: {
+      "Cookie": (await cookies()).toString(),
+    },
+    body: formData,
+  });
+
+  return response.json();
+};
