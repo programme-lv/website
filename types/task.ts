@@ -58,6 +58,7 @@ type StatementImage = {
     http_url: string;
     width_px: number;
     height_px: number;
+    s3_uri: string;
 };
 
 export type {

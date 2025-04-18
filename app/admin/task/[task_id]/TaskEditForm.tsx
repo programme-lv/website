@@ -103,6 +103,12 @@ export default function TaskEditForm({ task }: TaskEditFormProps) {
     }
   };
 
+  const handleDeleteImage = async (s3Uri: string) => {
+    // prompt for confirmation
+    // then call the delete endpoint
+    alert("not implemented");
+  }
+
   return (
     <div className="container py-2 mx-auto">
       <h1 className="text-2xl font-bold mb-4">
@@ -182,7 +188,7 @@ export default function TaskEditForm({ task }: TaskEditFormProps) {
 
         <div className="flex justify-end">
           <button
-            className={`px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 ${isSubmittingStatement ? "opacity-70 cursor-not-allowed" : ""}`}
+            className={`p-2 bg-blue-700 text-white rounded hover:bg-blue-800 ${isSubmittingStatement ? "opacity-70 cursor-not-allowed" : ""}`}
             onClick={handleSave}
             disabled={isSubmittingStatement}
           >
@@ -210,7 +216,7 @@ export default function TaskEditForm({ task }: TaskEditFormProps) {
             />
             <label
               htmlFor="image-upload"
-              className={`p-2 text-sm bg-green-500 text-white rounded hover:bg-green-600 cursor-pointer ${isUploadingImage ? "opacity-70 cursor-not-allowed" : ""}`}
+              className={`p-2 bg-blue-700 text-white rounded hover:bg-blue-800 cursor-pointer ${isUploadingImage ? "opacity-70 cursor-not-allowed" : ""}`}
             >
               {isUploadingImage ? "Uploading..." : "Upload New Image"}
             </label>
@@ -225,6 +231,14 @@ export default function TaskEditForm({ task }: TaskEditFormProps) {
             data={task.statement_images || []}
             className="w-full"
             columns={[
+              {
+                key: "preview",
+                header: "Preview",
+                width: "100px",
+                render: (item) => (
+                  <img src={item.http_url} alt={item.filename} className="w-24" />
+                ),
+              },
               {
                 key: "filename",
                 header: "Filename",
@@ -253,6 +267,15 @@ export default function TaskEditForm({ task }: TaskEditFormProps) {
                 header: "Height [px]",
                 render: (item) => item.height_px,
               },
+              {
+                key: "delete",
+                header: "Delete",
+                render: (item) => (
+                  <button className="p-2 px-3 text-sm bg-red-700 text-white rounded hover:bg-red-800" onClick={() => handleDeleteImage(item.s3_uri)}>
+                    Delete
+                  </button>
+                ),
+              }
             ]}
             keyExtractor={(item) => item.http_url}
           />
