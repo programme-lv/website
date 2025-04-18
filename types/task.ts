@@ -13,6 +13,7 @@ type Task = {
     origin_notes?: Record<string, string>;
     visible_input_subtasks?: VisibleInputSubtask[];
     statement_subtasks?: SubtaskOverview[];
+    statement_images?: StatementImage[];
 };
 
 type SubtaskOverview = {
@@ -50,13 +51,11 @@ type MarkdownStatement = {
     scoring?: string;
     talk?: string;
     example?: string;
-    images?: MdImg[];
 };
 
-type MdImg = {
-    img_uuid: string;
+type StatementImage = {
+    filename: string;
     http_url: string;
-    width_em: number;
     width_px: number;
     height_px: number;
 };
@@ -69,5 +68,5 @@ export type {
     TestWithOnlyInput,
     Example,
     MarkdownStatement,
-    MdImg,
+    StatementImage,
 };
