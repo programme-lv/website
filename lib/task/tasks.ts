@@ -1,6 +1,9 @@
+'use server';
+
 import { Task } from "@/types/task";
 import { ApiResponse } from "../api-response";
 import { API_HOST } from "../config";
+import { cookies } from "next/headers";
 
 export const getTaskById = async (
   taskId: string,
@@ -54,7 +57,10 @@ export const updateTaskStatement = async (
 ): Promise<ApiResponse<null>> => {
   const response = await fetch(`${API_HOST}/tasks/${taskId}/statements/lv`, {
     method: "PUT",
-    headers: {"Content-Type": "application/json"},
+    headers: {
+      "Content-Type": "application/json",
+      "Cookie": (await cookies()).toString(),
+    },
     body: JSON.stringify(data),
   });
 
