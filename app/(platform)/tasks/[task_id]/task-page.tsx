@@ -37,6 +37,7 @@ import { getTaskById } from "@/lib/task/tasks";
 import {
 	Example,
 	MarkdownStatement,
+	StatementImage,
 	SubtaskOverview,
 	Task,
 	VisibleInputSubtask,
@@ -115,6 +116,7 @@ function LeftSide({ task }: { task: Task }) {
 				<Divider className="my-1" />
 				{task.default_md_statement && (
 					<MdView
+						statement_images={task.statement_images}
 						cpu_time_limit_seconds={task.cpu_time_limit_seconds}
 						examples={task.examples}
 						md_statement={task.default_md_statement}
@@ -144,6 +146,7 @@ function MdView({
 	cpu_time_limit_seconds,
 	memory_limit_megabytes,
 	statement_subtasks,
+	statement_images,
 }: {
 	md_statement: MarkdownStatement;
 	examples?: Example[];
@@ -151,6 +154,7 @@ function MdView({
 	cpu_time_limit_seconds?: number;
 	memory_limit_megabytes?: number;
 	statement_subtasks?: SubtaskOverview[];
+	statement_images?: StatementImage[];
 }) {
 	// const [sections, setSections] = useState({
 	// 	story: md_statement.story,
@@ -169,12 +173,12 @@ function MdView({
 	// }, [md_statement]);
 
 	const sections = {
-		story: renderMd(md_statement.story, md_statement.images),
-		input: renderMd(md_statement.input, md_statement.images),
-		output: renderMd(md_statement.output, md_statement.images),
-		scoring: md_statement.scoring ? renderMd(md_statement.scoring, md_statement.images) : "",
-		talk: md_statement.talk ? renderMd(md_statement.talk, md_statement.images) : "",
-		example: md_statement.example ? renderMd(md_statement.example, md_statement.images) : ""
+		story: renderMd(md_statement.story, statement_images),
+		input: renderMd(md_statement.input, statement_images),
+		output: renderMd(md_statement.output, statement_images),
+		scoring: md_statement.scoring ? renderMd(md_statement.scoring, statement_images) : "",
+		talk: md_statement.talk ? renderMd(md_statement.talk, statement_images) : "",
+		example: md_statement.example ? renderMd(md_statement.example, statement_images) : ""
 	}
 
 	return (

@@ -8,7 +8,7 @@ import remarkGfm from "remark-gfm";
 import { Node } from "unist";
 import { Element } from "hast";
 import { visit } from "unist-util-visit";
-import { MdImg } from "@/types/task";
+import { StatementImage } from "@/types/task";
 
 // Plugin to add Tailwind classes
 function rehypeAddClasses() {
@@ -114,22 +114,19 @@ function rehypeAddClasses() {
 }
 
 // assigns them the correct urls, widths
-function rehypeFixImages(images: MdImg[]) {
+function rehypeFixImages(images: StatementImage[]) {
   return (tree: Node) => {
     visit(tree, "element", (node: Element, index, parent: Element) => {
       if (node.tagName === "img") {
-        const img = images.find((i) => i.img_uuid === node.properties.src);
+        const img = images.find((i) => i.filename === node.properties.src);
         if (img) {
           node.properties.src = img.http_url;
           const aspect_ratio = img.width_px / img.height_px;
-          if (img.width_em) {
-            node.properties.style += `width: ${img.width_em}ch;`;
-            node.properties.style += `aspect-ratio: ${aspect_ratio};`;
-
-          } else {
-            node.properties.style += `width: ${img.width_px}px;`;
-            node.properties.style += `aspect-ratio: ${aspect_ratio};`;
-          }
+          // if (img.width_em) {
+          //   node.properties.style += `width: ${img.width_em}ch;`;
+          //   node.properties.style += `aspect-ratio: ${aspect_ratio};`;
+          node.properties.style += `width: ${img.width_px}px;`;
+          node.properties.style += `aspect-ratio: ${aspect_ratio};`;
         }
       }
     });
@@ -147,7 +144,7 @@ function rehypeRemoveImages() {
   };
 }
 
-export default function renderMd(md: string, images: MdImg[] = []): string {
+export default function renderMd(md: string, images: StatementImage[] = []): string {
   const result = unified()
     .use(remarkParse)
     .use(remarkGfm)
