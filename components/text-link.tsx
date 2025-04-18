@@ -1,7 +1,14 @@
 import Link from "next/link";
 
-export function TextLink({ children, href }: { children: React.ReactNode, href: string }) {
+type TextLinkProps = {
+    children: React.ReactNode;
+    href: string;
+    target?: string;
+    rel?: string;
+}
+
+export function TextLink({ children, href, target, rel }: TextLinkProps) {
     return (
-        <Link href={href} className="text-blue-900 hover:underline underline-offset-2 hover:decoration-blue-900/90">{children}</Link>
+        <Link href={href} className="text-blue-900 hover:underline underline-offset-2 hover:decoration-blue-900/90" target={target} rel={rel}>{children}</Link>
     )
 }
