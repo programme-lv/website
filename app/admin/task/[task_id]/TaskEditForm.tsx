@@ -39,6 +39,18 @@ export default function TaskEditForm({ task }: TaskEditFormProps) {
     example: calculateRows(task_md?.example || ""),
   });
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault();
+        handleSave();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [formData]);
+
   function calculateRows(text: string): number {
     const lineCount = (text.match(/\n/g) || []).length + 1;
     return Math.max(3, Math.min(40, lineCount));
@@ -162,7 +174,10 @@ export default function TaskEditForm({ task }: TaskEditFormProps) {
         </div>
       )}
 
-      <h2 className="text-lg font-bold mb-4">Statement</h2>
+      <h2 className="text-lg font-bold mb-1">Statement</h2>
+      <div className="text-sm text-gray-600 mb-3">
+        Pro tip: Press Ctrl+S to save the statement
+      </div>
       <div className="space-y-4">
         <div>
           <label className="block text-sm font-medium mb-1">Story</label>
