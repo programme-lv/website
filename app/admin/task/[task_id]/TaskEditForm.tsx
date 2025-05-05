@@ -1,12 +1,11 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { MarkdownStatement, Task } from "@/types/task";
 import { updateTaskStatement, UpdateStatementRequest, uploadTaskImage, deleteTaskImage } from "@/lib/task/tasks";
 import { useRouter } from "next/navigation";
 import { TextLink } from "@/components/text-link";
 import GenericTable from "@/components/generic-table";
-import { revalidatePath } from "next/cache";
 
 interface TaskEditFormProps {
   task: Task;
@@ -30,12 +29,31 @@ export default function TaskEditForm({ task }: TaskEditFormProps) {
     example: task_md?.example || "",
   });
 
+  const [textareaRows, setTextareaRows] = useState({
+    story: calculateRows(task_md?.story || ""),
+    input: calculateRows(task_md?.input || ""),
+    output: calculateRows(task_md?.output || ""),
+    notes: calculateRows(task_md?.notes || ""),
+    scoring: calculateRows(task_md?.scoring || ""),
+    talk: calculateRows(task_md?.talk || ""),
+    example: calculateRows(task_md?.example || ""),
+  });
+
+  function calculateRows(text: string): number {
+    const lineCount = (text.match(/\n/g) || []).length + 1;
+    return Math.max(3, Math.min(40, lineCount));
+  }
+
   const handleChange =
     (field: keyof Omit<MarkdownStatement, "images">) =>
       (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setFormData({
           ...formData,
           [field]: e.target.value,
+        });
+        setTextareaRows({
+          ...textareaRows,
+          [field]: calculateRows(e.target.value)
         });
       };
 
@@ -149,63 +167,70 @@ export default function TaskEditForm({ task }: TaskEditFormProps) {
         <div>
           <label className="block text-sm font-medium mb-1">Story</label>
           <textarea
-            className="w-full border rounded p-2 h-40"
+            className="w-full border rounded p-2"
             value={formData.story}
             onChange={handleChange("story")}
+            rows={textareaRows.story}
           />
         </div>
 
         <div>
           <label className="block text-sm font-medium mb-1">Input</label>
           <textarea
-            className="w-full border rounded p-2 h-24"
+            className="w-full border rounded p-2"
             value={formData.input}
             onChange={handleChange("input")}
+            rows={textareaRows.input}
           />
         </div>
 
         <div>
           <label className="block text-sm font-medium mb-1">Output</label>
           <textarea
-            className="w-full border rounded p-2 h-24"
+            className="w-full border rounded p-2"
             value={formData.output}
             onChange={handleChange("output")}
+            rows={textareaRows.output}
           />
         </div>
 
         <div>
           <label className="block text-sm font-medium mb-1">Notes</label>
           <textarea
-            className="w-full border rounded p-2 h-24"
+            className="w-full border rounded p-2"
             value={formData.notes}
             onChange={handleChange("notes")}
+            rows={textareaRows.notes}
           />
         </div>
 
         <div>
           <label className="block text-sm font-medium mb-1">Scoring</label>
           <textarea
-            className="w-full border rounded p-2 h-24"
+            className="w-full border rounded p-2"
             value={formData.scoring}
             onChange={handleChange("scoring")}
+            rows={textareaRows.scoring}
           />
         </div>
 
         <div>
           <label className="block text-sm font-medium mb-1">Talk</label>
           <textarea
-            className="w-full border rounded p-2 h-24"
+            className="w-full border rounded p-2"
             value={formData.talk}
             onChange={handleChange("talk")}
+            rows={textareaRows.talk}
           />
         </div>
 
         <div>
           <label className="block text-sm font-medium mb-1">Example</label>
           <textarea
-            className="w-full border rounded p-2 h-24"
+            className="w-full border rounded p-2"
             value={formData.example}
             onChange={handleChange("example")}
+            rows={textareaRows.example}
           />
         </div>
 
