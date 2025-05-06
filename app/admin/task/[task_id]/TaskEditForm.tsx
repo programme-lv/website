@@ -293,6 +293,7 @@ export default function TaskEditForm({ task }: TaskEditFormProps) {
           <GenericTable
             data={task.statement_images || []}
             className="w-full"
+            delimitedRows={[2, 5]}
             columns={[
               {
                 key: "preview",

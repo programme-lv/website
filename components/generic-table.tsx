@@ -20,6 +20,7 @@ type GenericTableProps<T> = {
   skeletonRowCount?: number;
   className?: string;
   rowHeight?: "normal" | "compact"; // Add rowHeight prop
+  delimitedRows?: number[]; // after these rows, make the horizontal line thicker
 };
 
 export default function GenericTable<T>({ 
@@ -29,7 +30,8 @@ export default function GenericTable<T>({
   skeleton = false, 
   skeletonRowCount = 5,
   className = "",
-  rowHeight = "normal" // Default to normal height
+  rowHeight = "normal", // Default to normal height
+  delimitedRows = [] // Default to empty array
 }: GenericTableProps<T>) {
   // Process columns to handle colSpans correctly
   const processedColumns = React.useMemo(() => {
@@ -86,7 +88,10 @@ export default function GenericTable<T>({
       <tbody>
         {skeleton ? (
           Array.from({ length: skeletonRowCount }).map((_, i) => (
-            <tr key={`skeleton-${i}`} className={cn(rowHeightClass, { "border-b border-divider": i !== skeletonRowCount - 1 }, { "bg-gray-50": i % 2 === 0 })}>
+            <tr key={`skeleton-${i}`} className={cn(rowHeightClass, { 
+                "border-b border-divider": i !== skeletonRowCount - 1,
+                "border-b-2 border-gray-300": delimitedRows.includes(i)
+              }, { "bg-gray-50": i % 2 === 0 })}>
               {columns.map((col, j) => (
                 <td 
                   key={`skeleton-cell-${i}-${j}`} 
@@ -100,7 +105,10 @@ export default function GenericTable<T>({
           ))
         ) : (
           data.map((item, i) => (
-            <tr key={keyExtractor(item)} className={cn(rowHeightClass, { "border-b border-divider": i !== data.length - 1 }, { "bg-gray-50": i % 2 === 0 })}>
+            <tr key={keyExtractor(item)} className={cn(rowHeightClass, { 
+                "border-b border-divider": i !== data.length - 1,
+                "border-b-2 border-gray-300": delimitedRows.includes(i)
+              }, { "bg-gray-50": i % 2 === 0 })}>
               {columns.map((col, j) => (
                 <td 
                   key={`cell-${keyExtractor(item)}-${col.key}`} 

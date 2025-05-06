@@ -154,6 +154,10 @@ function TestResultTable({ subm, exec }: { subm: DetailedSubmView, exec: Executi
   const testgroups = subm.curr_eval.test_groups.map((tg, idx) => ({...tg, id:idx+1}));
   const test_results = exec.test_res.map(x=>({...x, id:x.id+1}));
 
+  function test_testgroups(test: TestRes) {
+    return testgroups.filter(tg=>tg.tg_tests.some(x=>x[0]<=test.id&&x[1]>=test.id));
+  }
+
   const columns: Column<typeof test_results[0]>[] = [
     {
       key: "id",
@@ -166,8 +170,7 @@ function TestResultTable({ subm, exec }: { subm: DetailedSubmView, exec: Executi
       header: "Grupa",
       width: "110px",
       render: (test) => {
-
-        const tgs = testgroups.filter(tg=>tg.tg_tests.some(x=>x[0]<=test.id&&x[1]>=test.id));
+        const tgs = test_testgroups(test);
         return tgs.map(x => `${x.id}.`).join(", ");
       }
     },
@@ -190,7 +193,7 @@ function TestResultTable({ subm, exec }: { subm: DetailedSubmView, exec: Executi
     {
       key: "mem",
       header: "Atmiņa [MiB]",
-      width: "110px",
+      width: "120px",
       render: (test) => test.subm_rd?.mem_kib ? (test.subm_rd.mem_kib / 1024).toFixed(1) : "N/A"
     },
     {
@@ -205,11 +208,26 @@ function TestResultTable({ subm, exec }: { subm: DetailedSubmView, exec: Executi
           aria-label="Atvērt testa detaļas"
           className="min-w-0 p-1 h-auto"
         >
-          <span className="text-default-500">👁️</span>
+          <span className="text-default-500">[skatīt]</span>
         </Button>
       )
     }
   ];
+
+  function indices_where_testgroup_changes(test_results: TestRes[]) {
+    const result = [];
+    for(let i = 1; i < test_results.length; i++) {
+      const prev_tg = test_testgroups(test_results[i-1]);
+      const curr_tg = test_testgroups(test_results[i]);
+      
+      // Compare test groups - check if they're different
+      if (!prev_tg.length || !curr_tg.length || 
+          prev_tg.map(tg => tg.id).join(',') !== curr_tg.map(tg => tg.id).join(',')) {
+        result.push(i-1);
+      }
+    }
+    return result;
+  }
 
   return (
     <div>
@@ -217,8 +235,8 @@ function TestResultTable({ subm, exec }: { subm: DetailedSubmView, exec: Executi
 
         {subm.curr_eval.subtasks.map((subtask, i)=>(
           <div key={subtask.description}>
-            <p className="font-normal text-default-foreground pl-1">
-              {i+1}. apakšuzdevums: "<span dangerouslySetInnerHTML={{ __html: renderMdLite(subtask.description).replaceAll("<p>", "").replaceAll("</p>", "") }} />"
+            <p className="font-normal text-default-foreground pl-1 mt-2 mb-1">
+              {i+1}. apakšuzdevums: <span dangerouslySetInnerHTML={{ __html: renderMdLite(subtask.description).replaceAll("<p>", "").replaceAll("</p>", "") }} />
             </p>
             <GenericTable
               data={test_results.filter(test=>subtask.st_tests.some(x=>x[0]<=test.id&&x[1]>=test.id))}
@@ -226,6 +244,7 @@ function TestResultTable({ subm, exec }: { subm: DetailedSubmView, exec: Executi
               keyExtractor={(test) => subtask.description + "_" + test.id.toString()}
               className="w-full max-w-[650px]"
               rowHeight="compact"
+              delimitedRows={indices_where_testgroup_changes(test_results.filter(test=>subtask.st_tests.some(x=>x[0]<=test.id&&x[1]>=test.id)))}
             />
           </div>
         ))}
