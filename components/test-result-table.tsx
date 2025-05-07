@@ -22,7 +22,7 @@ export default function TestResultTable({ subm, exec }: { subm: DetailedSubmView
     const testgroups = subm.curr_eval.test_groups.map((tg, idx) => ({ ...tg, id: idx + 1 }));
 
     // set test ids to be 1-indexed
-    const test_results = exec.test_res.map(x => ({ ...x, id: x.id + 1 }));
+    const test_results = exec.test_res.map(x => ({ ...x }));
 
     // returna list of testgroups that contain the test
     function test_testgroups(test: TestRes) {
@@ -59,7 +59,7 @@ export default function TestResultTable({ subm, exec }: { subm: DetailedSubmView
             key: "cpu",
             header: "CPU laiks [s]",
             width: "110px",
-            render: (test) => test.subm_rd?.cpu_ms ? (test.subm_rd.cpu_ms / 1000).toFixed(2) : "N/A"
+            render: (test) => test.subm_rd?.cpu_ms ? (test.subm_rd.cpu_ms / 1000).toFixed(3) : "N/A"
         },
         {
             key: "mem",
@@ -97,9 +97,18 @@ export default function TestResultTable({ subm, exec }: { subm: DetailedSubmView
         return result;
     }
 
-
     return (
         <div>
+            <div>
+                <GenericTable
+                    data={test_results}
+                    columns={columns.filter(x => x.key !== "test_group")}
+                    keyExtractor={(test) => test.id.toString()}
+                    className="w-full max-w-[650px]"
+                    rowHeight="compact"
+                />
+            </div>
+
             <div className="flex flex-col gap-4">
                 {subm.curr_eval.subtasks.map((subtask, i) => (
                     <div key={subtask.description}>

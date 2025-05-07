@@ -17,3 +17,7 @@
   text-align: right;
   color: rgba(115,138,148,.4);
 }
+
+.code-block pre {
+    overflow: auto;
+}
