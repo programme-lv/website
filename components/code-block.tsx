@@ -1,3 +1,4 @@
+"use client";
 import { useState } from "react";
 import { IconCopy } from "@tabler/icons-react";
 import toast from "react-hot-toast";

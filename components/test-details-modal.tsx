@@ -39,6 +39,7 @@ export default function TestDetailsModal({ isOpen, onOpenChange, test, submissio
     <Modal 
       isOpen={isOpen} 
       onOpenChange={onOpenChange}
+      isKeyboardDismissDisabled={false}
       size="2xl"
       classNames={{
         base: "bg-transparent shadow-none",
