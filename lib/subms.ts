@@ -1,7 +1,7 @@
 import { API_HOST } from "./config";
 import { Execution } from "@/types/exec";
-import { DetailedSubmView, SubmListEntry, SubmListSseUpdate, PaginatedSubmListResponse } from "@/types/subm";
-import { MaxScore, MaxScorePerTask } from "@/types/scores";
+import { SubmListEntry, SubmListSseUpdate, PaginatedSubmListResponse } from "@/types/subm";
+import { MaxScorePerTask } from "@/types/scores";
 
 export const listSubmissions = async (
   offset: number = 0,
@@ -62,9 +62,9 @@ export const createSubmission = async (
   return data;
 };
 
-export const subscribeToSubmUpdates = (
+export function subscribeToSubmUpdates(
   onUpdate: (update: SubmListSseUpdate) => void,
-) => {
+) {
   const eventSource = new EventSource(`${API_HOST}/subm-updates`);
 
   eventSource.onmessage = (event) => {
@@ -88,25 +88,6 @@ export const subscribeToSubmUpdates = (
   return () => {
     eventSource.close();
   };
-};
-
-export const getSubmission = async (
-  submUuid: string,
-): Promise<DetailedSubmView> => {
-  const response = await fetch(`${API_HOST}/subm/${submUuid}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw { response: { data } };
-  }
-
-  return data.data;
 };
 
 export const getExec = async (execUuid: string): Promise<Execution> => {

@@ -85,6 +85,7 @@ export default function User() {
                 const res = await logoutUser();
                 if (res.status === "success") {
                   authContext.setUser(null);
+                  router.push("/");
                 } else {
                   alert("Kļūda: " + res.message);
                 }

@@ -60,7 +60,7 @@ export type SubmListEntry = {
 
 export type DetailedSubmView = {
   subm_uuid: string;
-  content: string;
+  content?: string;
   username: string;
   curr_eval: SubmEval;
   pr_lang: PrLang;

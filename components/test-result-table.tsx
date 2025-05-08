@@ -29,7 +29,7 @@ export default function TestResultTable({ subm, exec }: { subm: DetailedSubmView
         return testgroups.filter(tg => tg.tg_tests.some(x => x[0] <= test.id && x[1] >= test.id));
     }
 
-    const columns: Column<typeof test_results[0]>[] = [
+    let columns: Column<typeof test_results[0]>[] = [
         {
             key: "id",
             header: "Tests #",
@@ -65,7 +65,7 @@ export default function TestResultTable({ subm, exec }: { subm: DetailedSubmView
             key: "mem",
             header: "Atmiņa [MiB]",
             width: "120px",
-            render: (test) => test.subm_rd?.mem_kib ? (test.subm_rd.mem_kib / 1024).toFixed(1) : "N/A"
+            render: (test) => test.subm_rd?.mem_kib ? (test.subm_rd.mem_kib / 1024).toFixed(2) : "N/A"
         },
         {
             key: "details",
@@ -84,6 +84,10 @@ export default function TestResultTable({ subm, exec }: { subm: DetailedSubmView
             )
         }
     ];
+
+    if(!subm.content){
+        columns = columns.filter(x => x.key !== "details");
+    }
 
     // return a list of indices where the testgroup changes in a list of subtask tests
     // used for visual separation of testgroups in the table

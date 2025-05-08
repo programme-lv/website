@@ -1,7 +1,7 @@
-import { Card, CardBody, Spacer } from "@heroui/react";
+import { Spacer } from "@heroui/react";
 import { notFound } from "next/navigation";
 
-import { getExec, getSubmission } from "@/lib/subms";
+import { getExec } from "@/lib/subms";
 import Layout from "@/components/layout";
 import SubmInfoHeader from "@/components/subm-info-header";
 import CodeBlock from "@/components/code-block";
@@ -10,6 +10,7 @@ import { DetailedSubmView } from "@/types/subm";
 import "katex/dist/katex.min.css";
 import TestResultTable from "@/components/test-result-table";
 import ShikiCodeBlock from "@/components/ro-shiki-code";
+import { getSubmission } from "@/lib/fetch-subm";
 
 export default async function Page({
   params,
@@ -91,9 +92,16 @@ export default async function Page({
                     />
                     <Spacer y={3} />
                     <div className="bg-white p-3 rounded-small border-small border-divider overflow-x-auto">
-                        <ShikiCodeBlock lang={submData.pr_lang.monaco_id}>
-                            {submData.content}
-                        </ShikiCodeBlock>
+                        {!submData.content && (
+                            <div className="text-small text-default-900 select-none mb-1">
+                                Risinājuma kods ir pieejams tikai lietotājiem, kuri paši ir atrisinājuši šo uzdevumu.
+                            </div>
+                        )}
+                        {submData.content && (
+                            <ShikiCodeBlock lang={submData.pr_lang.monaco_id}>
+                                {submData.content}
+                            </ShikiCodeBlock>
+                        )}
                     </div>
                     <Spacer y={3} />
                     {execData.subm_comp && (

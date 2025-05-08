@@ -97,7 +97,7 @@ export default function SubmissionTable({ submissions, skeleton = false }: Submi
             render: (item) => (
                 item.score_info.exceeded_mem ? 
                 <span>&gt; {item.score_info.max_mem_kib / 1024}</span> : 
-                <span>{(item.score_info.max_mem_kib / 1024).toFixed(1)}</span>
+                <span>{(item.score_info.max_mem_kib / 1024).toFixed(2)}</span>
             )
         },
         {
