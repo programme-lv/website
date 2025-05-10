@@ -32,6 +32,30 @@ export const listSubmissions = async (
   }
 };
 
+// New function to reevaluate selected submissions
+export const reevaluateSubmissions = async (submUuids: string[]): Promise<void> => {
+  try {
+    const response = await fetch(`${API_HOST}/reeval`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        subm_uuids: submUuids,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw { response: { data: errorData } };
+    }
+  } catch (error) {
+    console.error("Error reevaluating submissions:", error);
+    throw error;
+  }
+};
+
 // New function to create a submission
 export const createSubmission = async (
   submission: string,

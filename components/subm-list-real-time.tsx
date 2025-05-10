@@ -1,8 +1,7 @@
 "use client"; // Declare this as a client-side component
 
-import React, { Suspense, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
 import { subscribeToSubmUpdates, listSubmissions } from "@/lib/subms";
 import { SubmListEntry, SubmListSseUpdate } from "@/types/subm";
