@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useContext } from "react";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 
 import Alert from "@/components/alert";
@@ -14,10 +14,15 @@ import { getMaxScorePerTask } from "@/lib/subms";
 export function TaskList(props: { tasks: Task[] }) {
 	const authContext = useContext(AuthContext);
 
-  const userMaxScoresQuery = useQuery(['userScores', authContext.user?.username], () => getMaxScorePerTask(authContext.user?.username ?? ""), {
+  const userMaxScoresQuery = useQuery({
+    queryKey: ['userScores', authContext.user?.username],
+    queryFn: () => getMaxScorePerTask(authContext.user?.username ?? ""),
     enabled: !!authContext.user?.username,
   });
-  const listTasksQuery = useQuery(["tasks"], listTasks);
+  const listTasksQuery = useQuery({
+    queryKey: ["tasks"],
+    queryFn: listTasks
+  });
 
   let tasks = listTasksQuery.data ? (listTasksQuery.data.data ?? []) : props.tasks;
   tasks = tasks?.sort(

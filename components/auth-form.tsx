@@ -1,5 +1,5 @@
-import { useState, useContext, useEffect } from "react";
-import { useMutation } from "react-query";
+import { useState, useContext } from "react";
+import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import { AuthContext } from "@/app/providers";
@@ -26,7 +26,8 @@ export default function AuthForm({ type }: { type: "login" | "register" }) {
   const [error, setError] = useState<string | null>(null);
   const toggleVisibility = () => setIsVisible(!isVisible);
   const [isRedirecting, setIsRedirecting] = useState(false);
-  const registerMutation = useMutation(registerUser, {
+  const registerMutation = useMutation({
+    mutationFn: registerUser,
     onMutate: () => {
       setError(null);
     },
@@ -43,7 +44,8 @@ export default function AuthForm({ type }: { type: "login" | "register" }) {
     },
   });
 
-  const loginMutation = useMutation(loginUser, {
+  const loginMutation = useMutation({
+    mutationFn: loginUser,
     onMutate: () => {
       setError(null);
     },
@@ -108,8 +110,8 @@ export default function AuthForm({ type }: { type: "login" | "register" }) {
           isRequired
           classNames={{ inputWrapper: "border-small border-default-300" }}
           isDisabled={
-            loginMutation.isLoading ||
-            registerMutation.isLoading ||
+            loginMutation.status === 'pending' ||
+            registerMutation.status === 'pending' ||
             isRedirecting
           }
           label="Lietotājvārds"
@@ -125,8 +127,8 @@ export default function AuthForm({ type }: { type: "login" | "register" }) {
                 className="flex-1"
                 classNames={{ inputWrapper: "border-small border-default-300" }}
                 isDisabled={
-                  loginMutation.isLoading ||
-                  registerMutation.isLoading ||
+                  loginMutation.status === 'pending' ||
+                  registerMutation.status === 'pending' ||
                   isRedirecting
                 }
                 label="Vārds (neobligāts)"
@@ -139,8 +141,8 @@ export default function AuthForm({ type }: { type: "login" | "register" }) {
                 className="flex-1"
                 classNames={{ inputWrapper: "border-small border-default-300" }}
                 isDisabled={
-                  loginMutation.isLoading ||
-                  registerMutation.isLoading ||
+                  loginMutation.status === 'pending' ||
+                  registerMutation.status === 'pending' ||
                   isRedirecting
                 }
                 label="Uzvārds (neobligāts)"
@@ -154,8 +156,8 @@ export default function AuthForm({ type }: { type: "login" | "register" }) {
               isRequired
               classNames={{ inputWrapper: "border-small border-default-300" }}
               isDisabled={
-                loginMutation.isLoading ||
-                registerMutation.isLoading ||
+                loginMutation.status === 'pending' ||
+                registerMutation.status === 'pending' ||
                 isRedirecting
               }
               label="E-pasta adrese"
@@ -188,8 +190,8 @@ export default function AuthForm({ type }: { type: "login" | "register" }) {
               </button>
             }
             isDisabled={
-              loginMutation.isLoading ||
-              registerMutation.isLoading ||
+              loginMutation.status === 'pending' ||
+              registerMutation.status === 'pending' ||
               isRedirecting
             }
             label="Parole"
@@ -205,8 +207,8 @@ export default function AuthForm({ type }: { type: "login" | "register" }) {
               className="flex-1"
               classNames={{ inputWrapper: "border-small border-default-300" }}
               isDisabled={
-                loginMutation.isLoading ||
-                registerMutation.isLoading ||
+                loginMutation.status === 'pending' ||
+                registerMutation.status === 'pending' ||
                 isRedirecting
               }
               label="Apstipriniet paroli"
@@ -223,8 +225,8 @@ export default function AuthForm({ type }: { type: "login" | "register" }) {
             className="flex-grow mt-4"
             color="primary"
             isLoading={
-              loginMutation.isLoading ||
-              registerMutation.isLoading ||
+              loginMutation.status === 'pending' ||
+              registerMutation.status === 'pending' ||
               isRedirecting
             }
             type="submit"

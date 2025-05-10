@@ -2,7 +2,7 @@
 
 import Layout from "@/components/layout";
 import { getMaxScorePerTask } from "@/lib/subms";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Toaster } from 'react-hot-toast';
 import { use } from 'react';
 import UserScoresTable from "@/components/user-scores-table";
@@ -13,7 +13,9 @@ export default function UserPage({
   params: Promise<{ username: string }>;
 }) {
   const { username } = use(params);
-  const { data: response, isLoading, error } = useQuery(['userScores', username], () => getMaxScorePerTask(username), {
+  const { data: response, isLoading, error } = useQuery({
+    queryKey: ['userScores', username],
+    queryFn: () => getMaxScorePerTask(username),
     enabled: !!username,
   });
 

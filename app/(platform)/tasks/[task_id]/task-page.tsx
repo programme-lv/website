@@ -32,7 +32,7 @@ import {
 	Image,
 } from "@heroui/react";
 import MonacoEditor from "@monaco-editor/react";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { getTaskById } from "@/lib/task/tasks";
 import {
@@ -60,11 +60,11 @@ export default function TaskDetailsPage(props: { task: Task }) {
 
 	const [task, setTask] = useState<Task>(props.task);
 
-	const { data: getTaskByIdData } = useQuery(
-		["task", task_id],
-		() => getTaskById(task_id as string),
-		{ staleTime: 30 * 10000 } // 300 seconds
-	);
+	const { data: getTaskByIdData } = useQuery({
+		queryKey: ["task", task_id],
+		queryFn: () => getTaskById(task_id as string),
+		staleTime: 30 * 10000 // 300 seconds
+	});
 
 	useEffect(() => {
 		if (getTaskByIdData?.data) {
@@ -483,10 +483,10 @@ function RightSide({ taskCode }: { taskCode: string }) {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const router = useRouter();
 
-	const { data: listLangsResponse } = useQuery(
-		"list-languages",
-		listProgrammingLanguages
-	);
+	const { data: listLangsResponse } = useQuery({
+		queryKey: ["list-languages"],
+		queryFn: listProgrammingLanguages
+	});
 
 	const languages = listLangsResponse?.data;
 	const [code, setCode] = useState<string>("");
@@ -532,7 +532,7 @@ int main() {
 				selectedLanguage,
 				taskCode
 			);
-			await queryClient.invalidateQueries("submissions");
+			await queryClient.invalidateQueries({ queryKey: ["submissions"] });
 			await router.push(`/submissions`);
 		} catch (error: any) {
 			setIsLoading(false);

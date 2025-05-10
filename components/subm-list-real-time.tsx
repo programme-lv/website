@@ -1,7 +1,7 @@
 "use client"; // Declare this as a client-side component
 
 import React, { useEffect, useState } from "react";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 
 import { subscribeToSubmUpdates, listSubmissions } from "@/lib/subms";
 import { SubmListEntry, SubmListSseUpdate } from "@/types/subm";
@@ -43,10 +43,9 @@ export default function RealTimeSubmTable({
   const [submissions, setSubmissions] = useState<SubmListEntry[]>(initialSubmissions);
 
   // Fetch submissions data with a polling interval of 2 seconds
-  const { data, isLoading, refetch } = useQuery(
-    ["submissions", initialPagination.offset, initialPagination.limit],
-    () => listSubmissions(initialPagination.offset, initialPagination.limit),
-    {
+  const { data, isLoading, refetch } = useQuery({
+      queryKey: ["submissions", initialPagination.offset, initialPagination.limit],
+      queryFn: () => listSubmissions(initialPagination.offset, initialPagination.limit),
       refetchInterval: 10000,
       refetchOnWindowFocus: true,
       refetchOnMount: true,
@@ -56,13 +55,15 @@ export default function RealTimeSubmTable({
         page: initialSubmissions,
         pagination: initialPagination
       }, // Provide initial data to prevent flash of loading state
-      refetchOnReconnect: true,
-      onSettled: () => {
-        // Ensure loading state is reset when data fetching completes
-        setIsChangingPage(false);
-      }
+      refetchOnReconnect: true
+  });
+  
+  // Reset isChangingPage when loading state changes
+  useEffect(() => {
+    if (!isLoading) {
+      setIsChangingPage(false);
     }
-  );
+  }, [isLoading]);
 
   /**
    * useEffect hook to subscribe to submission updates via WebSocket.
