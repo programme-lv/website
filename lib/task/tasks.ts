@@ -80,26 +80,9 @@ export const updateTaskStatement = async (
   return response.json();
 };
 
-export const uploadTaskImage = async (taskId: string, image: File): Promise<ApiResponse<null>> => {
-  const formData = new FormData();
-  formData.append("image", image);
-
-  const response = await fetch(`${API_HOST}/tasks/${taskId}/images`, {
-    method: "POST",
-    headers: {
-      "Cookie": (await cookies()).toString(),
-    },
-    next: {
-      tags: [`task-${taskId}`]
-    },
-    body: formData,
-  });
-
+export const revalidateTask = async (taskId: string) => {
   revalidateTag(`task-${taskId}`);
-
-  return response.json();
 };
-
 
 export const deleteTaskImage = async (taskId: string, s3Uri: string): Promise<ApiResponse<null>> => {
   // URL encode the S3 URI since it may contain characters like '/'

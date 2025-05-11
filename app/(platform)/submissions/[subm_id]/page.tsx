@@ -94,7 +94,7 @@ export default async function Page({
                     <div className="bg-white p-3 rounded-small border-small border-divider overflow-x-auto">
                         {!submData.content && (
                             <div className="text-small text-default-900 select-none mb-1">
-                                Risinājuma kods ir pieejams tikai lietotājiem, kuri paši ir atrisinājuši šo uzdevumu.
+                                Risinājuma kods ir pieejams tiem tikai lietotājiem, kuri paši ir atrisinājuši šo uzdevumu.
                             </div>
                         )}
                         {submData.content && (

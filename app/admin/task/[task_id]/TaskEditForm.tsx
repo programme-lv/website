@@ -2,10 +2,11 @@
 
 import { useState, useRef, useEffect } from "react";
 import { MarkdownStatement, Task } from "@/types/task";
-import { updateTaskStatement, UpdateStatementRequest, uploadTaskImage, deleteTaskImage } from "@/lib/task/tasks";
+import { updateTaskStatement, UpdateStatementRequest, deleteTaskImage, revalidateTask } from "@/lib/task/tasks";
 import { useRouter } from "next/navigation";
 import { TextLink } from "@/components/text-link";
 import GenericTable from "@/components/generic-table";
+import { uploadTaskImage } from "@/lib/task/upload-image";
 
 interface TaskEditFormProps {
   task: Task;
@@ -85,6 +86,7 @@ export default function TaskEditForm({ task }: TaskEditFormProps) {
       };
 
       await updateTaskStatement(task.short_task_id, data);
+      revalidateTask(task.short_task_id);
 
       // Refresh the page to show updated data
       await router.refresh();
