@@ -1,6 +1,6 @@
 export const dynamic = 'force-dynamic'
 import { getTaskById } from "@/lib/task/tasks";
-import TaskEditForm from "./TaskEditForm";
+import StatementEditForm from "./TaskEditForm";
 import { isAdmin } from "@/lib/dal";
 import RestrictedPleaseLogin from "@/components/restricted-please-login";
 import Layout from "@/components/layout";
@@ -37,7 +37,7 @@ export default async function TaskEditPage({ params }: { params: Promise<{ task_
           </div>
         </div>
         <div className="flex-1 min-w-0">
-          <TaskEditForm task={task} />
+          <StatementEditForm task={task} />
         </div>
       </div>
     </Layout>

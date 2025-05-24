@@ -8,11 +8,11 @@ import { TextLink } from "@/components/text-link";
 import GenericTable from "@/components/generic-table";
 import { uploadTaskImage } from "@/lib/task/upload-image";
 
-interface TaskEditFormProps {
+interface StatementEditFormProps {
     task: Task;
 }
 
-export default function TaskEditForm({ task }: TaskEditFormProps) {
+export default function StatementEditForm({ task }: StatementEditFormProps) {
     const router = useRouter();
     const [isSubmittingStatement, setIsSubmittingStatement] = useState(false);
     const [isUploadingImage, setIsUploadingImage] = useState(false);
