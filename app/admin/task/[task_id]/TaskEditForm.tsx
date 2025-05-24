@@ -337,6 +337,12 @@ export default function TaskEditForm({ task }: TaskEditFormProps) {
                 width: "100px",
               },
               {
+                key: "size",
+                header: "Size [kB]",
+                render: (item) => (item.sz_in_bytes / 1000).toFixed(0),
+                width: "100px",
+              },
+              {
                 key: "delete",
                 header: "Delete",
                 render: (item) => (

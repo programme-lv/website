@@ -59,6 +59,7 @@ type StatementImage = {
     width_px: number;
     height_px: number;
     s3_uri: string;
+    sz_in_bytes: number;
 };
 
 export type {
