@@ -25,7 +25,7 @@ interface BreadcrumbItem {
 interface LayoutProps {
   children: React.ReactNode;
   breadcrumbs: BreadcrumbItem[];
-  active: "tasks" | "submissions";
+  active: "tasks" | "submissions" | "admin";
 }
 
 const MobileNavigationModal = ({
@@ -91,7 +91,7 @@ const Breadcrumbs = ({ items }: { items: BreadcrumbItem[] }) => (
                 {item.label}
               </Link>
             ) : (
-              <span className="text-default-500">
+              <span className={cn("text-default-500",{"text-default-900":index===items.length-1})}>
                 {item.label}
               </span>
             )}

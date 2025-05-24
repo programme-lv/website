@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Tooltip } from "@heroui/tooltip";
-import { IconInbox, IconListDetails } from "@tabler/icons-react";
+import { IconInbox, IconListDetails, IconTerminal2 } from "@tabler/icons-react";
 import React from "react";
 
 import Logo from "@/public/emoji-logo.png";
@@ -29,13 +29,22 @@ const items: SidebarItem[] = [
     icon: IconInbox,
     title: "Iesūtījumi",
   },
+
+  {
+    key: "admin",
+    href: "/admin",
+    icon: IconTerminal2,
+    title: "Admin",
+  },
 ];
 
 type SidebarProps = {
-  active: "tasks" | "submissions";
+  active: "tasks" | "submissions" | "admin";
 };
 
 export default function Sidebar(props: SidebarProps) {
+  const filteredItems = items.filter((item) => item.key !== "admin" || props.active === "admin");
+
   return (
     <>
       <div className="fixed flex-col bg-white !border-r-small border-divider h-full min-w-16 hidden md:flex">
@@ -47,7 +56,7 @@ export default function Sidebar(props: SidebarProps) {
           </div>
         </div>
         <nav className="mt-12 flex flex-col items-center gap-8 w-full">
-          {items.map((item) => (
+          {filteredItems.map((item) => (
             <Tooltip
               disableAnimation
               className="rounded-md"
