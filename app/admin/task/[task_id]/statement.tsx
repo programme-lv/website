@@ -290,10 +290,9 @@ export default function StatementEditForm({ task }: StatementEditFormProps) {
                     </div>
                 </div>
 
-                <div className="p-2 bg-white max-w-2xl">
+                <div className="p-2 bg-white max-w-3xl">
                     <GenericTable
                         data={task.statement_images || []}
-                        className="w-full"
                         delimitedRows={[2, 5]}
                         columns={[
                             {
@@ -308,6 +307,7 @@ export default function StatementEditForm({ task }: StatementEditFormProps) {
                                 key: "filename",
                                 header: "Filename",
                                 render: (item) => item.filename,
+                                width: "200px",
                             },
                             {
                                 key: "url",
