@@ -148,7 +148,7 @@ function TaskCard(props: TaskCardProps) {
                   </div>
                 )}
                 {props.origin_notes && props.origin_notes["lv"] && (
-                  <div className="text-xs text-gray-700 ms-2 max-w-[22em]">
+                  <div className="text-xs text-gray-700 ms-2 text-balance max-w-[30em] max-h-[2rem]">
                     {props.origin_notes["lv"]}
                   </div>
                 )}
