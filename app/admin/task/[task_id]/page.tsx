@@ -1,10 +1,10 @@
 export const dynamic = 'force-dynamic'
 import { getTaskById } from "@/lib/task/tasks";
-import StatementEditForm, { TaskEditForm } from "./TaskEditForm";
+import StatementEditForm from "./statement";
+import TaskEditForm from "./task";
 import { isAdmin } from "@/lib/dal";
 import RestrictedPleaseLogin from "@/components/restricted-please-login";
 import Layout from "@/components/layout";
-import { Button } from "@heroui/button";
 import { TextLink } from "@/components/text-link";
 
 export default async function TaskEditPage({ 
@@ -47,6 +47,26 @@ export default async function TaskEditPage({
               <div className={currentTab === "statement" ? "font-semibold" : ""}>
                 <TextLink href={`/admin/task/${task.short_task_id}?tab=statement`}>
                   Formulējums
+                </TextLink>
+              </div>
+              <div className={currentTab === "testing" ? "font-semibold" : ""}>
+                <TextLink disabled href={`/admin/task/${task.short_task_id}?tab=testing`}>
+                  Testēšana
+                </TextLink>
+              </div>
+              <div className={currentTab === "solutions" ? "font-semibold" : ""}>
+                <TextLink disabled href={`/admin/task/${task.short_task_id}?tab=solutions`}>
+                  Atrisinājumi
+                </TextLink>
+              </div>
+              <div className={currentTab === "archive" ? "font-semibold" : ""}>
+                <TextLink disabled href={`/admin/task/${task.short_task_id}?tab=archive`}>
+                  Arhīvs
+                </TextLink>
+              </div>
+              <div className={currentTab === "history" ? "font-semibold" : ""}>
+                <TextLink disabled href={`/admin/task/${task.short_task_id}?tab=history`}>
+                  Vēsture
                 </TextLink>
               </div>
             </nav>
