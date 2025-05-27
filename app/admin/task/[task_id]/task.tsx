@@ -85,7 +85,7 @@ export default function TaskEditForm({ task }: TaskEditFormProps) {
     };
 
     return (
-        <div className="container py-2 mx-auto">
+        <div className="container py-2 mt-2 max-w-4xl">
             <h1 className="text-2xl font-bold mb-4">
                 {task.task_full_name}
             </h1>
@@ -96,15 +96,50 @@ export default function TaskEditForm({ task }: TaskEditFormProps) {
                 </div>
             )}
 
-            <h2 className="text-lg font-bold mb-4">Task Illustration</h2>
-            <p className="text-sm text-gray-600 mb-4">
-                This image is displayed on the task card in the task list.
-            </p>
+
+            {/* Task Metadata */}
+            <div className="space-y-4 bg-white p-2">
+                <div>
+                    <label className="block text-sm font-medium mb-1">Uzdevuma nosaukums</label>
+                    <input
+                        type="text"
+                        className="w-full border rounded p-2 bg-gray-50"
+                        value={task.task_full_name}
+                        disabled
+                        title="Task name editing not yet implemented"
+                    />
+                </div>
+
+                <div>
+                    <label className="block text-sm font-medium mb-1">Izcelsmes olimpiāde</label>
+                    <input
+                        type="text"
+                        className="w-full border rounded p-2 bg-gray-50"
+                        value={task.origin_olympiad}
+                        disabled
+                        title="Origin olympiad editing not yet implemented"
+                    />
+                </div>
+
+                <div>
+                    <label className="block text-sm font-medium mb-1">Grūtības pakāpe</label>
+                    <input
+                        type="number"
+                        min="1"
+                        max="5"
+                        className="w-full border rounded p-2 bg-gray-50"
+                        value={task.difficulty_rating}
+                        disabled
+                        title="Difficulty rating editing not yet implemented"
+                    />
+                </div>
+            </div>
+
+            <h2 className="text-lg font-bold mt-4">Uzdevuma ilustrācija</h2>
 
             {/* Current Illustration */}
             {task.illustration_img_url && (
-                <div className="mb-6">
-                    <h3 className="text-md font-semibold mb-2">Current Illustration</h3>
+                <div className="mt-2">
                     <div className="flex items-start gap-4">
                         <img 
                             src={task.illustration_img_url} 
@@ -151,82 +186,7 @@ export default function TaskEditForm({ task }: TaskEditFormProps) {
                     >
                         {isUploadingIllustration ? "Uploading..." : "Choose Image"}
                     </label>
-                    <span className="ml-2 text-sm text-gray-600">
-                        Supported formats: JPG, PNG, GIF, WebP, SVG, BMP, TIFF
-                    </span>
                 </div>
-                <p className="text-xs text-gray-500 mt-1">
-                    Recommended size: 120x120 pixels. Images will be automatically resized if needed.
-                </p>
-            </div>
-
-            {/* Task Metadata */}
-            <h2 className="text-lg font-bold mb-4">Task Metadata</h2>
-            <div className="space-y-4">
-                <div>
-                    <label className="block text-sm font-medium mb-1">Task Name</label>
-                    <input
-                        type="text"
-                        className="w-full border rounded p-2 bg-gray-50"
-                        value={task.task_full_name}
-                        disabled
-                        title="Task name editing not yet implemented"
-                    />
-                </div>
-
-                <div>
-                    <label className="block text-sm font-medium mb-1">Origin Olympiad</label>
-                    <input
-                        type="text"
-                        className="w-full border rounded p-2 bg-gray-50"
-                        value={task.origin_olympiad}
-                        disabled
-                        title="Origin olympiad editing not yet implemented"
-                    />
-                </div>
-
-                <div>
-                    <label className="block text-sm font-medium mb-1">Difficulty Rating</label>
-                    <input
-                        type="number"
-                        min="1"
-                        max="5"
-                        className="w-full border rounded p-2 bg-gray-50"
-                        value={task.difficulty_rating}
-                        disabled
-                        title="Difficulty rating editing not yet implemented"
-                    />
-                </div>
-
-                <div>
-                    <label className="block text-sm font-medium mb-1">Memory Limit (MB)</label>
-                    <input
-                        type="number"
-                        className="w-full border rounded p-2 bg-gray-50"
-                        value={task.memory_limit_megabytes}
-                        disabled
-                        title="Memory limit editing not yet implemented"
-                    />
-                </div>
-
-                <div>
-                    <label className="block text-sm font-medium mb-1">CPU Time Limit (seconds)</label>
-                    <input
-                        type="number"
-                        step="0.1"
-                        className="w-full border rounded p-2 bg-gray-50"
-                        value={task.cpu_time_limit_seconds}
-                        disabled
-                        title="CPU time limit editing not yet implemented"
-                    />
-                </div>
-            </div>
-
-            <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded">
-                <p className="text-sm text-yellow-800">
-                    <strong>Note:</strong> Task metadata editing is not yet implemented. 
-                    Currently, only illustration image upload/replacement is planned for implementation.
-                </p>
             </div>
         </div>
     );

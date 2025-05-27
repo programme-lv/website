@@ -164,7 +164,7 @@ export default function StatementEditForm({ task }: StatementEditFormProps) {
     }
 
     return (
-        <div className="container py-2 mx-auto">
+        <div className="container py-2 mt-2 max-w-4xl">
             <h1 className="text-2xl font-bold mb-4">
                 {task.task_full_name}
             </h1>
@@ -290,7 +290,7 @@ export default function StatementEditForm({ task }: StatementEditFormProps) {
                     </div>
                 </div>
 
-                <div className="p-2 bg-white max-w-3xl">
+                <div className="p-2 bg-white">
                     <GenericTable
                         data={task.statement_images || []}
                         delimitedRows={[2, 5]}
