@@ -84,11 +84,11 @@ export const revalidateTask = async (taskId: string) => {
   revalidateTag(`task-${taskId}`);
 };
 
-export const deleteTaskImage = async (taskId: string, s3Uri: string): Promise<ApiResponse<null>> => {
-  // URL encode the S3 URI since it may contain characters like '/'
-  const encodedS3Uri = encodeURIComponent(s3Uri);
+export const deleteTaskImage = async (taskId: string, filename: string): Promise<ApiResponse<null>> => {
+  // URL encode the filename since it may contain special characters
+  const encodedFilename = encodeURIComponent(filename);
 
-  const response = await fetch(`${API_HOST}/tasks/${taskId}/images/${encodedS3Uri}`, {
+  const response = await fetch(`${API_HOST}/tasks/${taskId}/images/${encodedFilename}`, {
     method: "DELETE",
     headers: {
       "Cookie": (await cookies()).toString(),
@@ -99,7 +99,7 @@ export const deleteTaskImage = async (taskId: string, s3Uri: string): Promise<Ap
   });
 
   if (!response.ok) {
-    throw new Error(`Error deleting task image for task ID: ${taskId}, S3 URI: ${s3Uri}`);
+    throw new Error(`Error deleting task image for task ID: ${taskId}, filename: ${filename}`);
   } 
 
   revalidateTag(`task-${taskId}`);

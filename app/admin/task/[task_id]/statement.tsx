@@ -135,7 +135,7 @@ export default function StatementEditForm({ task }: StatementEditFormProps) {
         }
     };
 
-    const handleDeleteImage = async (s3Uri: string) => {
+    const handleDeleteImage = async (filename: string) => {
         if (!confirm("Are you sure you want to delete this image?")) {
             return;
         }
@@ -144,7 +144,7 @@ export default function StatementEditForm({ task }: StatementEditFormProps) {
             setIsUploadingImage(true); // Reuse the loading state for deletion
             setUploadError(null);
 
-            const response = await deleteTaskImage(task.short_task_id, s3Uri);
+            const response = await deleteTaskImage(task.short_task_id, filename);
             if (response.status !== "success") {
                 alert("Failed to delete image: " + response.message);
                 return;
@@ -345,7 +345,7 @@ export default function StatementEditForm({ task }: StatementEditFormProps) {
                                 key: "delete",
                                 header: "Delete",
                                 render: (item) => (
-                                    <button className="p-2 px-3 text-sm bg-red-700 text-white rounded hover:bg-red-800" onClick={() => handleDeleteImage(item.s3_uri)}>
+                                    <button className="p-2 px-3 text-sm bg-red-700 text-white rounded hover:bg-red-800" onClick={() => handleDeleteImage(item.filename)}>
                                         Delete
                                     </button>
                                 ),
