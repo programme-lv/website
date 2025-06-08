@@ -37,6 +37,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getTaskById } from "@/lib/task/tasks";
 import {
 	Example,
+	IllustrationImage,
 	MarkdownStatement,
 	StatementImage,
 	SubtaskOverview,
@@ -316,7 +317,7 @@ function Section({ title, content }: { title: string; content: string }) {
 type TaskHeaderProps = {
 	task_full_name: string;
 	difficulty_rating: 1 | 2 | 3 | 4 | 5;
-	illustration_img_url?: string;
+	illustration_img?: IllustrationImage;
 	origin_olympiad?: string;
 	origin_notes?: Record<string, string>;
 	default_pdf_statement_url?: string;
@@ -325,7 +326,7 @@ type TaskHeaderProps = {
 function TaskHeader({
 	task_full_name,
 	difficulty_rating,
-	illustration_img_url,
+	illustration_img,
 	origin_olympiad,
 	origin_notes,
 	default_pdf_statement_url,
@@ -367,23 +368,23 @@ function TaskHeader({
 			<div className="flex flex-col p-0 sm:flex-nowrap">
 				<div className="flex flex-row">
 					<div className="h-full flex flex-row gap-3 sm:flex-nowrap flex-grow px-2.5 py-1.5">
-						{layout === "wide" && illustration_img_url && (
-							<>
-								{imageLoading && <Skeleton className="w-[120px] h-[120px] absolute rounded-md" />}
-								<div className="max-w-[120px] w-[120px] flex-none">
+											{layout === "wide" && illustration_img && (
+						<>
+							{imageLoading && <Skeleton className="w-[120px] h-[120px] absolute rounded-md" />}
+							<div className="max-w-[120px] w-[120px] flex-none">
 
-									<Image
-										disableAnimation
-										alt={task_full_name}
-										className="flex-none object-cover rounded-md"
-										src={illustration_img_url}
-										onLoad={() => setImageLoading(false)}
-										height={120}
-										width={120}
-									/>
-								</div>
-							</>
-						)}
+								<Image
+									disableAnimation
+									alt={task_full_name}
+									className="flex-none object-cover rounded-md"
+									src={illustration_img.http_url}
+									onLoad={() => setImageLoading(false)}
+									height={120}
+									width={120}
+								/>
+							</div>
+						</>
+					)}
 						<div className="flex flex-col flex-grow justify-between w-full">
 							<div className="flex justify-between items-center">
 								<div className="inline-flex gap-x-4 gap-y-1 justify-between items-center flex-wrap">
@@ -432,16 +433,16 @@ function TaskHeader({
 								</div>
 							</div>
 							<div className="flex flex-grow gap-2 mt-1">
-								{layout === "narrow" && illustration_img_url && (
-									<div className="max-w-[100px] min-h-16 min-w-16 flex">
-										<Image
-											alt={task_full_name}
-											className="flex-none object-cover"
-											disableSkeleton
-											src={illustration_img_url}
-										/>
-									</div>
-								)}
+															{layout === "narrow" && illustration_img && (
+								<div className="max-w-[100px] min-h-16 min-w-16 flex">
+									<Image
+										alt={task_full_name}
+										className="flex-none object-cover"
+										disableSkeleton
+										src={illustration_img.http_url}
+									/>
+								</div>
+							)}
 								<div className="flex flex-col flex-grow">
 									<div className="flex justify-between max-w-[24em]">
 										<div className="flex justify-between">

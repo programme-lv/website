@@ -1,3 +1,10 @@
+type IllustrationImage = {
+    http_url: string;
+    width_px: number;
+    height_px: number;
+    sz_in_bytes: number;
+};
+
 type Task = {
     short_task_id: string;
     task_full_name: string;
@@ -5,7 +12,7 @@ type Task = {
     cpu_time_limit_seconds: number;
     origin_olympiad: string;
     lv_pdf_statement_sha: string;
-    illustration_img_url?: string;
+    illustration_img?: IllustrationImage;
     difficulty_rating: 1 | 2 | 3 | 4 | 5;
     default_md_statement?: MarkdownStatement;
     examples?: Example[];
@@ -64,6 +71,7 @@ type StatementImage = {
 
 export type {
     Task,
+    IllustrationImage,
     SubtaskOverview,
     StInputs,
     VisibleInputSubtask,

@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import { Task } from "@/types/task";
 import { useRouter } from "next/navigation";
 import { TextLink } from "@/components/text-link";
+import { uploadTaskIllustration, deleteTaskIllustration } from "@/lib/task/upload-image";
 
 interface TaskEditFormProps {
     task: Task;
@@ -24,23 +25,19 @@ export default function TaskEditForm({ task }: TaskEditFormProps) {
             setIsUploadingIllustration(true);
             setError(null);
 
-            // TODO: Implement API call for uploading illustration image
-            // const response = await uploadTaskIllustration(task.short_task_id, file);
-            // if (response.status !== "success") {
-            //     alert("Failed to upload illustration: " + response.message);
-            //     return;
-            // }
-
-            // For now, just show a placeholder message
-            alert("Illustration image upload API not yet implemented");
-
-            // await router.refresh();
+            const response = await uploadTaskIllustration(task.short_task_id, file);
+            if (response.status !== "success") {
+                setError("Failed to upload illustration: " + response.message);
+                return;
+            }
 
             if (illustrationFileInputRef.current) {
                 illustrationFileInputRef.current.value = "";
             }
 
-            // alert("Illustration uploaded successfully!");
+            // Refresh the page to show the updated task data
+            router.refresh();
+            alert("Illustration uploaded successfully!");
         } catch (err) {
             console.error("Error uploading illustration:", err);
             setError(
@@ -52,7 +49,7 @@ export default function TaskEditForm({ task }: TaskEditFormProps) {
     };
 
     const handleDeleteIllustration = async () => {
-        if (!task.illustration_img_url) return;
+        if (!task.illustration_img) return;
         
         if (!confirm("Are you sure you want to delete the task illustration?")) {
             return;
@@ -62,18 +59,15 @@ export default function TaskEditForm({ task }: TaskEditFormProps) {
             setIsUploadingIllustration(true);
             setError(null);
 
-            // TODO: Implement API call for deleting illustration image
-            // const response = await deleteTaskIllustration(task.short_task_id);
-            // if (response.status !== "success") {
-            //     alert("Failed to delete illustration: " + response.message);
-            //     return;
-            // }
+            const response = await deleteTaskIllustration(task.short_task_id);
+            if (response.status !== "success") {
+                setError("Failed to delete illustration: " + response.message);
+                return;
+            }
 
-            // For now, just show a placeholder message
-            alert("Delete illustration API not yet implemented");
-
-            // await router.refresh();
-            // alert("Illustration deleted successfully!");
+            // Refresh the page to show the updated task data
+            router.refresh();
+            alert("Illustration deleted successfully!");
         } catch (err) {
             console.error("Error deleting illustration:", err);
             setError(
@@ -138,22 +132,26 @@ export default function TaskEditForm({ task }: TaskEditFormProps) {
             <h2 className="text-lg font-bold mt-4">Uzdevuma ilustrācija</h2>
 
             {/* Current Illustration */}
-            {task.illustration_img_url && (
+            {task.illustration_img && (
                 <div className="mt-2">
                     <div className="flex items-start gap-4">
                         <img 
-                            src={task.illustration_img_url} 
+                            src={task.illustration_img.http_url} 
                             alt={task.task_full_name}
                             className="w-32 h-32 object-cover rounded-md border"
                         />
                         <div className="flex flex-col gap-2">
                             <TextLink 
-                                href={task.illustration_img_url} 
+                                href={task.illustration_img.http_url} 
                                 target="_blank" 
                                 rel="noopener noreferrer"
                             >
                                 View full size
                             </TextLink>
+                            <div className="text-sm text-gray-600">
+                                <div>Dimensions: {task.illustration_img.width_px} × {task.illustration_img.height_px} px</div>
+                                <div>File size: {(task.illustration_img.sz_in_bytes / 1024).toFixed(1)} KB</div>
+                            </div>
                             <button
                                 className="p-2 px-3 text-sm bg-red-700 text-white rounded hover:bg-red-800 w-fit"
                                 onClick={handleDeleteIllustration}
@@ -167,10 +165,7 @@ export default function TaskEditForm({ task }: TaskEditFormProps) {
             )}
 
             {/* Upload New Illustration */}
-            <div className="mb-6">
-                <h3 className="text-md font-semibold mb-2">
-                    {task.illustration_img_url ? "Replace Illustration" : "Upload Illustration"}
-                </h3>
+            {!task.illustration_img && <div className="mb-6">
                 <div className="flex items-center">
                     <input
                         ref={illustrationFileInputRef}
@@ -187,7 +182,7 @@ export default function TaskEditForm({ task }: TaskEditFormProps) {
                         {isUploadingIllustration ? "Uploading..." : "Choose Image"}
                     </label>
                 </div>
-            </div>
+            </div>}
         </div>
     );
 }

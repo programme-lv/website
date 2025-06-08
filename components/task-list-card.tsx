@@ -11,6 +11,7 @@ import { renderMdLite } from "@/lib/render-md";
 import TaskDifficultyChip from "./task-difficulty-chip";
 import { cn } from "./cn";
 import { MaxScore } from "@/types/scores";
+import { IllustrationImage } from "@/types/task";
 
 type MarkdownStatement = {
   story: string;
@@ -24,7 +25,7 @@ type TaskCardProps = {
   task_full_name: string;
   origin_olympiad: string;
   difficulty_rating: 1 | 2 | 3 | 4 | 5;
-  illustration_img_url?: string;
+  illustration_img?: IllustrationImage;
   default_md_statement?: MarkdownStatement;
   origin_notes?: Record<string, string>;
   user_max_score?: MaxScore;
@@ -83,9 +84,9 @@ function TaskCard(props: TaskCardProps) {
     >
       {solve_state === "attempted" && <div className="absolute top-3 right-3 text-sm">Iesākts</div>}
       {solve_state === "solved" && <div className="absolute top-3 right-3 text-sm">Izpildīts</div>}
-      <div className={cn("flex flex-col p-3 sm:flex-row overflow-hidden", {"px-4":!props.illustration_img_url} )}>
+      <div className={cn("flex flex-col p-3 sm:flex-row overflow-hidden", {"px-4":!props.illustration_img} )}>
         <div className="flex gap-x-4 flex-row sm:flex-nowrap items-center">
-          {props.illustration_img_url && isWide && (
+          {props.illustration_img && isWide && (
             <>
               {illstrImgLoading && (
                 <Skeleton className="w-[120px] h-[120px] absolute rounded-md" />
@@ -96,7 +97,7 @@ function TaskCard(props: TaskCardProps) {
                   alt={props.task_full_name}
                   className="h-full object-cover rounded-md"
                   height={120}
-                  src={props.illustration_img_url}
+                  src={props.illustration_img.http_url}
                   width={120}
                   onLoad={() => setIllstrImgLoading(false)}
                 />
