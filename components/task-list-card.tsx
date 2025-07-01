@@ -82,8 +82,8 @@ function TaskCard(props: TaskCardProps) {
         )
       }
     >
-      {solve_state === "attempted" && <div className="absolute bottom-3 right-3 text-sm">Iesākts</div>}
-      {solve_state === "solved" && <div className="absolute bottom-3 right-3 text-sm">Izpildīts</div>}
+      {solve_state === "attempted" && <div className="absolute top-3 right-3 text-sm">Iesākts</div>}
+      {solve_state === "solved" && <div className="absolute top-3 right-3 text-sm">Izpildīts</div>}
       <div className={cn("flex flex-col py-2 px-2.5 sm:flex-row overflow-hidden", {"pl-3":!props.illustration_img} )}>
         <div className="flex gap-x-3 flex-row sm:flex-nowrap items-center">
           {props.illustration_img && isWide && (
@@ -149,7 +149,7 @@ function TaskCard(props: TaskCardProps) {
                   </div>
                 )}
                 {props.origin_notes && props.origin_notes["lv"] && (
-                  <div className="text-xs text-gray-700 ms-2 text-balance max-w-[30em] max-h-[2rem]">
+                  <div className="text-xs text-gray-700 ms-2 text-balance max-w-[30em] max-h-[2rem] overflow-hidden">
                     {props.origin_notes["lv"]}
                   </div>
                 )}

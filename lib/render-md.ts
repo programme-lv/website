@@ -41,10 +41,24 @@ function rehypeAddClasses() {
           node.properties.className = ["bg-gray-100", "p-1", "rounded"];
           break;
         case "table":
+          // Create a wrapper div with overflow-x-auto
+          const wrapper: Element = {
+            type: "element",
+            tagName: "div",
+            properties: {
+              className: ["overflow-x-auto"]
+            },
+            children: [node]
+          };
+
+          // Replace the table node with the wrapper
+          if (parent && index !== null) {
+            parent.children[index] = wrapper;
+          }
+
           node.properties.className = [
-            // "w-full",
             "m-auto",
-            "divide-y",
+            "divide-y", 
             "divide-gray-200",
             "my-2"
           ];
@@ -57,6 +71,7 @@ function rehypeAddClasses() {
             "bg-white",
             "divide-y",
             "divide-gray-200",
+            "text-left",
           ];
           break;
         case "tr":
@@ -66,6 +81,7 @@ function rehypeAddClasses() {
           node.properties.className = [
             "px-3",
             "py-1",
+            "text-left",
             "font-normal",
             "border",
             "border-divider",

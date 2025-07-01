@@ -79,7 +79,7 @@ export default function TaskDetailsPage(props: { task: Task }) {
 	}
 
 	return (
-		<main className="m-2 flex-grow w-full overflow-visible relative pointer-events-auto">
+		<main className="my-2 md:mx-2 flex-grow w-full overflow-visible relative pointer-events-auto">
 			{/* Desktop View */}
 			<div
 				ref={pageRefXL}
@@ -375,7 +375,7 @@ function TaskHeader({
 		<div className="w-full" ref={cardRef}>
 			<div className="flex flex-col p-0 sm:flex-nowrap">
 				<div className="flex flex-row">
-					<div className="h-full flex flex-row gap-3 sm:flex-nowrap flex-grow px-2 py-1.5">
+					<div className="h-full flex flex-row gap-3 sm:flex-nowrap flex-grow px-2 py-1">
 											{layout === "wide" && illustration_img && (
 						<>
 							{imageLoading && <Skeleton className="w-[120px] h-[120px] absolute rounded-md" />}
@@ -469,7 +469,7 @@ function TaskHeader({
 												</>
 											)}
 											{origin_notes?.lv && (
-												<div className="text-xs text-gray-700 ms-1 text-balance">
+												<div className="text-xs text-gray-700 ms-0.5 text-balance">
 													{origin_notes.lv}
 												</div>
 											)}
