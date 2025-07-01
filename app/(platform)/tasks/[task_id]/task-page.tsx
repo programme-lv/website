@@ -597,7 +597,7 @@ function ResizeBar() {
 	return (
 		<div
 			className="flex items-center justify-center w-3 h-full p-0"
-			style={{ marginLeft: 6 }}
+			style={{ marginLeft: 7 }}
 		>
 			<div className="flex flex-col gap-0">
 				{[...Array(3)].map((_, i) => (
