@@ -183,7 +183,7 @@ const MdView = React.memo(function MdViewInner({
 	const subtaskDescriptions = useMemo(() => statement_subtasks?.map((subtask) => renderMdLite(subtask.descriptions["lv"])) ?? [], [JSON.stringify(statement_subtasks)]);
 
 	return (
-		<div className="w-full flex-grow flex flex-col gap-4 my-2 px-3 pb-4">
+		<div className="w-full flex-grow flex flex-col gap-4 my-2 px-2.5 pb-4">
 			<Section title="Stāsts" content={sections.story} />
 			{sections.input && <Section title="Ievaddati" content={sections.input} />}
 			{sections.output && <Section title="Izvaddati" content={sections.output} />}
@@ -193,11 +193,11 @@ const MdView = React.memo(function MdViewInner({
 			{examples && !sections.example && (
 				<div>
 					<h2 className="text-small my-1 mb-2 font-semibold">Piemēri</h2>
-					<div className="flex gap-2 flex-wrap w-full max-w-full">
+					<div className="flex gap-3 flex-wrap w-full max-w-full">
 						{examples.map((example, i) => (
 							<div
 								key={example.input + example.output}
-								className="border-small border-default-300 p-2 flex-grow rounded-md w-[350px] max-w-full"
+								className="border-small border-default-300 p-2 flex-grow rounded-sm w-[350px] max-w-full"
 							>
 								<div className="flex gap-2 gap-x-4 flex-wrap">
 									<CodeBlockWithTitle title="Ievaddati" content={example.input} />
@@ -221,19 +221,19 @@ const MdView = React.memo(function MdViewInner({
 				</div>
 			)}
 
-			<div className="font-light">
+			<div>
 				<h2 className="text-small my-1 mb-2 font-semibold">
-					Ierobežojumi un prasības
+					Izpildes resursu ierobežojumi
 				</h2>
 				<div>
-					Maksimālais <span className="font-medium">izpildes laiks</span> uz testu:{" "}
-					<span className="font-medium">{cpu_time_limit_seconds}</span>{" "}
+					CPU izpildes laiks uz testu:{" "}
+					<strong>{cpu_time_limit_seconds}</strong>{" "}
 					sekundes.
 				</div>
 				<div className="my-0.5"/>
 				<div>
-					Maksimālais <span className="font-medium">atmiņas apjoms</span> uz testu:{" "}
-					<span className="font-medium">{memory_limit_megabytes}</span>{" "}
+					RAM atmiņas apjoms uz testu:{" "}
+					<strong>{memory_limit_megabytes}</strong>{" "}
 					megabaiti.
 				</div>
 			</div>
@@ -243,8 +243,15 @@ const MdView = React.memo(function MdViewInner({
 					<h2 className="text-small my-1 mb-2 font-semibold">
 						Apakšuzdevumi un to vērtēšana
 					</h2>
-					<div className="border-small border-divider rounded-small p-2">
+					<div className="border-small border-divider rounded-sm p-1">
 						<table className="w-full rounded-sm">
+							<thead>
+								<tr className="border-b border-divider font-normal text-sm">
+									<th className="px-2 py-1.5 max-w-[3em] min-w-[2em] font-normal border-r">#</th>
+									<th className="px-2 py-1.5 font-normal border-r">Apraksts un ierobežojumi</th>
+									<th className="px-2 py-1.5 max-w-[3em] min-w-[3em] font-normal">Punkti</th>
+								</tr>
+							</thead>
 							<tbody>
 								{statement_subtasks.map((subtask, i) => (
 									<tr key={i} className={cn({"border-b border-divider": i !== statement_subtasks.length - 1}, { "bg-gray-50": i % 2 === 0 })}>
@@ -256,7 +263,7 @@ const MdView = React.memo(function MdViewInner({
 												}}
 											/>
 										</td>
-										<td className="px-2 py-1.5 max-w-[6em] min-w-[4em] border-l border-gray-200"><span className="font-medium">{subtask.score}</span> p.</td>
+										<td className="px-2 py-1.5 max-w-[3em] min-w-[3em] border-l border-gray-200 font-mono text-center">{subtask.score}</td>
 									</tr>
 								))}
 							</tbody>
@@ -277,11 +284,11 @@ const MdView = React.memo(function MdViewInner({
 					<h2 className="text-small my-1 mb-2 font-semibold">
 						{vis_inp_st_input.subtask}. apakšuzdevuma ievaddati
 					</h2>
-					<div className="flex gap-2 flex-wrap w-full max-w-full">
+					<div className="flex gap-3 flex-wrap w-full max-w-full">
 						{vis_inp_st_input.inputs.map((test, i) => (
 							<div
 								key={i}
-								className="border-small border-divider p-2 flex-grow rounded-md w-[350px] max-w-full"
+								className="border-small border-divider p-2 flex-grow rounded-sm w-[350px] max-w-full"
 							>
 								<div className="flex gap-2 flex-wrap">
 									<CodeBlock content={test.input} />
@@ -308,7 +315,7 @@ function Section({ title, content }: { title: string; content: string }) {
 	return (
 		<div>
 			<h2 className="text-small mb-1 font-semibold">{title}</h2>
-			<div className="text-justify">
+			<div>
 				<span dangerouslySetInnerHTML={{ __html: content }} />
 			</div>
 		</div>
@@ -368,7 +375,7 @@ function TaskHeader({
 		<div className="w-full" ref={cardRef}>
 			<div className="flex flex-col p-0 sm:flex-nowrap">
 				<div className="flex flex-row">
-					<div className="h-full flex flex-row gap-3 sm:flex-nowrap flex-grow px-2.5 py-1.5">
+					<div className="h-full flex flex-row gap-3 sm:flex-nowrap flex-grow px-2 py-1.5">
 											{layout === "wide" && illustration_img && (
 						<>
 							{imageLoading && <Skeleton className="w-[120px] h-[120px] absolute rounded-md" />}
@@ -388,7 +395,7 @@ function TaskHeader({
 					)}
 						<div className="flex flex-col flex-grow justify-between w-full">
 							<div className="flex justify-between items-center">
-								<div className="inline-flex gap-x-4 gap-y-1 justify-between items-center flex-wrap">
+								<div className="inline-flex gap-x-3 gap-y-1 justify-between items-center flex-wrap">
 									<h3 className="text-large font-semibold">
 										{task_full_name}
 									</h3>
@@ -433,7 +440,7 @@ function TaskHeader({
 									</Dropdown>}
 								</div>
 							</div>
-							<div className="flex flex-grow gap-2 mt-1">
+							<div className="flex flex-grow gap-2">
 															{layout === "narrow" && illustration_img && (
 								<div className="max-w-[100px] min-h-16 min-w-16 flex">
 									<Image
@@ -462,7 +469,7 @@ function TaskHeader({
 												</>
 											)}
 											{origin_notes?.lv && (
-												<div className="text-small text-default-700 ms-1">
+												<div className="text-xs text-gray-700 ms-1 text-balance">
 													{origin_notes.lv}
 												</div>
 											)}

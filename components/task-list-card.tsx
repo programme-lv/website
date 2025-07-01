@@ -73,7 +73,7 @@ function TaskCard(props: TaskCardProps) {
           {"bg-yellow-50": solve_state === "attempted"},
         {"bg-white": solve_state === "todo"},
         {"bg-green-50": solve_state === "solved"},
-        "w-full border border-divider rounded-md hover:border-blue-500",
+        "w-full border border-divider rounded-sm hover:border-blue-500",
         {"hover:border-green-500": props.difficulty_rating === 1},
         {"hover:border-blue-500": props.difficulty_rating === 2},
         {"hover:border-violet-500": props.difficulty_rating === 3},
@@ -82,10 +82,10 @@ function TaskCard(props: TaskCardProps) {
         )
       }
     >
-      {solve_state === "attempted" && <div className="absolute top-3 right-3 text-sm">Iesākts</div>}
-      {solve_state === "solved" && <div className="absolute top-3 right-3 text-sm">Izpildīts</div>}
-      <div className={cn("flex flex-col p-3 sm:flex-row overflow-hidden", {"px-4":!props.illustration_img} )}>
-        <div className="flex gap-x-4 flex-row sm:flex-nowrap items-center">
+      {solve_state === "attempted" && <div className="absolute bottom-3 right-3 text-sm">Iesākts</div>}
+      {solve_state === "solved" && <div className="absolute bottom-3 right-3 text-sm">Izpildīts</div>}
+      <div className={cn("flex flex-col py-2 px-2.5 sm:flex-row overflow-hidden", {"pl-3":!props.illustration_img} )}>
+        <div className="flex gap-x-3 flex-row sm:flex-nowrap items-center">
           {props.illustration_img && isWide && (
             <>
               {illstrImgLoading && (

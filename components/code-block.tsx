@@ -14,7 +14,7 @@ export default function CodeBlock({ content }: { content: string }) {
     };
 
     return (
-        <div className="relative flex flex-grow flex-col">
+        <div className="relative flex flex-grow flex-col text-sm">
             <code
                 className="p-2 flex-grow border-small border-divider min-h-8 rounded-sm bg-gray-100"
                 style={{
