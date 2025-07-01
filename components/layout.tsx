@@ -14,8 +14,9 @@ import Link from "next/link";
 import Sidebar from "@/components/sidebar";
 
 import User from "./navbar-user";
-import React from "react";
+import React, { useContext } from "react";
 import { IconInbox, IconListDetails } from "@tabler/icons-react";
+import { AuthContext } from "@/app/providers";
 
 interface BreadcrumbItem {
   label: string;
@@ -129,6 +130,9 @@ const Layout: React.FC<LayoutProps> = ({ children, breadcrumbs, active }) => {
     onOpenChange: onMobileMenuOpenChange,
   } = useDisclosure();
 
+  const { user } = useContext(AuthContext);
+  const userIsAdmin = user?.username === "admin";
+
   return (
     <>
       <MobileNavigationModal
@@ -138,7 +142,7 @@ const Layout: React.FC<LayoutProps> = ({ children, breadcrumbs, active }) => {
       />
 
       <div className="min-h-screen w-full">
-        <Sidebar active={active} />
+        <Sidebar active={active} userIsAdmin={userIsAdmin}/>
 
         <div className="md:ml-16">
           <Header

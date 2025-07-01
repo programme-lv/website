@@ -40,10 +40,11 @@ const items: SidebarItem[] = [
 
 type SidebarProps = {
   active: "tasks" | "submissions" | "admin";
+  userIsAdmin?: boolean;
 };
 
 export default function Sidebar(props: SidebarProps) {
-  const filteredItems = items.filter((item) => item.key !== "admin" || props.active === "admin");
+  const filteredItems = items.filter((item) => item.key !== "admin" || props.userIsAdmin);
 
   return (
     <>
