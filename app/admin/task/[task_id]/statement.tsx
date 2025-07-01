@@ -5,7 +5,10 @@ import { updateTaskStatement, UpdateStatementRequest, deleteTaskImage, revalidat
 import { useRouter } from "next/navigation";
 import { TextLink } from "@/components/text-link";
 import GenericTable from "@/components/generic-table";
+import GenericButton from "@/components/generic-button";
 import { uploadTaskImage } from "@/lib/task/upload-image";
+import Link from "next/link";
+import { IconExternalLink } from "@tabler/icons-react";
 
 interface StatementEditFormProps {
     task: Task;
@@ -165,8 +168,11 @@ export default function StatementEditForm({ task }: StatementEditFormProps) {
 
     return (
         <div className="container py-2 mt-2 max-w-4xl">
-            <h1 className="text-2xl font-bold mb-4">
+            <h1 className="text-2xl font-bold mb-4 flex items-center gap-2">
                 {task.task_full_name}
+                <Link href={`/tasks/${task.short_task_id}`} className="text-blue-700 inline">
+                    <IconExternalLink className="w-4 h-4" />
+                </Link>
             </h1>
 
             {error && (
@@ -251,13 +257,14 @@ export default function StatementEditForm({ task }: StatementEditFormProps) {
                 </div>
 
                 <div className="flex justify-end">
-                    <button
-                        className={`p-2 bg-blue-700 text-white rounded hover:bg-blue-800 ${isSubmittingStatement ? "opacity-70 cursor-not-allowed" : ""}`}
+                    <GenericButton
+                        variant="primary"
                         onClick={handleSave}
-                        disabled={isSubmittingStatement}
+                        isLoading={isSubmittingStatement}
+                        isDisabled={isSubmittingStatement}
                     >
-                        {isSubmittingStatement ? "Saving..." : "Update statement"}
-                    </button>
+                        Update statement
+                    </GenericButton>
                 </div>
 
                 <h2 className="text-lg font-bold mb-4">Statement Images</h2>
@@ -278,11 +285,14 @@ export default function StatementEditForm({ task }: StatementEditFormProps) {
                             onChange={handleImageUpload}
                             className="hidden"
                         />
-                        <label
-                            htmlFor="image-upload"
-                            className={`p-2 bg-blue-700 text-white rounded hover:bg-blue-800 cursor-pointer ${isUploadingImage ? "opacity-70 cursor-not-allowed" : ""}`}
-                        >
-                            {isUploadingImage ? "Uploading..." : "Upload New Image"}
+                        <label htmlFor="image-upload">
+                            <GenericButton
+                                variant="primary"
+                                isLoading={isUploadingImage}
+                                isDisabled={isUploadingImage}
+                            >
+                                Upload New Image
+                            </GenericButton>
                         </label>
                         <span className="ml-2 text-sm text-gray-600">
                             Supported formats: JPG, PNG, GIF, WebP, SVG, BMP, TIFF
@@ -345,9 +355,13 @@ export default function StatementEditForm({ task }: StatementEditFormProps) {
                                 key: "delete",
                                 header: "Delete",
                                 render: (item) => (
-                                    <button className="p-2 px-3 text-sm bg-red-700 text-white rounded hover:bg-red-800" onClick={() => handleDeleteImage(item.filename)}>
+                                    <GenericButton
+                                        variant="danger"
+                                        size="sm"
+                                        onClick={() => handleDeleteImage(item.filename)}
+                                    >
                                         Delete
-                                    </button>
+                                    </GenericButton>
                                 ),
                                 width: "100px",
                             }

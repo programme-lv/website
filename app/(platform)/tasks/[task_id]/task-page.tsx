@@ -16,6 +16,7 @@ import {
 	IconFileTypePdf,
 	IconGripVertical,
 	IconMenu2,
+	IconPencil,
 	IconSend,
 } from "@tabler/icons-react";
 import {
@@ -114,7 +115,7 @@ const LeftSide = React.memo(function LeftSideInner({ task }: { task: Task }) {
 			className="h-full max-h-full w-full overflow-hidden rounded-sm border-small border-divider p-2 bg-white overflow-y-auto"
 		>
 			<div className="h-full relative flex flex-col items-center gap-1 flex-grow">
-				<TaskHeader {...task} />
+				<TaskHeader task_id={task.short_task_id} {...task} />
 
 				<Divider className="my-1" />
 				{task.default_md_statement && (
@@ -324,6 +325,7 @@ function Section({ title, content }: { title: string; content: string }) {
 
 type TaskHeaderProps = {
 	task_full_name: string;
+	task_id: string;
 	difficulty_rating: 1 | 2 | 3 | 4 | 5;
 	illustration_img?: IllustrationImage;
 	origin_olympiad?: string;
@@ -333,6 +335,7 @@ type TaskHeaderProps = {
 
 function TaskHeader({
 	task_full_name,
+	task_id,
 	difficulty_rating,
 	illustration_img,
 	origin_olympiad,
@@ -343,6 +346,9 @@ function TaskHeader({
 	const [layout, setLayout] = useState<"xs" | "narrow" | "wide">("wide");
 	const [imageLoading, setImageLoading] = useState<boolean>(true);
 	const [logoLoading, setLogoLoading] = useState<boolean>(true);
+
+	const { user } = useContext(AuthContext);
+	const userIsAdmin = user?.username === "admin";
 
 	const handleCardResize = (cardWidth: number) => {
 		const wideBoundary = 550;
@@ -406,7 +412,7 @@ function TaskHeader({
 									)}
 								</div>
 								<div>
-									{default_pdf_statement_url && <Dropdown placement="bottom-end" disableAnimation radius="sm">
+									{(default_pdf_statement_url || userIsAdmin) && <Dropdown placement="bottom-end" disableAnimation radius="sm">
 										<DropdownTrigger>
 											<Button isIconOnly size="sm" variant="light">
 												<IconMenu2
@@ -427,12 +433,21 @@ function TaskHeader({
 													<DropdownItem
 														key="open-original-pdf"
 														endContent={
-															<IconFileTypePdf className="text-default-600" />
+															<IconFileTypePdf className="text-default-700" />
 														}
 														href={default_pdf_statement_url}
 														target="_blank"
 													>
 														Atvērt oriģinālo PDF
+													</DropdownItem>
+												)}
+												{userIsAdmin && (
+													<DropdownItem
+														key="edit-task"
+														endContent={<IconPencil className="text-default-700" />}
+														href={`/admin/task/${task_id}`}
+													>
+														Rediģēt uzdevumu
 													</DropdownItem>
 												)}
 											</>

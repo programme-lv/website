@@ -2,7 +2,7 @@
 import GenericTable from "@/components/generic-table";
 import { listSubmissions, reevaluateSubmissions } from "@/lib/subms";
 import { PaginatedSubmListResponse, SubmListEntry } from "@/types/subm";
-import { Button } from "@heroui/button";
+import GenericButton from "@/components/generic-button";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -64,17 +64,22 @@ export default function SubmAdminList({ submPage }: { submPage: PaginatedSubmLis
     return (
         <div className="p-2 bg-white  max-w-2xl rounded-small">
             {/* <button onClick={() => refetch()}>Refresh</button> */}
-            <div className="flex flex-row gap-2 items-center justify-between">
+            <div className="flex flex-row gap-2 items-center justify-start">
                 <div className="flex flex-row gap-2 items-center">
                     <NumberInput fullWidth={false} size="sm" value={currentPage} onValueChange={setCurrentPage} label="Page" min={1} />
                     <NumberInput fullWidth={false} size="sm" value={limit} onValueChange={setLimit} label="Limit" />
-                    <Button color="primary" onPress={() => refetch()}>Refresh</Button>
+                    <GenericButton variant="primary" onClick={() => refetch()}>
+                        Refresh
+                    </GenericButton>
                 </div>
-                <Button
-                    color="secondary"
-                    onPress={handleReevaluate}
+                <GenericButton
+                    variant="secondary"
+                    onClick={handleReevaluate}
                     isDisabled={selectedSubmissions.size === 0 || isReevaluating}
-                > Reevaluate</Button>
+                    isLoading={isReevaluating}
+                >
+                    Reevaluate
+                </GenericButton>
             </div>
             <br />
             <GenericTable

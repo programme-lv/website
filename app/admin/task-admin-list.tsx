@@ -1,4 +1,5 @@
 import GenericTable from "@/components/generic-table";
+import GenericButton from "@/components/generic-button";
 import { ApiResponse } from "@/lib/api-response";
 import { Task } from "@/types/task";
 import Link from "next/link";
@@ -24,9 +25,9 @@ export default function TaskAdminList({ tasks }: { tasks: ApiResponse<Task[]> })
                             header: "Darbība",
                             render: (task) => (
                                 <Link href={`/admin/task/${task.short_task_id}`}>
-                                    <button className="bg-blue-500 text-sm text-white p-2 rounded">
+                                    <GenericButton variant="primary" size="sm">
                                         Rediģēt
-                                    </button>
+                                    </GenericButton>
                                 </Link>
                             ),
                         }

@@ -4,7 +4,10 @@ import { useState, useRef } from "react";
 import { Task } from "@/types/task";
 import { useRouter } from "next/navigation";
 import { TextLink } from "@/components/text-link";
+import GenericButton from "@/components/generic-button";
 import { uploadTaskIllustration, deleteTaskIllustration } from "@/lib/task/upload-image";
+import { IconExternalLink } from "@tabler/icons-react";
+import Link from "next/link";
 
 interface TaskEditFormProps {
     task: Task;
@@ -80,8 +83,11 @@ export default function TaskEditForm({ task }: TaskEditFormProps) {
 
     return (
         <div className="container py-2 mt-2 max-w-4xl">
-            <h1 className="text-2xl font-bold mb-4">
+            <h1 className="text-2xl font-bold mb-4 flex items-center gap-2">
                 {task.task_full_name}
+                <Link href={`/tasks/${task.short_task_id}`} className="text-blue-700 inline">
+                    <IconExternalLink className="w-4 h-4" />
+                </Link>
             </h1>
 
             {error && (
@@ -152,13 +158,15 @@ export default function TaskEditForm({ task }: TaskEditFormProps) {
                                 <div>Dimensions: {task.illustration_img.width_px} × {task.illustration_img.height_px} px</div>
                                 <div>File size: {(task.illustration_img.sz_in_bytes / 1024).toFixed(1)} KB</div>
                             </div>
-                            <button
-                                className="p-2 px-3 text-sm bg-red-700 text-white rounded hover:bg-red-800 w-fit"
+                            <GenericButton
+                                variant="danger"
+                                size="sm"
                                 onClick={handleDeleteIllustration}
-                                disabled={isUploadingIllustration}
+                                isLoading={isUploadingIllustration}
+                                isDisabled={isUploadingIllustration}
                             >
-                                {isUploadingIllustration ? "Deleting..." : "Delete Illustration"}
-                            </button>
+                                Delete Illustration
+                            </GenericButton>
                         </div>
                     </div>
                 </div>
@@ -175,11 +183,15 @@ export default function TaskEditForm({ task }: TaskEditFormProps) {
                         onChange={handleIllustrationUpload}
                         className="hidden"
                     />
-                    <label
-                        htmlFor="illustration-upload"
-                        className={`p-2 bg-blue-700 text-white rounded hover:bg-blue-800 cursor-pointer ${isUploadingIllustration ? "opacity-70 cursor-not-allowed" : ""}`}
-                    >
-                        {isUploadingIllustration ? "Uploading..." : "Choose Image"}
+                    <label htmlFor="illustration-upload">
+                        <GenericButton
+                            variant="primary"
+                            size="sm"
+                            isLoading={isUploadingIllustration}
+                            isDisabled={isUploadingIllustration}
+                        >
+                            Choose Image
+                        </GenericButton>
                     </label>
                 </div>
             </div>}
