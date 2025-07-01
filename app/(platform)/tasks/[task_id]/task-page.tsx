@@ -52,6 +52,7 @@ import { createSubmission } from "@/lib/subms";
 import TaskDifficultyChip from "@/components/task-difficulty-chip";
 import LIO_LOGO from "@/public/lio-logo.png";
 import CodeBlock from "@/components/code-block";
+import GenericButton from "@/components/generic-button";
 import { ProgrammingLanguage } from "@/types/proglv";
 
 export default function TaskDetailsPage(props: { task: Task }) {
@@ -78,7 +79,7 @@ export default function TaskDetailsPage(props: { task: Task }) {
 	}
 
 	return (
-		<main className="m-3 flex-grow w-full overflow-visible relative pointer-events-auto">
+		<main className="m-2 flex-grow w-full overflow-visible relative pointer-events-auto">
 			{/* Desktop View */}
 			<div
 				ref={pageRefXL}
@@ -110,7 +111,7 @@ export default function TaskDetailsPage(props: { task: Task }) {
 const LeftSide = React.memo(function LeftSideInner({ task }: { task: Task }) {
 	return (
 		<div
-			className="h-full max-h-full w-full overflow-hidden rounded-small border-small border-divider p-2 bg-white overflow-y-auto"
+			className="h-full max-h-full w-full overflow-hidden rounded-sm border-small border-divider p-2 bg-white overflow-y-auto"
 		>
 			<div className="h-full relative flex flex-col items-center gap-1 flex-grow">
 				<TaskHeader {...task} />
@@ -398,7 +399,7 @@ function TaskHeader({
 									)}
 								</div>
 								<div>
-									<Dropdown placement="bottom-end" disableAnimation radius="sm">
+									{default_pdf_statement_url && <Dropdown placement="bottom-end" disableAnimation radius="sm">
 										<DropdownTrigger>
 											<Button isIconOnly size="sm" variant="light">
 												<IconMenu2
@@ -429,7 +430,7 @@ function TaskHeader({
 												)}
 											</>
 										</DropdownMenu>
-									</Dropdown>
+									</Dropdown>}
 								</div>
 							</div>
 							<div className="flex flex-grow gap-2 mt-1">
@@ -547,7 +548,7 @@ int main() {
 	};
 
 	return (
-		<div className="flex flex-col flex-grow bg-white rounded-small border-small border-divider p-2">
+		<div className="flex flex-col flex-grow bg-white rounded-sm border-small border-divider p-2">
 			<div className="h-full w-full flex flex-col gap-2">
 				<div className="flex justify-end gap-3">
 					<LanguageSelect
@@ -557,14 +558,19 @@ int main() {
 					/>
 					<div className="mt-2 flex justify-end gap-3">
 						{authContext.user ? (
-							<Button color="primary" size="sm" isLoading={isLoading} onPress={submitSolution}>
+							<GenericButton 
+								variant="primary" 
+								size="sm" 
+								isLoading={isLoading} 
+								onClick={() => submitSolution()}
+								icon={<IconSend size={16} />}
+							>
 								Iesūtīt risinājumu
-								<IconSend size={16} />
-							</Button>
+							</GenericButton>
 						) : (
-							<Button isDisabled size="sm">
+							<GenericButton isDisabled size="sm">
 								Pieslēdzies, lai iesūtītu risinājumu!
-							</Button>
+							</GenericButton>
 						)}
 					</div>
 				</div>
