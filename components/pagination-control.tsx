@@ -55,7 +55,10 @@ export default function PaginationControl({
         initialPage={currentPage} 
         total={totalPages} 
         onChange={handlePageChange}
-        className="text-sm bg-white rounded-small p-2 border-small border-divider m-0"
+        className="text-sm bg-white rounded-sm p-2 border-small border-divider m-0"
+        classNames={{
+          item: "rounded-small"
+        }}
         showControls
         color="primary"
         variant="flat"

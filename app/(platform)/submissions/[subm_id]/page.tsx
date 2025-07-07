@@ -91,10 +91,10 @@ export default async function Page({
                         eval_status={submData.curr_eval.eval_stage}
                     />
                     <Spacer y={3} />
-                    <div className="bg-white p-3 rounded-small border-small border-divider overflow-x-auto">
+                    <div className="bg-white p-3 rounded-sm border-small border-divider overflow-x-auto">
                         {!submData.content && (
                             <div className="text-small text-default-900 select-none mb-1">
-                                Risinājuma kods ir pieejams tiem tikai lietotājiem, kuri paši ir atrisinājuši šo uzdevumu.
+                                Risinājuma kods ir redzams tikai tiem lietotājiem, kuri paši ir atrisinājuši šo uzdevumu.
                             </div>
                         )}
                         {submData.content && (
@@ -106,7 +106,7 @@ export default async function Page({
                     <Spacer y={3} />
                     {execData.subm_comp && (
                         <>
-                            <div className="bg-white p-3 rounded-small border-small border-divider overflow-x-auto">
+                            <div className="bg-white p-3 rounded-sm border-small border-divider overflow-x-auto">
                                 <p className="text-small text-default-900 select-none mb-1">
                                     Kompilācijas izvaddati:
                                 </p>
@@ -116,7 +116,7 @@ export default async function Page({
                         </>
                     )}
                     {(!execData.subm_comp || execData.subm_comp.exit === 0) && (
-                        <div className="bg-white p-3 rounded-small border-small border-divider overflow-x-auto">
+                        <div className="bg-white p-3 rounded-sm border-small border-divider overflow-x-auto">
                             <TestResultTable subm={submData} exec={execData} />
                         </div>
                     )}

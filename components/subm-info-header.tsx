@@ -35,7 +35,7 @@ type SubmInfoHeaderProps = {
     ];
   
     return (
-      <div className="border-small border-divider rounded-md bg-white p-3">
+      <div className="border-small border-divider rounded-sm bg-white p-3">
         <div className="flex flex-wrap gap-x-6 gap-y-3 lg:gap-8 xl:gap-10 px-1">
           {entries.map((entry) => (
             <div key={entry.label} className="flex flex-col">
