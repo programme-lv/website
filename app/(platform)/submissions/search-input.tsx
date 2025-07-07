@@ -22,7 +22,11 @@ export default function SearchInput() {
 
     const handleSearch = () => {
         const params = new URLSearchParams(searchParams.toString());
-        params.set("search", search);
+        if (search === "") {
+            params.delete("search");
+        } else {
+            params.set("search", search);
+        }
         router.push(`${pathname}?${params.toString()}`);
     }
 

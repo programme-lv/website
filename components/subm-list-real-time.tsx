@@ -21,6 +21,7 @@ export default function RealTimeSubmTable({
   initial,
   initialPagination,
   currentPage,
+  search,
 }: {
   initial: SubmListEntry[];
   initialPagination: {
@@ -30,6 +31,7 @@ export default function RealTimeSubmTable({
     hasMore: boolean;
   };
   currentPage: number;
+  search: string;
 }) {
   const [isChangingPage, setIsChangingPage] = useState(false);
 
@@ -44,8 +46,8 @@ export default function RealTimeSubmTable({
 
   // Fetch submissions data with a polling interval of 2 seconds
   const { data, isLoading, refetch } = useQuery({
-      queryKey: ["submissions", initialPagination.offset, initialPagination.limit],
-      queryFn: () => listSubmissions(initialPagination.offset, initialPagination.limit),
+      queryKey: ["submissions", initialPagination.offset, initialPagination.limit, search],
+      queryFn: () => listSubmissions(initialPagination.offset, initialPagination.limit, search),
       refetchInterval: 10000,
       refetchOnWindowFocus: true,
       refetchOnMount: true,
@@ -111,7 +113,7 @@ export default function RealTimeSubmTable({
     <>
       <div className="w-full">
         <SubmissionTable
-          skeleton={(submissions.length === 0 || (isChangingPage || isLoading))}
+          skeleton={isChangingPage || isLoading}
           submissions={submissions} // Pass the submissions data to the table component
         />
       </div>

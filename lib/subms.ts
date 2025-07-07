@@ -5,10 +5,12 @@ import { MaxScorePerTask } from "@/types/scores";
 
 export const listSubmissions = async (
   offset: number = 0,
-  limit: number = 30
+  limit: number = 30,
+  search?: string
 ): Promise<PaginatedSubmListResponse> => {
   try {
-    const response = await fetch(`${API_HOST}/subm?offset=${offset}&limit=${limit}`, {
+    let url = `${API_HOST}/subm?offset=${offset}&limit=${limit}&search=${encodeURIComponent(search || "")}`;
+    const response = await fetch(url, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
