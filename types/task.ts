@@ -69,6 +69,16 @@ type StatementImage = {
     sz_in_bytes: number;
 };
 
+type TaskPreview = {
+    shortId: string;
+    fullName: string;
+    illustrImg: IllustrationImage;
+    difficultyRating: number;
+    originOlympiad: string;
+    originNote: string;
+    mdStatementStory: string;
+};
+
 export type {
     Task,
     IllustrationImage,
@@ -79,4 +89,5 @@ export type {
     Example,
     MarkdownStatement,
     StatementImage,
+    TaskPreview,
 };
