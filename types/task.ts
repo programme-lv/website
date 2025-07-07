@@ -70,13 +70,13 @@ type StatementImage = {
 };
 
 type TaskPreview = {
-    shortId: string;
-    fullName: string;
-    illustrImg: IllustrationImage;
-    difficultyRating: number;
-    originOlympiad: string;
-    originNote: string;
-    mdStatementStory: string;
+    short_id: string;
+    full_name: string;
+    illustr_img?: IllustrationImage;
+    difficulty_rating: 1 | 2 | 3 | 4 | 5;
+    origin_olympiad?: string;
+    origin_note?: string;
+    md_statement_story: string;
 };
 
 export type {

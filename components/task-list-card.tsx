@@ -11,23 +11,15 @@ import { renderMdLite } from "@/lib/render-md";
 import TaskDifficultyChip from "./task-difficulty-chip";
 import { cn } from "./cn";
 import { MaxScore } from "@/types/scores";
-import { IllustrationImage } from "@/types/task";
-
-type MarkdownStatement = {
-  story: string;
-  input: string;
-  output: string;
-  notes?: string;
-  scoring?: string;
-};
+import { IllustrationImage, TaskPreview } from "@/types/task";
 
 type TaskCardProps = {
-  task_full_name: string;
-  origin_olympiad: string;
+  full_name: string;
+  origin_olympiad?: string;
   difficulty_rating: 1 | 2 | 3 | 4 | 5;
-  illustration_img?: IllustrationImage;
-  default_md_statement?: MarkdownStatement;
-  origin_notes?: Record<string, string>;
+  illustr_img?: IllustrationImage;
+  md_statement_story?: string;
+  origin_note?: string;
   user_max_score?: MaxScore;
 };
 
@@ -84,9 +76,9 @@ function TaskCard(props: TaskCardProps) {
     >
       {solve_state === "attempted" && <div className="absolute top-3 right-3 text-sm">Iesākts</div>}
       {solve_state === "solved" && <div className="absolute top-3 right-3 text-sm">Izpildīts</div>}
-      <div className={cn("flex flex-col py-2 px-2.5 sm:flex-row overflow-hidden", {"pl-3":!props.illustration_img} )}>
+      <div className={cn("flex flex-col py-2 px-2.5 sm:flex-row overflow-hidden", {"pl-3":!props.illustr_img} )}>
         <div className="flex gap-x-3 flex-row sm:flex-nowrap items-center">
-          {props.illustration_img && isWide && (
+          {props.illustr_img && isWide && (
             <>
               {illstrImgLoading && (
                 <Skeleton className="w-[120px] h-[120px] absolute rounded-md" />
@@ -94,10 +86,10 @@ function TaskCard(props: TaskCardProps) {
               <div className="w-[120px] max-w-[120px] flex-shrink-0">
                 <Image
                   disableAnimation
-                  alt={props.task_full_name}
+                  alt={props.full_name}
                   className="h-full object-cover rounded-md"
                   height={120}
-                  src={props.illustration_img.http_url}
+                  src={props.illustr_img.http_url}
                   width={120}
                   onLoad={() => setIllstrImgLoading(false)}
                 />
@@ -109,19 +101,19 @@ function TaskCard(props: TaskCardProps) {
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-x-2">
                   <h3 className="text-lg font-medium truncate">
-                    {props.task_full_name}
+                    {props.full_name}
                   </h3>
                   <TaskDifficultyChip
                     difficulty_rating={props.difficulty_rating}
                   />
                 </div>
               </div>
-              {props.default_md_statement && (
+              {props.md_statement_story && (
                 <div className="mt-1">
                   <div
                     dangerouslySetInnerHTML={{
                       __html: renderMdLite(
-                        (props.default_md_statement.story)
+                        (props.md_statement_story)
                           .replace(/\n/g, " ")
                           .substring(0, 600),
                       ),
@@ -148,9 +140,9 @@ function TaskCard(props: TaskCardProps) {
                     />
                   </div>
                 )}
-                {props.origin_notes && props.origin_notes["lv"] && (
+                {props.origin_note && (
                   <div className="text-xs text-gray-700 ms-2 text-balance max-w-[30em] max-h-[2rem] overflow-hidden">
-                    {props.origin_notes["lv"]}
+                    {props.origin_note}
                   </div>
                 )}
               </div>

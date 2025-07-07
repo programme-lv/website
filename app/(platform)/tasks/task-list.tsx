@@ -7,11 +7,11 @@ import Link from "next/link";
 import Alert from "@/components/alert";
 import { listTasks } from "@/lib/task/tasks";
 import TaskCard from "@/components/task-list-card";
-import { Task } from "@/types/task";
+import { TaskPreview } from "@/types/task";
 import { AuthContext } from "@/app/providers";
 import { getMaxScorePerTask } from "@/lib/subms";
 
-export function TaskList(props: { tasks: Task[] }) {
+export function TaskList(props: { tasks: TaskPreview[] }) {
 	const authContext = useContext(AuthContext);
 
   const userMaxScoresQuery = useQuery({
@@ -26,7 +26,7 @@ export function TaskList(props: { tasks: Task[] }) {
 
   let tasks = listTasksQuery.data ? (listTasksQuery.data.data ?? []) : props.tasks;
   tasks = tasks?.sort(
-    (a: Task, b: Task) => a.difficulty_rating - b.difficulty_rating,
+    (a: TaskPreview, b: TaskPreview) => a.difficulty_rating - b.difficulty_rating,
   );
 
   let userMaxScores = userMaxScoresQuery.data;
@@ -43,16 +43,16 @@ export function TaskList(props: { tasks: Task[] }) {
         {tasks && tasks.length > 0 ? (
           tasks.map((task) => (
             <Link
-              key={task.short_task_id}
+              key={task.short_id}
               className="contents"
-              href={`/tasks/${task.short_task_id}`}
+              href={`/tasks/${task.short_id}`}
               prefetch={true}
             >
               {userMaxScores && (
-                <TaskCard key={task.short_task_id} {...task} user_max_score={userMaxScores[task.short_task_id]}/>
+                <TaskCard key={task.short_id} {...task} user_max_score={userMaxScores[task.short_id]}/>
               )}
               {!userMaxScores && (
-                <TaskCard key={task.short_task_id} {...task} />
+                <TaskCard key={task.short_id} {...task} />
               )}
             </Link>
           ))

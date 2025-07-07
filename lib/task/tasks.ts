@@ -1,6 +1,6 @@
 'use server';
 
-import { Task } from "@/types/task";
+import { Task, TaskPreview } from "@/types/task";
 import { ApiResponse } from "../api-response";
 import { API_HOST } from "../config";
 import { cookies } from "next/headers";
@@ -31,8 +31,8 @@ export const getTaskById = async (
   return data;
 };
 
-export const listTasks = async (): Promise<ApiResponse<Task[]>> => {
-  const response = await fetch(`${API_HOST}/tasks`, {
+export const listTasks = async (): Promise<ApiResponse<TaskPreview[]>> => {
+  const response = await fetch(`${API_HOST}/task-list`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
