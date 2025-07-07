@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Tooltip } from "@heroui/tooltip";
-import { IconInbox, IconListDetails, IconTerminal2 } from "@tabler/icons-react";
+import { IconInbox, IconListDetails, IconTerminal2, IconInfoCircle } from "@tabler/icons-react";
 import React from "react";
 
 import Logo from "@/public/emoji-logo.png";
@@ -31,6 +31,13 @@ const items: SidebarItem[] = [
   },
 
   {
+    key: "about",
+    href: "/about",
+    icon: IconInfoCircle,
+    title: "Par mums",
+  },
+
+  {
     key: "admin",
     href: "/admin",
     icon: IconTerminal2,
@@ -39,7 +46,7 @@ const items: SidebarItem[] = [
 ];
 
 type SidebarProps = {
-  active: "tasks" | "submissions" | "admin";
+  active: "tasks" | "submissions" | "admin" | "about";
   userIsAdmin?: boolean;
 };
 

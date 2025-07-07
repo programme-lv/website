@@ -15,7 +15,7 @@ import Sidebar from "@/components/sidebar";
 
 import User from "./navbar-user";
 import React, { useContext } from "react";
-import { IconInbox, IconListDetails } from "@tabler/icons-react";
+import { IconInbox, IconListDetails, IconInfoCircle } from "@tabler/icons-react";
 import { AuthContext } from "@/app/providers";
 
 interface BreadcrumbItem {
@@ -26,7 +26,7 @@ interface BreadcrumbItem {
 interface LayoutProps {
   children: React.ReactNode;
   breadcrumbs: BreadcrumbItem[];
-  active: "tasks" | "submissions" | "admin";
+  active: "tasks" | "submissions" | "admin" | "about";
 }
 
 const MobileNavigationModal = ({
@@ -54,6 +54,7 @@ const MobileNavigationModal = ({
         <div className="flex flex-col gap-8 mt-6 mb-10 mx-8">
           <Link href="/tasks" className="flex items-center gap-2" onClick={onClose}><IconListDetails />Uzdevumi </Link>
           <Link href="/submissions" className="flex items-center gap-2" onClick={onClose}><IconInbox />Iesūtījumi </Link>
+          <Link href="/about" className="flex items-center gap-2" onClick={onClose}><IconInfoCircle />Par mums </Link>
         </div>
       </ModalBody>
     </ModalContent>
