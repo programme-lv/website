@@ -1,6 +1,6 @@
 import { cn } from "@heroui/react";
-import BlueLink from "./blue-link";
-import { statusTranslations } from "./submission-table";
+import BlueLink from "@/components/blue-link";
+import { statusTranslations } from "@/components/submission-table";
 
 
 function Score({ received, possible }: { received: number, possible: number }) {
