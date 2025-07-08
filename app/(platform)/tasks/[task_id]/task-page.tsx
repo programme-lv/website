@@ -557,7 +557,7 @@ int main() {
 				taskCode
 			);
 			await queryClient.invalidateQueries({ queryKey: ["submissions"] });
-			await router.push(`/submissions`);
+			await router.push(`/submissions?my=true`);
 		} catch (error: any) {
 			setIsLoading(false);
 			const data = error.response?.data;
