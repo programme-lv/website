@@ -8,9 +8,13 @@ interface Props {
 export default async function ShikiCodeBlock(props: Props) {
   const out = await codeToHtml(props.children, {
     lang: props.lang,
-    theme: 'catppuccin-latte',
+    theme: 'dark-plus',
     transformers: [
       {
+        pre(node) {
+          node.properties.style += ';padding: 0.5rem;';
+          return node;
+        },
         line(node) {
           // Add line class to each line for the CSS selector
           node.properties.class = 'line';
