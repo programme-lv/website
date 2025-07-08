@@ -158,26 +158,19 @@ export default function StatementEditForm({ task }: StatementEditFormProps) {
 
     return (
         <div className="container py-2 mt-2 max-w-4xl">
-            <h1 className="text-2xl font-bold mb-4 flex items-center gap-2">
-                {task.task_full_name}
-                <Link href={`/tasks/${task.short_task_id}`} className="text-blue-700 inline">
-                    <IconExternalLink className="w-4 h-4" />
-                </Link>
-            </h1>
-
             {error && (
                 <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
                     {error}
                 </div>
             )}
 
-            <h2 className="text-lg font-bold mb-1">Statement</h2>
+            <h2 className="text-lg font-bold mb-1">Formulējums</h2>
             <div className="text-sm text-gray-600 mb-3">
-                Pro tip: Press Ctrl+S to save the statement
+                Padoms: Ctrl+S lai saglabāt formulējuma izmaiņas.
             </div>
             <div className="space-y-4">
                 <div>
-                    <label className="block text-sm font-medium mb-1">Story</label>
+                    <label className="block text-sm font-medium mb-1">Stāsts</label>
                     <textarea
                         className="w-full border rounded p-2"
                         value={formData.story}
@@ -187,7 +180,7 @@ export default function StatementEditForm({ task }: StatementEditFormProps) {
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium mb-1">Input</label>
+                    <label className="block text-sm font-medium mb-1">Ievaddati</label>
                     <textarea
                         className="w-full border rounded p-2"
                         value={formData.input}
@@ -197,7 +190,7 @@ export default function StatementEditForm({ task }: StatementEditFormProps) {
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium mb-1">Output</label>
+                    <label className="block text-sm font-medium mb-1">Izvaddati</label>
                     <textarea
                         className="w-full border rounded p-2"
                         value={formData.output}
@@ -207,42 +200,42 @@ export default function StatementEditForm({ task }: StatementEditFormProps) {
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium mb-1">Notes</label>
+                    <label className="block text-sm font-medium mb-1">Piezīmes</label>
                     <textarea
                         className="w-full border rounded p-2"
                         value={formData.notes}
                         onChange={handleChange("notes")}
-                        rows={textareaRows.notes}
+                        rows={1}
                     />
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium mb-1">Scoring</label>
+                    <label className="block text-sm font-medium mb-1">Vērtēšana (šķiet, ka netiek izmantota)</label>
                     <textarea
                         className="w-full border rounded p-2"
                         value={formData.scoring}
                         onChange={handleChange("scoring")}
-                        rows={textareaRows.scoring}
+                        rows={1}
                     />
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium mb-1">Talk</label>
+                    <label className="block text-sm font-medium mb-1">Komunikācija  (interaktīvajos uzdevumos)</label>
                     <textarea
                         className="w-full border rounded p-2"
                         value={formData.talk}
                         onChange={handleChange("talk")}
-                        rows={textareaRows.talk}
+                        rows={1}
                     />
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium mb-1">Example</label>
+                    <label className="block text-sm font-medium mb-1">Piemērs (interaktīvajos uzdevumos)</label>
                     <textarea
                         className="w-full border rounded p-2"
                         value={formData.example}
                         onChange={handleChange("example")}
-                        rows={textareaRows.example}
+                        rows={1}
                     />
                 </div>
 
@@ -254,11 +247,11 @@ export default function StatementEditForm({ task }: StatementEditFormProps) {
                         isDisabled={isSubmittingStatement}
                         icon={<IconDeviceFloppy size={18} />}
                     >
-                        Update statement
+                        Saglabāt formulējumu
                     </GenericButton>
                 </div>
 
-                <h2 className="text-lg font-bold mb-4">Statement Images</h2>
+                <h2 className="text-lg font-bold mb-4">Formulējuma attēli</h2>
 
                 {uploadError && (
                     <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
@@ -274,10 +267,10 @@ export default function StatementEditForm({ task }: StatementEditFormProps) {
                             variant="primary"
                             acceptedTypes="image/jpeg,image/png,image/gif,image/webp,image/svg+xml,image/bmp,image/tiff"
                         >
-                            Upload New Image
+                            Augšupielādēt jaunu attēlu
                         </FileUpload>
                         <span className="ml-2 text-sm text-gray-600">
-                            Supported formats: JPG, PNG, GIF, WebP, SVG, BMP, TIFF
+                            Atļautie formāti: JPG, PNG, GIF, WebP, SVG, BMP, TIFF
                         </span>
                     </div>
                 </div>
@@ -285,11 +278,10 @@ export default function StatementEditForm({ task }: StatementEditFormProps) {
                 <div className="p-2 bg-white">
                     <GenericTable
                         data={task.statement_images || []}
-                        delimitedRows={[2, 5]}
                         columns={[
                             {
                                 key: "preview",
-                                header: "Preview",
+                                header: "Priekšskatījums",
                                 width: "100px",
                                 render: (item) => (
                                     <img src={item.http_url} alt={item.filename} className="w-24" />
@@ -297,7 +289,7 @@ export default function StatementEditForm({ task }: StatementEditFormProps) {
                             },
                             {
                                 key: "filename",
-                                header: "Filename",
+                                header: "Faila nosaukums",
                                 render: (item) => item.filename,
                                 width: "200px",
                             },
@@ -311,38 +303,38 @@ export default function StatementEditForm({ task }: StatementEditFormProps) {
                                         target="_blank"
                                         rel="noopener noreferrer"
                                     >
-                                        here
+                                        skatīt
                                     </TextLink>
                                 ),
                             },
                             {
                                 key: "width",
-                                header: "Width [px]",
+                                header: "Platums [px]",
                                 render: (item) => item.width_px,
-                                width: "100px",
+                                width: "120px",
                             },
                             {
                                 key: "height",
-                                header: "Height [px]",
+                                header: "Augstums [px]",
                                 render: (item) => item.height_px,
-                                width: "100px",
+                                width: "120px",
                             },
                             {
                                 key: "size",
-                                header: "Size [kB]",
+                                header: "Izmērs [kB]",
                                 render: (item) => (item.sz_in_bytes / 1000).toFixed(0),
                                 width: "100px",
                             },
                             {
                                 key: "delete",
-                                header: "Delete",
+                                header: "Darbība",
                                 render: (item) => (
                                     <GenericButton
                                         variant="danger"
                                         size="sm"
                                         onClick={() => handleDeleteImage(item.filename)}
                                     >
-                                        Delete
+                                        Dzēst
                                     </GenericButton>
                                 ),
                                 width: "100px",

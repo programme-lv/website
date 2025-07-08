@@ -6,6 +6,7 @@ import { isAdmin } from "@/lib/dal";
 import RestrictedPleaseLogin from "@/components/restricted-please-login";
 import Layout from "@/components/layout";
 import { TextLink } from "@/components/text-link";
+import SolutionsEditForm from "./solutions";
 
 export default async function TaskEditPage({ 
   params, 
@@ -36,7 +37,7 @@ export default async function TaskEditPage({
     <Layout breadcrumbs={breadcrumbs} active="admin">
       <div className="flex gap-6">
         <div className="w-64 flex-shrink-0">
-          <div className="sticky top-2 m-2 p-4 bg-white border border-divider">
+          <div className="sticky top-3 m-3 p-4 bg-white border border-divider">
             <nav className="flex flex-col gap-2">
               <div className="font-medium mb-2">Rediģējamās sadaļas</div>
               <div className={currentTab === "task" ? "font-semibold" : ""}>
@@ -55,7 +56,7 @@ export default async function TaskEditPage({
                 </TextLink>
               </div>
               <div className={currentTab === "solutions" ? "font-semibold" : ""}>
-                <TextLink disabled href={`/admin/task/${task.short_task_id}?tab=solutions`}>
+                <TextLink href={`/admin/task/${task.short_task_id}?tab=solutions`}>
                   Atrisinājumi
                 </TextLink>
               </div>
@@ -75,6 +76,8 @@ export default async function TaskEditPage({
         <div className="flex-1 min-w-0">
           {currentTab === "statement" ? (
             <StatementEditForm task={task} />
+          ) : currentTab === "solutions" ? (
+            <SolutionsEditForm task={task} />
           ) : (
             <TaskEditForm task={task} />
           )}
