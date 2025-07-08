@@ -5,8 +5,8 @@ import { listTasks } from "@/lib/task/tasks";
 import RestrictedPleaseLogin from "@/components/restricted-please-login";
 import TaskAdminList from "./task-admin-list";
 import SubmAdminList from "./subm-admin-list";
-import { listSubmissions } from "@/lib/subms";
 import Layout from "@/components/layout";
+import { listSubmissionsServerSide } from "@/lib/subm/list-ss";
 
 export default async function AdminPage() {
     if (!(await isAdmin())) {
@@ -14,7 +14,7 @@ export default async function AdminPage() {
     }
 
     const tasks = await listTasks();
-    const submPage = await listSubmissions(0, 10);
+    const submPage = await listSubmissionsServerSide(0, 10);
 
     const breadcrumbs = [
         { label: "Admin", href: "/admin" },
