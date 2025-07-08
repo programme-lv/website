@@ -4,12 +4,12 @@ import { useState } from "react";
 import { Button, useDisclosure } from "@heroui/react";
 import TestDetailsModal, { full_verdicts, verdict_colors } from "@/components/test-details-modal";
 import { Execution, TestRes } from "@/types/exec";
-import { DetailedSubmView } from "@/types/subm";
 import GenericTable, { Column } from "@/components/generic-table";
 import { renderMdLite } from "@/lib/render-md";
 import "katex/dist/katex.min.css";
+import { SubmEval } from "@/types/subm";
 
-export default function TestResultTable({ subm, exec }: { subm: DetailedSubmView, exec: Execution }) {
+export default function TestResultTable({ visible_details, subm_eval, test_results }: { visible_details: boolean, subm_eval: SubmEval, test_results: TestRes[] }) {
     const [selectedTest, setSelectedTest] = useState<TestRes | null>(null);
     const { isOpen, onOpen: openTestDetailsModal, onOpenChange } = useDisclosure();
 
@@ -19,10 +19,7 @@ export default function TestResultTable({ subm, exec }: { subm: DetailedSubmView
     };
 
     // set testgroup ids to be 1-indexed
-    const testgroups = subm.curr_eval.test_groups.map((tg, idx) => ({ ...tg, id: idx + 1 }));
-
-    // set test ids to be 1-indexed
-    const test_results = exec.test_res.map(x => ({ ...x }));
+    const testgroups = subm_eval.test_groups.map((tg, idx) => ({ ...tg, id: idx + 1 }));
 
     // returna list of testgroups that contain the test
     function test_testgroups(test: TestRes) {
@@ -50,8 +47,8 @@ export default function TestResultTable({ subm, exec }: { subm: DetailedSubmView
             header: "Vērtējums",
             width: "170px",
             render: (test) => (
-                <span className={`whitespace-nowrap ${verdict_colors[subm.curr_eval.verdicts[test.id - 1]] || ''}`}>
-                    {full_verdicts[subm.curr_eval.verdicts[test.id - 1]] || 'Nezināms'}
+                <span className={`whitespace-nowrap ${verdict_colors[subm_eval.verdicts[test.id - 1]] || ''}`}>
+                    {full_verdicts[subm_eval.verdicts[test.id - 1]] || 'Nezināms'}
                 </span>
             )
         },
@@ -85,7 +82,7 @@ export default function TestResultTable({ subm, exec }: { subm: DetailedSubmView
         }
     ];
 
-    if(!subm.content){
+    if(!visible_details){
         columns = columns.filter(x => x.key !== "details");
     }
 
@@ -114,7 +111,7 @@ export default function TestResultTable({ subm, exec }: { subm: DetailedSubmView
             </div>
 
             <div className="flex flex-col gap-4">
-                {subm.curr_eval.subtasks.map((subtask, i) => (
+                {subm_eval.subtasks.map((subtask, i) => (
                     <div key={subtask.description}>
                         <p className="font-normal text-default-foreground pl-1 mt-2 mb-1">
                             {i + 1}. apakšuzdevums: <span dangerouslySetInnerHTML={{ __html: renderMdLite(subtask.description).replaceAll("<p>", "").replaceAll("</p>", "") }} />
@@ -135,7 +132,7 @@ export default function TestResultTable({ subm, exec }: { subm: DetailedSubmView
                 isOpen={isOpen}
                 onOpenChange={onOpenChange}
                 test={selectedTest}
-                submission={subm}
+                subm_eval={subm_eval}
             />
         </div>
     );

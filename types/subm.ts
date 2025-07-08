@@ -18,7 +18,7 @@ type ScoreInfo = {
   exceeded_mem: boolean;
 };
 
-type SubmEval = {
+export type SubmEval = {
   eval_uuid: string;
   subm_uuid: string;
   eval_stage: string;

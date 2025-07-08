@@ -117,7 +117,7 @@ export default async function Page({
                     )}
                     {(!execData.subm_comp || execData.subm_comp.exit === 0) && (
                         <div className="bg-white p-3 rounded-sm border-small border-divider overflow-x-auto">
-                            <TestResultTable subm={submData} exec={execData} />
+                            <TestResultTable visible_details={!!submData.content} subm_eval={submData.curr_eval} test_results={execData.test_res.map(x => ({ ...x }))} />
                         </div>
                     )}
                     <Spacer y={2} />

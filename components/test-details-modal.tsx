@@ -2,13 +2,13 @@ import React from "react";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button } from "@heroui/react";
 import CodeBlock from "@/components/code-block";
 import { TestRes } from "@/types/exec";
-import { DetailedSubmView, Verdict } from "@/types/subm";
+import { SubmEval } from "@/types/subm";
 
 interface TestDetailsModalProps {
   isOpen: boolean;
   onOpenChange: () => void;
   test: TestRes | null;
-  submission: DetailedSubmView;
+  subm_eval: SubmEval;
 }
 
 // Shared verdict mappings
@@ -30,10 +30,10 @@ export const verdict_colors: Record<string, string> = {
   'I': 'text-default-600',
 };
 
-export default function TestDetailsModal({ isOpen, onOpenChange, test, submission }: TestDetailsModalProps) {
+export default function TestDetailsModal({ isOpen, onOpenChange, test, subm_eval }: TestDetailsModalProps) {
   if (!test) return null;
   
-  const verdict = submission.curr_eval.verdicts[test.id-1];
+  const verdict = subm_eval.verdicts[test.id-1];
   
   return (
     <Modal 
