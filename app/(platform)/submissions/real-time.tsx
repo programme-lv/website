@@ -1,11 +1,14 @@
 "use client"; // Declare this as a client-side component
 
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
-import { subscribeToSubmUpdates, listSubmissions } from "@/lib/subms";
+import { subscribeToSubmUpdates } from "@/lib/subms";
 import { SubmListEntry, SubmListSseUpdate } from "@/types/subm";
-import SubmissionTable from "./submission-table";
+import SubmissionTable from "@/components/submission-table";
+import { listSubmissionsClientSide } from "@/lib/subm/list";
+import { AuthContext } from "@/app/providers";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 /**
  * RealTimeSubmTable Component
@@ -22,6 +25,7 @@ export default function RealTimeSubmTable({
   initialPagination,
   currentPage,
   search,
+  my,
 }: {
   initial: SubmListEntry[];
   initialPagination: {
@@ -31,7 +35,8 @@ export default function RealTimeSubmTable({
     hasMore: boolean;
   };
   currentPage: number;
-  search: string;
+  search?: string;
+  my?: string;
 }) {
   const [isChangingPage, setIsChangingPage] = useState(false);
 
@@ -43,11 +48,34 @@ export default function RealTimeSubmTable({
 
   // State to manage the list of submissions
   const [submissions, setSubmissions] = useState<SubmListEntry[]>(initialSubmissions);
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const { user } = useContext(AuthContext);
+
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams.toString());
+    if(params.get("my") === "true" && !user) {
+      params.delete("my");
+    }
+    router.push(`${pathname}?${params.toString()}`);
+  }, [user]);
 
   // Fetch submissions data with a polling interval of 2 seconds
-  const { data, isLoading, refetch } = useQuery({
-      queryKey: ["submissions", initialPagination.offset, initialPagination.limit, search],
-      queryFn: () => listSubmissions(initialPagination.offset, initialPagination.limit, search),
+  const { data, isLoading, refetch, error } = useQuery({
+      queryKey: ["submissions", initialPagination.offset, initialPagination.limit, search, my],
+      queryFn: async () => {
+        try {
+          if(user&&user.uuid) {
+            return await listSubmissionsClientSide(initialPagination.offset, initialPagination.limit, search, my);
+          } else {
+            return await listSubmissionsClientSide(initialPagination.offset, initialPagination.limit, search, undefined);
+          }
+        } catch (error: any) {
+
+        }
+      },
       refetchInterval: 10000,
       refetchOnWindowFocus: true,
       refetchOnMount: true,

@@ -27,6 +27,10 @@ export default function SearchInput() {
         } else {
             params.set("search", search);
         }
+        const page = params.get("page");
+        if(search&&page&&page!="1") {
+            params.delete("page");
+        }
         router.push(`${pathname}?${params.toString()}`);
     }
 

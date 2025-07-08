@@ -50,21 +50,22 @@ export default function PaginationControl({
   };
 
   return (
-    <div className="min-h-[40px] min-w-[200px]"> {/* Add fixed minimum dimensions */}
+    <div className="min-h-[40px] w-[292px]"> {/* Add fixed minimum dimensions */}
       <Pagination 
         initialPage={currentPage} 
         total={totalPages} 
+        disableAnimation
         onChange={handlePageChange}
         className="text-sm bg-white rounded-sm p-2 border-small border-divider m-0"
         classNames={{
           item: "rounded-small"
         }}
-        showControls
         color="primary"
         variant="flat"
         size="sm"
         page={currentPage}
         isDisabled={isChangingPage}
+        siblings={1}
       />
     </div>
   );

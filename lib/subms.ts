@@ -1,38 +1,7 @@
 import { API_HOST } from "./config";
 import { Execution } from "@/types/exec";
-import { SubmListEntry, SubmListSseUpdate, PaginatedSubmListResponse } from "@/types/subm";
+import { SubmListEntry, SubmListSseUpdate } from "@/types/subm";
 import { MaxScorePerTask } from "@/types/scores";
-
-export const listSubmissions = async (
-  offset: number = 0,
-  limit: number = 30,
-  search?: string
-): Promise<PaginatedSubmListResponse> => {
-  try {
-    let url = `${API_HOST}/subm?offset=${offset}&limit=${limit}&search=${encodeURIComponent(search || "")}`;
-    const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Headers": "*",
-        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-        "Access-Control-Allow-Origin": "*",
-      },
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw { response: { data: errorData } };
-    }
-
-    const parsedData = await response.json();
-
-    return parsedData.data;
-  } catch (error) {
-    console.error("Error fetching submissions:", error);
-    throw error;
-  }
-};
 
 // New function to reevaluate selected submissions
 export const reevaluateSubmissions = async (submUuids: string[]): Promise<void> => {
