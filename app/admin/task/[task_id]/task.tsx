@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { Task } from "@/types/task";
 import { useRouter } from "next/navigation";
 import { TextLink } from "@/components/text-link";
@@ -8,6 +8,7 @@ import GenericButton from "@/components/generic-button";
 import { uploadTaskIllustration, deleteTaskIllustration } from "@/lib/task/upload-image";
 import { IconExternalLink } from "@tabler/icons-react";
 import Link from "next/link";
+import FileUpload from "@/components/file-upload";
 
 interface TaskEditFormProps {
     task: Task;
@@ -17,12 +18,8 @@ export default function TaskEditForm({ task }: TaskEditFormProps) {
     const router = useRouter();
     const [isUploadingIllustration, setIsUploadingIllustration] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const illustrationFileInputRef = useRef<HTMLInputElement>(null);
 
-    const handleIllustrationUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (!e.target.files || e.target.files.length === 0) return;
-
-        const file = e.target.files[0];
+    const handleIllustrationUpload = async (file: File) => {
 
         try {
             setIsUploadingIllustration(true);
@@ -34,9 +31,7 @@ export default function TaskEditForm({ task }: TaskEditFormProps) {
                 return;
             }
 
-            if (illustrationFileInputRef.current) {
-                illustrationFileInputRef.current.value = "";
-            }
+
 
             // Refresh the page to show the updated task data
             router.refresh();
@@ -175,24 +170,14 @@ export default function TaskEditForm({ task }: TaskEditFormProps) {
             {/* Upload New Illustration */}
             {!task.illustration_img && <div className="mb-6">
                 <div className="flex items-center">
-                    <input
-                        ref={illustrationFileInputRef}
-                        type="file"
-                        id="illustration-upload"
-                        accept="image/jpeg,image/png,image/gif,image/webp,image/svg+xml,image/bmp,image/tiff"
-                        onChange={handleIllustrationUpload}
-                        className="hidden"
-                    />
-                    <label htmlFor="illustration-upload">
-                        <GenericButton
-                            variant="primary"
-                            size="sm"
-                            isLoading={isUploadingIllustration}
-                            isDisabled={isUploadingIllustration}
-                        >
-                            Choose Image
-                        </GenericButton>
-                    </label>
+                    <FileUpload
+                        onFileSelect={handleIllustrationUpload}
+                        isLoading={isUploadingIllustration}
+                        variant="primary"
+                        acceptedTypes="image/jpeg,image/png,image/gif,image/webp,image/svg+xml,image/bmp,image/tiff"
+                    >
+                        Choose Image
+                    </FileUpload>
                 </div>
             </div>}
         </div>

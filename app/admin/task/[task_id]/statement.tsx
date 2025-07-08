@@ -6,9 +6,10 @@ import { useRouter } from "next/navigation";
 import { TextLink } from "@/components/text-link";
 import GenericTable from "@/components/generic-table";
 import GenericButton from "@/components/generic-button";
+import FileUpload from "@/components/file-upload";
 import { uploadTaskImage } from "@/lib/task/upload-image";
 import Link from "next/link";
-import { IconExternalLink } from "@tabler/icons-react";
+import { IconDeviceFloppy, IconExternalLink } from "@tabler/icons-react";
 
 interface StatementEditFormProps {
     task: Task;
@@ -20,7 +21,6 @@ export default function StatementEditForm({ task }: StatementEditFormProps) {
     const [isUploadingImage, setIsUploadingImage] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [uploadError, setUploadError] = useState<string | null>(null);
-    const fileInputRef = useRef<HTMLInputElement>(null);
     const task_md = task.default_md_statement;
     const [formData, setFormData] = useState<Partial<MarkdownStatement>>({
         story: task_md?.story || "",
@@ -104,13 +104,7 @@ export default function StatementEditForm({ task }: StatementEditFormProps) {
         }
     };
 
-    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (!e.target.files || e.target.files.length === 0) return;
-
-        const file = e.target.files[0];
-        const formData = new FormData();
-        formData.append("image", file);
-
+    const handleImageUpload = async (file: File) => {
         try {
             setIsUploadingImage(true);
             setUploadError(null);
@@ -122,10 +116,6 @@ export default function StatementEditForm({ task }: StatementEditFormProps) {
             }
 
             await router.refresh();
-
-            if (fileInputRef.current) {
-                fileInputRef.current.value = "";
-            }
 
             alert("Image uploaded successfully!");
         } catch (err) {
@@ -262,6 +252,7 @@ export default function StatementEditForm({ task }: StatementEditFormProps) {
                         onClick={handleSave}
                         isLoading={isSubmittingStatement}
                         isDisabled={isSubmittingStatement}
+                        icon={<IconDeviceFloppy size={18} />}
                     >
                         Update statement
                     </GenericButton>
@@ -277,23 +268,14 @@ export default function StatementEditForm({ task }: StatementEditFormProps) {
 
                 <div className="mb-4">
                     <div className="flex items-center">
-                        <input
-                            ref={fileInputRef}
-                            type="file"
-                            id="image-upload"
-                            accept="image/jpeg,image/png,image/gif,image/webp,image/svg+xml,image/bmp,image/tiff"
-                            onChange={handleImageUpload}
-                            className="hidden"
-                        />
-                        <label htmlFor="image-upload">
-                            <GenericButton
-                                variant="primary"
-                                isLoading={isUploadingImage}
-                                isDisabled={isUploadingImage}
-                            >
-                                Upload New Image
-                            </GenericButton>
-                        </label>
+                        <FileUpload
+                            onFileSelect={handleImageUpload}
+                            isLoading={isUploadingImage}
+                            variant="primary"
+                            acceptedTypes="image/jpeg,image/png,image/gif,image/webp,image/svg+xml,image/bmp,image/tiff"
+                        >
+                            Upload New Image
+                        </FileUpload>
                         <span className="ml-2 text-sm text-gray-600">
                             Supported formats: JPG, PNG, GIF, WebP, SVG, BMP, TIFF
                         </span>

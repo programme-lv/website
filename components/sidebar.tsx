@@ -76,7 +76,7 @@ export default function Sidebar(props: SidebarProps) {
             >
               <div
                 className={cn(
-                  "flex items-center justify-center w-[38px] h-[38px] rounded-md",
+                  "flex items-center justify-center w-[38px] h-[38px] rounded-small hover:bg-gray-100",
                   props.active === item.key && "bg-gray-100",
                 )}
               >

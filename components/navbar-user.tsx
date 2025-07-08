@@ -14,6 +14,7 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/app/providers";
 import { useRouter } from "next/navigation";
 import { loginUser, logoutUser } from "@/lib/auth";
+import GenericButton from "./generic-button";
 
 export default function User() {
   const router = useRouter();
@@ -31,19 +32,29 @@ export default function User() {
   return (
     <div className="flex items-center gap-3">
       {!user && (
-        <Button
-          className="font-medium gap-1 ps-4"
-          color="primary"
-          endContent={<IconChevronRight size={14} />}
-          radius="md"
+        // <Button
+        //   className="font-medium gap-1 ps-4"
+        //   color="primary"
+        //   endContent={<IconChevronRight size={14} />}
+        //   radius="md"
+        //   size="sm"
+        //   variant="solid"
+        //   onPress={() => {
+        //     router.push(`/login${redirectParam}`);
+        //   }}
+        // >
+        //   Pieslēgties
+        // </Button>
+        <GenericButton
+          variant="primary"
           size="sm"
-          variant="solid"
-          onPress={() => {
+          icon={<IconChevronRight size={16} />}
+          onClick={() => {
             router.push(`/login${redirectParam}`);
           }}
         >
           Pieslēgties
-        </Button>
+        </GenericButton>
       )}
       {user && (
         <Dropdown placement="bottom-end">
