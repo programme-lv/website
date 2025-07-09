@@ -77,7 +77,7 @@ export default async function TaskEditPage({
           {currentTab === "statement" ? (
             <StatementEditForm task={task} />
           ) : currentTab === "solutions" ? (
-            <SolutionsEditForm task={task} />
+            <SolutionsEditForm task_id={task.short_task_id}/>
           ) : (
             <TaskEditForm task={task} />
           )}
