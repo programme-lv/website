@@ -6,6 +6,8 @@ import GenericButton from "@/components/generic-button";
 import { IconEdit, IconEye, IconPlus } from "@tabler/icons-react";
 import { TextLink } from "@/components/text-link";
 import TextButton from "@/components/text-button";
+import AddSolutionModal, { SolutionFormData } from "@/app/admin/task/[task_id]/add-solution-modal";
+import { useState } from "react";
 
 interface SolutionsEditFormProps {
     task_id: string;
@@ -26,7 +28,8 @@ interface Solution {
 }
 
 export default function SolutionsEditForm({ task_id, pub_available, draft_available }: SolutionsEditFormProps) {
-    const sampleSolutions: Solution[] = [
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [solutions, setSolutions] = useState<Solution[]>([
         {
             filename: "solution1.py",
             pr_lang: "Python 3.11",
@@ -60,7 +63,23 @@ export default function SolutionsEditForm({ task_id, pub_available, draft_availa
             draft_run_result: "50/100 | 1.87 s | 492 MiB *",
             draft_run_uuid: "674f941f-8983-674f-9526-d54ecc76979h",
         },
-    ];
+    ]);
+
+    const handleAddSolution = (solutionData: SolutionFormData) => {
+        // TODO: Map programming language ID to display name from API
+        const newSolution: Solution = {
+            filename: solutionData.filename,
+            pr_lang: solutionData.programmingLanguage, // This should be converted to display name
+            content: solutionData.content,
+            expected_result: solutionData.expectedResult,
+            author: solutionData.author,
+            pub_run_result: "Risinājums nav izpildīts",
+            pub_run_uuid: "",
+            draft_run_result: "Risinājums nav izpildīts",
+            draft_run_uuid: "",
+        };
+        setSolutions(prev => [...prev, newSolution]);
+    };
 
     let columns: Column<Solution>[] = [
         {
@@ -167,14 +186,26 @@ export default function SolutionsEditForm({ task_id, pub_available, draft_availa
             </div>
             <div className="p-2 bg-white border border-divider rounded-sm">
                 <GenericTable
-                    data={sampleSolutions}
+                    data={solutions}
                     columns={columns}
                     keyExtractor={(item) => item.filename}
                 />
             </div>
             <div>
-                <GenericButton size="sm" icon={<IconPlus size={18} />}>Pievienot risinājumu</GenericButton>
+                <GenericButton 
+                    size="sm" 
+                    icon={<IconPlus size={18} />}
+                    onClick={() => setIsModalOpen(true)}
+                >
+                    Pievienot risinājumu
+                </GenericButton>
             </div>
+            
+            <AddSolutionModal
+                isOpen={isModalOpen}
+                onOpenChange={() => setIsModalOpen(!isModalOpen)}
+                onSolutionAdded={handleAddSolution}
+            />
         </div>
     );
 }

@@ -32,7 +32,7 @@ export default function GenericButton({
   const variantClasses = {
     primary: "bg-primary text-white hover:bg-primary-600 focus:ring-blue-500",
     secondary: "bg-secondary text-white hover:bg-secondary-600 focus:ring-secondary",
-    success: "bg-green-600 text-white hover:bg-green-700 focus:ring-green-500",
+    success: "bg-success-600 text-white hover:bg-success-700 focus:ring-success-500",
     warning: "bg-yellow-600 text-white hover:bg-yellow-700 focus:ring-yellow-500",
     danger: "bg-red-600 text-white hover:bg-red-700 focus:ring-red-500",
     default: "bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500"
