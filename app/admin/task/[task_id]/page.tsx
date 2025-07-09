@@ -1,12 +1,13 @@
 export const dynamic = 'force-dynamic'
 import { getTaskById } from "@/lib/task/tasks";
-import StatementEditForm from "./statement";
+import StatementEditForm from "./statement/statement";
 import TaskEditForm from "./task";
 import { isAdmin } from "@/lib/dal";
 import RestrictedPleaseLogin from "@/components/restricted-please-login";
 import Layout from "@/components/layout";
 import { TextLink } from "@/components/text-link";
-import SolutionsEditForm from "./solutions";
+import SolutionsEditForm from "./solutions/page";
+import TaskAdminNav from "@/components/task-admin-nav";
 
 export default async function TaskEditPage({ 
   params, 
@@ -36,48 +37,10 @@ export default async function TaskEditPage({
   return (
     <Layout breadcrumbs={breadcrumbs} active="admin">
       <div className="flex gap-6">
-        <div className="w-64 flex-shrink-0">
-          <div className="sticky top-3 m-3 p-4 bg-white border border-divider">
-            <nav className="flex flex-col gap-2">
-              <div className="font-medium mb-2">Rediģējamās sadaļas</div>
-              <div className={currentTab === "task" ? "font-semibold" : ""}>
-                <TextLink href={`/admin/task/${task.short_task_id}?tab=task`}>
-                  Uzdevums
-                </TextLink>
-              </div>
-              <div className={currentTab === "statement" ? "font-semibold" : ""}>
-                <TextLink href={`/admin/task/${task.short_task_id}?tab=statement`}>
-                  Formulējums
-                </TextLink>
-              </div>
-              <div className={currentTab === "testing" ? "font-semibold" : ""}>
-                <TextLink disabled href={`/admin/task/${task.short_task_id}?tab=testing`}>
-                  Testēšana
-                </TextLink>
-              </div>
-              <div className={currentTab === "solutions" ? "font-semibold" : ""}>
-                <TextLink href={`/admin/task/${task.short_task_id}?tab=solutions`}>
-                  Atrisinājumi
-                </TextLink>
-              </div>
-              <div className={currentTab === "archive" ? "font-semibold" : ""}>
-                <TextLink disabled href={`/admin/task/${task.short_task_id}?tab=archive`}>
-                  Arhīvs
-                </TextLink>
-              </div>
-              <div className={currentTab === "history" ? "font-semibold" : ""}>
-                <TextLink disabled href={`/admin/task/${task.short_task_id}?tab=history`}>
-                  Vēsture
-                </TextLink>
-              </div>
-            </nav>
-          </div>
-        </div>
+        <TaskAdminNav taskId={task.short_task_id} activeTab="task" />
         <div className="flex-1 min-w-0">
           {currentTab === "statement" ? (
             <StatementEditForm task={task} />
-          ) : currentTab === "solutions" ? (
-            <SolutionsEditForm task_id={task.short_task_id}/>
           ) : (
             <TaskEditForm task={task} />
           )}

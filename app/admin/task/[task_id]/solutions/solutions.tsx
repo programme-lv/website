@@ -1,9 +1,7 @@
 "use client";
-import { Task } from "@/types/task";
-import { useRouter } from "next/navigation";
 import GenericTable, { Column } from "@/components/generic-table";
 import GenericButton from "@/components/generic-button";
-import { IconEdit, IconEye, IconPlus } from "@tabler/icons-react";
+import { IconPlus } from "@tabler/icons-react";
 import { TextLink } from "@/components/text-link";
 import TextButton from "@/components/text-button";
 import AddSolutionModal, { SolutionFormData } from "@/app/admin/task/[task_id]/add-solution-modal";
@@ -112,10 +110,10 @@ export default function SolutionsEditForm({ task_id, pub_available, draft_availa
             header: "Iespējotais rezultāts",
             render: (item) => <div className="flex flex-col">
                 {pub_available && (<><div>{item.pub_run_result}</div>
-                <div>
-                    [ {<TextLink href={`/admin/task/${task_id}/solutions/run/${item.pub_run_uuid}`}>{item.pub_run_uuid.slice(0, 8)}</TextLink>} ]
-                    [ <TextButton variant="secondary">Pārtestēt</TextButton> ]
-                </div></>)}
+                    <div>
+                        [ {<TextLink href={`/admin/task/${task_id}/solutions/run/${item.pub_run_uuid}`}>{item.pub_run_uuid.slice(0, 8)}</TextLink>} ]
+                        [ <TextButton variant="secondary">Pārtestēt</TextButton> ]
+                    </div></>)}
                 {!pub_available && (
                     <>
                         <div>Risinājums nav izpildīts</div>
@@ -192,15 +190,15 @@ export default function SolutionsEditForm({ task_id, pub_available, draft_availa
                 />
             </div>
             <div>
-                <GenericButton 
-                    size="sm" 
+                <GenericButton
+                    size="sm"
                     icon={<IconPlus size={18} />}
                     onClick={() => setIsModalOpen(true)}
                 >
                     Pievienot risinājumu
                 </GenericButton>
             </div>
-            
+
             <AddSolutionModal
                 isOpen={isModalOpen}
                 onOpenChange={() => setIsModalOpen(!isModalOpen)}

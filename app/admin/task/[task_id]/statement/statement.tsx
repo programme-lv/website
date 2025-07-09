@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { MarkdownStatement, Task } from "@/types/task";
 import { updateTaskStatement, UpdateStatementRequest, deleteTaskImage, revalidateTask } from "@/lib/task/tasks";
 import { useRouter } from "next/navigation";
@@ -8,8 +8,7 @@ import GenericTable from "@/components/generic-table";
 import GenericButton from "@/components/generic-button";
 import FileUpload from "@/components/file-upload";
 import { uploadTaskImage } from "@/lib/task/upload-image";
-import Link from "next/link";
-import { IconDeviceFloppy, IconExternalLink } from "@tabler/icons-react";
+import { IconDeviceFloppy } from "@tabler/icons-react";
 
 interface StatementEditFormProps {
     task: Task;
