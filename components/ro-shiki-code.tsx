@@ -1,3 +1,4 @@
+'use server'
 import { codeToHtml } from 'shiki'
 
 interface Props {

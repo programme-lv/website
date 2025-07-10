@@ -5,6 +5,7 @@ import { IconPlus } from "@tabler/icons-react";
 import { TextLink } from "@/components/text-link";
 import TextButton from "@/components/text-button";
 import AddSolutionModal, { SolutionFormData } from "@/app/admin/task/[task_id]/add-solution-modal";
+import ViewSolutionModal from "@/app/admin/task/[task_id]/view-solution-modal";
 import { useState } from "react";
 
 interface SolutionsEditFormProps {
@@ -27,6 +28,8 @@ interface Solution {
 
 export default function SolutionsEditForm({ task_id, pub_available, draft_available }: SolutionsEditFormProps) {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+    const [selectedSolution, setSelectedSolution] = useState<Solution | null>(null);
     const [solutions, setSolutions] = useState<Solution[]>([
         {
             filename: "solution1.py",
@@ -79,6 +82,11 @@ export default function SolutionsEditForm({ task_id, pub_available, draft_availa
         setSolutions(prev => [...prev, newSolution]);
     };
 
+    const handleViewSolution = (solution: Solution) => {
+        setSelectedSolution(solution);
+        setIsViewModalOpen(true);
+    };
+
     let columns: Column<Solution>[] = [
         {
             key: "filename",
@@ -87,7 +95,7 @@ export default function SolutionsEditForm({ task_id, pub_available, draft_availa
                 <div className="flex flex-col">
                     <div>{item.filename}</div>
                     <div className="flex flex-row gap-2">
-                        [ <TextButton>Skatīt</TextButton> ]
+                        [ <TextButton onClick={() => handleViewSolution(item)}>Skatīt</TextButton> ]
                         ( {item.pr_lang} )
                     </div>
                 </div>,
@@ -175,11 +183,11 @@ export default function SolutionsEditForm({ task_id, pub_available, draft_availa
             <div className="flex flex-col gap-2">
                 <p>
                     Uzdevuma risinājums ir paredzēts kļūdainu un nepilnīgu testu novēršanai, kā arī ierobežojumu izvēlei,
-                    lai kalibrēt ierobežojumus atbilstoši sagaidāmajam risinājuma iegūtajam punktu skaitam.
+                    lai kalibrēt iegūtu punktu skaitu atbilstoši sagaidāmajam rezultātam.
                 </p>
                 <p>
                     Risinājumu ir iespējams izpildīt (iesūtīt) pret iespējoto vai melnraksta testu kopu.
-                    Norādītais rezultāts ņem vērā atbilstošās testu grupas, to punktus un izpildes resursu ierobežojumus.
+                    Testu kopa nāk kopā ar testu grupām, to punktu skaitiem, kā arī pārbaudes programmu jeb čekeri.
                 </p>
             </div>
             <div className="p-2 bg-white border border-divider rounded-sm">
@@ -198,11 +206,20 @@ export default function SolutionsEditForm({ task_id, pub_available, draft_availa
                     Pievienot risinājumu
                 </GenericButton>
             </div>
+            <p>
+                Šajā sadaļa izmaiņas tiek automātiski saglabātas.
+            </p>
 
             <AddSolutionModal
                 isOpen={isModalOpen}
                 onOpenChange={() => setIsModalOpen(!isModalOpen)}
                 onSolutionAdded={handleAddSolution}
+            />
+
+            <ViewSolutionModal
+                isOpen={isViewModalOpen}
+                onOpenChange={() => setIsViewModalOpen(!isViewModalOpen)}
+                solution={selectedSolution}
             />
         </div>
     );

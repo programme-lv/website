@@ -3,10 +3,9 @@ import React, { useState, useEffect } from "react";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Input, Textarea, Select, SelectItem } from "@heroui/react";
 import { IconPlus, IconUpload } from "@tabler/icons-react";
 import FileUpload from "@/components/file-upload";
-import { ProgrammingLanguage } from "@/types/proglv";
 import { listProgrammingLanguages } from "@/lib/langs";
 import { useQuery } from "@tanstack/react-query";
-import GenericButton from "../../../../components/generic-button";
+import GenericButton from "@/components/generic-button";
 
 interface AddSolutionModalProps {
 	isOpen: boolean;
@@ -22,27 +21,9 @@ export interface SolutionFormData {
 	expectedResult: string;
 }
 
-// File extension to language mapping
 const extensionToLanguage: Record<string, string> = {
 	'.py': 'python311',
 	'.cpp': 'cpp17',
-	'.cc': 'cpp17',
-	'.cxx': 'cpp17',
-	'.c': 'c11',
-	'.java': 'java17',
-	'.js': 'javascript',
-	'.ts': 'typescript',
-	'.go': 'go',
-	'.rs': 'rust',
-	'.php': 'php',
-	'.rb': 'ruby',
-	'.cs': 'csharp',
-	'.kt': 'kotlin',
-	'.scala': 'scala',
-	'.hs': 'haskell',
-	'.ml': 'ocaml',
-	'.pas': 'pascal',
-	'.pl': 'perl'
 };
 
 export default function AddSolutionModal({ isOpen, onOpenChange, onSolutionAdded }: AddSolutionModalProps) {
@@ -64,7 +45,6 @@ export default function AddSolutionModal({ isOpen, onOpenChange, onSolutionAdded
 
 	useEffect(() => {
 		if (languages && !formData.programmingLanguage) {
-			// Set default language to cpp17 if available, otherwise first enabled language
 			const defaultLang = languages.find((lang) => lang.id === "cpp17" && lang.enabled);
 			if (defaultLang) {
 				setFormData(prev => ({ ...prev, programmingLanguage: defaultLang.id }));
@@ -107,32 +87,23 @@ export default function AddSolutionModal({ isOpen, onOpenChange, onSolutionAdded
 	};
 
 	const handleSubmit = async () => {
-		// Validation
-		if (!formData.filename.trim()) {
-			alert('Lūdzu, ievadiet faila nosaukumu.');
-			return;
-		}
-		if (!formData.programmingLanguage) {
-			alert('Lūdzu, izvēlieties programmēšanas valodu.');
-			return;
-		}
-		if (!formData.content.trim()) {
-			alert('Lūdzu, ievadiet kodu.');
-			return;
-		}
-		if (!formData.author.trim()) {
-			alert('Lūdzu, ievadiet autora vārdu.');
-			return;
-		}
-		if (!formData.expectedResult.trim()) {
-			alert('Lūdzu, ievadiet sagaidāmo rezultātu.');
-			return;
+		const requiredFields: Array<[keyof typeof formData, string]> = [
+			['filename', 'faila nosaukumu'],
+			['programmingLanguage', 'programmēšanas valodu'],
+			['content', 'kodu'], 
+			['expectedResult', 'sagaidāmo rezultātu'],
+		];
+		for (const [field, label] of requiredFields) {
+			if (!formData[field]?.trim()) {
+				alert(`Lūdzu, ievadiet ${label}.`);
+				return;
+			}
 		}
 
 		setIsSubmitting(true);
+
 		try {
 			onSolutionAdded(formData);
-			// Reset form
 			setFormData({
 				filename: '',
 				programmingLanguage: languages?.find(l => l.id === "cpp17" && l.enabled)?.id || languages?.find(l => l.enabled)?.id || '',
@@ -140,7 +111,7 @@ export default function AddSolutionModal({ isOpen, onOpenChange, onSolutionAdded
 				author: '',
 				expectedResult: ''
 			});
-			onOpenChange(); // Close modal
+			onOpenChange();
 		} catch (error) {
 			console.error('Error adding solution:', error);
 			alert('Kļūda pievienojot risinājumu. Lūdzu, mēģiniet vēlreiz.');
@@ -155,43 +126,28 @@ export default function AddSolutionModal({ isOpen, onOpenChange, onSolutionAdded
 		}
 	};
 
-	const getLanguageDisplayName = (langId: string): string => {
-		const lang = languages?.find(l => l.id === langId);
-		return lang ? lang.fullName : langId;
-	};
-
 	return (
 		<Modal
 			isOpen={isOpen}
 			onOpenChange={handleClose}
 			isKeyboardDismissDisabled={isSubmitting}
 			size="2xl"
-			classNames={{
-				base: "bg-transparent shadow-none",
-				wrapper: "p-0"
-			}}
 			radius="sm"
 		>
 			<ModalContent>
-				{(onClose) => (
-					<div className="bg-background border-small border-default-300 rounded-md overflow-hidden">
-						<ModalHeader className="bg-white p-4 border-b border-default-300">
-							<span className="text-lg font-semibold">Pievienot risinājumu</span>
+				{() => (
+					<>
+						<ModalHeader className="border-b border-divider py-3 mb-2">
+							Pievienot risinājumu
 						</ModalHeader>
 
-						<ModalBody className="p-4 bg-white">
+						<ModalBody>
 							<div className="flex flex-col gap-4">
-								<FileUpload
-									onFileSelect={handleFileSelect}
-									acceptedTypes=".py,.cpp,.cc,.cxx,.c,.java,.js,.ts,.go,.rs,.php,.rb,.cs,.kt,.scala,.hs,.ml,.pas,.pl"
-									variant="secondary"
-									size="sm"
-									icon={<IconUpload size={16} />}
-								>
-									Izvēlēties failu
+								<FileUpload onFileSelect={handleFileSelect} acceptedTypes=".py,.cpp"
+									variant="secondary" size="sm" icon={<IconUpload size={16} />}>
+									Izvēlēties risinājuma failu
 								</FileUpload>
 
-								{/* Filename */}
 								<Input
 									label="Faila nosaukums"
 									placeholder="piemēram, solution1.py"
@@ -202,7 +158,6 @@ export default function AddSolutionModal({ isOpen, onOpenChange, onSolutionAdded
 									isRequired
 								/>
 
-								{/* Programming Language */}
 								<div className="flex flex-col gap-1">
 									{languages && (
 										<Select
@@ -211,7 +166,7 @@ export default function AddSolutionModal({ isOpen, onOpenChange, onSolutionAdded
 											className="max-w-full"
 											radius="sm"
 											classNames={{
-												popoverContent: "rounded-small border-small border-divider",
+												popoverContent: "rounded-small border border-divider",
 											}}
 											disallowEmptySelection
 											selectedKeys={[formData.programmingLanguage]}
@@ -230,18 +185,15 @@ export default function AddSolutionModal({ isOpen, onOpenChange, onSolutionAdded
 									)}
 								</div>
 
-								{/* Author */}
 								<Input
 									label="Autors"
-									placeholder="Risinājuma autora vārds"
+									placeholder="Risinājuma autora vārds, uzvārds"
 									value={formData.author}
 									onChange={(e) => setFormData(prev => ({ ...prev, author: e.target.value }))}
 									size="sm"
 									variant="underlined"
-									isRequired
 								/>
 
-								{/* Expected Result */}
 								<Input
 									label="Sagaidāmais rezultāts"
 									placeholder="piemēram: 100/100 @ 1.00s & 256 MiB"
@@ -252,7 +204,6 @@ export default function AddSolutionModal({ isOpen, onOpenChange, onSolutionAdded
 									isRequired
 								/>
 
-								{/* Content */}
 								<Textarea
 									label="Kods"
 									placeholder="Risinājuma pirmkods"
@@ -266,9 +217,9 @@ export default function AddSolutionModal({ isOpen, onOpenChange, onSolutionAdded
 							</div>
 						</ModalBody>
 
-						<ModalFooter className="bg-white p-4 border-t border-default-300">
-							<Button disableAnimation color="danger" variant="light" onPress={handleClose} isDisabled={isSubmitting}>
-								Atcelt
+						<ModalFooter className="border-t border-divider">
+							<Button disableAnimation color="warning" variant="light" onPress={handleClose} isDisabled={isSubmitting}>
+								<span className="font-semibold">Atcelt</span>
 							</Button>
 							<GenericButton
 								variant="success"
@@ -278,7 +229,7 @@ export default function AddSolutionModal({ isOpen, onOpenChange, onSolutionAdded
 								Pievienot risinājumu
 							</GenericButton>
 						</ModalFooter>
-					</div>
+					</>
 				)}
 			</ModalContent>
 		</Modal>
