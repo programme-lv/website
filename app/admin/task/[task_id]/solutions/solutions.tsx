@@ -182,8 +182,8 @@ export default function SolutionsEditForm({ task_id, pub_available, draft_availa
             <h2 className="text-lg font-bold">Risinājumi</h2>
             <div className="flex flex-col gap-2">
                 <p>
-                    Uzdevuma risinājums ir paredzēts kļūdainu un nepilnīgu testu novēršanai, kā arī ierobežojumu izvēlei,
-                    lai kalibrēt iegūtu punktu skaitu atbilstoši sagaidāmajam rezultātam.
+                    Uzdevuma risinājums ir paredzēts kļūdainu un nepilnīgu testu īpašību novēršanai, kā arī izpildes ierobežojumu izvēlei,
+                    lai kalibrēt iegūto punktu skaitu atbilstoši sagaidāmajam rezultātam.
                 </p>
                 <p>
                     Risinājumu ir iespējams izpildīt (iesūtīt) pret iespējoto vai melnraksta testu kopu.

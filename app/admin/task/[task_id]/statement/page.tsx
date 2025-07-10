@@ -29,7 +29,7 @@ export default async function StatementPage({
 
     return (
         <Layout breadcrumbs={breadcrumbs} active="admin">
-            <div className="flex gap-6">
+            <div className="flex gap-3 mr-3">
                 <TaskAdminNav taskId={task.short_task_id} activeTab="statement" />
                 <StatementEditForm task={task} />
             </div>

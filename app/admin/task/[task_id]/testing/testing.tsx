@@ -29,15 +29,34 @@ export default function TestingEditForm() {
         },
     ];
 
+    const test_to_tg_idx_map = new Map<number, number[]>();
+    for (let tg_idx = 0; tg_idx < mockTestGroups.length; tg_idx++) {
+        const tg = mockTestGroups[tg_idx];
+        const test_list = parseTestListString(tg.test_list);
+        for (const test_id of test_list) {
+            if (!test_to_tg_idx_map.has(test_id)) {
+                test_to_tg_idx_map.set(test_id, []);
+            }
+            test_to_tg_idx_map.get(test_id)?.push(tg_idx);
+        }
+    }
+
     let test_set_columns: Column<Test>[] = [
         {
             key: "#",
-            header: "#",
+            header: "Tests #",
             render: (item, index) => index + 1,
         },
         {
+            key: "test_group",
+            header: "Testu grupa",
+            render: (item, index) => <div>
+                {test_to_tg_idx_map.get(index+1)?.map((tg_idx) => (tg_idx+1).toString()+".").join(", ")}
+            </div>,
+        },
+        {
             key: "input_preview",
-            header: "Ievade",
+            header: "Ievades priekšskatījums",
             render: (item) => <textarea
                 className="h-8 p-2 font-mono text-sm border border-divider rounded-sm"
                 value={item.input_preview}
@@ -46,7 +65,7 @@ export default function TestingEditForm() {
         },
         {
             key: "answer_preview",
-            header: "Atbilde",
+            header: "Atbildes priekšskatījums",
             render: (item) => <textarea
                 className="h-8 p-2 font-mono text-sm border border-divider rounded-sm"
                 value={item.answer_preview}
@@ -58,7 +77,7 @@ export default function TestingEditForm() {
     return (
         <div className="container py-2 mt-2 flex flex-col gap-3 max-w-4xl">
             <h2 className="text-lg font-bold">Testēšana</h2>
-            <h3 className="text-sm font-semibold">Testu kopa</h3>
+            <h3 className="font-semibold">Testu kopa</h3>
             <div className="p-2 bg-white border border-divider rounded-sm">
                 <GenericTable
                     data={mockTests}
@@ -69,10 +88,10 @@ export default function TestingEditForm() {
             </div>
 
             <section>
-                <h3 className="text-sm font-semibold">Testu grupas</h3>
+                <h3 className="font-semibold">Testu grupas</h3>
             </section>
             <section>
-                <h3 className="text-sm font-semibold mb-1">Čekeris</h3>
+                <h3 className="font-semibold mb-1">Čekeris</h3>
                 <div className="p-2 bg-white border border-divider rounded-sm">
                     <textarea
                         value={checker_code}
