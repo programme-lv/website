@@ -30,13 +30,13 @@ export default function TestResultTable({ visible_details, subm_eval, test_resul
         {
             key: "id",
             header: "Tests #",
-            width: "80px",
+            width: "60px",
             render: (test) => test.id
         },
         {
             key: "test_group",
             header: "Grupa",
-            width: "110px",
+            width: "60px",
             render: (test) => {
                 const tgs = test_testgroups(test);
                 return tgs.map(x => `${x.id}.`).join(", ");
@@ -100,20 +100,18 @@ export default function TestResultTable({ visible_details, subm_eval, test_resul
 
     return (
         <div>
-            <div>
-                <GenericTable
-                    data={test_results}
-                    columns={columns.filter(x => x.key !== "test_group")}
-                    keyExtractor={(test) => test.id.toString()}
-                    className="w-full max-w-[650px]"
-                    rowHeight="compact"
-                />
-            </div>
+            {subm_eval.subtasks.length == 0 && <GenericTable
+                data={test_results}
+                columns={columns.filter(x => x.key !== "test_group")}
+                keyExtractor={(test) => test.id.toString()}
+                className="w-full max-w-[650px]"
+                rowHeight="compact"
+            />}
 
             <div className="flex flex-col gap-4">
                 {subm_eval.subtasks.map((subtask, i) => (
                     <div key={subtask.description}>
-                        <p className="font-normal text-default-foreground pl-1 mt-2 mb-1">
+                        <p className="font-semibold text-sm text-default-foreground pl-1 mt-2 mb-1">
                             {i + 1}. apakšuzdevums: <span dangerouslySetInnerHTML={{ __html: renderMdLite(subtask.description).replaceAll("<p>", "").replaceAll("</p>", "") }} />
                         </p>
                         <GenericTable

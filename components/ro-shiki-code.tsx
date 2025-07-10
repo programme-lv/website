@@ -26,7 +26,7 @@ export default async function ShikiCodeBlock(props: Props) {
   })
 
   return (
-    <div className="code-block border-small border-divider min-h-8 rounded-sm">
+    <div className="code-block border-small border-divider min-h-8 rounded-sm text-sm">
       <div dangerouslySetInnerHTML={{ __html: out }} />
     </div>
   )
