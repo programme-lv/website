@@ -48,8 +48,6 @@ export default function ExamplesEditForm() {
         alert("Izmaiņas ir saglabātas!");
     };
 
-    console.log(examples[0])
-
     const columns: Column<Example>[] = [
         {
             key: "#",
