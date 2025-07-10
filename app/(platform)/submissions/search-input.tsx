@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useTransition } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Input } from "@heroui/react";
 import GenericButton from "@/components/generic-button";
@@ -11,6 +11,7 @@ export default function SearchInput() {
     const pathname = usePathname();
     const searchParams = useSearchParams();
     const [search, setSearch] = useState(searchParams.get("search") || "");
+    const [isPending, startTransition] = useTransition();
 
     // Update local state when URL params change (e.g., browser back/forward)
     useEffect(() => {
@@ -28,10 +29,12 @@ export default function SearchInput() {
             params.set("search", search);
         }
         const page = params.get("page");
-        if(search&&page&&page!="1") {
+        if(search && page && page !== "1") {
             params.delete("page");
         }
-        router.push(`${pathname}?${params.toString()}`);
+        startTransition(() => {
+            router.push(`${pathname}?${params.toString()}`);
+        });
     }
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -51,10 +54,11 @@ export default function SearchInput() {
                 onKeyDown={handleKeyDown}
             />
             <GenericButton
-            className="!min-w-0"
-              icon={<IconSearch size={16} />}
-              size="sm"
-              onClick={handleSearch}
+                className="!min-w-0"
+                icon={<IconSearch size={16} />}
+                size="sm"
+                onClick={handleSearch}
+                isLoading={isPending}
             />
         </div>
     )

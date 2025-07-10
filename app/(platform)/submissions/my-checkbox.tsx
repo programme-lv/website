@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useTransition } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Checkbox } from "@heroui/react";
 
@@ -9,6 +9,7 @@ export default function MySubmissionsCheckbox() {
     const pathname = usePathname();
     const searchParams = useSearchParams();
     const [mySubmissions, setMySubmissions] = useState(searchParams.get("my") === "true");
+    const [isPending, startTransition] = useTransition();
 
     useEffect(() => {
         const isMine = searchParams.get("my") === "true";
@@ -25,10 +26,12 @@ export default function MySubmissionsCheckbox() {
             params.delete("my");
         }
         const page = params.get("page");
-        if(checked&&page&&page!="1") {
+        if(checked && page && page !== "1") {
             params.delete("page");
         }
-        router.push(`${pathname}?${params.toString()}`);
+        startTransition(() => {
+            router.push(`${pathname}?${params.toString()}`);
+        });
     }
 
     return (
@@ -37,6 +40,7 @@ export default function MySubmissionsCheckbox() {
                 isSelected={mySubmissions}
                 disableAnimation={true}
                 onValueChange={handleToggle}
+                isDisabled={isPending}
             />
             <span className="text-sm text-default-800">Mani</span>
         </div>
