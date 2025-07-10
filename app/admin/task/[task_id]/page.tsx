@@ -5,8 +5,6 @@ import TaskEditForm from "./task";
 import { isAdmin } from "@/lib/dal";
 import RestrictedPleaseLogin from "@/components/restricted-please-login";
 import Layout from "@/components/layout";
-import { TextLink } from "@/components/text-link";
-import SolutionsEditForm from "./solutions/page";
 import TaskAdminNav from "@/components/task-admin-nav";
 
 export default async function TaskEditPage({ 
