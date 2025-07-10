@@ -240,7 +240,7 @@ export default function StatementEditForm({ task }: StatementEditFormProps) {
 
                 <div className="flex justify-end">
                     <GenericButton
-                        variant="primary"
+                        variant="success"
                         onClick={handleSave}
                         isLoading={isSubmittingStatement}
                         isDisabled={isSubmittingStatement}

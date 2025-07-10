@@ -36,7 +36,7 @@ export default function TaskAdminNav({ taskId, activeTab }: TaskAdminNavProps) {
     },
     {
       key: "solutions",
-      label: "Atrisinājumi",
+      label: "Risinājumi",
       href: `/admin/task/${taskId}/solutions`,
     },
     {

@@ -24,7 +24,7 @@ export default async function SolutionsPage({
         { label: "Admin", href: "/admin" },
         { label: "Uzdevumi" },
         { label: task.task_full_name, href: `/admin/task/${task.short_task_id}` },
-        { label: "Atrisinājumi" },
+        { label: "Risinājumi" },
     ];
 
     return (

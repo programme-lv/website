@@ -35,7 +35,7 @@ export default async function RunPage({
     { label: "Admin", href: "/admin" },
     { label: "Uzdevumi"},
     { label: task.task_full_name, href: `/admin/task/${task.short_task_id}` },
-    { label: "Atrisinājumi"},
+    { label: "Risinājumi"},
     { label: "Izpilde"},
     { label: run_id.slice(0, 8), href: `/admin/task/${task.short_task_id}/solutions/run/${run_id}` },
   ];

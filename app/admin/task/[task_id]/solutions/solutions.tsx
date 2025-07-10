@@ -179,7 +179,7 @@ export default function SolutionsEditForm({ task_id, pub_available, draft_availa
 
     return (
         <div className="container py-2 mt-2 flex flex-col gap-3">
-            <h2 className="text-lg font-bold">Atrisinājumi</h2>
+            <h2 className="text-lg font-bold">Risinājumi</h2>
             <div className="flex flex-col gap-2">
                 <p>
                     Uzdevuma risinājums ir paredzēts kļūdainu un nepilnīgu testu novēršanai, kā arī ierobežojumu izvēlei,
