@@ -6,10 +6,6 @@ import { Example } from "@/types/task";
 import { IconDeviceFloppy, IconDownload, IconPlus, IconTrash } from "@tabler/icons-react";
 import { useState } from "react";
 
-interface ExampleWithId extends Example {
-    id: number;
-}
-
 const mockExamples: Example[] = [
     {
         input: `5 9 3
@@ -28,81 +24,116 @@ X.X.X..X.
 ];
 
 export default function ExamplesEditForm() {
-    const [examples, setExamples] = useState<ExampleWithId[]>(mockExamples.map((example, index) => ({ ...example, id: index+1 })));
-    const columns: Column<ExampleWithId>[] = [
+    const initial = mockExamples;
+    const [examples, setExamples] = useState<Example[]>(initial);
+
+    const addExample = () => {
+        const newExample: Example = {
+            input: "",
+            output: "",
+            md_note: "",
+        };
+        setExamples([...examples, newExample]);
+    };
+
+    const deleteExample = (index: number) => {
+        setExamples(examples.filter((_, i) => i !== index));
+    };
+
+    const updateExample = (index: number, key: keyof Example, value: string) => {
+        setExamples(examples.map((example, i) => i === index ? { ...example, [key]: value } : example));
+    };
+
+    const saveChanges = () => {
+        alert("Izmaiņas ir saglabātas!");
+    };
+
+    console.log(examples[0])
+
+    const columns: Column<Example>[] = [
         {
             key: "#",
             header: "#",
-            render: (item) => item.id,
+            cellClassNames: (item,index) => (index >= initial.length) ? "bg-yellow-100" : "",
+            render: (item, index) => index + 1,
         },
         {
             key: "input",
             header: "Ievade",
-            render: (item) => <textarea 
-                className="w-full h-52 p-2 font-mono text-sm border border-divider rounded-sm" 
+            cellClassNames: (item, index) =>  (index >= initial.length || item.input !== initial[index].input)? "bg-yellow-100" : "",
+            render: (item, index) => <textarea
+                className="w-full h-52 p-2 font-mono text-sm border border-divider rounded-sm"
                 value={item.input}
-                readOnly
+                onChange={(e) => updateExample(index, "input", e.target.value)}
             />,
         },
         {
             key: "output",
             header: "Izvade",
-            render: (item) => <textarea 
-                className="w-full h-52 p-2 font-mono text-sm border border-divider rounded-sm" 
+            cellClassNames: (item, index) => (index >= initial.length || item.output !== initial[index].output) ? "bg-yellow-100" : "",
+            render: (item, index) => <textarea
+                className="w-full h-52 p-2 font-mono text-sm border border-divider rounded-sm"
                 value={item.output}
-                readOnly
+                onChange={(e) => updateExample(index, "output", e.target.value)}
             />,
         },
         {
             key: "md_note",
             header: "Piezīme",
-            render: (item) => <textarea 
-                className="w-full h-52 p-2 font-mono text-sm border border-divider rounded-sm" 
+            cellClassNames: (item, index) => (index >= initial.length || item.md_note !== initial[index].md_note) ? "bg-yellow-100" : "",
+            render: (item, index) => <textarea
+                className="w-full h-52 p-2 font-mono text-sm border border-divider rounded-sm"
                 value={item.md_note}
-                readOnly
+                onChange={(e) => updateExample(index, "md_note", e.target.value)}
             />,
         },
         {
             key: "actions",
             header: "Darbības",
-            render: (item) => <div className="h-full">
+            render: (item, index) => <div className="h-full">
                 <GenericButton
                     size="sm"
                     variant="danger"
                     icon={<IconTrash size={16} />}
-                    onClick={() => {}}
+                    onClick={() => deleteExample(index)}
                 >
                     Dzēst
                 </GenericButton>
             </div>,
         }
     ];
+    const hasChanges = examples.length !== initial.length || examples.some((example, index) => example.input !== initial[index].input || example.output !== initial[index].output || example.md_note !== initial[index].md_note);
     return (
         <div className="container py-2 mt-2 flex flex-col gap-3">
             <h2 className="text-lg font-bold">Piemēri</h2>
+            <p>
+                Lai atgriezt piemēru sākotnējo stāvokli, var pārlādēt lapu (ja izmaiņas nav saglabātas). Ctrl+R.
+            </p>
             <div className="p-2 bg-white border border-divider rounded-sm">
-            <GenericTable
-                data={examples}
-                columns={columns}
-                    keyExtractor={(item) => item.id.toString()}
+                <GenericTable
+                    data={examples}
+                    columns={columns}
+                    keyExtractor={(item, index) => index.toString()}
                 />
+                {initial.length-examples.length > 0 && <p className="mt-2 text-danger">{initial.length-examples.length} rinda(s) tika izdzēsta</p>}
             </div>
             <div className="flex flex-row gap-3">
-            <GenericButton
-                size="sm"
-                icon={<IconPlus size={16} />}
-                onClick={() => {}}
-            >
-                Pievienot piemēru
-            </GenericButton>
-            <GenericButton
-                size="sm"
-                variant="success"
-                icon={<IconDeviceFloppy size={16} />}
-                onClick={() => {}}
-            >
-                Saglabāt izmaiņas
-            </GenericButton>
+                <GenericButton
+                    size="sm"
+                    icon={<IconPlus size={16} />}
+                    onClick={addExample}
+                >
+                    Pievienot piemēru
+                </GenericButton>
+                <GenericButton
+                    size="sm"
+                    variant="success"
+                    icon={<IconDeviceFloppy size={16} />}
+                    onClick={saveChanges}
+                    disabled={!hasChanges}
+                >
+                    Saglabāt izmaiņas
+                </GenericButton>
             </div>
         </div>
     );

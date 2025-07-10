@@ -6,6 +6,7 @@ export type Column<T> = {
   key: string;
   width?: string;
   render: (item: T, index: number) => React.ReactNode;
+  cellClassNames?: (item: T, index: number) => string;
   colSpan?: number;
   headerColSpan?: number;
   skipRender?: boolean; // Used for columns that are spanned by others
@@ -15,7 +16,7 @@ export type Column<T> = {
 type GenericTableProps<T> = {
   data: T[];
   columns: Column<T>[];
-  keyExtractor: (item: T) => string;
+  keyExtractor: (item: T, index: number) => string;
   skeleton?: boolean;
   skeletonRowCount?: number;
   className?: string;
@@ -105,14 +106,14 @@ export default function GenericTable<T>({
           ))
         ) : (
           data.map((item, i) => (
-            <tr key={keyExtractor(item)} className={cn(rowHeightClass, { 
+            <tr key={keyExtractor(item, i)} className={cn(rowHeightClass, { 
                 "border-b border-divider": i !== data.length - 1,
                 "border-b-2 border-gray-300": delimitedRows.includes(i)
               }, { "bg-gray-50": i % 2 === 0 })}>
               {columns.map((col, j) => (
                 <td 
-                  key={`cell-${keyExtractor(item)}-${col.key}`} 
-                  className={cn("p-2 py-2.5", { "border-r": j !== columns.length - 1 }, { "text-right": col.align === "right" }, { "text-center": col.align === "center" })}
+                  key={`cell-${keyExtractor(item, i)}-${col.key}`} 
+                  className={cn("p-2 py-2.5", { "border-r": j !== columns.length - 1 }, { "text-right": col.align === "right" }, { "text-center": col.align === "center" }, col.cellClassNames?.(item, i))}
                   colSpan={col.colSpan}
                 >
                   {col.render(item, i)}
