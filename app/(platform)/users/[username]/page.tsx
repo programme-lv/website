@@ -60,7 +60,7 @@ export default function UserPage({
     <Layout breadcrumbs={breadcrumbs} active="tasks">
       <Toaster/>
       <div className="m-3">
-        <div className="bg-white p-3 rounded-small border-small border-divider">
+        <div className="bg-white p-3 rounded-sm border-small border-divider">
           <h1 className="text-2xl">{username}</h1>
           {/* <p>Lietotājs izveidots {new Date(response.created_at).toLocaleDateString()}</p> */}
           <br></br>

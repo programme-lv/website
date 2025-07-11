@@ -143,7 +143,7 @@ export default function SolutionsEditForm({ task_id }: SolutionsEditFormProps) {
     ];
 
     return (
-        <div className="container py-2 mt-2 flex flex-col gap-3">
+        <div className="container py-2 mt-2 flex flex-col gap-3 overflow-hidden">
             <div>
                 <h2 className="text-lg font-bold">Risinājumi</h2>
                 <p className="text-sm">
@@ -151,7 +151,7 @@ export default function SolutionsEditForm({ task_id }: SolutionsEditFormProps) {
                     lai kalibrēt tā iegūto punktu skaitu pret sagaidāmo rezultātu.
                 </p>
             </div>
-            <div className="p-2 bg-white border border-divider rounded-sm">
+            <div className="p-2 bg-white border border-divider rounded-sm w-max max-w-full overflow-x-scroll">
                 <GenericTable
                     data={solutions}
                     columns={columns}

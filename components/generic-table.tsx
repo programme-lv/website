@@ -60,7 +60,7 @@ export default function GenericTable<T>({
   const rowHeightClass = rowHeight === "compact" ? "h-[50px]" : "h-[76px]";
 
   return (
-    <table className={cn("rounded-sm table-fixed", className)}>
+    <table className={cn("rounded-sm table-fixed w-max", className)}>
       {columns.some(col => col.width) && (
         <colgroup>
           {columns.map((col, i) => (
