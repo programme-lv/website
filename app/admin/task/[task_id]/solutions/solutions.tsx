@@ -10,8 +10,6 @@ import { useState } from "react";
 
 interface SolutionsEditFormProps {
     task_id: string;
-    pub_available?: boolean;
-    draft_available?: boolean;
 }
 
 interface Solution {
@@ -20,13 +18,11 @@ interface Solution {
     content: string; // source code
     expected_result: string; // expected result e.g., 20 p @ 1.00s & 256 MiB
     author: string;
-    pub_run_result: string; // published testset run result e.g., 70/100 | 1.23 s | 74 MiB
-    pub_run_uuid: string; // published testset run uuid
-    draft_run_result: string; // draft testset run result e.g., 70/100 | 1.23 s | 74 MiB
-    draft_run_uuid: string; // draft testset run uuid
+    run_result: string; // run result e.g., 70/100 | 1.23 s | 74 MiB
+    run_uuid: string; // run uuid
 }
 
-export default function SolutionsEditForm({ task_id, pub_available, draft_available }: SolutionsEditFormProps) {
+export default function SolutionsEditForm({ task_id }: SolutionsEditFormProps) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isViewModalOpen, setIsViewModalOpen] = useState(false);
     const [selectedSolution, setSelectedSolution] = useState<Solution | null>(null);
@@ -37,10 +33,8 @@ export default function SolutionsEditForm({ task_id, pub_available, draft_availa
             content: "print('Hello, World!')",
             expected_result: "20/100 @ 1.00s & 256 MiB",
             author: "Krišjānis Petručeņa",
-            pub_run_result: "70/100 | 1.23 s | 74 MiB *",
-            pub_run_uuid: "a5fe930d-7961-452d-8304-b32caa54757f",
-            draft_run_result: "100/100 | 1.23 s | 256 MiB",
-            draft_run_uuid: "452d930d-7961-452d-8304-b32caa54757f",
+            run_result: "70/100 | 1.23 s | 74 MiB *",
+            run_uuid: "a5fe930d-7961-452d-8304-b32caa54757f",
         },
         {
             filename: "solution2.cpp",
@@ -48,10 +42,8 @@ export default function SolutionsEditForm({ task_id, pub_available, draft_availa
             content: "#include <iostream>\nint main() {\n    std::cout << \"Hello World!\";\n    return 0;\n}",
             expected_result: "100/100 @ 0.50s & 128 MiB",
             author: "Jānis Bērziņš",
-            pub_run_result: "100/100 | 0.45 s | 64 MiB",
-            pub_run_uuid: "b7de940e-8972-563e-9415-c43dbb65868g",
-            draft_run_result: "",
-            draft_run_uuid: "",
+            run_result: "100/100 | 0.45 s | 64 MiB",
+            run_uuid: "b7de940e-8972-563e-9415-c43dbb65868g",
         },
         {
             filename: "slow_solution.java",
@@ -59,10 +51,8 @@ export default function SolutionsEditForm({ task_id, pub_available, draft_availa
             content: "public class Solution {\n    public static void main(String[] args) {\n        System.out.println(\"Hello World!\");\n    }\n}",
             expected_result: "50/100 @ 2.00s & 512 MiB",
             author: "Anna Liepiņa",
-            pub_run_result: "30/100 | 1.98 s | 486 MiB",
-            pub_run_uuid: "c8ef941f-8983-674f-9526-d54ecc76979h",
-            draft_run_result: "50/100 | 1.87 s | 492 MiB *",
-            draft_run_uuid: "674f941f-8983-674f-9526-d54ecc76979h",
+            run_result: "30/100 | 1.98 s | 486 MiB",
+            run_uuid: "c8ef941f-8983-674f-9526-d54ecc76979h",
         },
     ]);
 
@@ -74,10 +64,8 @@ export default function SolutionsEditForm({ task_id, pub_available, draft_availa
             content: solutionData.content,
             expected_result: solutionData.expectedResult,
             author: solutionData.author,
-            pub_run_result: "Risinājums nav izpildīts",
-            pub_run_uuid: "",
-            draft_run_result: "Risinājums nav izpildīts",
-            draft_run_uuid: "",
+            run_result: "Risinājums nav izpildīts",
+            run_uuid: "",
         };
         setSolutions(prev => [...prev, newSolution]);
     };
@@ -114,37 +102,17 @@ export default function SolutionsEditForm({ task_id, pub_available, draft_availa
             width: "240px",
         },
         {
-            key: "pub_run_result",
-            header: "Iespējotais rezultāts",
+            key: "run_result",
+            header: "Izpildes rezultāts",
             render: (item) => <div className="flex flex-col">
-                {pub_available && (<><div>{item.pub_run_result}</div>
+                {item.run_uuid && (<>
+                    <div>{item.run_result}</div>
                     <div>
-                        [ {<TextLink href={`/admin/task/${task_id}/solutions/run/${item.pub_run_uuid}`}>{item.pub_run_uuid.slice(0, 8)}</TextLink>} ]
-                        [ <TextButton variant="secondary">Pārtestēt</TextButton> ]
-                    </div></>)}
-                {!pub_available && (
-                    <>
-                        <div>Risinājums nav izpildīts</div>
-                        <div>
-                            [ <TextButton variant="secondary">Testēt</TextButton> ]
-                        </div>
-                    </>
-                )}
-            </div>,
-            width: "240px",
-        },
-        {
-            key: "draft_run_result",
-            header: "Melnraksta rezultāts",
-            render: (item) => <div className="flex flex-col">
-                {item.draft_run_uuid && (<>
-                    <div>{item.draft_run_result}</div>
-                    <div>
-                        [ {<TextLink href={`/admin/task/${task_id}/solutions/run/${item.draft_run_uuid}`}>{item.draft_run_uuid.slice(0, 8)}</TextLink>} ]
+                        [ {<TextLink href={`/admin/task/${task_id}/solutions/run/${item.run_uuid}`}>{item.run_uuid.slice(0, 8)}</TextLink>} ]
                         [ <TextButton variant="secondary">Pārtestēt</TextButton> ]
                     </div>
                 </>)}
-                {!item.draft_run_uuid && (<>
+                {!item.run_uuid && (<>
                     <div>Risinājums nav izpildīts</div>
                     <div>
                         [ <TextButton variant="secondary">Testēt</TextButton> ]
@@ -174,20 +142,13 @@ export default function SolutionsEditForm({ task_id, pub_available, draft_availa
         },
     ];
 
-    if (!draft_available) columns = columns.filter((column) => column.key !== "draft_run_result");
-    if (!pub_available) columns = columns.filter((column) => column.key !== "pub_run_result");
-
     return (
         <div className="container py-2 mt-2 flex flex-col gap-3">
-            <h2 className="text-lg font-bold">Risinājumi</h2>
-            <div className="flex flex-col gap-2">
-                <p>
+            <div>
+                <h2 className="text-lg font-bold">Risinājumi</h2>
+                <p className="text-sm">
                     Uzdevuma risinājums ir paredzēts kļūdainu un nepilnīgu testu īpašību novēršanai, kā arī izpildes ierobežojumu izvēlei,
-                    lai kalibrēt iegūto punktu skaitu atbilstoši sagaidāmajam rezultātam.
-                </p>
-                <p>
-                    Risinājumu ir iespējams izpildīt (iesūtīt) pret iespējoto vai melnraksta testu kopu.
-                    Testu kopa nāk kopā ar testu grupām, to punktu skaitiem, kā arī pārbaudes programmu jeb čekeri.
+                    lai kalibrēt tā iegūto punktu skaitu pret sagaidāmo rezultātu.
                 </p>
             </div>
             <div className="p-2 bg-white border border-divider rounded-sm">
@@ -219,7 +180,11 @@ export default function SolutionsEditForm({ task_id, pub_available, draft_availa
             <ViewSolutionModal
                 isOpen={isViewModalOpen}
                 onOpenChange={() => setIsViewModalOpen(!isViewModalOpen)}
-                solution={selectedSolution}
+                filename={selectedSolution?.filename || ""}
+                pr_lang={selectedSolution?.pr_lang || ""}
+                author={selectedSolution?.author || ""}
+                expected_result={selectedSolution?.expected_result || ""}
+                content={selectedSolution?.content || ""}
             />
         </div>
     );
