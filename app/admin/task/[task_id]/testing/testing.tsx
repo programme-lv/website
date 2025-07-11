@@ -4,8 +4,9 @@ import FileUpload from "@/components/file-upload";
 import GenericButton from "@/components/generic-button";
 import { TextLink } from "@/components/text-link";
 import { NumberInput } from "@heroui/number-input";
-import { IconDeviceFloppy } from "@tabler/icons-react";
+import { IconDeviceFloppy, IconEdit } from "@tabler/icons-react";
 import { useState } from "react";
+import CheckerEditModal from "./checker-edit-modal";
 
 interface TestGroup {
     test_list: string; // e.g. "1, 3, [4, 7], 9" = [1,3,4,5,6,7,9]
@@ -26,6 +27,8 @@ export default function TestingEditForm() {
     const [constraints, setConstraints] = useState<Constraints>(initialConstraints);
     const [isUploadingTestset, setIsUploadingTestset] = useState<boolean>(false);
     const [testCount, setTestCount] = useState<number>(1); // Number of tests currently uploaded
+    const [isCheckerModalOpen, setIsCheckerModalOpen] = useState<boolean>(false);
+    const [checkerCode, setCheckerCode] = useState<string>(checker_code);
 
     const mockTestGroups: TestGroup[] = [
         {
@@ -55,9 +58,13 @@ export default function TestingEditForm() {
         setIsUploadingTestset(false);
     };
 
+    const handleCheckerSave = (code: string) => {
+        setCheckerCode(code);
+        alert("Čekeris ir saglabāts!");
+    };
+
     const hasChanges = constraints.cpu_time_sec !== initialConstraints.cpu_time_sec || 
                       constraints.mem_mib !== initialConstraints.mem_mib;
-
     return (
         <div className="container py-2 mt-2 flex flex-col gap-3 max-w-4xl">
             <h2 className="text-lg font-bold">Testēšana</h2>
@@ -129,12 +136,28 @@ export default function TestingEditForm() {
                 </div>
                 <div className="p-2 bg-white border border-divider rounded-sm">
                     <textarea
-                        value={checker_code}
+                        value={checkerCode}
                         readOnly
                         className="w-full min-h-64 p-2 border border-divider rounded-sm bg-gray-50 font-mono text-sm"
                     />
                 </div>
+                <div>
+                    <GenericButton
+                        size="sm"
+                        icon={<IconEdit size={16} />}
+                        onClick={() => setIsCheckerModalOpen(true)}
+                    >
+                        Skatīt & rediģēt čekeri
+                    </GenericButton>
+                </div>
             </section>
+
+            <CheckerEditModal
+                isOpen={isCheckerModalOpen}
+                onOpenChange={() => setIsCheckerModalOpen(false)}
+                checkerCode={checkerCode}
+                onSave={handleCheckerSave}
+            />
         </div>
     );
 }
