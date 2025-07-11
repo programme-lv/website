@@ -33,7 +33,7 @@ export default function GenericButton({
     primary: "bg-primary text-white hover:bg-primary-600 focus:ring-blue-500",
     secondary: "bg-secondary text-white hover:bg-secondary-600 focus:ring-secondary",
     success: "bg-success-600 text-white hover:bg-success-700 focus:ring-success-500",
-    warning: "bg-yellow-600 text-white hover:bg-yellow-700 focus:ring-yellow-500",
+    warning: "bg-warning text-white hover:bg-warning-600 focus:ring-warning-500",
     danger: "bg-red-600 text-white hover:bg-red-700 focus:ring-red-500",
     default: "bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500"
   };
@@ -44,7 +44,12 @@ export default function GenericButton({
     lg: "px-6 py-3 text-base min-w-24 h-12 gap-3"
   };
 
-  const combinedClasses = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`;
+  let noContentPadding = "";
+  if (!children) {
+    noContentPadding = "px-1 min-w-8";
+  }
+
+  const combinedClasses = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className} ${noContentPadding}`;
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (!isDisabled && !isLoading && onClick) {
