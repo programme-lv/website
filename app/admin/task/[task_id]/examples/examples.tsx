@@ -160,7 +160,7 @@ export default function ExamplesEditForm() {
                     onClick={handleSave}
                     disabled={!hasChanges}
                 >
-                    Saglabāt izmaiņas piemēros
+                    Saglabāt piemērus 
                 </GenericButton>
             </div>
         </div>

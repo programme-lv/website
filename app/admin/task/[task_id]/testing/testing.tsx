@@ -1,26 +1,31 @@
 "use client";
 
-import GenericTable, { Column } from "@/components/generic-table";
-
-interface Test {
-    input_preview: string;
-    answer_preview: string;
-}
+import FileUpload from "@/components/file-upload";
+import GenericButton from "@/components/generic-button";
+import { TextLink } from "@/components/text-link";
+import { NumberInput } from "@heroui/number-input";
+import { IconDeviceFloppy } from "@tabler/icons-react";
+import { useState } from "react";
 
 interface TestGroup {
     test_list: string; // e.g. "1, 3, [4, 7], 9" = [1,3,4,5,6,7,9]
     points: number;
 }
 
-
+interface Constraints {
+    cpu_time_sec: number;
+    mem_mib: number;
+}
 
 export default function TestingEditForm() {
-    const mockTests: Test[] = [
-        {
-            input_preview: "1 2 3",
-            answer_preview: "6",
-        },
-    ];
+    const initialConstraints: Constraints = {
+        cpu_time_sec: 1.0,
+        mem_mib: 256
+    };
+
+    const [constraints, setConstraints] = useState<Constraints>(initialConstraints);
+    const [isUploadingTestset, setIsUploadingTestset] = useState<boolean>(false);
+    const [testCount, setTestCount] = useState<number>(1); // Number of tests currently uploaded
 
     const mockTestGroups: TestGroup[] = [
         {
@@ -29,69 +34,99 @@ export default function TestingEditForm() {
         },
     ];
 
-    const test_to_tg_idx_map = new Map<number, number[]>();
-    for (let tg_idx = 0; tg_idx < mockTestGroups.length; tg_idx++) {
-        const tg = mockTestGroups[tg_idx];
-        const test_list = parseTestListString(tg.test_list);
-        for (const test_id of test_list) {
-            if (!test_to_tg_idx_map.has(test_id)) {
-                test_to_tg_idx_map.set(test_id, []);
-            }
-            test_to_tg_idx_map.get(test_id)?.push(tg_idx);
-        }
-    }
+    const updateConstraint = (key: keyof Constraints, value: number) => {
+        setConstraints(prev => ({ ...prev, [key]: value }));
+    };
 
-    let test_set_columns: Column<Test>[] = [
-        {
-            key: "#",
-            header: "Tests #",
-            render: (item, index) => index + 1,
-        },
-        {
-            key: "test_group",
-            header: "Testu grupa",
-            render: (item, index) => <div>
-                {test_to_tg_idx_map.get(index+1)?.map((tg_idx) => (tg_idx+1).toString()+".").join(", ")}
-            </div>,
-        },
-        {
-            key: "input_preview",
-            header: "Ievades priekšskatījums",
-            render: (item) => <textarea
-                className="h-8 p-2 font-mono text-sm border border-divider rounded-sm"
-                value={item.input_preview}
-                readOnly
-            />,
-        },
-        {
-            key: "answer_preview",
-            header: "Atbildes priekšskatījums",
-            render: (item) => <textarea
-                className="h-8 p-2 font-mono text-sm border border-divider rounded-sm"
-                value={item.answer_preview}
-                readOnly
-            />,
-        },
-    ];
+    const saveConstraints = () => {
+        alert("Ierobežojumi ir saglabāti!");
+    };
+
+    const handleTestsetUpload = async (file: File) => {
+        setIsUploadingTestset(true);
+        
+        // Mock upload that takes about 1 second
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // Mock response - simulate extracting test count from zip
+        const mockTestCount = Math.floor(Math.random() * 20) + 5; // Random number between 5-24
+        setTestCount(mockTestCount);
+        alert(`Testu kopa "${file.name}" ir veiksmīgi augšupielādēta! Atrastas ${mockTestCount} testi.`);
+        setIsUploadingTestset(false);
+    };
+
+    const hasChanges = constraints.cpu_time_sec !== initialConstraints.cpu_time_sec || 
+                      constraints.mem_mib !== initialConstraints.mem_mib;
 
     return (
         <div className="container py-2 mt-2 flex flex-col gap-3 max-w-4xl">
             <h2 className="text-lg font-bold">Testēšana</h2>
-            <h3 className="font-semibold">Testu kopa</h3>
-            <div className="p-2 bg-white border border-divider rounded-sm">
-                <GenericTable
-                    data={mockTests}
-                    columns={test_set_columns}
-                    keyExtractor={(item, index) => index.toString()}
-                    rowHeight="compact"
-                />
-            </div>
-
-            <section>
-                <h3 className="font-semibold">Testu grupas</h3>
+            <hr/>
+            <section className="flex flex-col gap-3">
+                <div>
+                    <h3 className="font-semibold">Ierobežojumi</h3>
+                </div>
+                <div className="flex flex-row gap-3 p-2 bg-white border border-divider rounded-sm w-max">
+                    <NumberInput
+                        value={constraints.cpu_time_sec}
+                        disableAnimation
+                        labelPlacement="outside"
+                        placeholder="?"
+                        isRequired
+                        size="sm"
+                        formatOptions={{style: "decimal", minimumFractionDigits: 1, maximumFractionDigits: 1}}
+                        label="CPU laiks [s]"
+                        fullWidth={false}
+                        step={0.1}
+                        classNames={{ inputWrapper: "border border-divider rounded-small" }}
+                        onValueChange={(value) => updateConstraint('cpu_time_sec', value)}
+                    />
+                    <NumberInput
+                        value={constraints.mem_mib}
+                        size="sm"
+                        isRequired
+                        labelPlacement="outside"
+                        placeholder="?"
+                        label="Atmiņa [MiB]"
+                        fullWidth={false}
+                        classNames={{ inputWrapper: "border border-divider rounded-small" }}
+                        onValueChange={(value) => updateConstraint('mem_mib', value)}
+                    />
+                </div>
+                <div>
+                <GenericButton
+                    size="sm"
+                    variant="success"
+                    icon={<IconDeviceFloppy size={16} />}
+                    onClick={saveConstraints}
+                    disabled={!hasChanges}>
+                    Saglabāt ierobežojumus
+                </GenericButton>
+                </div>
             </section>
-            <section>
-                <h3 className="font-semibold mb-1">Čekeris</h3>
+            <hr/>
+            <section className="flex flex-col gap-3">
+                <h3 className="font-semibold">Testu kopa</h3>
+                    <p className="">
+                        Pašlaik ir augšupielādēti <span className="font-semibold">{testCount} testi</span>. Skatīt <TextLink href="/admin/task/1/testing/testset">testu kopu</TextLink>.
+                    </p>
+                    <FileUpload
+                        acceptedTypes=".zip"
+                        size="sm"
+                        onFileSelect={handleTestsetUpload}
+                        isDisabled={isUploadingTestset}
+                        isLoading={isUploadingTestset}
+                    >
+                        {isUploadingTestset ? "Augšupielādē..." : "Augšupielādēt testus (.zip)"}
+                    </FileUpload>
+
+            </section>
+            <hr/>
+            <section className="flex flex-col gap-3">
+                <div>
+                    <h3 className="font-semibold mb-1">Čekeris</h3>
+                    <p className="text-sm max-w-[50em]">Čekeris ir pārbaudes programma, kas nepieciešama, kad uzdevumā ir iespējamas vairākas pareizās atbildes. Parasti tā tiek sagatavota, izmantojot <TextLink href="https://github.com/MikeMirzayanov/testlib" target="_blank">Testlib.h bibliotēku</TextLink>. Čekeris saņem testa ievaddatus, pareizo atbildi un risinājuma izvaddatus. Tas beidz darbību ar izejas kodu 0, ja atbilde ir pareiza, un ar 1, citādi.  </p>
+                </div>
                 <div className="p-2 bg-white border border-divider rounded-sm">
                     <textarea
                         value={checker_code}
@@ -102,33 +137,6 @@ export default function TestingEditForm() {
             </section>
         </div>
     );
-}
-
-function parseTestListString(test_list: string): number[] {
-    // Split by commas and trim whitespace
-    const parts = test_list.split(',').map(p => p.trim());
-    
-    const resultSet = new Set<number>();
-
-    for (const part of parts) {
-        if (part.includes('[')) {
-            // Handle ranges like [4,7]
-            const range = part.replace(/[\[\]]/g, '').split(',').map(n => parseInt(n.trim()));
-            if (range.length === 2) {
-                for (let i = range[0]; i <= range[1]; i++) {
-                    resultSet.add(i);
-                }
-            }
-        } else {
-            // Handle single numbers
-            const num = parseInt(part);
-            if (!isNaN(num)) {
-                resultSet.add(num);
-            }
-        }
-    }
-
-    return Array.from(resultSet).sort((a, b) => a - b);
 }
 
 const checker_code = `#include "testlib.h"

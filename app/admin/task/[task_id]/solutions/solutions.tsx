@@ -146,9 +146,9 @@ export default function SolutionsEditForm({ task_id }: SolutionsEditFormProps) {
         <div className="container py-2 mt-2 flex flex-col gap-3 overflow-hidden">
             <div>
                 <h2 className="text-lg font-bold">Risinājumi</h2>
-                <p className="text-sm">
-                    Uzdevuma risinājums ir paredzēts kļūdainu un nepilnīgu testu īpašību novēršanai, kā arī izpildes ierobežojumu izvēlei,
-                    lai kalibrēt tā iegūto punktu skaitu pret sagaidāmo rezultātu.
+                <p className="text-sm max-w-[50em]">
+                    Priekšlaicīgi sagatavoti pareizi un nepareizi risinājumi palīdz novērst nepilnības testkopā un vērtēšanas sistēmā,
+                    kā arī izpildes ierobežojumos. Tie ļauj kalibrēt risinājuma izpildē iegūto punktu skaitu pret sagaidāmo rezultātu.
                 </p>
             </div>
             <div className="p-2 bg-white border border-divider rounded-sm w-max max-w-full overflow-x-scroll">
@@ -158,7 +158,7 @@ export default function SolutionsEditForm({ task_id }: SolutionsEditFormProps) {
                     keyExtractor={(item) => item.filename}
                 />
             </div>
-            <div>
+            <div className="flex flex-row gap-3 items-center">
                 <GenericButton
                     size="sm"
                     icon={<IconPlus size={18} />}
@@ -166,10 +166,10 @@ export default function SolutionsEditForm({ task_id }: SolutionsEditFormProps) {
                 >
                     Pievienot risinājumu
                 </GenericButton>
+                <p className="text-sm">
+                    Šajā sadaļa izmaiņas tiek automātiski saglabātas.
+                </p>
             </div>
-            <p>
-                Šajā sadaļa izmaiņas tiek automātiski saglabātas.
-            </p>
 
             <AddSolutionModal
                 isOpen={isModalOpen}
