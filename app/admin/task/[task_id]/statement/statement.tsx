@@ -20,9 +20,9 @@ export default function StatementEditForm({ task }: StatementEditFormProps) {
     return (
         <div className="py-2 mt-2">
             <MainStatementSection task={task} />
-            <br/>
+            <br />
             <hr />
-            <br/>
+            <br />
             <StatementImageTable task={task} />
         </div>
     );
@@ -118,8 +118,8 @@ function MainStatementSection({ task }: { task: Task }) {
                 <p className="text-sm">Ctrl+S, lai saglabāt formulējuma izmaiņas.</p>
             </div>
 
-            <div>
-                <label className="block text-sm font-medium mb-1">Stāsts</label>
+            <div className="flex flex-col gap-1 border border-divider rounded-sm p-2">
+                <label className="block text-sm font-medium">Stāsts</label>
                 <textarea
                     className="w-full border rounded p-2"
                     value={formData.story}
@@ -128,8 +128,8 @@ function MainStatementSection({ task }: { task: Task }) {
                 />
             </div>
 
-            <div>
-                <label className="block text-sm font-medium mb-1">Ievaddati</label>
+            <div className="flex flex-col gap-1 border border-divider rounded-sm p-2">
+                <label className="block text-sm font-medium">Ievaddati</label>
                 <textarea
                     className="w-full border rounded p-2"
                     value={formData.input}
@@ -138,8 +138,8 @@ function MainStatementSection({ task }: { task: Task }) {
                 />
             </div>
 
-            <div>
-                <label className="block text-sm font-medium mb-1">Izvaddati</label>
+            <div className="flex flex-col gap-1 border border-divider rounded-sm p-2">
+                <label className="block text-sm font-medium">Izvaddati</label>
                 <textarea
                     className="w-full border rounded p-2"
                     value={formData.output}
@@ -148,8 +148,8 @@ function MainStatementSection({ task }: { task: Task }) {
                 />
             </div>
 
-            <div>
-                <label className="block text-sm font-medium mb-1">Piezīmes</label>
+            {/* <div className="flex flex-col gap-1 border border-divider rounded-sm p-2">
+                <label className="block text-sm font-medium">Piezīmes</label>
                 <textarea
                     className="w-full border rounded p-2"
                     value={formData.notes}
@@ -158,8 +158,8 @@ function MainStatementSection({ task }: { task: Task }) {
                 />
             </div>
 
-            <div>
-                <label className="block text-sm font-medium mb-1">Vērtēšana (šķiet, ka netiek izmantota)</label>
+            <div className="flex flex-col gap-1 border border-divider rounded-sm p-2">
+                <label className="block text-sm font-medium">Vērtēšana (šķiet, ka netiek izmantota)</label>
                 <textarea
                     className="w-full border rounded p-2"
                     value={formData.scoring}
@@ -168,8 +168,8 @@ function MainStatementSection({ task }: { task: Task }) {
                 />
             </div>
 
-            <div>
-                <label className="block text-sm font-medium mb-1">Komunikācija  (interaktīvajos uzdevumos)</label>
+            <div className="flex flex-col gap-1 border border-divider rounded-sm p-2">
+                <label className="block text-sm font-medium">Komunikācija  (interaktīvajos uzdevumos)</label>
                 <textarea
                     className="w-full border rounded p-2"
                     value={formData.talk}
@@ -178,15 +178,15 @@ function MainStatementSection({ task }: { task: Task }) {
                 />
             </div>
 
-            <div>
-                <label className="block text-sm font-medium mb-1">Piemērs (interaktīvajos uzdevumos)</label>
+            <div className="flex flex-col gap-1 border border-divider rounded-sm p-2">
+                <label className="block text-sm font-medium">Piemērs (interaktīvajos uzdevumos)</label>
                 <textarea
                     className="w-full border rounded p-2"
                     value={formData.example}
                     onChange={handleChange("example")}
                     rows={1}
                 />
-            </div>
+            </div> */}
             <div className="flex justify-end">
                 <GenericButton
                     variant="success"
@@ -324,7 +324,20 @@ function StatementImageTable({ task }: { task: Task }) {
 
     return (
         <section className="flex flex-col gap-3">
-            <h2 className="text-lg font-bold">Formulējuma attēli</h2>
+            <div>
+                <h2 className="text-lg font-bold">Formulējuma attēli</h2>
+                <div className="text-sm">
+                    <ul className="list-disc list-inside">
+                        <li>
+                            Lai iekļaut attēlu formulējumā, <code>{'![2. attēls: Adapteru izmēri](1.png)'}</code>
+                        </li>
+                        <li>
+                            Ja nepieciešams cits platums, <code>{'<img src="2.png" alt="1. attēls: Laukuma piemērs" width=300/>'}</code>
+                        </li>
+                    </ul>
+                    P.s., jā, es apzinos, ka "alt" atrībuts "img" elemntā nav paredzēts, lai norādīt "figcaption", bet šādi ir krietni ērtāk.
+                </div>
+            </div>
 
             {uploadError && (
                 <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
