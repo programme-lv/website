@@ -31,7 +31,7 @@ export default function FileUpload({
 }: FileUploadProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const baseClasses = "relative inline-flex items-center justify-center rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer";
+  const baseClasses = "relative inline-flex items-center justify-center rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50";
 
   const variantClasses = {
     primary: "bg-primary text-white hover:bg-primary-600 focus:ring-blue-500",
@@ -85,12 +85,13 @@ export default function FileUpload({
         disabled={isDisabled || isLoading}
       />
       <div
-        className={combinedClasses}
+        className={`${combinedClasses} ${(isDisabled || isLoading) ? 'disabled opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
         onClick={handleClick}
         onKeyDown={handleKeyDown}
         tabIndex={isDisabled || isLoading ? -1 : 0}
         role="button"
         aria-label="Upload file"
+        aria-disabled={isDisabled || isLoading}
       >
         {children}
         {!isLoading && icon}
