@@ -11,6 +11,7 @@ export type Column<T> = {
   headerColSpan?: number;
   skipRender?: boolean; // Used for columns that are spanned by others
   align?: "left" | "right" | "center";
+  verticalAlign?: "top" | "middle" | "bottom";
 };
 
 type GenericTableProps<T> = {
@@ -32,7 +33,7 @@ export default function GenericTable<T>({
   skeletonRowCount = 5,
   className = "",
   rowHeight = "normal", // Default to normal height
-  delimitedRows = [] // Default to empty array
+  delimitedRows = [], // Default to empty array
 }: GenericTableProps<T>) {
   // Process columns to handle colSpans correctly
   const processedColumns = React.useMemo(() => {
@@ -113,7 +114,7 @@ export default function GenericTable<T>({
               {columns.map((col, j) => (
                 <td 
                   key={`cell-${keyExtractor(item, i)}-${col.key}`} 
-                  className={cn("p-2 py-2.5", { "border-r": j !== columns.length - 1 }, { "text-right": col.align === "right" }, { "text-center": col.align === "center" }, col.cellClassNames?.(item, i))}
+                  className={cn("p-2 py-2.5", { "border-r": j !== columns.length - 1 }, { "text-right": col.align === "right" }, { "text-center": col.align === "center" }, col.cellClassNames?.(item, i), { "align-top": col.verticalAlign === "top" }, { "align-middle": col.verticalAlign === "middle" }, { "align-bottom": col.verticalAlign === "bottom" })}
                   colSpan={col.colSpan}
                 >
                   {col.render(item, i)}
