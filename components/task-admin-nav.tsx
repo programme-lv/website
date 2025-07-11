@@ -30,6 +30,11 @@ export default function TaskAdminNav({ taskId, activeTab }: TaskAdminNavProps) {
       href: `/admin/task/${taskId}/examples`,
     },
     {
+      key: "scoring",
+      label: "Vērtēšana",
+      href: `/admin/task/${taskId}/scoring`,
+    },
+    {
       key: "testing",
       label: "Testēšana", 
       href: `/admin/task/${taskId}/testing`,
