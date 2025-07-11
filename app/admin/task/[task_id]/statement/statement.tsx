@@ -1,10 +1,10 @@
 "use client";
 import { useState, useEffect } from "react";
-import { MarkdownStatement, Task } from "@/types/task";
+import { MarkdownStatement, StatementImage, Task } from "@/types/task";
 import { updateTaskStatement, UpdateStatementRequest, deleteTaskImage, revalidateTask } from "@/lib/task/tasks";
 import { useRouter } from "next/navigation";
 import { TextLink } from "@/components/text-link";
-import GenericTable from "@/components/generic-table";
+import GenericTable, { Column } from "@/components/generic-table";
 import GenericButton from "@/components/generic-button";
 import FileUpload from "@/components/file-upload";
 import { uploadTaskImage } from "@/lib/task/upload-image";
@@ -15,11 +15,22 @@ interface StatementEditFormProps {
 }
 
 export default function StatementEditForm({ task }: StatementEditFormProps) {
+
+
+    return (
+        <div className="py-2 mt-2">
+            <MainStatementSection task={task} />
+            <br/>
+            <hr />
+            <br/>
+            <StatementImageTable task={task} />
+        </div>
+    );
+}
+
+function MainStatementSection({ task }: { task: Task }) {
     const router = useRouter();
     const [isSubmittingStatement, setIsSubmittingStatement] = useState(false);
-    const [isUploadingImage, setIsUploadingImage] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-    const [uploadError, setUploadError] = useState<string | null>(null);
     const task_md = task.default_md_statement;
     const [formData, setFormData] = useState<Partial<MarkdownStatement>>({
         story: task_md?.story || "",
@@ -74,7 +85,6 @@ export default function StatementEditForm({ task }: StatementEditFormProps) {
     const handleSave = async () => {
         try {
             setIsSubmittingStatement(true);
-            setError(null);
 
             const data: UpdateStatementRequest = {
                 story: formData.story || "",
@@ -95,13 +105,107 @@ export default function StatementEditForm({ task }: StatementEditFormProps) {
             alert("Task statement updated successfully!");
         } catch (err) {
             console.error("Error saving task statement:", err);
-            setError(
-                err instanceof Error ? err.message : "An unknown error occurred"
-            );
+            alert("Radās kļūda saglabājot formulējumu: " + err);
         } finally {
             setIsSubmittingStatement(false);
         }
     };
+
+    return (
+        <section className="flex flex-col gap-3">
+            <div>
+                <h2 className="text-lg font-bold">Formulējums</h2>
+                <p className="text-sm">Ctrl+S, lai saglabāt formulējuma izmaiņas.</p>
+            </div>
+
+            <div>
+                <label className="block text-sm font-medium mb-1">Stāsts</label>
+                <textarea
+                    className="w-full border rounded p-2"
+                    value={formData.story}
+                    onChange={handleChange("story")}
+                    rows={textareaRows.story}
+                />
+            </div>
+
+            <div>
+                <label className="block text-sm font-medium mb-1">Ievaddati</label>
+                <textarea
+                    className="w-full border rounded p-2"
+                    value={formData.input}
+                    onChange={handleChange("input")}
+                    rows={textareaRows.input}
+                />
+            </div>
+
+            <div>
+                <label className="block text-sm font-medium mb-1">Izvaddati</label>
+                <textarea
+                    className="w-full border rounded p-2"
+                    value={formData.output}
+                    onChange={handleChange("output")}
+                    rows={textareaRows.output}
+                />
+            </div>
+
+            <div>
+                <label className="block text-sm font-medium mb-1">Piezīmes</label>
+                <textarea
+                    className="w-full border rounded p-2"
+                    value={formData.notes}
+                    onChange={handleChange("notes")}
+                    rows={1}
+                />
+            </div>
+
+            <div>
+                <label className="block text-sm font-medium mb-1">Vērtēšana (šķiet, ka netiek izmantota)</label>
+                <textarea
+                    className="w-full border rounded p-2"
+                    value={formData.scoring}
+                    onChange={handleChange("scoring")}
+                    rows={1}
+                />
+            </div>
+
+            <div>
+                <label className="block text-sm font-medium mb-1">Komunikācija  (interaktīvajos uzdevumos)</label>
+                <textarea
+                    className="w-full border rounded p-2"
+                    value={formData.talk}
+                    onChange={handleChange("talk")}
+                    rows={1}
+                />
+            </div>
+
+            <div>
+                <label className="block text-sm font-medium mb-1">Piemērs (interaktīvajos uzdevumos)</label>
+                <textarea
+                    className="w-full border rounded p-2"
+                    value={formData.example}
+                    onChange={handleChange("example")}
+                    rows={1}
+                />
+            </div>
+            <div className="flex justify-end">
+                <GenericButton
+                    variant="success"
+                    onClick={handleSave}
+                    isLoading={isSubmittingStatement}
+                    isDisabled={isSubmittingStatement}
+                    icon={<IconDeviceFloppy size={18} />}
+                >
+                    Saglabāt formulējumu
+                </GenericButton>
+            </div>
+        </section>
+    );
+}
+
+function StatementImageTable({ task }: { task: Task }) {
+    const [uploadError, setUploadError] = useState<string | null>(null);
+    const [isUploadingImage, setIsUploadingImage] = useState(false);
+    const router = useRouter();
 
     const handleImageUpload = async (file: File) => {
         try {
@@ -155,194 +259,101 @@ export default function StatementEditForm({ task }: StatementEditFormProps) {
         }
     }
 
+    const columns: Column<StatementImage>[] = [
+        {
+            key: "preview",
+            header: "Priekšskatījums",
+            width: "100px",
+            render: (item) => (
+                <img src={item.http_url} alt={item.filename} className="w-24" />
+            ),
+        },
+        {
+            key: "filename",
+            header: "Faila nosaukums",
+            render: (item) => item.filename,
+            width: "200px",
+        },
+        {
+            key: "url",
+            header: "URL",
+            width: "100px",
+            render: (item) => (
+                <TextLink
+                    href={item.http_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    skatīt
+                </TextLink>
+            ),
+        },
+        {
+            key: "width",
+            header: "Platums [px]",
+            render: (item) => item.width_px,
+            width: "120px",
+        },
+        {
+            key: "height",
+            header: "Augstums [px]",
+            render: (item) => item.height_px,
+            width: "120px",
+        },
+        {
+            key: "size",
+            header: "Izmērs [kB]",
+            render: (item) => (item.sz_in_bytes / 1000).toFixed(0),
+            width: "100px",
+        },
+        {
+            key: "delete",
+            header: "Darbība",
+            render: (item) => (
+                <GenericButton
+                    variant="danger"
+                    size="sm"
+                    onClick={() => handleDeleteImage(item.filename)}
+                >
+                    Dzēst
+                </GenericButton>
+            ),
+            width: "100px",
+        }
+    ];
+
     return (
-        <div className="container py-2 mt-2 max-w-4xl">
-            {error && (
+        <section className="flex flex-col gap-3">
+            <h2 className="text-lg font-bold">Formulējuma attēli</h2>
+
+            {uploadError && (
                 <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                    {error}
+                    {uploadError}
                 </div>
             )}
 
-            <h2 className="text-lg font-bold mb-1">Formulējums</h2>
-            <div className="text-sm text-gray-600 mb-3">
-                Padoms: Ctrl+S lai saglabāt formulējuma izmaiņas.
+
+            <div className="p-2 bg-white border border-divider rounded-sm w-max">
+                <GenericTable
+                    data={task.statement_images || []}
+                    columns={columns}
+                    keyExtractor={(item) => item.filename}
+                />
             </div>
-            <div className="space-y-4">
-                <div>
-                    <label className="block text-sm font-medium mb-1">Stāsts</label>
-                    <textarea
-                        className="w-full border rounded p-2"
-                        value={formData.story}
-                        onChange={handleChange("story")}
-                        rows={textareaRows.story}
-                    />
-                </div>
 
-                <div>
-                    <label className="block text-sm font-medium mb-1">Ievaddati</label>
-                    <textarea
-                        className="w-full border rounded p-2"
-                        value={formData.input}
-                        onChange={handleChange("input")}
-                        rows={textareaRows.input}
-                    />
-                </div>
-
-                <div>
-                    <label className="block text-sm font-medium mb-1">Izvaddati</label>
-                    <textarea
-                        className="w-full border rounded p-2"
-                        value={formData.output}
-                        onChange={handleChange("output")}
-                        rows={textareaRows.output}
-                    />
-                </div>
-
-                <div>
-                    <label className="block text-sm font-medium mb-1">Piezīmes</label>
-                    <textarea
-                        className="w-full border rounded p-2"
-                        value={formData.notes}
-                        onChange={handleChange("notes")}
-                        rows={1}
-                    />
-                </div>
-
-                <div>
-                    <label className="block text-sm font-medium mb-1">Vērtēšana (šķiet, ka netiek izmantota)</label>
-                    <textarea
-                        className="w-full border rounded p-2"
-                        value={formData.scoring}
-                        onChange={handleChange("scoring")}
-                        rows={1}
-                    />
-                </div>
-
-                <div>
-                    <label className="block text-sm font-medium mb-1">Komunikācija  (interaktīvajos uzdevumos)</label>
-                    <textarea
-                        className="w-full border rounded p-2"
-                        value={formData.talk}
-                        onChange={handleChange("talk")}
-                        rows={1}
-                    />
-                </div>
-
-                <div>
-                    <label className="block text-sm font-medium mb-1">Piemērs (interaktīvajos uzdevumos)</label>
-                    <textarea
-                        className="w-full border rounded p-2"
-                        value={formData.example}
-                        onChange={handleChange("example")}
-                        rows={1}
-                    />
-                </div>
-
-                <div className="flex justify-end">
-                    <GenericButton
-                        variant="success"
-                        onClick={handleSave}
-                        isLoading={isSubmittingStatement}
-                        isDisabled={isSubmittingStatement}
-                        icon={<IconDeviceFloppy size={18} />}
-                    >
-                        Saglabāt formulējumu
-                    </GenericButton>
-                </div>
-
-                <h2 className="text-lg font-bold mb-4">Formulējuma attēli</h2>
-
-                {uploadError && (
-                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                        {uploadError}
-                    </div>
-                )}
-
-                <div className="mb-4">
-                    <div className="flex items-center">
-                        <FileUpload
-                            onFileSelect={handleImageUpload}
-                            isLoading={isUploadingImage}
-                            variant="primary"
-                            acceptedTypes="image/jpeg,image/png,image/gif,image/webp,image/svg+xml,image/bmp,image/tiff"
-                        >
-                            Augšupielādēt jaunu attēlu
-                        </FileUpload>
-                        <span className="ml-2 text-sm text-gray-600">
-                            Atļautie formāti: JPG, PNG, GIF, WebP, SVG, BMP, TIFF
-                        </span>
-                    </div>
-                </div>
-
-                <div className="p-2 bg-white">
-                    <GenericTable
-                        data={task.statement_images || []}
-                        columns={[
-                            {
-                                key: "preview",
-                                header: "Priekšskatījums",
-                                width: "100px",
-                                render: (item) => (
-                                    <img src={item.http_url} alt={item.filename} className="w-24" />
-                                ),
-                            },
-                            {
-                                key: "filename",
-                                header: "Faila nosaukums",
-                                render: (item) => item.filename,
-                                width: "200px",
-                            },
-                            {
-                                key: "url",
-                                header: "URL",
-                                width: "100px",
-                                render: (item) => (
-                                    <TextLink
-                                        href={item.http_url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                    >
-                                        skatīt
-                                    </TextLink>
-                                ),
-                            },
-                            {
-                                key: "width",
-                                header: "Platums [px]",
-                                render: (item) => item.width_px,
-                                width: "120px",
-                            },
-                            {
-                                key: "height",
-                                header: "Augstums [px]",
-                                render: (item) => item.height_px,
-                                width: "120px",
-                            },
-                            {
-                                key: "size",
-                                header: "Izmērs [kB]",
-                                render: (item) => (item.sz_in_bytes / 1000).toFixed(0),
-                                width: "100px",
-                            },
-                            {
-                                key: "delete",
-                                header: "Darbība",
-                                render: (item) => (
-                                    <GenericButton
-                                        variant="danger"
-                                        size="sm"
-                                        onClick={() => handleDeleteImage(item.filename)}
-                                    >
-                                        Dzēst
-                                    </GenericButton>
-                                ),
-                                width: "100px",
-                            }
-                        ]}
-                        keyExtractor={(item) => item.http_url}
-                    />
-                </div>
+            <div className="flex items-center">
+                <FileUpload
+                    onFileSelect={handleImageUpload}
+                    isLoading={isUploadingImage}
+                    variant="primary"
+                    acceptedTypes="image/jpeg,image/png,image/gif,image/webp,image/svg+xml,image/bmp,image/tiff"
+                >
+                    Augšupielādēt jaunu attēlu
+                </FileUpload>
+                <span className="ml-2 text-sm text-gray-600">
+                    Atļautie formāti: JPG, PNG
+                </span>
             </div>
-        </div>
+        </section>
     );
 }
