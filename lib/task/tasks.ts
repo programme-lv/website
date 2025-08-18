@@ -32,7 +32,7 @@ export const getTaskById = async (
 };
 
 export const listTasks = async (): Promise<ApiResponse<TaskPreview[]>> => {
-  const response = await fetch(`${API_HOST}/task-list`, {
+  const response = await fetch(`${API_HOST}/tasks`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
