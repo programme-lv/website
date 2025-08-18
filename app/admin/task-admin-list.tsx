@@ -3,6 +3,7 @@ import GenericButton from "@/components/generic-button";
 import { ApiResponse } from "@/lib/api-response";
 import { Task, TaskPreview } from "@/types/task";
 import Link from "next/link";
+import { API_HOST } from "@/lib/config";
 
 export default function TaskAdminList({ tasks }: { tasks: ApiResponse<TaskPreview[]> }) {
     return (
@@ -24,11 +25,22 @@ export default function TaskAdminList({ tasks }: { tasks: ApiResponse<TaskPrevie
                             key: "action",
                             header: "Darbība",
                             render: (task) => (
-                                <Link href={`/admin/task/${task.short_id}`}>
-                                    <GenericButton variant="primary" size="sm">
-                                        Rediģēt
-                                    </GenericButton>
-                                </Link>
+                                <div className="flex gap-2">
+                                    <Link href={`/admin/task/${task.short_id}`}>
+                                        <GenericButton variant="primary" size="sm">
+                                            Rediģēt
+                                        </GenericButton>
+                                    </Link>
+                                    <a
+                                        href={`${API_HOST}/tasks/${task.short_id}/export`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        <GenericButton variant="secondary" size="sm">
+                                            Lejupielādēt
+                                        </GenericButton>
+                                    </a>
+                                </div>
                             ),
                         }
                     ]}
