@@ -84,7 +84,6 @@ export default async function SubmissionListServerComponent(props: {
             <RealTimeSubmTable
               initial={submissionsResponse.page}
               initialPagination={submissionsResponse.pagination}
-              currentPage={page}
               search={search}
               my={my}
             />

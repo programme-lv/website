@@ -108,13 +108,14 @@ function rehypeAddClasses() {
                   type: "element",
                   tagName: "img",
                   properties: node.properties,
+                  children: [],
                 },
                 {
                   type: "element",
                   tagName: "figcaption",
                   properties: { className: ["text-sm", "text-center", "mt-2"] },
                   children: [
-                    { type: "text", value: node.properties.alt || "" },
+                    { type: "text", value: String(node.properties.alt || "") },
                   ],
                 },
               ],

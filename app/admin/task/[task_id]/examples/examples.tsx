@@ -29,6 +29,20 @@ export default function ExamplesEditForm() {
     const initial = mockExamples;
     const [examples, setExamples] = useState<Example[]>(initial);
 
+    const saveChanges = useCallback(() => {
+        alert("Izmaiņas ir saglabātas!");
+    }, []);
+
+    const hasChanges = examples.length !== initial.length || examples.some((example, index) => example.input !== initial[index].input || example.output !== initial[index].output || example.md_note !== initial[index].md_note);
+    
+    const handleSave = useCallback(() => {
+        if (hasChanges) {
+            saveChanges();
+        } else {
+            alert("Nav izmaiņu, ko saglabāt!");
+        }
+    }, [hasChanges, saveChanges]);
+
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if ((e.ctrlKey || e.metaKey) && e.key === 's') {
@@ -58,18 +72,7 @@ export default function ExamplesEditForm() {
         setExamples(examples.map((example, i) => i === index ? { ...example, [key]: value } : example));
     };
 
-    const saveChanges = useCallback(() => {
-        alert("Izmaiņas ir saglabātas!");
-    }, []);
 
-    const hasChanges = examples.length !== initial.length || examples.some((example, index) => example.input !== initial[index].input || example.output !== initial[index].output || example.md_note !== initial[index].md_note);
-    const handleSave = useCallback(() => {
-        if (hasChanges) {
-            saveChanges();
-        } else {
-            alert("Nav izmaiņu, ko saglabāt!");
-        }
-    }, [hasChanges, saveChanges]);
 
     const columns: Column<Example>[] = [
         {

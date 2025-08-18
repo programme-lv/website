@@ -14,7 +14,7 @@ export default function ReadonlyMonacoCode({ code, lang_monaco_id }: ReadonlyMon
         const contentHeight = Math.max(300, editor.getContentHeight());
 
         setEditorHeight(contentHeight + 10);
-        editor.layout({ height: contentHeight });
+        editor.layout({ height: contentHeight, width: editor.getLayoutInfo().width });
     }, []);
 
     return (

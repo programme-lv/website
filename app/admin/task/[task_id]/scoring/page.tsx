@@ -31,7 +31,7 @@ export default async function ScoringPage({
         <Layout breadcrumbs={breadcrumbs} active="admin">
             <div className="flex gap-3 mr-3">
                 <TaskAdminNav taskId={task.short_task_id} activeTab="scoring" />
-                <ScoringEditForm task={task} />
+                <ScoringEditForm />
             </div>
         </Layout>
     )

@@ -53,6 +53,35 @@ function MainStatementSection({ task }: { task: Task }) {
         example: calculateRows(task_md?.example || ""),
     });
 
+    const handleSave = useCallback(async () => {
+        try {
+            setIsSubmittingStatement(true);
+
+            const data: UpdateStatementRequest = {
+                story: formData.story || "",
+                input: formData.input || "",
+                output: formData.output || "",
+                notes: formData.notes || "",
+                scoring: formData.scoring || "",
+                talk: formData.talk || "",
+                example: formData.example || "",
+            };
+
+            await updateTaskStatement(task.short_task_id, data);
+            revalidateTask(task.short_task_id);
+
+            // Refresh the page to show updated data
+            await router.refresh();
+
+            alert("Task statement updated successfully!");
+        } catch (err) {
+            console.error("Error saving task statement:", err);
+            alert("Radās kļūda saglabājot formulējumu: " + err);
+        } finally {
+            setIsSubmittingStatement(false);
+        }
+    }, [formData, task.short_task_id, router]);
+
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if ((e.ctrlKey || e.metaKey) && e.key === 's') {
@@ -82,35 +111,6 @@ function MainStatementSection({ task }: { task: Task }) {
                     [field]: calculateRows(e.target.value)
                 });
             };
-
-    const handleSave = useCallback(async () => {
-        try {
-            setIsSubmittingStatement(true);
-
-            const data: UpdateStatementRequest = {
-                story: formData.story || "",
-                input: formData.input || "",
-                output: formData.output || "",
-                notes: formData.notes || "",
-                scoring: formData.scoring || "",
-                talk: formData.talk || "",
-                example: formData.example || "",
-            };
-
-            await updateTaskStatement(task.short_task_id, data);
-            revalidateTask(task.short_task_id);
-
-            // Refresh the page to show updated data
-            await router.refresh();
-
-            alert("Task statement updated successfully!");
-        } catch (err) {
-            console.error("Error saving task statement:", err);
-            alert("Radās kļūda saglabājot formulējumu: " + err);
-        } finally {
-            setIsSubmittingStatement(false);
-        }
-    }, [formData, task.short_task_id, router]);
 
     return (
         <section className="flex flex-col gap-3">

@@ -559,11 +559,16 @@ int main() {
 			);
 			await queryClient.invalidateQueries({ queryKey: ["submissions"] });
 			await router.push(`/submissions?my=true`);
-		} catch (error: any) {
+		} catch (error: unknown) {
 			setIsLoading(false);
-			const data = error.response?.data;
-			if ('message' in data) {
-				alert(data.message);
+			if (error && typeof error === 'object' && 'response' in error) {
+				const errorWithResponse = error as { response?: { data?: { message?: string } } };
+				const data = errorWithResponse.response?.data;
+				if (data && typeof data === 'object' && 'message' in data) {
+					alert(data.message);
+				} else {
+					alert("Kļūda iesūtot risinājumu. Lūdzu, mēģiniet vēlreiz!");
+				}
 			} else {
 				alert("Kļūda iesūtot risinājumu. Lūdzu, mēģiniet vēlreiz!");
 			}
