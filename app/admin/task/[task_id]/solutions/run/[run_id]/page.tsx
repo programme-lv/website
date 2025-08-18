@@ -10,11 +10,10 @@ import CodeBlock from "@/components/code-block";
 import TestResultTable from "@/components/test-result-table";
 
 export default async function RunPage({ 
-  params, 
-  searchParams 
+  params 
 }: { 
   params: Promise<{ task_id: string, run_id: string }>;
-  searchParams: Promise<{ tab?: string }>;
+
 }) {
   if (!(await isAdmin())) {
     return <RestrictedPleaseLogin />
@@ -28,8 +27,8 @@ export default async function RunPage({
   }
 
   const task = response.data;
-  const { tab } = await searchParams;
-  const currentTab = tab || "task";
+  // const { tab } = await searchParams;
+  // const _currentTab = tab || "task";
 
   const breadcrumbs = [
     { label: "Admin", href: "/admin" },

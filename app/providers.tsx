@@ -12,6 +12,7 @@ import {
   createContext,
   useEffect,
   useState,
+  useCallback,
 } from "react";
 
 import { User } from "@/types/proglv";
@@ -40,18 +41,19 @@ export function Providers({ children, themeProps, propsUser }: ProvidersProps) {
 
   const [user, setUser] = useState<User | null>(propsUser);
 
-  const refreshUser = async () => {
+  const refreshUser = useCallback(async () => {
     const res = await whoami();
     if (res.status === "success") {
       setUser(res.data);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    if (typeof document !== "undefined") {
+    const isServer = typeof document === "undefined";
+    if (!isServer) {
       refreshUser();
     }
-  }, [typeof document === "undefined"]);
+  }, [refreshUser]);
 
   // refresh user info every 10 seconds
   useEffect(() => {

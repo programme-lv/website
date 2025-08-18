@@ -2,7 +2,7 @@
 import {
   Avatar,
   Badge,
-  Button,
+
   Dropdown,
   DropdownItem,
   DropdownMenu,
@@ -13,7 +13,7 @@ import { useContext, useEffect, useState } from "react";
 
 import { AuthContext } from "@/app/providers";
 import { useRouter } from "next/navigation";
-import { loginUser, logoutUser } from "@/lib/auth";
+import { logoutUser } from "@/lib/auth";
 import GenericButton from "./generic-button";
 
 export default function User() {

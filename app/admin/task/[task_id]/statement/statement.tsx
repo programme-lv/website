@@ -1,5 +1,6 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import Image from "next/image";
 import { MarkdownStatement, StatementImage, Task } from "@/types/task";
 import { updateTaskStatement, UpdateStatementRequest, deleteTaskImage, revalidateTask } from "@/lib/task/tasks";
 import { useRouter } from "next/navigation";
@@ -62,7 +63,7 @@ function MainStatementSection({ task }: { task: Task }) {
 
         document.addEventListener('keydown', handleKeyDown);
         return () => document.removeEventListener('keydown', handleKeyDown);
-    }, [formData]);
+    }, [handleSave]);
 
     function calculateRows(text: string): number {
         const lineCount = (text.match(/\n/g) || []).length + 1;
@@ -82,7 +83,7 @@ function MainStatementSection({ task }: { task: Task }) {
                 });
             };
 
-    const handleSave = async () => {
+    const handleSave = useCallback(async () => {
         try {
             setIsSubmittingStatement(true);
 
@@ -109,7 +110,7 @@ function MainStatementSection({ task }: { task: Task }) {
         } finally {
             setIsSubmittingStatement(false);
         }
-    };
+    }, [formData, task.short_task_id, router]);
 
     return (
         <section className="flex flex-col gap-3">
@@ -265,7 +266,7 @@ function StatementImageTable({ task }: { task: Task }) {
             header: "Priekšskatījums",
             width: "100px",
             render: (item) => (
-                <img src={item.http_url} alt={item.filename} className="w-24" />
+                <Image src={item.http_url} alt={item.filename} className="w-24" width={96} height={96} />
             ),
         },
         {
@@ -335,7 +336,7 @@ function StatementImageTable({ task }: { task: Task }) {
                             Ja nepieciešams cits platums, <code>{'<img src="2.png" alt="1. attēls: Laukuma piemērs" width=300/>'}</code>
                         </li>
                     </ul>
-                    P.s., jā, es apzinos, ka "alt" atrībuts "img" elemntā nav paredzēts, lai norādīt "figcaption", bet šādi ir krietni ērtāk.
+                    P.s., jā, es apzinos, ka &quot;alt&quot; atrībuts &quot;img&quot; elemntā nav paredzēts, lai norādīt &quot;figcaption&quot;, bet šādi ir krietni ērtāk.
                 </div>
             </div>
 

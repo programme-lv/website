@@ -1,5 +1,5 @@
 import React from "react";
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button } from "@heroui/react";
+import { Modal, ModalContent, ModalHeader, ModalBody } from "@heroui/react";
 import CodeBlock from "@/components/code-block";
 import { TestRes } from "@/types/exec";
 import { SubmEval } from "@/types/subm";
@@ -47,7 +47,7 @@ export default function TestDetailsModal({ isOpen, onOpenChange, test, subm_eval
       }}
     >
       <ModalContent>
-        {(onClose) => (
+        {() => (
           <div className="bg-background border-small border-default-300 rounded-md overflow-hidden">
             <ModalHeader className="bg-white p-4 border-b border-default-300">
               <div className="flex gap-2 items-center">

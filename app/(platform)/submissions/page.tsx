@@ -37,7 +37,7 @@ export default async function SubmissionListServerComponent(props: {
   let submissionsResponse: PaginatedSubmListResponse;
   try {
     submissionsResponse = await listSubmissionsServerSide(offset, limit, search, actualMy);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error fetching submissions:", error);
     return <div>Error fetching submissions</div>;
   }

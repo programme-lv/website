@@ -9,7 +9,7 @@ import { Toaster } from 'react-hot-toast';
 export default async function TaskPageServerComponent({
   params,
 }: {
-  params: Promise<any>;
+  params: Promise<{ task_id: string }>;
 }) {
   const {task_id} = await params;
   const response = await getTaskById(task_id);

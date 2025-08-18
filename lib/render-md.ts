@@ -97,7 +97,7 @@ function rehypeAddClasses() {
           // node.properties.loading = "lazy";
           // Wrap the image in a figure and add a caption
           if (parent && parent.children) {
-            const figure: any = {
+            const figure: Element = {
               type: "element",
               tagName: "figure",
               properties: {
@@ -134,7 +134,7 @@ function rehypeAddClasses() {
 // assigns them the correct urls, widths
 function rehypeFixImages(images: StatementImage[]) {
   return (tree: Node) => {
-    visit(tree, "element", (node: Element, index, parent: Element) => {
+    visit(tree, "element", (node: Element) => {
       if (node.tagName === "img") {
         const img = images.find((i) => i.filename === node.properties.src);
         if (img) {

@@ -1,7 +1,7 @@
 import GenericTable from "@/components/generic-table";
 import GenericButton from "@/components/generic-button";
 import { ApiResponse } from "@/lib/api-response";
-import { Task, TaskPreview } from "@/types/task";
+import { TaskPreview } from "@/types/task";
 import Link from "next/link";
 import { API_HOST } from "@/lib/config";
 

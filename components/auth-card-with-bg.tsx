@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Suspense, useContext, useState } from "react";
+import React, { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
 

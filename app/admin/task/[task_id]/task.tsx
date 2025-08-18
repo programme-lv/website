@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { Task } from "@/types/task";
 import { useRouter } from "next/navigation";
 import { TextLink } from "@/components/text-link";
@@ -136,10 +137,12 @@ export default function TaskEditForm({ task }: TaskEditFormProps) {
             {task.illustration_img && (
                 <div className="mt-2">
                     <div className="flex items-start gap-4">
-                        <img 
+                        <Image 
                             src={task.illustration_img.http_url} 
                             alt={task.task_full_name}
                             className="w-32 h-32 object-cover rounded-md border"
+                            width={128}
+                            height={128}
                         />
                         <div className="flex flex-col gap-2">
                             <TextLink 

@@ -23,7 +23,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 export default function RealTimeSubmTable({
   initial,
   initialPagination,
-  currentPage,
+
   search,
   my,
 }: {
@@ -34,7 +34,7 @@ export default function RealTimeSubmTable({
     limit: number;
     hasMore: boolean;
   };
-  currentPage: number;
+
   search?: string;
   my?: string;
 }) {
@@ -60,10 +60,10 @@ export default function RealTimeSubmTable({
       params.delete("my");
     }
     router.push(`${pathname}?${params.toString()}`);
-  }, [user]);
+  }, [user, pathname, router, searchParams]);
 
   // Fetch submissions data with a polling interval of 2 seconds
-  const { data, isLoading, refetch, error } = useQuery({
+  const { data, isLoading } = useQuery({
       queryKey: ["submissions", initialPagination.offset, initialPagination.limit, search, my],
       queryFn: async () => {
         try {
@@ -72,7 +72,7 @@ export default function RealTimeSubmTable({
           } else {
             return await listSubmissionsClientSide(initialPagination.offset, initialPagination.limit, search, undefined);
           }
-        } catch (error: any) {
+        } catch {
 
         }
       },
@@ -126,7 +126,7 @@ export default function RealTimeSubmTable({
     if (data) {  // Only update when we have fresh data
       const dataArray = Array.isArray(data.page) ? data.page : [];
       
-      setSubmissions((prevSubms) => {
+      setSubmissions(() => {
         const updatedSubms = applyUpdatesToSubmissions(
           dataArray,           // Always use the fresh data instead of fallback
           updates,

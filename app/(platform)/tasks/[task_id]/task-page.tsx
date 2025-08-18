@@ -12,7 +12,7 @@ import React, {
 import { useParams, useRouter } from "next/navigation";
 import { Resizable } from "re-resizable";
 import {
-	IconCopy,
+
 	IconFileTypePdf,
 	IconGripVertical,
 	IconMenu2,
@@ -180,8 +180,9 @@ const MdView = React.memo(function MdViewInner({
 	statement_subtasks?: SubtaskOverview[];
 	statement_images?: StatementImage[];
 }) {
-	const sections = useMemo(() => renderSections(md_statement, statement_images ?? []), [JSON.stringify(md_statement), JSON.stringify(statement_images)]);
-	const subtaskDescriptions = useMemo(() => statement_subtasks?.map((subtask) => renderMdLite(subtask.descriptions["lv"])) ?? [], [JSON.stringify(statement_subtasks)]);
+	
+	const sections = useMemo(() => renderSections(md_statement, statement_images ?? []), [md_statement, statement_images]);
+	const subtaskDescriptions = useMemo(() => statement_subtasks?.map((subtask) => renderMdLite(subtask.descriptions["lv"])) ?? [], [statement_subtasks]);
 
 	return (
 		<div className="w-full flex-grow flex flex-col gap-4 my-2 px-2.5 pb-4">
@@ -195,7 +196,7 @@ const MdView = React.memo(function MdViewInner({
 				<div>
 					<h2 className="text-small my-1 mb-2 font-semibold">Piemēri</h2>
 					<div className="flex gap-3 flex-wrap w-full max-w-full">
-						{examples.map((example, i) => (
+						{examples.map((example) => (
 							<div
 								key={example.input + example.output}
 								className="border-small border-default-300 p-2 flex-grow rounded-sm w-[350px] max-w-full"
@@ -286,9 +287,9 @@ const MdView = React.memo(function MdViewInner({
 						{vis_inp_st_input.subtask}. apakšuzdevuma ievaddati
 					</h2>
 					<div className="flex gap-3 flex-wrap w-full max-w-full">
-						{vis_inp_st_input.inputs.map((test, i) => (
+						{vis_inp_st_input.inputs.map((test) => (
 							<div
-								key={i}
+								key={test.test_id}
 								className="border-small border-divider p-2 flex-grow rounded-sm w-[350px] max-w-full"
 							>
 								<div className="flex gap-2 flex-wrap">

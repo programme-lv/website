@@ -12,11 +12,11 @@ interface Subtask {
     points: number;
 }
 
-interface TestGroup {
-    points: number;
-    is_public: boolean;
-    test_ids: number[];
-}
+// interface TestGroup {
+//     points: number;
+//     is_public: boolean;
+//     test_ids: number[];
+// }
 
 export default function ScoringEditForm() {
     const [subtasks, setSubtasks] = useState<Subtask[]>(mockSubtasks);

@@ -49,11 +49,11 @@ export default function UserPage({
   }
 
   const completedTasks = Object.fromEntries(
-    Object.entries(response).filter(([_, score]) => score.received == score.possible)
+    Object.entries(response).filter(([, score]) => score.received == score.possible)
   );
 
   const inProgressTasks = Object.fromEntries(
-    Object.entries(response).filter(([_, score]) => score.received != score.possible)
+    Object.entries(response).filter(([, score]) => score.received != score.possible)
   );
 
   return (

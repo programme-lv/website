@@ -16,7 +16,7 @@ export default function MySubmissionsCheckbox() {
         if (isMine !== mySubmissions) {
             setMySubmissions(isMine);
         }
-    }, [searchParams]);
+    }, [searchParams, mySubmissions]);
 
     const handleToggle = (checked: boolean) => {
         const params = new URLSearchParams(searchParams.toString());

@@ -19,7 +19,7 @@ export default function SearchInput() {
         if (urlSearch !== search) {
             setSearch(urlSearch);
         }
-    }, [searchParams]);
+    }, [searchParams, search]);
 
     const handleSearch = () => {
         const params = new URLSearchParams(searchParams.toString());

@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button } from "@heroui/react";
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@heroui/react";
 import FileUpload from "@/components/file-upload";
 import GenericButton from "@/components/generic-button";
 import { IconDeviceFloppy, IconX } from "@tabler/icons-react";
@@ -37,7 +37,7 @@ export default function CheckerEditModal({ isOpen, onOpenChange, checkerCode, on
             const text = await file.text();
             setCode(text);
             setIsUploadingChecker(false);
-        } catch (error) {
+        } catch {
             alert("Kļūda nolasot failu!");
             setIsUploadingChecker(false);
         }

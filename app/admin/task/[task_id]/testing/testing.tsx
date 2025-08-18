@@ -8,10 +8,10 @@ import { IconDeviceFloppy, IconEdit } from "@tabler/icons-react";
 import { useState } from "react";
 import CheckerEditModal from "./checker-edit-modal";
 
-interface TestGroup {
-    test_list: string; // e.g. "1, 3, [4, 7], 9" = [1,3,4,5,6,7,9]
-    points: number;
-}
+// interface TestGroup {
+//     test_list: string; // e.g. "1, 3, [4, 7], 9" = [1,3,4,5,6,7,9]
+//     points: number;
+// }
 
 interface Constraints {
     cpu_time_sec: number;
@@ -30,12 +30,12 @@ export default function TestingEditForm() {
     const [isCheckerModalOpen, setIsCheckerModalOpen] = useState<boolean>(false);
     const [checkerCode, setCheckerCode] = useState<string>(checker_code);
 
-    const mockTestGroups: TestGroup[] = [
-        {
-            test_list: "1, 3, [4, 7], 9",
-            points: 10,
-        },
-    ];
+    // const mockTestGroups: TestGroup[] = [
+    //     {
+    //         test_list: "1, 3, [4, 7], 9",
+    //         points: 10,
+    //     },
+    // ];
 
     const updateConstraint = (key: keyof Constraints, value: number) => {
         setConstraints(prev => ({ ...prev, [key]: value }));

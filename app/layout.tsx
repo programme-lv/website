@@ -4,6 +4,19 @@ import clsx from "clsx";
 import { siteConfig } from "@/config/site";
 import { Providers } from "./providers";
 import whoami from "@/lib/user/whoami";
+import { Ubuntu, Ubuntu_Sans } from "next/font/google";
+
+const ubuntu = Ubuntu({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '700'],
+  variable: '--font-ubuntu',
+});
+
+const ubuntuSans = Ubuntu_Sans({
+  subsets: ['latin'],
+  weight: ['100', '200', '300', '400', '500', '600', '700', '800'],
+  variable: '--font-ubuntu-sans',
+});
 
 export const metadata: Metadata = {
   title: {
@@ -33,11 +46,8 @@ export default async function RootLayout({
   const user = res.data;
 
   return (
-    <html suppressHydrationWarning lang="en" style={{ backgroundColor: "rgb(250,250,250)", fontFamily: "'Ubuntu Sans','Ubuntu', sans-serif", fontSize: "1.1rem" }}>
+    <html suppressHydrationWarning lang="en" className={`${ubuntu.variable} ${ubuntuSans.variable}`} style={{ backgroundColor: "rgb(250,250,250)", fontFamily: "var(--font-ubuntu-sans), var(--font-ubuntu), sans-serif", fontSize: "1.1rem" }}>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Sans:ital,wght@0,100..800;1,100..800&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet" />
       </head>
       
       <body

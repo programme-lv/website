@@ -11,7 +11,7 @@ import { renderMdLite } from "@/lib/render-md";
 import TaskDifficultyChip from "./task-difficulty-chip";
 import { cn } from "./cn";
 import { MaxScore } from "@/types/scores";
-import { IllustrationImage, TaskPreview } from "@/types/task";
+import { IllustrationImage } from "@/types/task";
 
 type TaskCardProps = {
   full_name: string;

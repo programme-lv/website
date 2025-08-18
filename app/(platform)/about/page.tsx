@@ -22,7 +22,7 @@ export default function AboutPage() {
               <br/>
               <h3 className={styles.h3}>Mūsu mērķi 🎯</h3>
               <ul className={styles.ul}>
-                <li>Samazināt "barjeras", sākot programmēšanu</li>
+                <li>Samazināt &quot;barjeras&quot;, sākot programmēšanu</li>
                 <li>Arhivēt un publicēt olimpiāžu uzdevumus</li>
                 <li>Atbalstīt skolotājus ar rīkiem uzdevumu veidošanai un meklēšanai</li>
                 <li>Veicināt kopienu, organizējot konkursus un pasākumus</li>
@@ -51,7 +51,7 @@ export default function AboutPage() {
                 <li>Jānim Gruzim par CleverCode.lv izveidi un uzturēšanu. Tīmekļa vietne ir bijis milzīgs ieguvums visai Latvijai</li>
                 <li>Raivim Ieviņam, <TextLink href="https://pps.lv" target="_blank">PPS</TextLink> direktoram, un Veronikai Lohmanovai par iedvesmošanu, atbalstu un idejām</li>
                 <li>Mārtiņam Opmanim par aktīvu Latvijas Informātikas olimpiādēs (<TextLink href="https://lio.lv" target="_blank">LIO</TextLink>) organizēšanu un atļauju publicēt uzdevumus</li>
-                <li>Elīzai Bergai par uzdevumu ilustrāciju gleznošanu dzīvīgākai lietotājpieredzei. Tās (gandrīz visas) nav "ģenerētas"</li>
+                <li>Elīzai Bergai par uzdevumu ilustrāciju gleznošanu dzīvīgākai lietotājpieredzei. Tās (gandrīz visas) nav &quot;ģenerētas&quot;</li>
               </ul>
               <br/>
               <h3 className={styles.h3}>Saziņa ✉️</h3>

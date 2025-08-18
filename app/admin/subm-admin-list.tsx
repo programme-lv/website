@@ -3,7 +3,7 @@ import GenericTable from "@/components/generic-table";
 import { reevaluateSubmissions } from "@/lib/subms";
 import { PaginatedSubmListResponse, SubmListEntry } from "@/types/subm";
 import GenericButton from "@/components/generic-button";
-import Link from "next/link";
+
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { NumberInput } from "@heroui/number-input";
@@ -19,7 +19,7 @@ export default function SubmAdminList({ submPage }: { submPage: PaginatedSubmLis
     const [selectedSubmissions, setSelectedSubmissions] = useState<Set<string>>(new Set());
     const [isReevaluating, setIsReevaluating] = useState(false);
 
-    const { data, isLoading, refetch } = useQuery({
+    const { data, refetch } = useQuery({
         queryKey: ["submissions", offset, limit],
         queryFn: () => listSubmissionsClientSide(offset, limit),
         enabled: true,

@@ -10,7 +10,7 @@ type ReadonlyMonacoCodeProps = {
 export default function ReadonlyMonacoCode({ code, lang_monaco_id }: ReadonlyMonacoCodeProps) {
     const [editorHeight, setEditorHeight] = useState<number>(300); // Initial height
 
-    const updateHeight = useCallback((editor: any) => {
+    const updateHeight = useCallback((editor: import('monaco-editor').editor.IStandaloneCodeEditor) => {
         const contentHeight = Math.max(300, editor.getContentHeight());
 
         setEditorHeight(contentHeight + 10);

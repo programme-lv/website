@@ -124,7 +124,7 @@ export default function SolutionsEditForm({ task_id }: SolutionsEditFormProps) {
         {
             key: "actions",
             header: "Darbības",
-            render: (item) => (
+            render: () => (
                 <div className="flex flex-col">
                     <div>
                         [ <TextButton variant="warning">

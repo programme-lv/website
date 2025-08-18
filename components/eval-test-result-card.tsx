@@ -134,7 +134,7 @@ const TestResultHeader: React.FC<TestResultHeaderProps> = ({
 	time_lim,
 	mem_lim,
 	subm_exec,
-	tlib_exec,
+
 }) => {
 	const chipColor = useMemo(() => {
 		switch (verdict) {
@@ -223,33 +223,33 @@ const OutputSection: React.FC<{ title: string; content?: string | null }> = ({
 	);
 };
 
-// RuntimeInfo Component
-const RuntimeInfo: React.FC<{ subm_exec: RunData }> = ({ subm_exec }) => {
-	return (
-		<div className="flex flex-col gap-2">
-			{subm_exec?.cpu_ms && (
-				<div className="flex gap-1 items-center">
-					<p className="text-small text-default-700 whitespace-nowrap">
-						Izpildes laiks:
-					</p>
-					<CodeBlock
-						content={subm_exec.cpu_ms + "ms"}
-					/>
-				</div>
-			)}
-			{subm_exec?.mem_kib && (
-				<div className="flex gap-1 items-center">
-					<p className="text-small text-default-700 whitespace-nowrap">
-						Patērētā atmiņa:
-					</p>
-					<CodeBlock
-						content={
-							(subm_exec.mem_kib / 1024).toFixed(2) +
-							" MB"
-						}
-					/>
-				</div>
-			)}
-		</div>
-	);
-};
+// RuntimeInfo Component  
+// const RuntimeInfo: React.FC<{ subm_exec: RunData }> = ({ subm_exec }) => {
+//	return (
+//		<div className="flex flex-col gap-2">
+//			{subm_exec?.cpu_ms && (
+//				<div className="flex gap-1 items-center">
+//					<p className="text-small text-default-700 whitespace-nowrap">
+//						Izpildes laiks:
+//					</p>
+//					<CodeBlock
+//						content={subm_exec.cpu_ms + "ms"}
+//					/>
+//				</div>
+//			)}
+//			{subm_exec?.mem_kib && (
+//				<div className="flex gap-1 items-center">
+//					<p className="text-small text-default-700 whitespace-nowrap">
+//						Patērētā atmiņa:
+//					</p>
+//					<CodeBlock
+//						content={
+//							(subm_exec.mem_kib / 1024).toFixed(2) +
+//							" MB"
+//						}
+//					/>
+//				</div>
+//			)}
+//		</div>
+//	);
+// };

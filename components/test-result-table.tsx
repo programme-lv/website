@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button, useDisclosure } from "@heroui/react";
 import TestDetailsModal, { full_verdicts, verdict_colors } from "@/components/test-details-modal";
-import { Execution, TestRes } from "@/types/exec";
+import { TestRes } from "@/types/exec";
 import GenericTable, { Column } from "@/components/generic-table";
 import { renderMdLite } from "@/lib/render-md";
 import "katex/dist/katex.min.css";

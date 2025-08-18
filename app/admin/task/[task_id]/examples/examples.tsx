@@ -3,8 +3,8 @@
 import GenericButton from "@/components/generic-button";
 import GenericTable, { Column } from "@/components/generic-table";
 import { Example } from "@/types/task";
-import { IconDeviceFloppy, IconDownload, IconPlus, IconTrash } from "@tabler/icons-react";
-import { useState, useEffect } from "react";
+import { IconDeviceFloppy, IconPlus, IconTrash } from "@tabler/icons-react";
+import { useState, useEffect, useCallback } from "react";
 
 const mockExamples: Example[] = [
     {
@@ -39,7 +39,7 @@ export default function ExamplesEditForm() {
 
         document.addEventListener('keydown', handleKeyDown);
         return () => document.removeEventListener('keydown', handleKeyDown);
-    }, [examples, initial]);
+    }, [handleSave]);
 
     const addExample = () => {
         const newExample: Example = {
@@ -58,18 +58,18 @@ export default function ExamplesEditForm() {
         setExamples(examples.map((example, i) => i === index ? { ...example, [key]: value } : example));
     };
 
-    const saveChanges = () => {
+    const saveChanges = useCallback(() => {
         alert("Izmaiņas ir saglabātas!");
-    };
+    }, []);
 
     const hasChanges = examples.length !== initial.length || examples.some((example, index) => example.input !== initial[index].input || example.output !== initial[index].output || example.md_note !== initial[index].md_note);
-    const handleSave = () => {
+    const handleSave = useCallback(() => {
         if (hasChanges) {
             saveChanges();
         } else {
             alert("Nav izmaiņu, ko saglabāt!");
         }
-    };
+    }, [hasChanges, saveChanges]);
 
     const columns: Column<Example>[] = [
         {
