@@ -10,12 +10,17 @@ const ubuntu = Ubuntu({
   subsets: ['latin'],
   weight: ['300', '400', '500', '700'],
   variable: '--font-ubuntu',
+  display: 'swap',
+  fallback: ['system-ui', 'arial']
 });
 
 const ubuntuSans = Ubuntu_Sans({
   subsets: ['latin'],
   weight: ['100', '200', '300', '400', '500', '600', '700', '800'],
   variable: '--font-ubuntu-sans',
+  display: 'swap',
+  fallback: ['system-ui', 'arial'],
+  adjustFontFallback: false
 });
 
 export const metadata: Metadata = {
