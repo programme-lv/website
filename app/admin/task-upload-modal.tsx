@@ -16,6 +16,7 @@ export default function TaskUploadModal({ onTaskUploaded }: TaskUploadModalProps
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [overrideId, setOverrideId] = useState<string>("");
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -34,11 +35,12 @@ export default function TaskUploadModal({ onTaskUploaded }: TaskUploadModalProps
     setSuccess(null);
 
     try {
-      const response: ApiResponse<any> = await uploadTask(selectedFile);
+      const response: ApiResponse<any> = await uploadTask(selectedFile, overrideId);
       
       if (response.status === "success") {
         setSuccess("Uzdevums veiksmīgi augšupielādēts!");
         setSelectedFile(null);
+        setOverrideId("");
         if (onTaskUploaded) {
           onTaskUploaded();
         } else {
@@ -135,6 +137,19 @@ export default function TaskUploadModal({ onTaskUploaded }: TaskUploadModalProps
                 >
                   {selectedFile ? selectedFile.name : "Izvēlēties .zip failu"}
                 </FileUpload>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Override short ID (optional)</label>
+                <input
+                  type="text"
+                  value={overrideId}
+                  onChange={(e) => setOverrideId(e.target.value)}
+                  placeholder="piem. hello"
+                  className="w-full border rounded px-3 py-2 text-sm"
+                  disabled={isUploading}
+                />
+                <p className="text-xs text-gray-500 mt-1">Ja uzdevums ar tādu pašu ID jau pastāv, var norādīt jaunu saīsināto ID.</p>
               </div>
 
               {selectedFile && !isValidFile && (

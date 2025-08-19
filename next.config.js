@@ -14,9 +14,16 @@ const nextConfig = {
   },
   images: {
     remotePatterns: [
-      // {
-      //   hostname: 'proglv-public.s3.eu-central-1.amazonaws.com'
-      // }
+      {
+        protocol: 'https',
+        hostname: 'proglv-dev.s3.eu-central-1.amazonaws.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'proglv-public.s3.eu-central-1.amazonaws.com',
+        pathname: '/**',
+      },
     ]
   },
   eslint: {

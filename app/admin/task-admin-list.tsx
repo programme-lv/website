@@ -5,13 +5,14 @@ import { TaskPreview } from "@/types/task";
 import Link from "next/link";
 import { API_HOST } from "@/lib/config";
 import TaskUploadModal from "./task-upload-modal";
+import DeleteTaskButton from "./delete-task-button";
 
 export default function TaskAdminList({ tasks, onTaskUploaded }: { 
     tasks: ApiResponse<TaskPreview[]>;
     onTaskUploaded?: () => void;
 }) {
     return (
-        <div className="max-w-2xl">
+        <div className="max-w-4xl">
             <div className="mb-4 flex justify-end">
                 <TaskUploadModal onTaskUploaded={onTaskUploaded} />
             </div>
@@ -39,15 +40,10 @@ export default function TaskAdminList({ tasks, onTaskUploaded }: {
                                             Rediģēt
                                         </GenericButton>
                                     </Link>
-                                    <a
-                                        href={`${API_HOST}/tasks/${task.short_id}/export`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                    >
-                                        <GenericButton variant="secondary" size="sm">
-                                            Lejupielādēt
-                                        </GenericButton>
+                                    <a href={`${API_HOST}/tasks/${task.short_id}/export`} target="_blank" rel="noopener noreferrer">
+                                        <GenericButton variant="secondary" size="sm">Lejupielādēt</GenericButton>
                                     </a>
+                                    <DeleteTaskButton taskId={task.short_id} />
                                 </div>
                             ),
                         }
