@@ -18,8 +18,8 @@ export default async function AdminPage() {
 
     const breadcrumbs = [
         { label: "Admin", href: "/admin" },
-      ];
-      
+    ];
+
     return (
         <Layout breadcrumbs={breadcrumbs} active="admin">
             <div className="container mx-auto py-2 px-2">

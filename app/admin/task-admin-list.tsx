@@ -4,10 +4,18 @@ import { ApiResponse } from "@/lib/api-response";
 import { TaskPreview } from "@/types/task";
 import Link from "next/link";
 import { API_HOST } from "@/lib/config";
+import TaskUploadModal from "./task-upload-modal";
 
-export default function TaskAdminList({ tasks }: { tasks: ApiResponse<TaskPreview[]> }) {
+export default function TaskAdminList({ tasks, onTaskUploaded }: { 
+    tasks: ApiResponse<TaskPreview[]>;
+    onTaskUploaded?: () => void;
+}) {
     return (
-            <div className="p-2 bg-white  max-w-2xl">
+        <div className="max-w-2xl">
+            <div className="mb-4 flex justify-end">
+                <TaskUploadModal onTaskUploaded={onTaskUploaded} />
+            </div>
+            <div className="p-2 bg-white">
                 <GenericTable
                     data={tasks.data || []}
                     columns={[
@@ -47,6 +55,7 @@ export default function TaskAdminList({ tasks }: { tasks: ApiResponse<TaskPrevie
                     keyExtractor={(task) => task.short_id}
                     className="w-full"
                 />
-    </div>
-  );
+            </div>
+        </div>
+    );
 }
