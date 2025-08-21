@@ -8,11 +8,12 @@ type TextLinkProps = {
     disabled?: boolean;
     weight?: "normal" | "medium" | "semibold" | "bold";
     color?: "default" | "success";
+    isDisabled?: boolean;
 }
 
-export function TextLink({ children, href, target, rel, disabled, color = "default", weight = "normal" }: TextLinkProps) {
-    if (disabled) {
-        return <span className="text-gray-500">{children}</span>
+export function TextLink({ children, href, target, rel, disabled, color = "default", weight = "normal", isDisabled = false }: TextLinkProps) {
+    if (disabled || isDisabled) {
+        return <span className="text-gray-700 underline underline-offset-2 decoration-gray-700/30 cursor-not-allowed">{children}</span>
     }
 
     if (color === "success") {
