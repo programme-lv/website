@@ -5,15 +5,24 @@ import { useSearchParams } from "next/navigation";
 import { AuthContext } from "@/app/providers";
 import { registerUser, loginUser } from "@/lib/auth";
 import Alert from "@/components/alert";
-import { Button, Input, Divider } from "@heroui/react";
+import { Button, Divider, Input } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import Link from "next/link";
 import { Suspense } from "react";
 import { User } from "@/types/proglv";
+import GenericButton from "./generic-button";
+import { IconLogin, IconLogin2, IconUserPlus } from "@tabler/icons-react";
 
-export default function AuthForm({ type }: { type: "login" | "register" }) {
+
+function FormatError(error: string) {
+  // capitalize first letter
+  // add dot at the end
+  return error.charAt(0).toUpperCase() + error.slice(1) + ".";
+}
+
+export default function AuthForm({ type, redirect }: { type: "login" | "register"; redirect?: string }) {
   const searchParams = useSearchParams();
-  const redirectParam = searchParams.get("redirect");
+  const redirectParam = redirect ?? searchParams.get("redirect");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
@@ -36,11 +45,11 @@ export default function AuthForm({ type }: { type: "login" | "register" }) {
         setIsRedirecting(true);
         loginMutation.mutate({ username, password });
       } else {
-        setError(`Kļūda: ${response.message}.`);
+        setError(FormatError(response.message));
       }
     },
     onError: (error) => {
-      setError("Registration error: " + JSON.stringify(error));
+      alert("Registration error: " + JSON.stringify(error));
     },
   });
 
@@ -66,11 +75,11 @@ export default function AuthForm({ type }: { type: "login" | "register" }) {
         if (redirectParam) router.push(redirectParam);
         else router.push("/tasks");
       } else {
-        setError(`Kļūda: ${response.message}.`);
+        setError(FormatError(response.message));
       }
     },
     onError: async (response) => {
-      alert("Login error: " + JSON.stringify(response));
+      setError(FormatError(response.message));
     },
   });
 
@@ -95,7 +104,7 @@ export default function AuthForm({ type }: { type: "login" | "register" }) {
   };
 
   return (
-    <div className="flex w-full max-w-md flex-col gap-4 rounded-md bg-content1 px-4 md:px-6 pb-10 pt-6 shadow-small">
+    <div className="flex w-full max-w-md flex-col gap-4 pb-4 pt-4">
       <p className="pb-2 text-xl flex gap-x-2">
         {type === "register" ? (
           <>
@@ -107,13 +116,13 @@ export default function AuthForm({ type }: { type: "login" | "register" }) {
       </p>
       <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
         <Input
-          isRequired
           classNames={{ inputWrapper: "border-small border-default-300" }}
           isDisabled={
             loginMutation.status === 'pending' ||
             registerMutation.status === 'pending' ||
             isRedirecting
           }
+          disableAnimation
           label="Lietotājvārds"
           name="username"
           // placeholder="Ievadiet savu lietotājvārdu"
@@ -131,6 +140,7 @@ export default function AuthForm({ type }: { type: "login" | "register" }) {
                   registerMutation.status === 'pending' ||
                   isRedirecting
                 }
+                disableAnimation
                 label="Vārds (neobligāts)"
                 name="firstName"
                 // placeholder="Ievadiet savu vārdu"
@@ -145,6 +155,7 @@ export default function AuthForm({ type }: { type: "login" | "register" }) {
                   registerMutation.status === 'pending' ||
                   isRedirecting
                 }
+                disableAnimation
                 label="Uzvārds (neobligāts)"
                 name="lastName"
                 // placeholder="Ievadiet savu uzvārdu"
@@ -153,13 +164,13 @@ export default function AuthForm({ type }: { type: "login" | "register" }) {
               />
             </div>
             <Input
-              isRequired
               classNames={{ inputWrapper: "border-small border-default-300" }}
               isDisabled={
                 loginMutation.status === 'pending' ||
                 registerMutation.status === 'pending' ||
                 isRedirecting
               }
+              disableAnimation
               label="E-pasta adrese"
               name="email"
               // placeholder="Ievadiet savu e-pastu"
@@ -171,7 +182,6 @@ export default function AuthForm({ type }: { type: "login" | "register" }) {
         )}
         <div className="flex flex-col md:flex-row gap-3">
           <Input
-            isRequired
             className="flex-1"
             classNames={{ inputWrapper: "border-small border-default-300" }}
             endContent={
@@ -189,6 +199,7 @@ export default function AuthForm({ type }: { type: "login" | "register" }) {
                 )}
               </button>
             }
+            disableAnimation
             isDisabled={
               loginMutation.status === 'pending' ||
               registerMutation.status === 'pending' ||
@@ -203,7 +214,6 @@ export default function AuthForm({ type }: { type: "login" | "register" }) {
           />
           {type === "register" && (
             <Input
-              isRequired
               className="flex-1"
               classNames={{ inputWrapper: "border-small border-default-300" }}
               isDisabled={
@@ -211,6 +221,7 @@ export default function AuthForm({ type }: { type: "login" | "register" }) {
                 registerMutation.status === 'pending' ||
                 isRedirecting
               }
+              disableAnimation
               label="Apstipriniet paroli"
               name="confirmPassword"
               type="password"
@@ -221,7 +232,21 @@ export default function AuthForm({ type }: { type: "login" | "register" }) {
           )}
         </div>
         <div className="flex justify-center">
-          <Button
+          <GenericButton
+            rounded="lg"
+            variant={type === "register" ? "success" : "primary"}
+            icon={type === "register" ? <IconUserPlus size={22}/> : <IconLogin2 size={22}/>}
+            className="w-full"
+            isLoading={
+              loginMutation.status === 'pending' ||
+              registerMutation.status === 'pending' ||
+              isRedirecting
+            }
+            type="submit"
+          >
+            {type === "register" ? "Reģistrēties" : "Pieslēgties"}
+          </GenericButton>
+          {/* <Button
             className="flex-grow mt-4"
             color="primary"
             isLoading={
@@ -232,7 +257,7 @@ export default function AuthForm({ type }: { type: "login" | "register" }) {
             type="submit"
           >
             {type === "register" ? "Reģistrēties" : "Pieslēgties"}
-          </Button>
+          </Button> */}
         </div>
       </form>
 
@@ -245,15 +270,15 @@ export default function AuthForm({ type }: { type: "login" | "register" }) {
         <Divider className="flex-1" />
       </div>
       <Suspense>
-        <GoToLoginOrRegister type={type} />
+        <GoToLoginOrRegister type={type} redirect={redirectParam ?? undefined} />
       </Suspense>
     </div>
   );
 }
 
-function GoToLoginOrRegister({ type }: { type: "login" | "register" }) {
+function GoToLoginOrRegister({ type, redirect }: { type: "login" | "register"; redirect?: string }) {
   const searchParams = useSearchParams();
-  const redirectParam = searchParams.get("redirect");
+  const redirectParam = redirect ?? searchParams.get("redirect");
 
   return (
     <p className="text-center text-small">

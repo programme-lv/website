@@ -135,12 +135,12 @@ const LeftSide = React.memo(function LeftSideInner({ task }: { task: Task }) {
 });
 
 function CodeBlockWithTitle({ title, content }: { title: string; content: string }) {
-    return (
-        <div className="flex-grow basis-0 overflow-hidden min-w-[175px] flex flex-col">
-            <p className="text-small text-default-700 my-0.5 mb-2 select-none">{title}</p>
-            <CodeBlock content={content} />
-        </div>
-    )
+	return (
+		<div className="flex-grow basis-0 overflow-hidden min-w-[175px] flex flex-col">
+			<p className="text-small text-default-700 my-0.5 mb-2 select-none">{title}</p>
+			<CodeBlock content={content} />
+		</div>
+	)
 }
 
 type Sections = {
@@ -180,7 +180,7 @@ const MdView = React.memo(function MdViewInner({
 	statement_subtasks?: SubtaskOverview[];
 	statement_images?: StatementImage[];
 }) {
-	
+
 	const sections = useMemo(() => renderSections(md_statement, statement_images ?? []), [md_statement, statement_images]);
 	const subtaskDescriptions = useMemo(() => statement_subtasks?.map((subtask) => renderMdLite(subtask.descriptions["lv"])) ?? [], [statement_subtasks]);
 
@@ -232,7 +232,7 @@ const MdView = React.memo(function MdViewInner({
 					<strong>{cpu_time_limit_seconds}</strong>{" "}
 					sekundes.
 				</div>
-				<div className="my-0.5"/>
+				<div className="my-0.5" />
 				<div>
 					RAM atmiņas apjoms uz testu:{" "}
 					<strong>{memory_limit_megabytes}</strong>{" "}
@@ -256,7 +256,7 @@ const MdView = React.memo(function MdViewInner({
 							</thead>
 							<tbody>
 								{statement_subtasks.map((subtask, i) => (
-									<tr key={i} className={cn({"border-b border-divider": i !== statement_subtasks.length - 1}, { "bg-gray-50": i % 2 === 0 })}>
+									<tr key={i} className={cn({ "border-b border-divider": i !== statement_subtasks.length - 1 }, { "bg-gray-50": i % 2 === 0 })}>
 										<td className="px-2 py-1.5 max-w-[3em] min-w-[2em] border-r border-gray-200 text-center">{subtask.subtask}.</td>
 										<td className="px-2 py-1.5">
 											<div
@@ -383,23 +383,23 @@ function TaskHeader({
 			<div className="flex flex-col p-0 sm:flex-nowrap">
 				<div className="flex flex-row">
 					<div className="h-full flex flex-row gap-3 sm:flex-nowrap flex-grow px-2 py-1">
-											{layout === "wide" && illustration_img && (
-						<>
-							{imageLoading && <Skeleton className="w-[120px] h-[120px] absolute rounded-md" />}
-							<div className="max-w-[120px] w-[120px] flex-none">
+						{layout === "wide" && illustration_img && (
+							<>
+								{imageLoading && <Skeleton className="w-[120px] h-[120px] absolute rounded-md" />}
+								<div className="max-w-[120px] w-[120px] flex-none">
 
-								<Image
-									disableAnimation
-									alt={task_full_name}
-									className="flex-none object-cover rounded-md"
-									src={illustration_img.http_url}
-									onLoad={() => setImageLoading(false)}
-									height={120}
-									width={120}
-								/>
-							</div>
-						</>
-					)}
+									<Image
+										disableAnimation
+										alt={task_full_name}
+										className="flex-none object-cover rounded-md"
+										src={illustration_img.http_url}
+										onLoad={() => setImageLoading(false)}
+										height={120}
+										width={120}
+									/>
+								</div>
+							</>
+						)}
 						<div className="flex flex-col flex-grow justify-between w-full">
 							<div className="flex justify-between items-center">
 								<div className="inline-flex gap-x-3 gap-y-1 justify-between items-center flex-wrap">
@@ -413,7 +413,9 @@ function TaskHeader({
 									)}
 								</div>
 								<div>
-									{(default_pdf_statement_url || userIsAdmin) && <Dropdown placement="bottom-end" disableAnimation radius="sm">
+									{(default_pdf_statement_url || userIsAdmin) && <Dropdown placement="bottom-end" disableAnimation classNames={{
+										content: "rounded-md"
+									}}>
 										<DropdownTrigger>
 											<Button isIconOnly size="sm" variant="light">
 												<IconMenu2
@@ -425,6 +427,7 @@ function TaskHeader({
 										</DropdownTrigger>
 										<DropdownMenu
 											aria-label="Static Actions"
+											variant="flat"
 										// disabledKeys={
 										// 	default_pdf_statement_url ? [] : ["open-original-pdf"]
 										// }
@@ -432,7 +435,9 @@ function TaskHeader({
 											<>
 												{default_pdf_statement_url && (
 													<DropdownItem
+														disableAnimation
 														key="open-original-pdf"
+														className="rounded-md"
 														endContent={
 															<IconFileTypePdf className="text-default-700" />
 														}
@@ -444,7 +449,9 @@ function TaskHeader({
 												)}
 												{userIsAdmin && (
 													<DropdownItem
+														disableAnimation
 														key="edit-task"
+														className="rounded-md"
 														endContent={<IconPencil className="text-default-700" />}
 														href={`/admin/task/${task_id}`}
 													>
@@ -457,16 +464,16 @@ function TaskHeader({
 								</div>
 							</div>
 							<div className="flex flex-grow gap-2">
-															{layout === "narrow" && illustration_img && (
-								<div className="max-w-[100px] min-h-16 min-w-16 flex">
-									<Image
-										alt={task_full_name}
-										className="flex-none object-cover"
-										disableSkeleton
-										src={illustration_img.http_url}
-									/>
-								</div>
-							)}
+								{layout === "narrow" && illustration_img && (
+									<div className="max-w-[100px] min-h-16 min-w-16 flex">
+										<Image
+											alt={task_full_name}
+											className="flex-none object-cover"
+											disableSkeleton
+											src={illustration_img.http_url}
+										/>
+									</div>
+								)}
 								<div className="flex flex-col flex-grow">
 									<div className="flex justify-between max-w-[24em]">
 										<div className="flex justify-between">
@@ -586,10 +593,10 @@ int main() {
 					/>
 					<div className="mt-2 flex justify-end gap-3">
 						{authContext.user ? (
-							<GenericButton 
-								variant="primary" 
-								size="sm" 
-								isLoading={isLoading} 
+							<GenericButton
+								variant="primary"
+								size="sm"
+								isLoading={isLoading}
 								onClick={() => submitSolution()}
 								icon={<IconSend size={16} />}
 							>

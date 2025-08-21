@@ -12,6 +12,7 @@ interface GenericButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   isDisabled?: boolean;
   icon?: React.ReactNode;
   children?: React.ReactNode;
+  rounded?: "sm" | "md" | "lg";
 }
 
 
@@ -25,6 +26,7 @@ export default function GenericButton({
   icon,
   children,
   onClick,
+  rounded = "md",
   ...props
 }: GenericButtonProps) {
   const baseClasses = "relative inline-flex items-center justify-center rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed";
@@ -44,12 +46,18 @@ export default function GenericButton({
     lg: "px-6 py-3 text-base min-w-24 h-12 gap-3"
   };
 
+  const roundedClasses = {
+    sm: "rounded-sm",
+    md: "rounded-md",
+    lg: "rounded-lg"
+  };
+
   let noContentPadding = "";
   if (!children) {
     noContentPadding = "px-1 min-w-8";
   }
 
-  const combinedClasses = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className} ${noContentPadding}`;
+  const combinedClasses = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className} ${noContentPadding} ${roundedClasses[rounded]}`;
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (!isDisabled && !isLoading && onClick) {
