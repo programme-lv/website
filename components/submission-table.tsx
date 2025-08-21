@@ -111,7 +111,7 @@ export default function SubmissionTable({ submissions, skeleton = false }: Submi
             header: "Iesūtījums",
             width: "120px",
             render: (item) => (
-                <TextLink href={`/submissions/${item.subm_uuid}`}>
+                <TextLink isDisabled={item.status !== "finished"} href={`/submissions/${item.subm_uuid}`}>
                     {item.subm_uuid.slice(0, 8)}
                 </TextLink>
             )

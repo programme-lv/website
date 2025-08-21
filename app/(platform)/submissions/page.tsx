@@ -2,7 +2,7 @@ export const dynamic = "force-dynamic";
 export const revalidate = 60; // 1 minute
 
 import Layout from "@/components/layout";
-import RealTimeSubmTable from "./real-time";
+import RealTimeSubmTable from "./live-subm-table";
 import { Suspense } from "react";
 import PaginationControl from "@/components/pagination-control";
 import SearchInput from "./search-input";
