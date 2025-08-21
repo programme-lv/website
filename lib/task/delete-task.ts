@@ -9,11 +9,7 @@ export async function deleteTask(taskId: string): Promise<ApiResponse<null>> {
     credentials: "include",
   });
 
-  try {
-    return await response.json();
-  } catch {
-    return { status: "error", code: response.status, message: "Server returned no JSON" } as any;
-  }
+  return response.json();
 }
 
 

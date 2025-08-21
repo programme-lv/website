@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { IconUpload, IconX } from "@tabler/icons-react";
 import GenericButton from "@/components/generic-button";
 import FileUpload from "@/components/file-upload";
-import { uploadTask } from "@/lib/task/upload-task";
+import { uploadTask, UploadTaskResponse } from "@/lib/task/upload-task";
 import { ApiResponse } from "@/lib/api-response";
 
 interface TaskUploadModalProps {
@@ -35,7 +35,7 @@ export default function TaskUploadModal({ onTaskUploaded }: TaskUploadModalProps
     setSuccess(null);
 
     try {
-      const response: ApiResponse<any> = await uploadTask(selectedFile, overrideId);
+      const response: ApiResponse<UploadTaskResponse> = await uploadTask(selectedFile, overrideId);
       
       if (response.status === "success") {
         setSuccess("Uzdevums veiksmīgi augšupielādēts!");

@@ -89,14 +89,27 @@ export default function User() {
                             </Badge>
                         </button>
                     </DropdownTrigger>
-                    <DropdownMenu aria-label="Profile Actions" variant="flat">
+                    <DropdownMenu aria-label="Profile Actions" variant="flat" onAction={async (key) => {
+                        const actionKey = String(key);
+                        if (actionKey === "profile") {
+                            router.push(`/users/${user.username}`);
+                            return;
+                        }
+                        if (actionKey === "logout") {
+                            sessionStorage.clear();
+                            const res = await logoutUser();
+                            if (res.status === "success") {
+                                authContext.setUser(null);
+                                router.push("/");
+                            } else {
+                                alert("Kļūda: " + res.message);
+                            }
+                        }
+                    }}>
                         <DropdownItem
                             disableAnimation
                             key="profile"
                             className="flex gap-2 items-center justify-between rounded-md"
-                            onPress={() => {
-                                router.push(`/users/${user.username}`);
-                            }}
                         >
                             <div className="flex gap-2 items-center justify-between">
                                 <span>Profils</span>
@@ -110,20 +123,6 @@ export default function User() {
                             key="logout"
                             color="secondary"
                             className="rounded-md"
-                            onClick={() => {
-                                alert("Iziet no sistēmas");
-                            }}
-                            onPress={async () => {
-                                alert("Iziet no sistēmas");
-                                sessionStorage.clear();
-                                const res = await logoutUser();
-                                if (res.status === "success") {
-                                    authContext.setUser(null);
-                                    router.push("/");
-                                } else {
-                                    alert("Kļūda: " + res.message);
-                                }
-                            }}
                         >
                             <div className="flex gap-2 items-center justify-between">
                                 <span>Iziet no sistēmas</span>

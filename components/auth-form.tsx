@@ -5,13 +5,14 @@ import { useSearchParams } from "next/navigation";
 import { AuthContext } from "@/app/providers";
 import { registerUser, loginUser } from "@/lib/auth";
 import Alert from "@/components/alert";
-import { Button, Divider, Input } from "@heroui/react";
+import { Divider, Input } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import Link from "next/link";
 import { Suspense } from "react";
 import { User } from "@/types/proglv";
 import GenericButton from "./generic-button";
-import { IconLogin, IconLogin2, IconUserPlus } from "@tabler/icons-react";
+import { IconLogin2, IconUserPlus } from "@tabler/icons-react";
+import { TextLink } from "./text-link";
 
 
 function FormatError(error: string) {
@@ -285,30 +286,24 @@ function GoToLoginOrRegister({ type, redirect }: { type: "login" | "register"; r
       {type === "register" ? (
         <>
           Jau ir konts?&nbsp;
-          <Link
-            className="text-primary-500 hover:underline"
-            href={
-              redirectParam
-                ? `/login?redirect=${encodeURIComponent(redirectParam)}`
-                : `/login`
-            }
-          >
+          <TextLink color="default" weight="medium" href={
+            redirectParam
+              ? `/login?redirect=${encodeURIComponent(redirectParam)}`
+              : `/login`
+          }>
             Pieslēgties
-          </Link>
+          </TextLink>
         </>
       ) : (
         <>
           Nav konta?&nbsp;
-          <Link
-            className="text-primary-500 hover:underline"
-            href={
-              redirectParam
-                ? `/register?redirect=${encodeURIComponent(redirectParam)}`
-                : `/register`
-            }
-          >
+          <TextLink color="success" weight="medium" href={
+            redirectParam
+              ? `/register?redirect=${encodeURIComponent(redirectParam)}`
+              : `/register`
+          }>
             Reģistrēties
-          </Link>
+          </TextLink>
         </>
       )}
     </p>

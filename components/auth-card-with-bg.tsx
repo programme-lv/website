@@ -13,7 +13,7 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
 
   return (
     <div
-      className="flex min-h-screen relative w-screen items-center justify-center overflow-hidden bg-content1 p-2 pt-16 pb-16 lg:px-8"
+      className="flex min-h-screen relative w-screen items-center justify-center overflow-hidden bg-content1 p-2 pt-16 lg:px-8"
       style={{
         backgroundImage: `url(${Buyukada.src})`,
         backgroundSize: "cover",
@@ -39,7 +39,9 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
 
       {/* Auth Form */}
       <Suspense>
-        <AuthForm type={type} />
+        <div className="px-4 py-2 w-full max-w-md bg-white rounded-sm">
+          <AuthForm type={type} />
+        </div>
       </Suspense>
     </div>
   );

@@ -2,8 +2,11 @@
 
 import { API_HOST } from "../config";
 import { ApiResponse } from "../api-response";
+export interface UploadTaskResponse {
+  task_id: string;
+}
 
-export const uploadTask = async (zipFile: File, overrideId?: string): Promise<ApiResponse<any>> => {
+export const uploadTask = async (zipFile: File, overrideId?: string): Promise<ApiResponse<UploadTaskResponse>> => {
   const formData = new FormData();
   formData.append("task_zip", zipFile);
 
