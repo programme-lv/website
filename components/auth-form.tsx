@@ -11,8 +11,9 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { User } from "@/types/proglv";
 import GenericButton from "./generic-button";
-import { IconLogin2, IconUserPlus } from "@tabler/icons-react";
+import { IconEye, IconEyeOff, IconLogin2, IconUserPlus } from "@tabler/icons-react";
 import { TextLink } from "./text-link";
+import TextInput from "./text-input";
 
 
 function FormatError(error: string) {
@@ -104,6 +105,8 @@ export default function AuthForm({ type, redirect }: { type: "login" | "register
     }
   };
 
+  const disableInputs = loginMutation.status === 'pending' || registerMutation.status === 'pending' || isRedirecting;
+
   return (
     <div className="flex w-full max-w-md flex-col gap-4 pb-4 pt-4">
       <p className="pb-2 text-xl flex gap-x-2">
@@ -116,119 +119,72 @@ export default function AuthForm({ type, redirect }: { type: "login" | "register
         )}
       </p>
       <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
-        <Input
-          classNames={{ inputWrapper: "border-small border-default-300" }}
-          isDisabled={
-            loginMutation.status === 'pending' ||
-            registerMutation.status === 'pending' ||
-            isRedirecting
-          }
-          disableAnimation
+        <TextInput
+          isDisabled={disableInputs}
           label="Lietotājvārds"
           name="username"
-          // placeholder="Ievadiet savu lietotājvārdu"
           value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          onChange={setUsername}
         />
         {type === "register" && (
           <>
             <div className="flex flex-col md:flex-row gap-3">
-              <Input
+              <TextInput
                 className="flex-1"
-                classNames={{ inputWrapper: "border-small border-default-300" }}
-                isDisabled={
-                  loginMutation.status === 'pending' ||
-                  registerMutation.status === 'pending' ||
-                  isRedirecting
-                }
-                disableAnimation
+                isDisabled={disableInputs}
                 label="Vārds (neobligāts)"
                 name="firstName"
-                // placeholder="Ievadiet savu vārdu"
                 value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
+                onChange={setFirstName}
               />
-              <Input
+              <TextInput
                 className="flex-1"
-                classNames={{ inputWrapper: "border-small border-default-300" }}
-                isDisabled={
-                  loginMutation.status === 'pending' ||
-                  registerMutation.status === 'pending' ||
-                  isRedirecting
-                }
-                disableAnimation
+                isDisabled={disableInputs}
                 label="Uzvārds (neobligāts)"
                 name="lastName"
-                // placeholder="Ievadiet savu uzvārdu"
                 value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
+                onChange={setLastName}
               />
             </div>
-            <Input
-              classNames={{ inputWrapper: "border-small border-default-300" }}
-              isDisabled={
-                loginMutation.status === 'pending' ||
-                registerMutation.status === 'pending' ||
-                isRedirecting
-              }
-              disableAnimation
+            <TextInput
+              isDisabled={disableInputs}
               label="E-pasta adrese"
               name="email"
-              // placeholder="Ievadiet savu e-pastu"
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={setEmail}
             />
           </>
         )}
         <div className="flex flex-col md:flex-row gap-3">
-          <Input
+          <TextInput
             className="flex-1"
-            classNames={{ inputWrapper: "border-small border-default-300" }}
             endContent={
               <button type="button" onMouseDown={toggleVisibility}>
                 {isVisible ? (
-                  <Icon
-                    className="pointer-events-none text-2xl text-default-400"
-                    icon="solar:eye-closed-linear"
+                  <IconEyeOff className="text-default-500" size={22}
                   />
                 ) : (
-                  <Icon
-                    className="pointer-events-none text-2xl text-default-400"
-                    icon="solar:eye-bold"
-                  />
+                  <IconEye className="text-default-500" size={22}/>
                 )}
               </button>
             }
-            disableAnimation
-            isDisabled={
-              loginMutation.status === 'pending' ||
-              registerMutation.status === 'pending' ||
-              isRedirecting
-            }
+            isDisabled={disableInputs}
             label="Parole"
             name="password"
-            // placeholder="Ievadiet savu paroli"
             type={isVisible ? "text" : "password"}
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={setPassword}
           />
           {type === "register" && (
-            <Input
+            <TextInput
               className="flex-1"
-              classNames={{ inputWrapper: "border-small border-default-300" }}
-              isDisabled={
-                loginMutation.status === 'pending' ||
-                registerMutation.status === 'pending' ||
-                isRedirecting
-              }
-              disableAnimation
+              isDisabled={disableInputs}
               label="Apstipriniet paroli"
               name="confirmPassword"
               type="password"
-              // placeholder="Apstipriniet savu paroli"
               value={repPassword}
-              onChange={(e) => setRepPassword(e.target.value)}
+              onChange={setRepPassword}
             />
           )}
         </div>

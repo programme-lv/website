@@ -5,6 +5,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Input } from "@heroui/react";
 import GenericButton from "@/components/generic-button";
 import { IconSearch } from "@tabler/icons-react";
+import TextInput from "@/components/text-input";
 
 export default function SearchInput() {
     const router = useRouter();
@@ -45,13 +46,13 @@ export default function SearchInput() {
 
     return (
         <div className="p-2 border-small border-divider rounded-sm bg-white flex flex-row gap-2 items-center">
-            <Input
+            <TextInput
+                name="search"
                 placeholder="Meklēt"
-                size="sm"
-                className="w-48 border-divider border rounded-md"
                 value={search}
-                onValueChange={(e) => setSearch(e)}
+                onChange={setSearch}
                 onKeyDown={handleKeyDown}
+                className="w-48"
             />
             <GenericButton
                 className="!min-w-0"

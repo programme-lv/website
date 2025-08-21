@@ -10,14 +10,15 @@ import TaskCard from "@/components/task-list-card";
 import { TaskPreview } from "@/types/task";
 import { AuthContext } from "@/app/providers";
 import { getMaxScorePerTask } from "@/lib/subms";
+import { MaxScorePerTask } from "@/types/scores";
 
-export function TaskList(props: { tasks: TaskPreview[] }) {
+export function TaskList(props: { tasks: TaskPreview[]; userMaxScores?: MaxScorePerTask }) {
 	const authContext = useContext(AuthContext);
 
   const userMaxScoresQuery = useQuery({
     queryKey: ['userScores', authContext.user?.username],
     queryFn: () => getMaxScorePerTask(authContext.user?.username ?? ""),
-    enabled: !!authContext.user?.username,
+    enabled: !props.userMaxScores && !!authContext.user?.username,
   });
   const listTasksQuery = useQuery({
     queryKey: ["tasks"],
@@ -29,7 +30,7 @@ export function TaskList(props: { tasks: TaskPreview[] }) {
     (a: TaskPreview, b: TaskPreview) => a.difficulty_rating - b.difficulty_rating,
   );
 
-  let userMaxScores = userMaxScoresQuery.data;
+  let userMaxScores = props.userMaxScores ?? userMaxScoresQuery.data;
 
   if (listTasksQuery.error) {
     return (
