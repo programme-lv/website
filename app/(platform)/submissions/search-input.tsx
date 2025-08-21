@@ -19,7 +19,7 @@ export default function SearchInput() {
         if (urlSearch !== search) {
             setSearch(urlSearch);
         }
-    }, [searchParams, search]);
+    }, [searchParams]);
 
     const handleSearch = () => {
         const params = new URLSearchParams(searchParams.toString());
@@ -48,7 +48,7 @@ export default function SearchInput() {
             <Input
                 placeholder="Meklēt"
                 size="sm"
-                className="w-48 border-divider border rounded-small"
+                className="w-48 border-divider border rounded-md"
                 value={search}
                 onValueChange={(e) => setSearch(e)}
                 onKeyDown={handleKeyDown}
