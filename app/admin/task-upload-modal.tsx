@@ -95,9 +95,9 @@ export default function TaskUploadModal({ onTaskUploaded }: TaskUploadModalProps
         size="md"
         onClick={() => setIsOpen(true)}
         className="flex items-center gap-2"
+        icon={<IconUpload className="w-4 h-4" />}
       >
-        <IconUpload className="w-4 h-4" />
-        Augšupielādēt uzdevumu
+        Augšupielādēt (.zip)
       </GenericButton>
 
       {isOpen && (
@@ -122,10 +122,6 @@ export default function TaskUploadModal({ onTaskUploaded }: TaskUploadModalProps
 
             <div className="space-y-4">
               <div>
-                <p className="text-sm text-gray-600 mb-3">
-                  Izvēlieties .zip failu, kas satur uzdevuma datus.
-                </p>
-                
                 <FileUpload
                   onFileSelect={handleFileSelect}
                   acceptedTypes=".zip"

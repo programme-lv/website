@@ -16,7 +16,7 @@ export default function TaskAdminList({ tasks, onTaskUploaded }: {
             <div className="mb-4 flex justify-end">
                 <TaskUploadModal onTaskUploaded={onTaskUploaded} />
             </div>
-            <div className="p-2 bg-white">
+            <div className="p-2 bg-white border-divider border">
                 <GenericTable
                     data={tasks.data || []}
                     columns={[
