@@ -249,15 +249,15 @@ const MdView = React.memo(function MdViewInner({
 						<table className="w-full rounded-sm">
 							<thead>
 								<tr className="border-b border-divider font-normal text-sm">
-									<th className="px-2 py-1.5 max-w-[3em] min-w-[2em] font-normal border-r">#</th>
+									<th className="px-2 py-1.5 max-w-16 w-12 font-normal border-r">#</th>
 									<th className="px-2 py-1.5 font-normal border-r">Apraksts un ierobežojumi</th>
-									<th className="px-2 py-1.5 max-w-[3em] min-w-[3em] font-normal">Punkti</th>
+									<th className="px-2 py-1.5 max-w-16 w-14 font-normal">Punkti</th>
 								</tr>
 							</thead>
 							<tbody>
 								{statement_subtasks.map((subtask, i) => (
 									<tr key={i} className={cn({ "border-b border-divider": i !== statement_subtasks.length - 1 }, { "bg-gray-50": i % 2 === 0 })}>
-										<td className="px-2 py-1.5 max-w-[3em] min-w-[2em] border-r border-gray-200 text-center">{subtask.subtask}.</td>
+										<td className="px-2 py-1.5 max-w-16 min-w-[2em] border-r border-gray-200 text-center">{subtask.subtask}.</td>
 										<td className="px-2 py-1.5">
 											<div
 												dangerouslySetInnerHTML={{
