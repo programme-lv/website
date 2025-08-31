@@ -290,6 +290,7 @@ const MdView = React.memo(function MdViewInner({
 						</span>
 						.
 					</div>
+					<div dangerouslySetInnerHTML={{ __html: sections.scoring }} className="" />
 				</div>
 			)}
 
@@ -319,16 +320,6 @@ const MdView = React.memo(function MdViewInner({
 					</div>
 				</div>
 			))}
-
-			{sections.scoring && (
-				<div>
-					<h2 className="text-small mb-3 mt-6 font-semibold">
-						Apakšuzdevumi un to vērtēšana
-					</h2>
-					<div dangerouslySetInnerHTML={{ __html: sections.scoring }} className="" />
-				</div>
-			)}
-
 		</div>
 	);
 });
