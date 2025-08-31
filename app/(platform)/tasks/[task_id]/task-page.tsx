@@ -435,7 +435,7 @@ function TaskHeader({
 									<h3 className="text-large font-semibold">
 										{task_full_name}
 									</h3>
-									{difficulty_rating && (
+									{difficulty_rating > 0 && (
 										<TaskDifficultyChip
 											difficulty_rating={difficulty_rating}
 										/>

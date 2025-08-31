@@ -103,9 +103,9 @@ function TaskCard(props: TaskCardProps) {
                   <h3 className="text-lg font-medium truncate">
                     {props.full_name}
                   </h3>
-                  <TaskDifficultyChip
+                  {props.difficulty_rating > 0  && <TaskDifficultyChip
                     difficulty_rating={props.difficulty_rating}
-                  />
+                  />}
                 </div>
               </div>
               {props.md_statement_story && (
