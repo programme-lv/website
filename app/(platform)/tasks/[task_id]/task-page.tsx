@@ -56,6 +56,7 @@ import CodeBlock from "@/components/code-block";
 import GenericButton from "@/components/generic-button";
 import { ProgrammingLanguage } from "@/types/proglv";
 import GenericTable from "@/components/generic-table";
+import MarkdownRenderer from "@/components/markdown-renderer";
 
 export default function TaskDetailsPage(props: { task: Task }) {
 	const { task_id } = useParams();
@@ -93,7 +94,7 @@ export default function TaskDetailsPage(props: { task: Task }) {
 					handleComponent={{ right: <ResizeBar /> }}
 					maxWidth={"70%"}
 					minWidth={"330px"}
-					snap={{x: Array.from({length: 100}, (_, i) => (i + 1) * 50)}}
+					snap={{x: Array.from({length: 200}, (_, i) => (i + 1) * 25)}}
 				>
 					<LeftSide task={task} />
 				</Resizable>
@@ -163,7 +164,7 @@ function renderSections(md_statement: MarkdownStatement, statement_images: State
 		scoring: md_statement.scoring ? renderMd(md_statement.scoring, statement_images) : "",
 		talk: md_statement.talk ? renderMd(md_statement.talk, statement_images) : "",
 		example: md_statement.example ? renderMd(md_statement.example, statement_images) : "",
-		notes: md_statement.notes ? renderMd(md_statement.notes, statement_images) : ""
+		notes: md_statement.notes ?? ""
 	}
 }
 
@@ -295,7 +296,7 @@ const MdView = React.memo(function MdViewInner({
 			{md_statement.notes && (
 				<div>
 					<h2 className="text-small mb-1 font-semibold">Piezīmes</h2>
-					<div dangerouslySetInnerHTML={{ __html: sections.notes }} />
+					<MarkdownRenderer content={sections.notes} />
 				</div>
 			)}
 
