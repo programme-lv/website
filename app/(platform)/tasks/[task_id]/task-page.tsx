@@ -55,6 +55,7 @@ import LIO_LOGO from "@/public/lio-logo.png";
 import CodeBlock from "@/components/code-block";
 import GenericButton from "@/components/generic-button";
 import { ProgrammingLanguage } from "@/types/proglv";
+import GenericTable from "@/components/generic-table";
 
 export default function TaskDetailsPage(props: { task: Task }) {
 	const { task_id } = useParams();
@@ -92,6 +93,7 @@ export default function TaskDetailsPage(props: { task: Task }) {
 					handleComponent={{ right: <ResizeBar /> }}
 					maxWidth={"70%"}
 					minWidth={"330px"}
+					snap={{x: Array.from({length: 100}, (_, i) => (i + 1) * 50)}}
 				>
 					<LeftSide task={task} />
 				</Resizable>
@@ -150,6 +152,7 @@ type Sections = {
 	scoring: string;
 	talk: string;
 	example: string;
+	notes: string;
 }
 
 function renderSections(md_statement: MarkdownStatement, statement_images: StatementImage[]): Sections {
@@ -159,8 +162,19 @@ function renderSections(md_statement: MarkdownStatement, statement_images: State
 		output: renderMd(md_statement.output, statement_images),
 		scoring: md_statement.scoring ? renderMd(md_statement.scoring, statement_images) : "",
 		talk: md_statement.talk ? renderMd(md_statement.talk, statement_images) : "",
-		example: md_statement.example ? renderMd(md_statement.example, statement_images) : ""
+		example: md_statement.example ? renderMd(md_statement.example, statement_images) : "",
+		notes: md_statement.notes ? renderMd(md_statement.notes, statement_images) : ""
 	}
+}
+
+type MdViewProps = {
+	md_statement: MarkdownStatement;
+	examples?: Example[];
+	vis_inp_st_inputs?: VisibleInputSubtask[];
+	cpu_time_limit_seconds?: number;
+	memory_limit_megabytes?: number;
+	statement_subtasks?: SubtaskOverview[];
+	statement_images?: StatementImage[];
 }
 
 const MdView = React.memo(function MdViewInner({
@@ -171,15 +185,7 @@ const MdView = React.memo(function MdViewInner({
 	memory_limit_megabytes,
 	statement_subtasks,
 	statement_images,
-}: {
-	md_statement: MarkdownStatement;
-	examples?: Example[];
-	vis_inp_st_inputs?: VisibleInputSubtask[];
-	cpu_time_limit_seconds?: number;
-	memory_limit_megabytes?: number;
-	statement_subtasks?: SubtaskOverview[];
-	statement_images?: StatementImage[];
-}) {
+}: MdViewProps) {
 
 	const sections = useMemo(() => renderSections(md_statement, statement_images ?? []), [md_statement, statement_images]);
 	const subtaskDescriptions = useMemo(() => statement_subtasks?.map((subtask) => renderMdLite(subtask.descriptions["lv"])) ?? [], [statement_subtasks]);
@@ -245,31 +251,36 @@ const MdView = React.memo(function MdViewInner({
 					<h2 className="text-small my-1 mb-2 font-semibold">
 						Apakšuzdevumi un to vērtēšana
 					</h2>
-					<div className="border-small border-divider rounded-sm p-1">
-						<table className="w-full rounded-sm">
-							<thead>
-								<tr className="border-b border-divider font-normal text-sm">
-									<th className="px-2 py-1.5 max-w-16 w-12 font-normal border-r">#</th>
-									<th className="px-2 py-1.5 font-normal border-r">Apraksts un ierobežojumi</th>
-									<th className="px-2 py-1.5 max-w-16 w-14 font-normal">Punkti</th>
-								</tr>
-							</thead>
-							<tbody>
-								{statement_subtasks.map((subtask, i) => (
-									<tr key={i} className={cn({ "border-b border-divider": i !== statement_subtasks.length - 1 }, { "bg-gray-50": i % 2 === 0 })}>
-										<td className="px-2 py-1.5 max-w-16 min-w-[2em] border-r border-gray-200 text-center">{subtask.subtask}.</td>
-										<td className="px-2 py-1.5">
-											<div
-												dangerouslySetInnerHTML={{
-													__html: subtaskDescriptions[i],
-												}}
-											/>
-										</td>
-										<td className="px-2 py-1.5 max-w-[3em] min-w-[3em] border-l border-gray-200 font-mono text-center">{subtask.score}</td>
-									</tr>
-								))}
-							</tbody>
-						</table>
+					<div className="border-small border-divider rounded-sm p-1 mt-2">
+						<GenericTable
+							data={statement_subtasks}
+							keyExtractor={(item) => `${item.subtask}`}
+							columns={[
+								{
+									header: "#",
+									key: "num",
+									width: "48px",
+									align: "center",
+									render: (item) => <>{item.subtask}.</>,
+								},
+								{
+									header: "Apakšuzdevuma apraksts",
+									key: "desc",
+									render: (_item, i) => (
+										<div dangerouslySetInnerHTML={{ __html: subtaskDescriptions[i] }} />
+									),
+								},
+								{
+									header: "Punkti",
+									key: "score",
+									width: "60px",
+									align: "center",
+									render: (item) => <span className="font-mono">{item.score}</span>,
+								},
+							]}
+							className="w-full"
+							rowHeight="compact"
+						/>
 					</div>
 					<div className="mt-2 text-small text-right">
 						Apakšuzdevumu punktu summa ={" "}
@@ -278,6 +289,13 @@ const MdView = React.memo(function MdViewInner({
 						</span>
 						.
 					</div>
+				</div>
+			)}
+
+			{md_statement.notes && (
+				<div>
+					<h2 className="text-small mb-1 font-semibold">Piezīmes</h2>
+					<div dangerouslySetInnerHTML={{ __html: sections.notes }} />
 				</div>
 			)}
 
@@ -309,6 +327,7 @@ const MdView = React.memo(function MdViewInner({
 					<div dangerouslySetInnerHTML={{ __html: sections.scoring }} className="" />
 				</div>
 			)}
+
 		</div>
 	);
 });
