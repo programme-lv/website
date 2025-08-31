@@ -60,7 +60,7 @@ export default function GenericTable<T>({
 
   // Define row height based on prop
   const rowHeightClass = rowHeight === "compact" ? " " : "h-[76px]";
-  const cellPaddingClass = rowHeight === "compact" ? "p-2 py-2" : "p-2.5 py-2.5";
+  const cellPaddingClass = rowHeight === "compact" ? "px-2 py-1.5" : "px-2.5 py-2";
 
   // if col header align is not set, use the align of the col
   processedColumns = processedColumns.map((col) => {

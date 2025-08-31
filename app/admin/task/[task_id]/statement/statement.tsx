@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { MarkdownStatement, StatementImage, Task } from "@/types/task";
 import { updateTaskStatement, UpdateStatementRequest, deleteTaskImage, revalidateTask } from "@/lib/task/tasks";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { TextLink } from "@/components/text-link";
 import GenericTable, { Column } from "@/components/generic-table";
 import GenericButton from "@/components/generic-button";
@@ -68,10 +68,7 @@ function MainStatementSection({ task }: { task: Task }) {
             };
 
             await updateTaskStatement(task.short_task_id, data);
-            revalidateTask(task.short_task_id);
-
-            // Refresh the page to show updated data
-            await router.refresh();
+            await revalidateTask(task.short_task_id);
 
             alert("Task statement updated successfully!");
         } catch (err) {
@@ -129,7 +126,7 @@ function MainStatementSection({ task }: { task: Task }) {
                 />
             </div>
 
-            <div className="flex flex-col gap-1 border border-divider rounded-sm p-2">
+            {(task.testing_type === "checker" || formData.input !== "") && <div className="flex flex-col gap-1 border border-divider rounded-sm p-2">
                 <label className="block text-sm font-medium">Ievaddati</label>
                 <textarea
                     className="w-full border rounded p-2"
@@ -137,9 +134,9 @@ function MainStatementSection({ task }: { task: Task }) {
                     onChange={handleChange("input")}
                     rows={textareaRows.input}
                 />
-            </div>
+            </div>}
 
-            <div className="flex flex-col gap-1 border border-divider rounded-sm p-2">
+            {(task.testing_type === "checker" || formData.output !== "") && <div className="flex flex-col gap-1 border border-divider rounded-sm p-2">
                 <label className="block text-sm font-medium">Izvaddati</label>
                 <textarea
                     className="w-full border rounded p-2"
@@ -147,19 +144,10 @@ function MainStatementSection({ task }: { task: Task }) {
                     onChange={handleChange("output")}
                     rows={textareaRows.output}
                 />
-            </div>
+            </div>}
 
-            {/* <div className="flex flex-col gap-1 border border-divider rounded-sm p-2">
-                <label className="block text-sm font-medium">Piezīmes</label>
-                <textarea
-                    className="w-full border rounded p-2"
-                    value={formData.notes}
-                    onChange={handleChange("notes")}
-                    rows={1}
-                />
-            </div>
 
-            <div className="flex flex-col gap-1 border border-divider rounded-sm p-2">
+            {/*<div className="flex flex-col gap-1 border border-divider rounded-sm p-2">
                 <label className="block text-sm font-medium">Vērtēšana (šķiet, ka netiek izmantota)</label>
                 <textarea
                     className="w-full border rounded p-2"
@@ -167,27 +155,36 @@ function MainStatementSection({ task }: { task: Task }) {
                     onChange={handleChange("scoring")}
                     rows={1}
                 />
-            </div>
+            </div>*/}
 
-            <div className="flex flex-col gap-1 border border-divider rounded-sm p-2">
-                <label className="block text-sm font-medium">Komunikācija  (interaktīvajos uzdevumos)</label>
+            {(task.testing_type === "interactor" || formData.talk !== "") && <div className="flex flex-col gap-1 border border-divider rounded-sm p-2">
+                <label className="block text-sm font-medium">Komunikācija</label>
                 <textarea
                     className="w-full border rounded p-2"
                     value={formData.talk}
                     onChange={handleChange("talk")}
-                    rows={1}
+                    rows={textareaRows.talk}
                 />
-            </div>
+            </div>}
 
-            <div className="flex flex-col gap-1 border border-divider rounded-sm p-2">
-                <label className="block text-sm font-medium">Piemērs (interaktīvajos uzdevumos)</label>
+            {(task.testing_type === "interactor" || formData.example !== "") && <div className="flex flex-col gap-1 border border-divider rounded-sm p-2">
+                <label className="block text-sm font-medium">Piemērs</label>
                 <textarea
                     className="w-full border rounded p-2"
                     value={formData.example}
                     onChange={handleChange("example")}
-                    rows={1}
+                    rows={textareaRows.example}
                 />
-            </div> */}
+            </div>}
+            {/*(task.testing_type === "interactor" || formData.notes !== "") && <div className="flex flex-col gap-1 border border-divider rounded-sm p-2">
+                <label className="block text-sm font-medium">Piezīmes</label>
+                <textarea
+                    className="w-full border rounded p-2"
+                    value={formData.notes}
+                    onChange={handleChange("notes")}
+                    rows={textareaRows.notes}
+                />
+            </div>*/}
             <div className="flex justify-end">
                 <GenericButton
                     variant="success"
@@ -199,6 +196,7 @@ function MainStatementSection({ task }: { task: Task }) {
                     Saglabāt formulējumu
                 </GenericButton>
             </div>
+            
         </section>
     );
 }

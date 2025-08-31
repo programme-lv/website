@@ -5,6 +5,9 @@ import type { Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import GenericTable from "./generic-table";
 import { cn } from "./cn";
+import rehypeKatex from "rehype-katex";
+import remarkMath from "remark-math";
+import 'katex/dist/katex.min.css' // `rehype-katex` does not import the CSS for you
 
 type JsonComponent = {
     component: string;
@@ -52,11 +55,9 @@ function renderTableFromJson(spec: TableJsonSpec) {
 }
 
 export default function MarkdownRenderer({ content }: { content: string }) {
+    console.log(content);
     const components: Components = {
         pre: ({node, children, ...props }) => {
-            console.clear();
-            console.log(node);
-            console.log(children);
             if(children && (children as ReactElement).props.node.tagName === "code") {
                 return <>{children}</>;
             }
@@ -65,9 +66,6 @@ export default function MarkdownRenderer({ content }: { content: string }) {
         code({ node, className, children, ...props }) {
             const match = /language-(\w+)/.exec(className || "");
             const value = String(children).replace(/\n$/, "");
-
-            // console.clear();
-            console.log(node);
 
             if (match && match[1] === "json") {
                 try {
@@ -92,7 +90,8 @@ export default function MarkdownRenderer({ content }: { content: string }) {
     };
     return (
         <ReactMarkdown
-            remarkPlugins={[remarkGfm]}
+            remarkPlugins={[remarkGfm, remarkMath]}
+            rehypePlugins={[rehypeKatex]}
             components={components}
         >
             {content}

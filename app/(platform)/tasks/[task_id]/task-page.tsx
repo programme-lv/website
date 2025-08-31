@@ -163,7 +163,7 @@ function renderSections(md_statement: MarkdownStatement, statement_images: State
 		output: renderMd(md_statement.output, statement_images),
 		scoring: md_statement.scoring ? renderMd(md_statement.scoring, statement_images) : "",
 		talk: md_statement.talk ? renderMd(md_statement.talk, statement_images) : "",
-		example: md_statement.example ? renderMd(md_statement.example, statement_images) : "",
+		example: md_statement.example ?? "",
 		notes: md_statement.notes ?? ""
 	}
 }
@@ -197,7 +197,7 @@ const MdView = React.memo(function MdViewInner({
 			{sections.input && <Section title="Ievaddati" content={sections.input} />}
 			{sections.output && <Section title="Izvaddati" content={sections.output} />}
 			{sections.talk && <Section title="Komunikācija" content={sections.talk} />}
-			{sections.example && <Section title="Piemērs" content={sections.example} />}
+			{sections.example && <SectionNEW title="Piemērs" md_content={sections.example} />}
 
 			{examples && !sections.example && (
 				<div>
@@ -340,6 +340,15 @@ function Section({ title, content }: { title: string; content: string }) {
 			<div>
 				<span dangerouslySetInnerHTML={{ __html: content }} />
 			</div>
+		</div>
+	);
+}
+
+function SectionNEW({title, md_content}: {title: string, md_content: string}) {
+	return (
+		<div>
+			<h2 className="text-small mb-1 font-semibold">{title}</h2>
+			<MarkdownRenderer content={md_content} />
 		</div>
 	);
 }

@@ -21,6 +21,7 @@ type Task = {
     visible_input_subtasks?: VisibleInputSubtask[];
     statement_subtasks?: SubtaskOverview[];
     statement_images?: StatementImage[];
+    testing_type: "checker" | "interactor";
 };
 
 type SubtaskOverview = {
