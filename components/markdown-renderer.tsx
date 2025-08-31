@@ -87,6 +87,9 @@ export default function MarkdownRenderer({ content }: { content: string }) {
                 </code>
             );
         },
+        p: ({node, children, className, ...props}) => {
+            return <p className={cn(className, "mb-2")} {...props}>{children}</p>;
+        },
     };
     return (
         <ReactMarkdown

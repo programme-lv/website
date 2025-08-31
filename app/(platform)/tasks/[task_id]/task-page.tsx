@@ -162,7 +162,7 @@ function renderSections(md_statement: MarkdownStatement, statement_images: State
 		input: renderMd(md_statement.input, statement_images),
 		output: renderMd(md_statement.output, statement_images),
 		scoring: md_statement.scoring ? renderMd(md_statement.scoring, statement_images) : "",
-		talk: md_statement.talk ? renderMd(md_statement.talk, statement_images) : "",
+		talk: md_statement.talk ?? "",
 		example: md_statement.example ?? "",
 		notes: md_statement.notes ?? ""
 	}
@@ -196,7 +196,7 @@ const MdView = React.memo(function MdViewInner({
 			<Section title="Stāsts" content={sections.story} />
 			{sections.input && <Section title="Ievaddati" content={sections.input} />}
 			{sections.output && <Section title="Izvaddati" content={sections.output} />}
-			{sections.talk && <Section title="Komunikācija" content={sections.talk} />}
+			{sections.talk && <SectionNEW title="Komunikācija" md_content={sections.talk} />}
 			{sections.example && <SectionNEW title="Piemērs" md_content={sections.example} />}
 
 			{examples && !sections.example && (
