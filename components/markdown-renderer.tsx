@@ -3,7 +3,7 @@ import React, { ReactElement, ReactNode } from "react";
 import ReactMarkdown from "react-markdown";
 import type { Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
-import GenericTable from "./generic-table";
+import GenericTable, { Column } from "./generic-table";
 import { cn } from "./cn";
 import rehypeKatex from "rehype-katex";
 import remarkMath from "remark-math";
@@ -16,7 +16,7 @@ type JsonComponent = {
 
 type TableJsonSpec = {
     component: "table";
-    cols: Array<{ header: string, width?: string }>;
+    cols: Array<{ header: string, width?: string, code?: boolean }>;
     data: Array<Array<string>>;
 };
 
@@ -28,15 +28,19 @@ function renderTableFromJson(spec: TableJsonSpec) {
     type Row = { cells: string[] };
     const rows: Row[] = spec.data.map((r) => ({ cells: r }));
 
-    const columns = spec.cols.map((c, idx) => ({
+    const columns: Column<Row>[] = spec.cols.map((c, idx) => ({
         header: c.header,
         key: `col-${idx}`,
         width: c.width,
-        render: (item: Row) => (
+        render: (item: Row) => {
+            if(c.code) {
+                return (<pre className="p-1 rounded"><code>{item.cells[idx]}</code></pre>);
+            }
             // Allow inline HTML like <br> and inline code already present in the JSON
             // <div dangerouslySetInnerHTML={{ __html: item.cells[idx] ?? "" }} />
-            <MarkdownRenderer content={item.cells[idx] ?? ""} />
-        ),
+            return (<MarkdownRenderer content={item.cells[idx].replaceAll("\n", "\n\n") ?? ""} />);
+        },
+        verticalAlign: "top",
     }));
 
     return (
