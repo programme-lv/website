@@ -25,3 +25,7 @@
 strong {
   font-weight: 600;
 }
+
+.bg-dark {
+  background-color: #1e1e1e;
+}

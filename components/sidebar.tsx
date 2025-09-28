@@ -55,7 +55,7 @@ export default function Sidebar(props: SidebarProps) {
 
   return (
     <>
-      <div className="fixed flex-col bg-white !border-r-small border-divider h-full min-w-16 hidden md:flex">
+      <div className="fixed flex-col !border-r-small border-divider h-full min-w-16 hidden md:flex bg-dark text-gray-200">
         <div className="flex items-center px-3 justify-center gap-0">
           <div className="flex mt-4 items-center">
             <Link href="/tasks">
@@ -76,7 +76,7 @@ export default function Sidebar(props: SidebarProps) {
             >
               <div
                 className={cn(
-                  "flex items-center justify-center w-[38px] h-[38px] rounded-small hover:bg-gray-100",
+                  "flex items-center justify-center w-[38px] h-[38px] rounded-small",
                   props.active === item.key && "bg-gray-100",
                 )}
               >
@@ -84,7 +84,7 @@ export default function Sidebar(props: SidebarProps) {
                   {React.createElement(item.icon, {
                     width: 24,
                     className: cn(
-                      "hover:text-default-800",
+                      {"hover:text-white": props.active !== item.key},
                       props.active === item.key && "text-default-800",
                     ),
                   })}
