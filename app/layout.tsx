@@ -51,7 +51,7 @@ export default async function RootLayout({
   const user = res.data;
 
   return (
-    <html suppressHydrationWarning lang="en" className={`${ubuntu.variable} ${ubuntuSans.variable}`} style={{ backgroundColor: "rgb(250,250,250)", fontFamily: "var(--font-ubuntu-sans), var(--font-ubuntu), sans-serif", fontSize: "1.1rem" }}>
+    <html suppressHydrationWarning lang="en" className={`${ubuntu.variable} ${ubuntuSans.variable}`} style={{ backgroundColor: "var(--bg-color)", fontFamily: "var(--font-ubuntu-sans), var(--font-ubuntu), sans-serif", fontSize: "1.1rem" }}>
       <head>
       </head>
       

@@ -17,6 +17,7 @@ import User from "./navbar-user";
 import React, { useContext } from "react";
 import { IconInbox, IconListDetails, IconInfoCircle } from "@tabler/icons-react";
 import { AuthContext } from "@/app/providers";
+import { TextLink } from "./text-link";
 
 interface BreadcrumbItem {
   label: string;
@@ -81,19 +82,19 @@ const MobileMenuButton = ({ onOpen }: { onOpen: () => void }) => (
 
 const Breadcrumbs = ({ items }: { items: BreadcrumbItem[] }) => (
   <nav className="hidden sm:block">
-    <ol className="flex gap-x-1.5 text-sm">
+    <ol className="flex gap-x-1.5 text-sm font-mono">
       {items.map((item, index) => (
         <React.Fragment key={index}>
           <li>
             {item.href ? (
               <Link
-                className={cn("text-default-500 hover:underline",{"text-default-900":index===items.length-1})}
+                className={cn("text-default-500 hover:underline",{"text-default-800":index===items.length-1})}
                 href={item.href}
               >
                 {item.label}
               </Link>
             ) : (
-              <span className={cn("text-default-500",{"text-default-900":index===items.length-1})}>
+              <span className={cn("text-default-500",{"text-default-800":index===items.length-1})}>
                 {item.label}
               </span>
             )}
@@ -142,7 +143,7 @@ const Layout: React.FC<LayoutProps> = ({ children, breadcrumbs, active }) => {
         onClose={onMobileMenuClose}
       />
 
-      <div className="min-h-screen w-full">
+      <div className="w-full">
         <Sidebar active={active} userIsAdmin={userIsAdmin}/>
 
         <div className="md:ml-16">

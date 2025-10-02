@@ -55,7 +55,7 @@ export default async function SubmissionListServerComponent(props: {
 
   return (
     <Layout breadcrumbs={breadcrumbs} active="submissions">
-      <div className="px-3">
+      <div className="px-4">
         {/* Pagination above the table */}
         <div className="flex justify-end xl:justify-between gap-x-4 flex-wrap items-center mt-4 mb-2">
           <div className="text-gray-500 px-2 hidden xl:block">

@@ -26,6 +26,10 @@ strong {
   font-weight: 600;
 }
 
-.bg-dark {
+.sidebar-bg-dark {
   background-color: #1e1e1e;
+}
+
+:root {
+  --bg-color: #FAFAFA;
 }

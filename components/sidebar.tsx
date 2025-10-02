@@ -55,7 +55,7 @@ export default function Sidebar(props: SidebarProps) {
 
   return (
     <>
-      <div className="fixed flex-col !border-r-small border-divider h-full min-w-16 hidden md:flex bg-dark text-gray-200">
+      <div className="fixed flex-col !border-r-small border-divider h-full min-w-16 hidden md:flex sidebar-bg-dark text-gray-200">
         <div className="flex items-center px-3 justify-center gap-0">
           <div className="flex mt-4 items-center">
             <Link href="/tasks">
