@@ -27,7 +27,8 @@ strong {
 }
 
 .sidebar-bg-dark {
-  background-color: #1e1e1e;
+  /* background-color: #1e1e1e; */
+  background: linear-gradient(to left top, #1e1e1e, #141414);
 }
 
 :root {
