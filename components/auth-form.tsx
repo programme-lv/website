@@ -74,8 +74,8 @@ export default function AuthForm({ type, redirect }: { type: "login" | "register
 
         setIsRedirecting(true);
 
-        if (redirectParam) router.push(redirectParam);
-        else router.push("/tasks");
+        // Use hard navigation to ensure server components re-fetch data with new auth state
+        window.location.href = redirectParam || "/tasks";
       } else {
         setError(FormatError(response.message));
       }
