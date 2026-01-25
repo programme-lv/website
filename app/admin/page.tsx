@@ -7,6 +7,11 @@ import TaskAdminList from "./task-admin-list";
 import SubmAdminList from "./subm-admin-list";
 import Layout from "@/components/layout";
 import { listSubmissionsServerSide } from "@/lib/subm/list-ss";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Admin",
+};
 
 export default async function AdminPage() {
     if (!(await isAdmin())) {

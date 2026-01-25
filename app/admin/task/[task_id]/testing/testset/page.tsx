@@ -1,6 +1,11 @@
 import GenericTable, { Column } from "@/components/generic-table";
 import RestrictedPleaseLogin from "@/components/restricted-please-login";
 import { isAdmin } from "@/lib/dal";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Testu kopa",
+};
 
 interface Test {
     input_preview: string;

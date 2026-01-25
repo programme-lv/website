@@ -8,6 +8,21 @@ import { DetailedSubmView } from "@/types/subm";
 import { Execution } from "@/types/exec";
 import CodeBlock from "@/components/code-block";
 import TestResultTable from "@/components/test-result-table";
+import { Metadata } from "next";
+
+export async function generateMetadata({ 
+  params 
+}: { 
+  params: Promise<{ task_id: string, run_id: string }>;
+}): Promise<Metadata> {
+  const { task_id, run_id } = await params;
+  const response = await getTaskById(task_id);
+  const task = response.data;
+
+  return {
+    title: task ? `Izpilde ${run_id.slice(0, 8)}: ${task.task_full_name}` : `Admin: ${task_id}`,
+  };
+}
 
 export default async function RunPage({ 
   params 

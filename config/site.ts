@@ -1,9 +1,9 @@
 export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
-  name: "programme.lv",
+  name: "Programme.lv",
   description:
-    "bezmaksas programmēšanas apguves vietne iesācējiem un lietpratējiem ar teoriju un uzdevumiem",
+    "Atjautīgi programmēšanas uzdevumi iesācējiem un lietpratējiem.",
   navItems: [
     // {
     //   label: "Uzdevumi",

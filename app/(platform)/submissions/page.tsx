@@ -10,6 +10,11 @@ import MySubmissionsCheckbox from "./my-checkbox";
 import whoami from "@/lib/user/whoami";
 import { listSubmissionsServerSide } from "@/lib/subm/list-ss";
 import { PaginatedSubmListResponse } from "@/types/subm";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Iesūtījumi",
+};
 
 // This is the correct pattern for server components in Next.js
 export default async function SubmissionListServerComponent(props: {

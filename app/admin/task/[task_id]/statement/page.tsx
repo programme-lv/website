@@ -4,6 +4,21 @@ import RestrictedPleaseLogin from "@/components/restricted-please-login";
 import { getTaskById } from "@/lib/task/tasks";
 import TaskAdminNav from "@/components/task-admin-nav";
 import StatementEditForm from "./statement";
+import { Metadata } from "next";
+
+export async function generateMetadata({
+    params,
+}: {
+    params: Promise<{ task_id: string }>;
+}): Promise<Metadata> {
+    const { task_id } = await params;
+    const response = await getTaskById(task_id);
+    const task = response.data;
+
+    return {
+        title: task ? `Formulējums: ${task.task_full_name}` : `Admin: ${task_id}`,
+    };
+}
 
 export default async function StatementPage({
     params,

@@ -6,6 +6,18 @@ import "katex/dist/katex.min.css";
 import TestResultTable from "@/components/test-result-table";
 import ShikiCodeBlock from "@/components/ro-shiki-code";
 import { getSubmission } from "@/lib/fetch-subm";
+import { Metadata } from "next";
+
+export async function generateMetadata({
+	params,
+}: {
+	params: Promise<{ subm_id: string }>;
+}): Promise<Metadata> {
+	const { subm_id } = await params;
+	return {
+		title: `Iesūtījums #${subm_id.slice(0, 8)}`,
+	};
+}
 
 export default async function Page({
 	params,

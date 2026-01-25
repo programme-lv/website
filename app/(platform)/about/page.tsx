@@ -1,6 +1,11 @@
 import Layout from "@/components/layout";
 import styles from "./about.module.css";
 import { TextLink } from "@/components/text-link";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Par mums",
+};
 
 function Content() {
 	return (
