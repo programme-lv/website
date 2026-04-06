@@ -34,7 +34,7 @@ export default async function TaskListServerComponent() {
 
   return (
     <Layout breadcrumbs={breadcrumbs} active="tasks">
-      <div className="px-4 pt-1">
+      <div className="px-2 sm:px-4 pt-1">
         <TaskList tasks={tasks.data ?? []} userMaxScores={userMaxScores} />
       </div>
     </Layout>
