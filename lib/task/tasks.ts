@@ -4,7 +4,7 @@ import { Task, TaskPreview } from "@/types/task";
 import { ApiResponse } from "../api-response";
 import { API_HOST } from "../config";
 import { cookies } from "next/headers";
-import { revalidateTag } from "next/cache";
+import { updateTag } from "next/cache";
 
 export const getTaskById = async (
   taskId: string,
@@ -75,13 +75,13 @@ export const updateTaskStatement = async (
     throw new Error(`Error updating task statement for ID: ${taskId}`);
   }
 
-  revalidateTag(`task-${taskId}`);
+  updateTag(`task-${taskId}`);
 
   return response.json();
 };
 
 export const revalidateTask = async (taskId: string) => {
-  revalidateTag(`task-${taskId}`);
+  updateTag(`task-${taskId}`);
 };
 
 export const deleteTaskImage = async (taskId: string, filename: string): Promise<ApiResponse<null>> => {
@@ -102,7 +102,7 @@ export const deleteTaskImage = async (taskId: string, filename: string): Promise
     throw new Error(`Error deleting task image for task ID: ${taskId}, filename: ${filename}`);
   } 
 
-  revalidateTag(`task-${taskId}`);
+  updateTag(`task-${taskId}`);
 
   return response.json();
 }

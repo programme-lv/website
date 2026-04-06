@@ -1,5 +1,5 @@
 "use client";
-import React, { ReactElement, ReactNode } from "react";
+import React from "react";
 import ReactMarkdown from "react-markdown";
 import type { Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -62,7 +62,10 @@ export default function MarkdownRenderer({ content }: { content: string }) {
     console.log(content);
     const components: Components = {
         pre: ({node, children, ...props }) => {
-            if(children && (children as ReactElement).props.node.tagName === "code") {
+            if (
+                React.isValidElement<{ node?: { tagName?: string } }>(children) &&
+                children.props.node?.tagName === "code"
+            ) {
                 return <>{children}</>;
             }
             return <pre {...props}>{children}</pre>;
