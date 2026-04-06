@@ -77,6 +77,7 @@ type TaskPreview = {
     difficulty_rating: 1 | 2 | 3 | 4 | 5;
     origin_olympiad?: string;
     origin_note?: string;
+    origin_note_short?: string;
     md_statement_story: string;
 };
 

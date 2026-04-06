@@ -51,7 +51,7 @@ import renderMd, { renderMdLite } from "@/lib/render-md";
 import { listProgrammingLanguages } from "@/lib/langs";
 import { createSubmission } from "@/lib/subms";
 import TaskDifficultyChip from "@/components/task-difficulty-chip";
-import LIO_LOGO from "@/public/lio-logo.png";
+import LIO_LOGO from "@/public/lio-logo-small-no-text.webp";
 import CodeBlock from "@/components/code-block";
 import GenericButton from "@/components/generic-button";
 import { ProgrammingLanguage } from "@/types/proglv";

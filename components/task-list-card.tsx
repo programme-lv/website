@@ -1,5 +1,5 @@
 "use client";
-import lio_logo from "@/public/lio-logo.png";
+import lio_logo from "@/public/lio-logo-small-no-text.webp";
 
 import React, { useRef, useEffect, useState } from "react";
 import { Skeleton } from "@heroui/react";
@@ -20,6 +20,7 @@ type TaskCardProps = {
 	illustr_img?: IllustrationImage;
 	md_statement_story?: string;
 	origin_note?: string;
+	origin_note_short?: string;
 	user_max_score?: MaxScore;
 };
 
@@ -56,6 +57,11 @@ function TaskCard(props: TaskCardProps) {
 	// }, []);
 
 	const solve_state = getSolveState(props.user_max_score);
+	const mobileOriginNote = props.origin_note_short ?? props.origin_note;
+
+	const lioLogoAspectRatio = 9/10; // width/height
+	const lioLogoHeight = 33;
+	const lioLogoWidth = Math.round(lioLogoHeight * lioLogoAspectRatio);
 
 	return (
 		(<div
@@ -149,12 +155,12 @@ function TaskCard(props: TaskCardProps) {
 							</div>
 						</div>
 
-						<div className="flex justify-between items-center mt-1">
-							<div className="flex items-center">
+						<div className="flex justify-between items-center mt-1.5">
+							<div className="flex items-center min-w-0">
 								{props.origin_olympiad === "LIO" && (
-									<div className="w-[48px] h-[37px] min-w-[48px]">
+									<div style={{ width: `${lioLogoWidth}px`, height: `${lioLogoHeight}px`, minWidth: `${lioLogoWidth}px` }}>
 										{olympLogoLoading && (
-											<Skeleton className="w-[48px] h-[37px] absolute rounded-sm" />
+											<Skeleton style={{ width: `${lioLogoWidth}px`, height: `${lioLogoHeight}px` }} className="absolute rounded-sm" />
 										)}
 										<Image
 											alt="Latvijas informātikas olimpiādes logo"
@@ -165,25 +171,25 @@ function TaskCard(props: TaskCardProps) {
 										/>
 									</div>
 								)}
-								{/* <div className="hidden sm:block"> */}
-								{props.origin_note && props.origin_note.length >= 80 && (
-									<div className="text-xs text-gray-700 ms-1 sm:ms-2 text-balance max-w-[30em] max-h-[2rem] overflow-hidden">
-										{props.origin_note}
-									</div>
-								)}
-								{props.origin_note && props.origin_note.length < 80 && (
-									<div className="text-xs text-gray-700 ms-1 sm:ms-2 text-balance max-w-[15em] max-h-[2rem] overflow-hidden">
-										{props.origin_note}
-									</div>
-								)}
-								{/* </div>
-								<div className="block sm:hidden">
-								{props.origin_note && (
-									<div className="text-xs text-gray-700 ms-2 text-balance max-w-[30em] max-h-[3rem] overflow-hidden">
-										{props.origin_note}
-									</div>
-								)}
-								</div> */}
+								<div className="hidden sm:block min-w-0">
+									{props.origin_note && props.origin_note.length >= 80 && (
+										<div className="text-xs text-gray-800 ms-1 sm:ms-2 text-balance max-w-[30em] max-h-[2rem] overflow-hidden">
+											{props.origin_note}
+										</div>
+									)}
+									{props.origin_note && props.origin_note.length < 80 && (
+										<div className="text-xs text-gray-800 ms-1 sm:ms-2 text-balance max-w-[15em] max-h-[2rem] overflow-hidden">
+											{props.origin_note}
+										</div>
+									)}
+								</div>
+								<div className="block sm:hidden min-w-0">
+									{mobileOriginNote && (
+										<div className={cn("text-xs text-gray-800 ms-1 text-balance max-h-[2rem] overflow-hidden", { "max-w-[15em]": mobileOriginNote.length < 80 })}>
+											{mobileOriginNote}
+										</div>
+									)}
+								</div>
 							</div>
 						</div>
 					</div>
