@@ -500,13 +500,13 @@ function TaskHeader({
 											{origin_olympiad === "LIO" && (
 												<>
 													{logoLoading && <Skeleton className="w-16 h-[50px] absolute rounded-md" />}
-													<div className="w-16 min-w-16">
+													<div className="w-12 min-w-12">
 														<Image
 															disableAnimation
 															alt="Latvijas Informātikas olimpiādes logo"
 															src={LIO_LOGO.src}
 															onLoad={() => setLogoLoading(false)}
-															width={64}
+															width={48}
 														/>
 													</div>
 												</>

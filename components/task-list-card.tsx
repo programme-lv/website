@@ -34,6 +34,21 @@ function getSolveState(user_max_score: MaxScore | undefined): "solved" | "attemp
 	return "attempted";
 }
 
+function insertNonBreakableSpaces(note?: string) {
+	if (!note) {
+		return note;
+	}
+
+	// Keep Latvian date abbreviations together, e.g. `2025. g.` and `m. g.`, by
+	// replacing the space before `g.` with a non-breaking space. In
+	// `/(\b\d{4}\.) g\./g`, `\b` is a word boundary, `\d{4}` matches 4 digits,
+	// `\.` matches a literal dot, and `$1` reuses the captured `2025.` part. The
+	// second regex, `/m\. g\./g`, matches the literal `m. g.` month-year suffix.
+	return note
+		.replace(/(\b\d{4}\.) g\./g, "$1\u00A0g.")
+		.replace(/m\. g\./g, "m.\u00A0g.");
+}
+
 function TaskCard(props: TaskCardProps) {
 	const cardRef = useRef<HTMLDivElement>(null);
 	// const [isWide, setIsWide] = useState(true);
@@ -57,7 +72,8 @@ function TaskCard(props: TaskCardProps) {
 	// }, []);
 
 	const solve_state = getSolveState(props.user_max_score);
-	const mobileOriginNote = props.origin_note_short ?? props.origin_note;
+	const originNote = insertNonBreakableSpaces(props.origin_note);
+	const mobileOriginNote = insertNonBreakableSpaces(props.origin_note_short ?? props.origin_note);
 
 	const lioLogoAspectRatio = 9/10; // width/height
 	const lioLogoHeight = 33;
@@ -172,14 +188,14 @@ function TaskCard(props: TaskCardProps) {
 									</div>
 								)}
 								<div className="hidden sm:block min-w-0">
-									{props.origin_note && props.origin_note.length >= 80 && (
+									{originNote && originNote.length >= 80 && (
 										<div className="text-xs text-gray-800 ms-1 sm:ms-2 text-balance max-w-[30em] max-h-[2rem] overflow-hidden">
-											{props.origin_note}
+											{originNote}
 										</div>
 									)}
-									{props.origin_note && props.origin_note.length < 80 && (
+									{originNote && originNote.length < 80 && (
 										<div className="text-xs text-gray-800 ms-1 sm:ms-2 text-balance max-w-[15em] max-h-[2rem] overflow-hidden">
-											{props.origin_note}
+											{originNote}
 										</div>
 									)}
 								</div>
