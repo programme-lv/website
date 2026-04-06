@@ -108,7 +108,7 @@ function TaskCard(props: TaskCardProps) {
 						{props.illustr_img && (
 							<>
 								{illstrImgLoading && (
-									<Skeleton className="w-[70px] h-[70px] absolute rounded-md" />
+									<Skeleton className="w-[70px] h-[70px] absolute rounded-sm" />
 								)}
 								<div className="w-[70px] max-w-[70px] flex-shrink-0">
 									<Image
