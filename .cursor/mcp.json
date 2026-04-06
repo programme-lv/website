@@ -13,6 +13,9 @@
         "-y",
         "@heroui/react-mcp@latest"
       ]
+    },
+    "heroui-migration": {
+      "url": "https://migration-mcp.heroui.com"
     }
   }
 }
