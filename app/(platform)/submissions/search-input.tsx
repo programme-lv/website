@@ -5,7 +5,6 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Input } from "@heroui/react";
 import GenericButton from "@/components/generic-button";
 import { IconSearch } from "@tabler/icons-react";
-import TextInput from "@/components/text-input";
 
 export default function SearchInput() {
     const router = useRouter();
@@ -17,9 +16,7 @@ export default function SearchInput() {
     // Update local state when URL params change (e.g., browser back/forward)
     useEffect(() => {
         const urlSearch = searchParams.get("search") || "";
-        if (urlSearch !== search) {
-            setSearch(urlSearch);
-        }
+        setSearch((prev) => (prev === urlSearch ? prev : urlSearch));
     }, [searchParams]);
 
     const handleSearch = () => {
@@ -38,7 +35,7 @@ export default function SearchInput() {
         });
     }
 
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
         if (e.key === 'Enter') {
             handleSearch();
         }
@@ -46,16 +43,25 @@ export default function SearchInput() {
 
     return (
         <div className="p-2 border-small border-divider rounded-sm bg-white flex flex-row gap-2 items-center">
-            <TextInput
+            {/* <TextInput
                 name="search"
                 placeholder="Meklēt"
                 value={search}
                 onChange={setSearch}
                 onKeyDown={handleKeyDown}
                 className="w-48"
+            /> */}
+            <Input
+                name="search"
+                placeholder="Meklēt"
+                value={search}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)}
+                onKeyDown={handleKeyDown}
+                className="w-48"
+                variant="secondary"
             />
             <GenericButton
-                className="!min-w-0"
+                className="min-w-0!"
                 icon={<IconSearch size={16} />}
                 size="sm"
                 onClick={handleSearch}

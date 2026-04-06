@@ -1,7 +1,5 @@
 "use client";
 
-import { HeroUIProvider } from "@heroui/system";
-import { useRouter } from "next/navigation";
 import {
   ThemeProvider as NextThemesProvider,
   type ThemeProviderProps,
@@ -39,8 +37,6 @@ export interface ProvidersProps {
 const queryClient = new QueryClient();
 
 export function Providers({ children, themeProps, propsUser }: ProvidersProps) {
-  const router = useRouter();
-
   const [user, setUser] = useState<User | null>(propsUser);
 
   const refreshUser = useCallback(async () => {
@@ -59,21 +55,19 @@ export function Providers({ children, themeProps, propsUser }: ProvidersProps) {
 
   // refresh user info every 10 seconds
   useEffect(() => {
-    const interval = setInterval(() => refreshUser, 10000);
+    const interval = setInterval(refreshUser, 10000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [refreshUser]);
 
   return (
     <QueryClientProvider client={queryClient}>
       <AuthContext.Provider
         value={{user,setUser}}
       >
-        <HeroUIProvider navigate={router.push}>
-          <NextThemesProvider {...themeProps}>
-            {children}
-          </NextThemesProvider>
-        </HeroUIProvider>
+        <NextThemesProvider {...themeProps}>
+          {children}
+        </NextThemesProvider>
       </AuthContext.Provider>
     </QueryClientProvider>
   );

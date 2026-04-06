@@ -1,14 +1,17 @@
-import { Link } from "@heroui/link";
-import { button as buttonStyles } from "@heroui/theme";
-
 import { title, subtitle } from "@/components/primitives";
 import { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Sākums",
 };
 
 export default function Home() {
+  const primaryLinkClasses =
+    "inline-flex items-center justify-center rounded-full bg-blue-600 px-5 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-700";
+  const secondaryLinkClasses =
+    "inline-flex items-center justify-center rounded-full border border-default-300 px-5 py-2.5 text-sm font-medium text-default-800 transition-colors hover:bg-gray-50";
+
   return (
     <>
       <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
@@ -24,26 +27,15 @@ export default function Home() {
 
         <div className="flex gap-3">
           <Link
-            // isDisabled
-            // isExternal
-            className={buttonStyles({
-              color: "primary",
-              radius: "full",
-              variant: "shadow",
-            })}
+            className={primaryLinkClasses}
             href="/auth/register"
-            // href={siteConfig.links.docs}
           >
             Reģistrēties
           </Link>
           <Link
-            // isDisabled
-            // isExternal
-            className={buttonStyles({ variant: "bordered", radius: "full" })}
-            // href={siteConfig.links.github}
+            className={secondaryLinkClasses}
             href="/auth/login"
           >
-            {/* <GithubIcon size={20} /> */}
             Ieiet portālā
           </Link>
         </div>

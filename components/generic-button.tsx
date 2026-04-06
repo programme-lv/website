@@ -29,13 +29,13 @@ export default function GenericButton({
   rounded = "md",
   ...props
 }: GenericButtonProps) {
-  const baseClasses = "relative inline-flex items-center justify-center rounded-md focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed";
+  const baseClasses = "relative inline-flex items-center justify-center rounded-md font-medium transition-colors focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed";
 
   const variantClasses = {
-    primary: "bg-primary text-white hover:bg-primary-600",
-    secondary: "bg-secondary text-white hover:bg-secondary-600",
-    success: "bg-success-600 text-white hover:bg-success-700",
-    warning: "bg-warning text-white hover:bg-warning-600",
+    primary: "bg-blue-600 text-white hover:bg-blue-700",
+    secondary: "bg-zinc-700 text-white hover:bg-zinc-800",
+    success: "bg-emerald-600 text-white hover:bg-emerald-700",
+    warning: "bg-amber-500 text-white hover:bg-amber-600",
     danger: "bg-red-600 text-white hover:bg-red-700",
     default: "bg-gray-200 text-gray-900 hover:bg-gray-300"
   };

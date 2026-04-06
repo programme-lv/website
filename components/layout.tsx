@@ -2,11 +2,6 @@
 import {
   Button,
   cn,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalHeader,
-  useDisclosure,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import Link from "next/link";
@@ -14,7 +9,7 @@ import Link from "next/link";
 import Sidebar from "@/components/sidebar";
 
 import User from "./navbar-user";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { IconInbox, IconListDetails, IconInfoCircle } from "@tabler/icons-react";
 import { AuthContext } from "@/app/providers";
 import { TextLink } from "./text-link";
@@ -36,30 +31,36 @@ const MobileNavigationModal = ({
   onClose,
 }: {
   isOpen: boolean;
-  onOpenChange: () => void;
+  onOpenChange: (open: boolean) => void;
   onClose: () => void;
 }) => (
-  <Modal
-    backdrop="blur"
-    className="mx-2"
-    isOpen={isOpen}
-    placement="center"
-    onOpenChange={onOpenChange}
-    hideCloseButton={true}
-  >
-    <ModalContent>
-      <ModalHeader className="flex flex-col gap-1 -mb-2">
-        Navigācijas izvēlne
-      </ModalHeader>
-      <ModalBody>
-        <div className="flex flex-col gap-8 mt-6 mb-10 mx-8">
+  !isOpen ? null : (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 md:hidden"
+      onClick={() => onOpenChange(false)}
+    >
+      <div
+        className="w-full max-w-sm rounded-md bg-white shadow-xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between border-b border-divider px-4 py-3">
+          <h2 className="text-base font-semibold">Navigācijas izvēlne</h2>
+          <button
+            className="rounded-md px-2 py-1 text-sm text-default-700 hover:bg-gray-100"
+            onClick={onClose}
+            type="button"
+          >
+            Aizvērt
+          </button>
+        </div>
+        <div className="flex flex-col gap-8 px-8 py-6">
           <Link href="/tasks" className="flex items-center gap-2" onClick={onClose}><IconListDetails />Uzdevumi </Link>
           <Link href="/submissions" className="flex items-center gap-2" onClick={onClose}><IconInbox />Iesūtījumi </Link>
           <Link href="/about" className="flex items-center gap-2" onClick={onClose}><IconInfoCircle />Par mums </Link>
         </div>
-      </ModalBody>
-    </ModalContent>
-  </Modal>
+      </div>
+    </div>
+  )
 );
 
 const MobileMenuButton = ({ onOpen }: { onOpen: () => void }) => (
@@ -67,7 +68,7 @@ const MobileMenuButton = ({ onOpen }: { onOpen: () => void }) => (
     <Button
       isIconOnly
       size="sm"
-      variant="light"
+      variant="ghost"
       onPress={onOpen}
     >
       <Icon
@@ -125,12 +126,7 @@ const Header = ({
 );
 
 const Layout: React.FC<LayoutProps> = ({ children, breadcrumbs, active }) => {
-  const {
-    isOpen: isMobileMenuOpen,
-    onOpen: onMobileMenuOpen,
-    onClose: onMobileMenuClose,
-    onOpenChange: onMobileMenuOpenChange,
-  } = useDisclosure();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const { user } = useContext(AuthContext);
   const userIsAdmin = user?.username === "admin";
@@ -139,8 +135,8 @@ const Layout: React.FC<LayoutProps> = ({ children, breadcrumbs, active }) => {
     <>
       <MobileNavigationModal
         isOpen={isMobileMenuOpen}
-        onOpenChange={onMobileMenuOpenChange}
-        onClose={onMobileMenuClose}
+        onOpenChange={setIsMobileMenuOpen}
+        onClose={() => setIsMobileMenuOpen(false)}
       />
 
       <div className="w-full">
@@ -149,7 +145,7 @@ const Layout: React.FC<LayoutProps> = ({ children, breadcrumbs, active }) => {
         <div className="md:ml-16">
           <Header
             breadcrumbs={breadcrumbs}
-            onMobileMenuOpen={onMobileMenuOpen}
+            onMobileMenuOpen={() => setIsMobileMenuOpen(true)}
           />
 
           {children}

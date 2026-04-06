@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Input, Textarea, Select, SelectItem } from "@heroui/react";
+import { Input, Textarea } from "@heroui/react";
 import { IconPlus, IconUpload } from "@tabler/icons-react";
 import FileUpload from "@/components/file-upload";
 import { listProgrammingLanguages } from "@/lib/langs";
@@ -126,112 +126,95 @@ export default function AddSolutionModal({ isOpen, onOpenChange, onSolutionAdded
 		}
 	};
 
+	if (!isOpen) {
+		return null;
+	}
+
 	return (
-		<Modal
-			isOpen={isOpen}
-			onOpenChange={handleClose}
-			isKeyboardDismissDisabled={isSubmitting}
-			size="2xl"
-			radius="sm"
-		>
-			<ModalContent>
-				{() => (
-					<>
-						<ModalHeader className="border-b border-divider py-3 mb-2">
-							Pievienot risinājumu
-						</ModalHeader>
+		<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={handleClose}>
+			<div className="w-full max-w-3xl rounded-md bg-white shadow-xl" onClick={(e) => e.stopPropagation()}>
+				<div className="border-b border-divider px-6 py-3 text-lg font-semibold">
+					Pievienot risinājumu
+				</div>
 
-						<ModalBody>
-							<div className="flex flex-col gap-4">
-								<FileUpload onFileSelect={handleFileSelect} acceptedTypes=".py,.cpp"
-									variant="secondary" size="sm" icon={<IconUpload size={16} />}>
-									Izvēlēties risinājuma failu
-								</FileUpload>
+				<div className="max-h-[80vh] overflow-y-auto p-6">
+					<div className="flex flex-col gap-4">
+						<FileUpload onFileSelect={handleFileSelect} acceptedTypes=".py,.cpp"
+							variant="secondary" size="sm" icon={<IconUpload size={16} />}>
+							Izvēlēties risinājuma failu
+						</FileUpload>
 
-								<Input
-									label="Faila nosaukums"
-									placeholder="piemēram, solution1.py"
-									value={formData.filename}
-									onChange={(e) => setFormData(prev => ({ ...prev, filename: e.target.value }))}
-									size="sm"
-									variant="underlined"
-									isRequired
-								/>
+						<Input
+							label="Faila nosaukums"
+							placeholder="piemēram, solution1.py"
+							value={formData.filename}
+							onChange={(e) => setFormData(prev => ({ ...prev, filename: e.target.value }))}
+							size="sm"
+							isRequired
+						/>
 
-								<div className="flex flex-col gap-1">
-									{languages && (
-										<Select
-											label="Programmēšanas valoda"
-											isRequired
-											className="max-w-full"
-											radius="sm"
-											classNames={{
-												popoverContent: "rounded-small border border-divider",
-											}}
-											disallowEmptySelection
-											selectedKeys={[formData.programmingLanguage]}
-											size="sm"
-											variant="underlined"
-											disableAnimation
-											onSelectionChange={(selectedKeys) => {
-												const key = Array.from(selectedKeys)[0];
-												setFormData(prev => ({ ...prev, programmingLanguage: key as string }));
-											}}
-											items={languages.filter(lang => lang.enabled)}
-											selectionMode="single"
-										>
-											{(item) => <SelectItem key={item.id}>{item.fullName}</SelectItem>}
-										</Select>
-									)}
-								</div>
+						<div className="flex flex-col gap-1">
+							<label className="text-sm font-medium">Programmēšanas valoda</label>
+							<select
+								className="rounded-sm border border-divider bg-white px-3 py-2 text-sm"
+								value={formData.programmingLanguage}
+								onChange={(e) => setFormData(prev => ({ ...prev, programmingLanguage: e.target.value }))}
+							>
+								{languages?.filter((lang) => lang.enabled).map((item) => (
+									<option key={item.id} value={item.id}>
+										{item.fullName}
+									</option>
+								))}
+							</select>
+						</div>
 
-								<Input
-									label="Autors"
-									placeholder="Risinājuma autora vārds, uzvārds"
-									value={formData.author}
-									onChange={(e) => setFormData(prev => ({ ...prev, author: e.target.value }))}
-									size="sm"
-									variant="underlined"
-								/>
+						<Input
+							label="Autors"
+							placeholder="Risinājuma autora vārds, uzvārds"
+							value={formData.author}
+							onChange={(e) => setFormData(prev => ({ ...prev, author: e.target.value }))}
+							size="sm"
+						/>
 
-								<Input
-									label="Sagaidāmais rezultāts"
-									placeholder="piemēram: 100/100 @ 1.00s & 256 MiB"
-									value={formData.expectedResult}
-									onChange={(e) => setFormData(prev => ({ ...prev, expectedResult: e.target.value }))}
-									size="sm"
-									variant="underlined"
-									isRequired
-								/>
+						<Input
+							label="Sagaidāmais rezultāts"
+							placeholder="piemēram: 100/100 @ 1.00s & 256 MiB"
+							value={formData.expectedResult}
+							onChange={(e) => setFormData(prev => ({ ...prev, expectedResult: e.target.value }))}
+							size="sm"
+							isRequired
+						/>
 
-								<Textarea
-									label="Kods"
-									placeholder="Risinājuma pirmkods"
-									value={formData.content}
-									onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
-									minRows={10}
-									maxRows={20}
-									variant="underlined"
-									isRequired
-								/>
-							</div>
-						</ModalBody>
+						<Textarea
+							label="Kods"
+							placeholder="Risinājuma pirmkods"
+							value={formData.content}
+							onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
+							minRows={10}
+							maxRows={20}
+							isRequired
+						/>
+					</div>
+				</div>
 
-						<ModalFooter className="border-t border-divider">
-							<Button disableAnimation color="warning" variant="light" onPress={handleClose} isDisabled={isSubmitting}>
-								<span className="font-semibold">Atcelt</span>
-							</Button>
-							<GenericButton
-								variant="success"
-								icon={<IconPlus size={16} />}
-								onClick={handleSubmit}
-								isLoading={isSubmitting}>
-								Pievienot risinājumu
-							</GenericButton>
-						</ModalFooter>
-					</>
-				)}
-			</ModalContent>
-		</Modal>
+				<div className="flex justify-end gap-3 border-t border-divider px-6 py-4">
+					<button
+						className="rounded-md border border-divider px-4 py-2 text-sm hover:bg-gray-50 disabled:opacity-50"
+						onClick={handleClose}
+						type="button"
+						disabled={isSubmitting}
+					>
+						Atcelt
+					</button>
+					<GenericButton
+						variant="success"
+						icon={<IconPlus size={16} />}
+						onClick={handleSubmit}
+						isLoading={isSubmitting}>
+						Pievienot risinājumu
+					</GenericButton>
+				</div>
+			</div>
+		</div>
 	);
 } 

@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@heroui/react";
 import FileUpload from "@/components/file-upload";
 import GenericButton from "@/components/generic-button";
 import { IconDeviceFloppy, IconX } from "@tabler/icons-react";
@@ -46,67 +45,62 @@ export default function CheckerEditModal({ isOpen, onOpenChange, checkerCode, on
     const codeLines = code.split('\n').length;
     const codeLength = code.length;
 
+    if (!isOpen) {
+        return null;
+    }
+
     return (
-        <Modal
-            isOpen={isOpen}
-            onOpenChange={onOpenChange}
-            size="full"
-            radius="sm"
-        >
-            <ModalContent>
-                {(onClose) => (
-                    <>
-                        <ModalHeader className="border-b border-divider py-3">
-                            <div className="flex flex-col">
-                                <span className="text-lg font-semibold">Čekeris</span>
-                                <span className="text-sm text-default-600">
-                                    checker.cpp • C++ • Testlib.h • {codeLines} rindas • {codeLength} simboli
-                                </span>
-                            </div>
-                        </ModalHeader>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={onOpenChange}>
+            <div className="flex h-[90vh] w-full max-w-6xl flex-col rounded-md bg-white shadow-xl" onClick={(e) => e.stopPropagation()}>
+                <div className="border-b border-divider px-6 py-3">
+                    <div className="flex flex-col">
+                        <span className="text-lg font-semibold">Čekeris</span>
+                        <span className="text-sm text-default-600">
+                            checker.cpp • C++ • Testlib.h • {codeLines} rindas • {codeLength} simboli
+                        </span>
+                    </div>
+                </div>
 
-                        <ModalBody className="flex flex-col gap-3">
-                            <div>
-                                <FileUpload
-                                    acceptedTypes=".cpp,.cc,.c"
-                                    size="sm"
-                                    onFileSelect={handleFileUpload}
-                                    isDisabled={isUploadingChecker}
-                                    isLoading={isUploadingChecker}
-                                >
-                                    {isUploadingChecker ? "Augšupielādē..." : "Augšupielādēt čekeri (.cpp)"}
-                                </FileUpload>
-                            </div>
-                            <textarea
-                                value={code}
-                                onChange={(e) => setCode(e.target.value)}
-                                className="w-full flex-1 p-2 border border-divider rounded-sm bg-white font-mono text-sm resize-none"
-                                placeholder="Ievadiet čekera kodu..."
-                            />
-                        </ModalBody>
+                <div className="flex flex-1 flex-col gap-3 overflow-hidden p-6">
+                    <div>
+                        <FileUpload
+                            acceptedTypes=".cpp,.cc,.c"
+                            size="sm"
+                            onFileSelect={handleFileUpload}
+                            isDisabled={isUploadingChecker}
+                            isLoading={isUploadingChecker}
+                        >
+                            {isUploadingChecker ? "Augšupielādē..." : "Augšupielādēt čekeri (.cpp)"}
+                        </FileUpload>
+                    </div>
+                    <textarea
+                        value={code}
+                        onChange={(e) => setCode(e.target.value)}
+                        className="w-full flex-1 p-2 border border-divider rounded-sm bg-white font-mono text-sm resize-none"
+                        placeholder="Ievadiet čekera kodu..."
+                    />
+                </div>
 
-                        <ModalFooter className="border-t border-divider">
-                            <GenericButton
-                                size="sm"
-                                variant="secondary"
-                                icon={<IconX size={16} />}
-                                onClick={onClose}
-                            >
-                                Atcelt
-                            </GenericButton>
-                            <GenericButton
-                                size="sm"
-                                variant="success"
-                                icon={<IconDeviceFloppy size={16} />}
-                                onClick={handleSave}
-                                disabled={!hasChanges}
-                            >
-                                Saglabāt čekeri
-                            </GenericButton>
-                        </ModalFooter>
-                    </>
-                )}
-            </ModalContent>
-        </Modal>
+                <div className="flex justify-end gap-3 border-t border-divider px-6 py-4">
+                    <GenericButton
+                        size="sm"
+                        variant="secondary"
+                        icon={<IconX size={16} />}
+                        onClick={onOpenChange}
+                    >
+                        Atcelt
+                    </GenericButton>
+                    <GenericButton
+                        size="sm"
+                        variant="success"
+                        icon={<IconDeviceFloppy size={16} />}
+                        onClick={handleSave}
+                        disabled={!hasChanges}
+                    >
+                        Saglabāt čekeri
+                    </GenericButton>
+                </div>
+            </div>
+        </div>
     );
 } 

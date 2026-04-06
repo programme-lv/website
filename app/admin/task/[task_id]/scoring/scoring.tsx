@@ -1,7 +1,7 @@
 "use client";
 import GenericButton from "@/components/generic-button";
 import GenericTable, { Column } from "@/components/generic-table";
-import { Checkbox } from "@heroui/checkbox";
+import { Checkbox } from "@heroui/react";
 import { IconDeviceFloppy } from "@tabler/icons-react";
 import { useState } from "react";
 

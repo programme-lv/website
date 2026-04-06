@@ -56,6 +56,7 @@ export default async function RootLayout({
       </head>
       
       <body
+        suppressHydrationWarning
         className={clsx(
           "min-h-screen antialiased",
         )}

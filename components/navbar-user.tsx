@@ -8,27 +8,21 @@ import {
     DropdownTrigger,
 } from "@heroui/react";
 import { IconChevronRight, IconLogout, IconUser } from "@tabler/icons-react";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 
 import { AuthContext } from "@/app/providers";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { logoutUser } from "@/lib/auth";
 import GenericButton from "./generic-button";
 import AuthModal from "./auth-modal";
 
 export default function User() {
     const router = useRouter();
+    const pathname = usePathname();
     const authContext = useContext(AuthContext);
     const user = authContext.user;
 
     const [isAuthOpen, setIsAuthOpen] = useState(false);
-    const [redirectValue, setRedirectValue] = useState("");
-
-    useEffect(() => {
-        if (typeof window !== "undefined") {
-            setRedirectValue(window.location.pathname);
-        }
-    }, []);
 
     return (
         <div className="flex items-center gap-3">
@@ -61,19 +55,12 @@ export default function User() {
                         type="login"
                         isOpen={isAuthOpen}
                         onOpenChange={setIsAuthOpen}
-                        redirect={redirectValue}
+                        redirect={pathname}
                     />
                 </>
             )}
             {user && (
-                <Dropdown
-                    placement="bottom-end"
-                    disableAnimation
-                    radius="sm"
-                    classNames={{
-                        content: "rounded-md",
-                    }}
-                >
+                <Dropdown>
                     <DropdownTrigger>
                         <button className="outline-none transition-transform flex gap-3 items-center">
                             <div className="text-default-800 text-small">{user.username}</div>
@@ -82,14 +69,13 @@ export default function User() {
                                 color="success"
                                 content=""
                                 placement="bottom-right"
-                                shape="circle"
                                 size="sm"
                             >
                                 <Avatar size="sm" />
                             </Badge>
                         </button>
                     </DropdownTrigger>
-                    <DropdownMenu aria-label="Profile Actions" variant="flat" onAction={async (key) => {
+                    <DropdownMenu aria-label="Profile Actions" onAction={async (key) => {
                         const actionKey = String(key);
                         if (actionKey === "profile") {
                             router.push(`/users/${user.username}`);

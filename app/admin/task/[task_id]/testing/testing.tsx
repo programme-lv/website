@@ -3,7 +3,6 @@
 import FileUpload from "@/components/file-upload";
 import GenericButton from "@/components/generic-button";
 import { TextLink } from "@/components/text-link";
-import { NumberInput } from "@heroui/number-input";
 import { IconDeviceFloppy, IconEdit } from "@tabler/icons-react";
 import { useState } from "react";
 import CheckerEditModal from "./checker-edit-modal";
@@ -74,31 +73,28 @@ export default function TestingEditForm() {
                     <h3 className="font-semibold">Ierobežojumi</h3>
                 </div>
                 <div className="flex flex-row gap-3 p-2 bg-white border border-divider rounded-sm w-max">
-                    <NumberInput
-                        value={constraints.cpu_time_sec}
-                        disableAnimation
-                        labelPlacement="outside"
-                        placeholder="?"
-                        isRequired
-                        size="sm"
-                        formatOptions={{style: "decimal", minimumFractionDigits: 1, maximumFractionDigits: 1}}
-                        label="CPU laiks [s]"
-                        fullWidth={false}
-                        step={0.1}
-                        classNames={{ inputWrapper: "border border-divider rounded-small" }}
-                        onValueChange={(value) => updateConstraint('cpu_time_sec', value)}
-                    />
-                    <NumberInput
-                        value={constraints.mem_mib}
-                        size="sm"
-                        isRequired
-                        labelPlacement="outside"
-                        placeholder="?"
-                        label="Atmiņa [MiB]"
-                        fullWidth={false}
-                        classNames={{ inputWrapper: "border border-divider rounded-small" }}
-                        onValueChange={(value) => updateConstraint('mem_mib', value)}
-                    />
+                    <label className="flex flex-col gap-1 text-sm">
+                        <span>CPU laiks [s]</span>
+                        <input
+                            className="w-28 rounded-sm border border-divider px-3 py-2"
+                            min="0"
+                            step="0.1"
+                            type="number"
+                            value={constraints.cpu_time_sec}
+                            onChange={(e) => updateConstraint("cpu_time_sec", Number(e.target.value))}
+                        />
+                    </label>
+                    <label className="flex flex-col gap-1 text-sm">
+                        <span>Atmiņa [MiB]</span>
+                        <input
+                            className="w-32 rounded-sm border border-divider px-3 py-2"
+                            min="0"
+                            step="1"
+                            type="number"
+                            value={constraints.mem_mib}
+                            onChange={(e) => updateConstraint("mem_mib", Number(e.target.value))}
+                        />
+                    </label>
                 </div>
                 <div>
                 <GenericButton

@@ -6,8 +6,7 @@ import GenericButton from "@/components/generic-button";
 
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { NumberInput } from "@heroui/number-input";
-import { Checkbox } from "@heroui/checkbox";
+import { Checkbox } from "@heroui/react";
 import { statusTranslations } from "@/components/submission-table";
 import { listSubmissionsClientSide } from "@/lib/subm/list";
 
@@ -67,8 +66,28 @@ export default function SubmAdminList({ submPage }: { submPage: PaginatedSubmLis
             {/* <button onClick={() => refetch()}>Refresh</button> */}
             <div className="flex flex-row gap-2 items-center justify-start">
                 <div className="flex flex-row gap-2 items-center">
-                    <NumberInput fullWidth={false} size="sm" value={currentPage} onValueChange={setCurrentPage} label="Page" min={1} />
-                    <NumberInput fullWidth={false} size="sm" value={limit} onValueChange={setLimit} label="Limit" />
+                    <label className="flex flex-col gap-1 text-sm">
+                        <span>Page</span>
+                        <input
+                            className="w-20 rounded-sm border border-divider px-3 py-2"
+                            min="1"
+                            step="1"
+                            type="number"
+                            value={currentPage}
+                            onChange={(e) => setCurrentPage(Number(e.target.value))}
+                        />
+                    </label>
+                    <label className="flex flex-col gap-1 text-sm">
+                        <span>Limit</span>
+                        <input
+                            className="w-20 rounded-sm border border-divider px-3 py-2"
+                            min="1"
+                            step="1"
+                            type="number"
+                            value={limit}
+                            onChange={(e) => setLimit(Number(e.target.value))}
+                        />
+                    </label>
                     <GenericButton variant="primary" onClick={() => refetch()}>
                         Refresh
                     </GenericButton>

@@ -15,8 +15,7 @@ export default function AuthCardWithBG(props: { type: "login" | "register" }) {
     <div
       className="flex min-h-screen relative w-screen items-center justify-center overflow-hidden bg-content1 p-2 pt-16 lg:px-8"
       style={{
-        backgroundImage: `url(${Buyukada.src})`,
-        backgroundSize: "cover",
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
         backgroundPosition: "center",
       }}
     >

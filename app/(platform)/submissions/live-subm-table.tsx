@@ -55,11 +55,17 @@ export default function RealTimeSubmTable({
   const { user } = useContext(AuthContext);
 
   useEffect(() => {
-    const params = new URLSearchParams(searchParams.toString());
-    if(params.get("my") === "true" && !user) {
-      params.delete("my");
+    if (searchParams.get("my") !== "true" || user) {
+      return;
     }
-    router.push(`${pathname}?${params.toString()}`);
+
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("my");
+
+    const nextQuery = params.toString();
+    const nextUrl = nextQuery ? `${pathname}?${nextQuery}` : pathname;
+
+    router.replace(nextUrl);
   }, [user, pathname, router, searchParams]);
 
   // Fetch submissions data with a polling interval of 2 seconds

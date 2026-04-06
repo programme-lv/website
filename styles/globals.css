@@ -1,6 +1,5 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@import "@heroui/styles";
 
 /* Code block line numbers */
 .code-block code {
@@ -33,4 +32,96 @@ strong {
 
 :root {
   --bg-color: #FAFAFA;
+  --legacy-divider: rgb(228 228 231);
+  --legacy-default-300: rgb(212 212 216);
+  --legacy-default-500: rgb(113 113 122);
+  --legacy-default-600: rgb(82 82 91);
+  --legacy-default-700: rgb(63 63 70);
+  --legacy-default-800: rgb(39 39 42);
+  --legacy-default-900: rgb(24 24 27);
+  --legacy-background: #ffffff;
+  --legacy-content1: #fafafa;
+}
+
+.text-tiny {
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
+.text-small {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.text-medium {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+.rounded-small {
+  border-radius: 0.375rem;
+}
+
+.border-small {
+  border-width: 1px;
+}
+
+.border-b-small {
+  border-bottom-width: 1px;
+}
+
+.border-r-small {
+  border-right-width: 1px;
+}
+
+.border-divider {
+  border-color: var(--legacy-divider);
+}
+
+.border-default-300 {
+  border-color: var(--legacy-default-300);
+}
+
+.text-default-500 {
+  color: var(--legacy-default-500);
+}
+
+.text-default-600 {
+  color: var(--legacy-default-600);
+}
+
+.text-default-700 {
+  color: var(--legacy-default-700);
+}
+
+.text-default-800 {
+  color: var(--legacy-default-800);
+}
+
+.text-default-900 {
+  color: var(--legacy-default-900);
+}
+
+.text-default-foreground {
+  color: var(--legacy-default-900);
+}
+
+.bg-background {
+  background-color: var(--legacy-background);
+}
+
+.bg-content1 {
+  background-color: var(--legacy-content1);
+}
+
+@layer components {
+  .input {
+    @apply rounded-sm;
+  }
+  .modal__dialog {
+    @apply rounded-xl;
+  }
+  .modal__body {
+    @apply px-0.5;
+  }
 }

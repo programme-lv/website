@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+import Link from "next/link";
 import React, {
 	useEffect,
 	useState,
@@ -21,16 +23,8 @@ import {
 } from "@tabler/icons-react";
 import {
 	Button,
-	Divider,
-	Dropdown,
-	DropdownItem,
-	DropdownMenu,
-	DropdownTrigger,
-	Select,
-	SelectItem,
 	Skeleton,
 	cn,
-	Image,
 } from "@heroui/react";
 import MonacoEditor from "@monaco-editor/react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -120,7 +114,7 @@ const LeftSide = React.memo(function LeftSideInner({ task }: { task: Task }) {
 			<div className="h-full relative flex flex-col items-center gap-1 flex-grow">
 				<TaskHeader task_id={task.short_task_id} {...task} />
 
-				<Divider className="my-1" />
+				<div className="my-1 border-t border-divider" />
 				{task.default_md_statement && (
 					<MdView
 						statement_images={task.statement_images}
@@ -409,7 +403,6 @@ function TaskHeader({
 								<div className="max-w-[120px] w-[120px] flex-none">
 
 									<Image
-										disableAnimation
 										alt={task_full_name}
 										className="flex-none object-cover rounded-md"
 										src={illustration_img.http_url}
@@ -433,54 +426,37 @@ function TaskHeader({
 									)}
 								</div>
 								<div>
-									{(default_pdf_statement_url || userIsAdmin) && <Dropdown placement="bottom-end" disableAnimation classNames={{
-										content: "rounded-md"
-									}}>
-										<DropdownTrigger>
-											<Button isIconOnly size="sm" variant="light">
+									{(default_pdf_statement_url || userIsAdmin) && (
+										<div className="flex items-center gap-2">
+											{default_pdf_statement_url && (
+												<a
+													aria-label="Atvērt oriģinālo PDF"
+													className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-divider text-default-700 transition-colors hover:bg-gray-50"
+													href={default_pdf_statement_url}
+													target="_blank"
+													rel="noreferrer"
+												>
+													<IconFileTypePdf height={20} width={20} />
+												</a>
+											)}
+											{userIsAdmin && (
+												<Link
+													aria-label="Rediģēt uzdevumu"
+													className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-divider text-default-700 transition-colors hover:bg-gray-50"
+													href={`/admin/task/${task_id}`}
+												>
+													<IconPencil height={18} width={18} />
+												</Link>
+											)}
+											<Button isIconOnly size="sm" variant="outline" isDisabled>
 												<IconMenu2
 													className="text-default-700"
 													height={20}
 													width={20}
 												/>
 											</Button>
-										</DropdownTrigger>
-										<DropdownMenu
-											aria-label="Static Actions"
-											variant="flat"
-										// disabledKeys={
-										// 	default_pdf_statement_url ? [] : ["open-original-pdf"]
-										// }
-										>
-											<>
-												{default_pdf_statement_url && (
-													<DropdownItem
-														disableAnimation
-														key="open-original-pdf"
-														className="rounded-md"
-														endContent={
-															<IconFileTypePdf className="text-default-700" />
-														}
-														href={default_pdf_statement_url}
-														target="_blank"
-													>
-														Atvērt oriģinālo PDF
-													</DropdownItem>
-												)}
-												{userIsAdmin && (
-													<DropdownItem
-														disableAnimation
-														key="edit-task"
-														className="rounded-md"
-														endContent={<IconPencil className="text-default-700" />}
-														href={`/admin/task/${task_id}`}
-													>
-														Rediģēt uzdevumu
-													</DropdownItem>
-												)}
-											</>
-										</DropdownMenu>
-									</Dropdown>}
+										</div>
+									)}
 								</div>
 							</div>
 							<div className="flex flex-grow gap-2">
@@ -489,8 +465,9 @@ function TaskHeader({
 										<Image
 											alt={task_full_name}
 											className="flex-none object-cover"
-											disableSkeleton
 											src={illustration_img.http_url}
+											height={100}
+											width={100}
 										/>
 									</div>
 								)}
@@ -502,11 +479,11 @@ function TaskHeader({
 													{logoLoading && <Skeleton className="w-16 h-[50px] absolute rounded-md" />}
 													<div className="w-12 min-w-12">
 														<Image
-															disableAnimation
 															alt="Latvijas Informātikas olimpiādes logo"
 															src={LIO_LOGO.src}
 															onLoad={() => setLogoLoading(false)}
 															width={48}
+															height={53}
 														/>
 													</div>
 												</>
@@ -698,31 +675,16 @@ function LanguageSelect({
 	});
 
 	return (
-		<Select
-			className="max-w-48"
-			radius="sm"
-			classNames={{
-				popoverContent: "rounded-small border-small border-divider",
-			}}
-			disallowEmptySelection
-			// label="Programmēšanas valoda"
-			selectedKeys={[selectedLanguage]}
-			size="sm"
-			variant="underlined"
-			disableAnimation
-			onSelectionChange={(selectedKeys) => {
-				if (selectedKeys === "all") {
-					setSelectedLanguage("cpp17");
-				} else {
-					const key = Array.from(selectedKeys)[0];
-					setSelectedLanguage((key as string) || "cpp17");
-				}
-			}}
-			items={languages}
-			disabledKeys={disabledKeys}
-			selectionMode="single"
+		<select
+			className="max-w-48 rounded-sm border border-divider bg-white px-2 py-2 text-sm"
+			value={selectedLanguage}
+			onChange={(e) => setSelectedLanguage(e.target.value || "cpp17")}
 		>
-			{(item) => <SelectItem key={item.id}>{item.fullName}</SelectItem>}
-		</Select>
+			{languages.map((item) => (
+				<option key={item.id} value={item.id} disabled={disabledKeys.includes(item.id)}>
+					{item.fullName}
+				</option>
+			))}
+		</select>
 	);
 }

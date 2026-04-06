@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button, useDisclosure } from "@heroui/react";
+import { Button } from "@heroui/react";
 import TestDetailsModal, { full_verdicts, verdict_colors } from "@/components/test-details-modal";
 import { TestRes } from "@/types/exec";
 import GenericTable, { Column } from "@/components/generic-table";
@@ -11,11 +11,11 @@ import { SubmEval } from "@/types/subm";
 
 export default function TestResultTable({ visible_details, subm_eval, test_results }: { visible_details: boolean, subm_eval: SubmEval, test_results: TestRes[] }) {
     const [selectedTest, setSelectedTest] = useState<TestRes | null>(null);
-    const { isOpen, onOpen: openTestDetailsModal, onOpenChange } = useDisclosure();
+    const [isOpen, setIsOpen] = useState(false);
 
     const openTestDetails = (test: TestRes) => {
         setSelectedTest(test);
-        openTestDetailsModal();
+        setIsOpen(true);
     };
 
     // set testgroup ids to be 1-indexed
@@ -70,7 +70,7 @@ export default function TestResultTable({ visible_details, subm_eval, test_resul
             width: "100px",
             render: (test) => (
                 <Button
-                    variant="light"
+                    variant="ghost"
                     size="sm"
                     onPress={() => openTestDetails(test)}
                     aria-label="Atvērt testa detaļas"
@@ -128,7 +128,7 @@ export default function TestResultTable({ visible_details, subm_eval, test_resul
 
             <TestDetailsModal
                 isOpen={isOpen}
-                onOpenChange={onOpenChange}
+                onOpenChange={setIsOpen}
                 test={selectedTest}
                 subm_eval={subm_eval}
             />

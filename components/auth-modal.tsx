@@ -1,7 +1,6 @@
 "use client";
 
-import React from "react";
-import { Modal, ModalContent, ModalBody } from "@heroui/react";
+import { Modal } from "@heroui/react";
 import AuthForm from "./auth-form";
 
 interface AuthModalProps {
@@ -13,23 +12,20 @@ interface AuthModalProps {
 
 export default function AuthModal({ type, isOpen, onOpenChange, redirect }: AuthModalProps) {
   return (
-    <Modal
-      isOpen={isOpen}
-      onOpenChange={onOpenChange}
-      hideCloseButton={false}
-      size="md"
-      placement="center"
-      scrollBehavior="inside"
-      radius="sm"
-      disableAnimation
-    >
-      <ModalContent>
-        {() => (
-          <ModalBody>
-            <AuthForm type={type} redirect={redirect} />
-          </ModalBody>
-        )}
-      </ModalContent>
+    <Modal >
+      <Modal.Backdrop
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        variant="blur"
+      >
+        <Modal.Container placement="center" scroll="inside" size="md">
+          <Modal.Dialog>
+            <Modal.Body>
+              <AuthForm type={type} redirect={redirect} />
+            </Modal.Body>
+          </Modal.Dialog>
+        </Modal.Container>
+      </Modal.Backdrop>
     </Modal>
   );
 }

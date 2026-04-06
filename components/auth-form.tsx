@@ -1,19 +1,15 @@
 import { useState, useContext } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import { AuthContext } from "@/app/providers";
 import { registerUser, loginUser } from "@/lib/auth";
 import Alert from "@/components/alert";
-import { Divider, Input } from "@heroui/react";
-import { Icon } from "@iconify/react";
-import Link from "next/link";
 import { Suspense } from "react";
 import { User } from "@/types/proglv";
 import GenericButton from "./generic-button";
 import { IconEye, IconEyeOff, IconLogin2, IconUserPlus } from "@tabler/icons-react";
 import { TextLink } from "./text-link";
-import TextInput from "./text-input";
+import { Input, Label } from "@heroui/react";
 
 
 function FormatError(error: string) {
@@ -32,7 +28,6 @@ export default function AuthForm({ type, redirect }: { type: "login" | "register
   const [lastName, setLastName] = useState("");
   const [repPassword, setRepPassword] = useState("");
   const authContext = useContext(AuthContext);
-  const router = useRouter();
   const [isVisible, setIsVisible] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const toggleVisibility = () => setIsVisible(!isVisible);
@@ -115,84 +110,120 @@ export default function AuthForm({ type, redirect }: { type: "login" | "register
             <span>Reģistrācija</span>
           </>
         ) : (
-          <>Pieslēgšanās</>
+          <>Sveicināts!</>
         )}
       </p>
       <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
-        <TextInput
-          isDisabled={disableInputs}
-          label="Lietotājvārds"
-          name="username"
-          value={username}
-          onChange={setUsername}
-        />
+        <div className="flex flex-col gap-1">
+          <Label>Lietotājvārds</Label>
+          <Input
+            aria-label="Lietotājvārds"
+            autoComplete="username"
+            className="border-divider border rounded-md py-3"
+            disabled={disableInputs}
+            name="username"
+            required
+            value={username}
+            variant="secondary"
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}
+          />
+        </div>
         {type === "register" && (
           <>
             <div className="flex flex-col md:flex-row gap-3">
-              <TextInput
-                className="flex-1"
-                isDisabled={disableInputs}
-                label="Vārds (neobligāts)"
-                name="firstName"
-                value={firstName}
-                onChange={setFirstName}
-              />
-              <TextInput
-                className="flex-1"
-                isDisabled={disableInputs}
-                label="Uzvārds (neobligāts)"
-                name="lastName"
-                value={lastName}
-                onChange={setLastName}
+              <div className="flex flex-1 flex-col gap-1">
+                <Label>Vārds (neobligāts)</Label>
+                <Input
+                  aria-label="Vārds (neobligāts)"
+                  className="border-divider border rounded-md py-3"
+                  disabled={disableInputs}
+                  name="firstName"
+                  value={firstName}
+                  variant="secondary"
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFirstName(e.target.value)}
+                />
+              </div>
+              <div className="flex flex-1 flex-col gap-1">
+                <Label>Uzvārds (neobligāts)</Label>
+                <Input
+                  aria-label="Uzvārds (neobligāts)"
+                  className="border-divider border rounded-md py-3"
+                  disabled={disableInputs}
+                  name="lastName"
+                  value={lastName}
+                  variant="secondary"
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setLastName(e.target.value)}
+                />
+              </div>
+            </div>
+            <div className="flex flex-col gap-1">
+              <Label>E-pasta adrese</Label>
+              <Input
+                aria-label="E-pasta adrese"
+                autoComplete="email"
+                className="border-divider border rounded-md py-3"
+                disabled={disableInputs}
+                name="email"
+                type="email"
+                value={email}
+                variant="secondary"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
               />
             </div>
-            <TextInput
-              isDisabled={disableInputs}
-              label="E-pasta adrese"
-              name="email"
-              type="email"
-              value={email}
-              onChange={setEmail}
-            />
           </>
         )}
         <div className="flex flex-col md:flex-row gap-3">
-          <TextInput
-            className="flex-1"
-            endContent={
-              <button type="button" onMouseDown={toggleVisibility}>
-                {isVisible ? (
-                  <IconEyeOff className="text-default-500" size={22}
-                  />
-                ) : (
-                  <IconEye className="text-default-500" size={22}/>
-                )}
-              </button>
-            }
-            isDisabled={disableInputs}
-            label="Parole"
-            name="password"
-            type={isVisible ? "text" : "password"}
-            value={password}
-            onChange={setPassword}
-          />
+          <div className="flex flex-1 flex-col gap-1">
+            <Label>Parole</Label>
+            <div className="relative">
+              <Input
+                aria-label="Parole"
+                autoComplete="password"
+                className="border-divider border rounded-md py-3 pr-10"
+                disabled={disableInputs}
+                name="password"
+                required
+                fullWidth
+                type={isVisible ? "text" : "password"}
+                value={password}
+                variant="secondary"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+              />
+              <div className="pointer-events-auto absolute inset-y-0 right-3 flex items-center">
+                <button type="button" onMouseDown={toggleVisibility}>
+                  {isVisible ? (
+                    <IconEyeOff className="text-default-500" size={22}
+                    />
+                  ) : (
+                    <IconEye className="text-default-500" size={22} />
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
           {type === "register" && (
-            <TextInput
-              className="flex-1"
-              isDisabled={disableInputs}
-              label="Apstipriniet paroli"
-              name="confirmPassword"
-              type="password"
-              value={repPassword}
-              onChange={setRepPassword}
-            />
+            <div className="flex flex-1 flex-col gap-1">
+              <Label>Apstipriniet paroli</Label>
+              <Input
+                aria-label="Apstipriniet paroli"
+                autoComplete="new-password"
+                className="border-divider border rounded-md py-3"
+                disabled={disableInputs}
+                name="confirmPassword"
+                required
+                type="password"
+                value={repPassword}
+                variant="secondary"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRepPassword(e.target.value)}
+              />
+            </div>
           )}
         </div>
         <div className="flex justify-center">
           <GenericButton
             rounded="lg"
             variant={type === "register" ? "success" : "primary"}
-            icon={type === "register" ? <IconUserPlus size={22}/> : <IconLogin2 size={22}/>}
+            icon={type === "register" ? <IconUserPlus size={22} /> : <IconLogin2 size={22} />}
             className="w-full"
             isLoading={
               loginMutation.status === 'pending' ||
@@ -222,9 +253,9 @@ export default function AuthForm({ type, redirect }: { type: "login" | "register
         <Alert message={error} type="error" onClose={() => setError(null)} />
       )}
       <div className="flex items-center gap-4 py-2">
-        <Divider className="flex-1" />
+        <div className="flex-1 border-t border-divider" />
         <p className="shrink-0 text-small text-default-500">VAI</p>
-        <Divider className="flex-1" />
+        <div className="flex-1 border-t border-divider" />
       </div>
       <Suspense>
         <GoToLoginOrRegister type={type} redirect={redirectParam ?? undefined} />

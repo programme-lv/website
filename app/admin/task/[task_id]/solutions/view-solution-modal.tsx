@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button } from "@heroui/react";
 
 interface ViewSolutionModalProps {
     isOpen: boolean;
@@ -13,46 +12,41 @@ interface ViewSolutionModalProps {
 }
 
 export default function ViewSolutionModal({ isOpen, onOpenChange, filename, pr_lang, author, expected_result, content }: ViewSolutionModalProps) {
+    if (!isOpen) {
+        return null;
+    }
+
     return (
-        <Modal
-            isOpen={isOpen}
-            onOpenChange={onOpenChange}
-            size="full"
-            radius="sm"
-        >
-            <ModalContent>
-                {(onClose) => (
-                    <>
-                        <ModalHeader className="border-b border-divider py-3">
-                            <div className="flex flex-col">
-                                <span className="text-lg font-semibold">Risinājuma kods</span>
-                                <span className="text-sm text-default-600">
-                                    {filename} • {pr_lang} • {author} • {content.split('\n').length} rindas • {content.length} simboli • {expected_result}
-                                </span>
-                            </div>
-                        </ModalHeader>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={onOpenChange}>
+            <div className="flex h-[90vh] w-full max-w-6xl flex-col rounded-md bg-white shadow-xl" onClick={(e) => e.stopPropagation()}>
+                <div className="border-b border-divider px-6 py-3">
+                    <div className="flex flex-col">
+                        <span className="text-lg font-semibold">Risinājuma kods</span>
+                        <span className="text-sm text-default-600">
+                            {filename} • {pr_lang} • {author} • {content.split('\n').length} rindas • {content.length} simboli • {expected_result}
+                        </span>
+                    </div>
+                </div>
 
-                        <ModalBody>
-                            <textarea
-                                value={content || ''}
-                                readOnly
-                                className="w-full h-full p-2 border border-divider rounded-sm bg-gray-50 font-mono text-sm resize-none"
-                                placeholder="Nav pieejams koda saturs"
-                            />
-                        </ModalBody>
+                <div className="flex-1 p-6">
+                    <textarea
+                        value={content || ''}
+                        readOnly
+                        className="h-full w-full p-2 border border-divider rounded-sm bg-gray-50 font-mono text-sm resize-none"
+                        placeholder="Nav pieejams koda saturs"
+                    />
+                </div>
 
-                        <ModalFooter className="border-t border-divider">
-                            <Button 
-                                color="primary" 
-                                variant="light"
-                                onPress={onClose}
-                            >
-                                Aizvērt
-                            </Button>
-                        </ModalFooter>
-                    </>
-                )}
-            </ModalContent>
-        </Modal>
+                <div className="flex justify-end border-t border-divider px-6 py-4">
+                    <button
+                        className="rounded-md border border-divider px-4 py-2 text-sm hover:bg-gray-50"
+                        onClick={onOpenChange}
+                        type="button"
+                    >
+                        Aizvērt
+                    </button>
+                </div>
+            </div>
+        </div>
     );
 }

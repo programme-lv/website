@@ -1,11 +1,11 @@
 "use client";
 import lio_logo from "@/public/lio-logo-small-no-text.webp";
+import Image from "next/image";
 
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useState } from "react";
 import { Skeleton } from "@heroui/react";
 
 import "katex/dist/katex.min.css"; // Import KaTeX CSS for styling
-import { Image } from "@heroui/image";
 
 import { renderMdLite } from "@/lib/render-md";
 import TaskDifficultyChip from "./task-difficulty-chip";
@@ -87,7 +87,7 @@ function TaskCard(props: TaskCardProps) {
 					{ "bg-yellow-50": solve_state === "attempted" },
 					{ "bg-white": solve_state === "todo" },
 					{ "bg-green-50": solve_state === "solved" },
-					"w-full border border-divider rounded-sm hover:border-blue-500",
+					"w-full rounded-sm border border-zinc-200",
 					{ "hover:border-green-500": props.difficulty_rating === 1 },
 					{ "hover:border-blue-500": props.difficulty_rating === 2 },
 					{ "hover:border-violet-500": props.difficulty_rating === 3 },
@@ -108,7 +108,6 @@ function TaskCard(props: TaskCardProps) {
 								)}
 								<div className="w-[120px] max-w-[120px] flex-shrink-0">
 									<Image
-										disableAnimation
 										alt={props.full_name}
 										className="h-full object-cover rounded-md"
 										height={120}
@@ -128,7 +127,6 @@ function TaskCard(props: TaskCardProps) {
 								)}
 								<div className="w-[70px] max-w-[70px] flex-shrink-0">
 									<Image
-										disableAnimation
 										alt={props.full_name}
 										className="h-full object-cover rounded-sm"
 										height={70}
@@ -182,7 +180,8 @@ function TaskCard(props: TaskCardProps) {
 											alt="Latvijas informātikas olimpiādes logo"
 											className="h-auto"
 											src={lio_logo.src}
-											radius="sm"
+											width={lioLogoWidth}
+											height={lioLogoHeight}
 											onLoad={() => setOlympLogoLoading(false)}
 										/>
 									</div>

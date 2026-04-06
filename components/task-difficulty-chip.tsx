@@ -13,9 +13,9 @@ export default function TaskDifficultyChip({ difficulty_rating }: { difficulty_r
   if (!config) return null;
 
   return (
-    <Chip className={config.className} size="sm" variant="flat">
+    <Chip className={config.className} size="sm" variant="soft">
       <span className="sm:hidden">{difficulty_rating}</span>
-      <span className="hidden sm:inline">{config.label}</span>
+      <span className="hidden sm:inline font-normal px-0.5">{config.label}</span>
     </Chip>
   );
 }
