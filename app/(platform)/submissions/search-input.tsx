@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useTransition } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Input } from "@heroui/react";
-import GenericButton from "@/components/generic-button";
+import { Button, Input } from "@heroui/react";
+import LoadingSpinner from "@/components/loading-spinner";
 import { IconSearch } from "@tabler/icons-react";
 
 export default function SearchInput() {
@@ -13,6 +13,11 @@ export default function SearchInput() {
     const [search, setSearch] = useState(searchParams.get("search") || "");
     const [isPending, startTransition] = useTransition();
 
+    const trimmedInput = search.trim();
+    const trimmedUrlSearch = (searchParams.get("search") ?? "").trim();
+    /** Empty field and no search in URL — nothing to run or clear. */
+    const canSubmitSearch = trimmedInput !== "" || trimmedUrlSearch !== "";
+
     // Update local state when URL params change (e.g., browser back/forward)
     useEffect(() => {
         const urlSearch = searchParams.get("search") || "";
@@ -20,6 +25,7 @@ export default function SearchInput() {
     }, [searchParams]);
 
     const handleSearch = () => {
+        if (!canSubmitSearch) return;
         const params = new URLSearchParams(searchParams.toString());
         if (search === "") {
             params.delete("search");
@@ -36,7 +42,7 @@ export default function SearchInput() {
     }
 
     const handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
-        if (e.key === 'Enter') {
+        if (e.key === "Enter" && canSubmitSearch) {
             handleSearch();
         }
     }
@@ -57,16 +63,24 @@ export default function SearchInput() {
                 value={search}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)}
                 onKeyDown={handleKeyDown}
-                className="w-48 min-h-8"
+                className="w-48 h-8"
                 variant="secondary"
             />
-            <GenericButton
-                className="min-w-0!"
-                icon={<IconSearch size={16} />}
+            <Button
+                isIconOnly
                 size="sm"
-                onClick={handleSearch}
-                isLoading={isPending}
-            />
+                variant="outline"
+                aria-label="Meklēt"
+                className="min-w-0 h-8 w-8 shrink-0"
+                onPress={handleSearch}
+                isDisabled={isPending || !canSubmitSearch}
+            >
+                {isPending ? (
+                    <LoadingSpinner className="h-4 w-4" />
+                ) : (
+                    <IconSearch className="text-default-700" size={16} />
+                )}
+            </Button>
         </div>
     )
 }
