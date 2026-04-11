@@ -29,7 +29,8 @@ export default function GenericButton({
   rounded = "md",
   ...props
 }: GenericButtonProps) {
-  const baseClasses = "relative inline-flex items-center justify-center rounded-md font-medium transition-colors focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed";
+  const baseClasses =
+    "relative inline-flex cursor-pointer items-center justify-center rounded-md font-medium transition-colors focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-focus)] disabled:cursor-not-allowed disabled:opacity-50";
 
   const variantClasses = {
     primary: "bg-blue-600 text-white hover:bg-blue-700",
