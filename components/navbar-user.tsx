@@ -69,7 +69,10 @@ export default function User() {
                             />
                         </Badge.Anchor>
                     </DropdownTrigger>
-                    <DropdownPopover className="min-w-[12rem]" placement="bottom end">
+                    <DropdownPopover
+                        className="min-w-48 rounded-md"
+                        placement="bottom end"
+                    >
                         <DropdownMenu
                             aria-label="Profile Actions"
                             onAction={async (key) => {
@@ -93,7 +96,7 @@ export default function User() {
                             <DropdownItem
                                 key="profile"
                                 textValue="Profils"
-                                className="gap-3"
+                                className="gap-3 rounded-md"
                             >
                                 <span className="flex w-full items-center justify-between gap-3">
                                     <span>Profils</span>
@@ -104,7 +107,7 @@ export default function User() {
                                 key="logout"
                                 variant="danger"
                                 textValue="Iziet no sistēmas"
-                                className="gap-3"
+                                className="gap-3 rounded-md"
                             >
                                 <span className="flex w-full items-center justify-between gap-3">
                                     <span>Iziet no sistēmas</span>
