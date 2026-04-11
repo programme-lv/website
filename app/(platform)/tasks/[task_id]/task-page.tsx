@@ -23,6 +23,8 @@ import {
 } from "@tabler/icons-react";
 import {
 	Button,
+	ListBox,
+	Select,
 	Skeleton,
 	cn,
 } from "@heroui/react";
@@ -47,7 +49,7 @@ import { createSubmission } from "@/lib/subms";
 import TaskDifficultyChip from "@/components/task-difficulty-chip";
 import LIO_LOGO from "@/public/lio-logo-small-no-text.webp";
 import CodeBlock from "@/components/code-block";
-import GenericButton from "@/components/generic-button";
+import LoadingSpinner from "@/components/loading-spinner";
 import { ProgrammingLanguage } from "@/types/proglv";
 import GenericTable from "@/components/generic-table";
 import MarkdownRenderer from "@/components/markdown-renderer";
@@ -582,29 +584,37 @@ int main() {
 	return (
 		<div className="flex flex-col flex-grow bg-white rounded-sm border-small border-divider p-2">
 			<div className="h-full w-full flex flex-col gap-2">
-				<div className="flex justify-end gap-3">
+				<div className="flex flex-wrap items-center justify-end gap-3">
 					<LanguageSelect
 						languages={languages}
 						selectedLanguage={selectedLanguage}
 						setSelectedLanguage={setSelectedLanguage}
 					/>
-					<div className="mt-2 flex justify-end gap-3">
-						{authContext.user ? (
-							<GenericButton
-								variant="primary"
-								size="sm"
-								isLoading={isLoading}
-								onClick={() => submitSolution()}
-								icon={<IconSend size={16} />}
-							>
-								Iesūtīt risinājumu
-							</GenericButton>
-						) : (
-							<GenericButton isDisabled size="sm">
-								Pieslēdzies, lai iesūtītu risinājumu!
-							</GenericButton>
-						)}
-					</div>
+					{authContext.user ? (
+						<Button
+							variant="primary"
+							size="sm"
+							isDisabled={isLoading}
+							onPress={() => void submitSolution()}
+							className="inline-flex h-8 min-h-8 items-center gap-2 rounded-sm font-medium"
+						>
+							Iesūtīt risinājumu
+							{isLoading ? (
+								<LoadingSpinner className="h-4 w-4" />
+							) : (
+								<IconSend size={16} aria-hidden />
+							)}
+						</Button>
+					) : (
+						<Button
+							variant="primary"
+							size="sm"
+							isDisabled
+							className="inline-flex h-8 min-h-8 items-center gap-2 rounded-sm font-medium"
+						>
+							Pieslēdzies, lai iesūtītu risinājumu!
+						</Button>
+					)}
 				</div>
 				<div style={{ flexGrow: 1, position: "relative" }}>
 					<div style={{ width: "100%", height: "100%", position: "absolute" }}>
@@ -655,36 +665,58 @@ function LanguageSelect({
 	selectedLanguage,
 	setSelectedLanguage,
 }: LanguageSelectProps) {
-	if (!languages) {
+	if (!languages?.length) {
 		return null;
 	}
 
-	const disabledKeys = languages
-		.filter((lang) => !lang.enabled)
-		.map((lang) => lang.id);
+	const disabledKeys = new Set(
+		languages.filter((lang) => !lang.enabled).map((lang) => lang.id)
+	);
 
-	// non disabled first, then by name
-	languages.sort((a, b) => {
-		if (disabledKeys.includes(a.id) && !disabledKeys.includes(b.id)) {
-			return 1;
-		}
-		if (!disabledKeys.includes(a.id) && disabledKeys.includes(b.id)) {
-			return -1;
-		}
+	const sorted = [...languages].sort((a, b) => {
+		const aDis = disabledKeys.has(a.id);
+		const bDis = disabledKeys.has(b.id);
+		if (aDis && !bDis) return 1;
+		if (!aDis && bDis) return -1;
 		return a.fullName.localeCompare(b.fullName);
 	});
 
+	const selectedKey =
+		selectedLanguage ||
+		sorted.find((l) => l.enabled)?.id ||
+		sorted[0]?.id;
+
 	return (
-		<select
-			className="max-w-48 rounded-sm border border-divider bg-white px-2 py-2 text-sm"
-			value={selectedLanguage}
-			onChange={(e) => setSelectedLanguage(e.target.value || "cpp17")}
+		<Select
+			className="w-full max-w-48"
+			variant="secondary"
+			selectedKey={selectedKey}
+			onSelectionChange={(key) => {
+				if (key !== null) setSelectedLanguage(String(key));
+			}}
 		>
-			{languages.map((item) => (
-				<option key={item.id} value={item.id} disabled={disabledKeys.includes(item.id)}>
-					{item.fullName}
-				</option>
-			))}
-		</select>
+			<Select.Trigger
+				className={cn(
+					"h-8 min-h-8 w-full justify-between gap-2 rounded-sm px-3 text-sm font-normal"
+				)}
+			>
+				<Select.Value />
+				<Select.Indicator />
+			</Select.Trigger>
+			<Select.Popover className="overflow-hidden rounded-sm">
+				<ListBox className="rounded-sm">
+					{sorted.map((lang) => (
+						<ListBox.Item
+							key={lang.id}
+							id={lang.id}
+							isDisabled={!lang.enabled}
+							textValue={lang.fullName}
+						>
+							{lang.fullName}
+						</ListBox.Item>
+					))}
+				</ListBox>
+			</Select.Popover>
+		</Select>
 	);
 }

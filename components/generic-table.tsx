@@ -8,6 +8,10 @@ export type Column<T> = {
   width?: string;
   render: (item: T, index: number) => React.ReactNode;
   cellClassNames?: (item: T, index: number) => string;
+  /** Applied to both header and body cells (e.g. responsive visibility). */
+  columnClassName?: string;
+  /** Optional `<col>` class (use `hidden xl:table-column` with `columnClassName: hidden xl:table-cell`). */
+  colgroupClassName?: string;
   colSpan?: number;
   headerColSpan?: number;
   skipRender?: boolean; // Used for columns that are spanned by others
@@ -71,11 +75,15 @@ export default function GenericTable<T>({
   });
 
   return (
-    <table className={cn("rounded-sm table-fixed w-max", className)}>
+    <table className={cn("rounded-sm table-fixed w-max min-w-0 max-w-full", className)}>
       {columns.some(col => col.width) && (
         <colgroup>
           {columns.map((col, i) => (
-            <col key={`col-${i}`} width={col.width} />
+            <col
+              key={`col-${i}`}
+              className={col.colgroupClassName}
+              width={col.width}
+            />
           ))}
         </colgroup>
       )}
@@ -89,7 +97,7 @@ export default function GenericTable<T>({
             return (
               <th 
                 key={`header-${col.key}`} 
-                className={cn("p-2 text-left font-medium", { "border-r": i !== columns.length - 1 }, { "text-left": col.headerAlign === "left" }, { "text-right": col.headerAlign === "right" }, { "text-center": col.headerAlign === "center" })}
+                className={cn("p-2 text-left font-medium", col.columnClassName, { "border-r": i !== columns.length - 1 }, { "text-left": col.headerAlign === "left" }, { "text-right": col.headerAlign === "right" }, { "text-center": col.headerAlign === "center" })}
                 colSpan={col.headerColSpan}
               >
                 {col.header}
@@ -108,7 +116,7 @@ export default function GenericTable<T>({
               {columns.map((col, j) => (
                 <td 
                   key={`skeleton-cell-${i}-${j}`} 
-                  className={cn(cellPaddingClass, "animate-pulse", { "border-r": j !== columns.length - 1 })}
+                  className={cn(cellPaddingClass, "animate-pulse", col.columnClassName, { "border-r": j !== columns.length - 1 })}
                   colSpan={col.colSpan}
                 >
                   <div className="bg-gray-300 rounded-sm w-full h-full text-gray-300">.</div>
@@ -125,7 +133,7 @@ export default function GenericTable<T>({
               {columns.map((col, j) => (
                 <td 
                   key={`cell-${keyExtractor(item, i)}-${col.key}`} 
-                  className={cn(cellPaddingClass, { "border-r": j !== columns.length - 1 }, { "text-right": col.align === "right" }, { "text-center": col.align === "center" }, col.cellClassNames?.(item, i), { "align-top": col.verticalAlign === "top" }, { "align-middle": col.verticalAlign === "middle" }, { "align-bottom": col.verticalAlign === "bottom" })}
+                  className={cn(cellPaddingClass, col.columnClassName, { "border-r": j !== columns.length - 1 }, { "text-right": col.align === "right" }, { "text-center": col.align === "center" }, col.cellClassNames?.(item, i), { "align-top": col.verticalAlign === "top" }, { "align-middle": col.verticalAlign === "middle" }, { "align-bottom": col.verticalAlign === "bottom" })}
                   colSpan={col.colSpan}
                 >
                   {col.render(item, i)}

@@ -13,6 +13,8 @@ type SubmissionsToolbarProps = {
   currentPage: number;
   totalPages: number;
   limit: number;
+  /** Total submissions (for mobile range summary). */
+  totalSubmissions: number;
 };
 
 function useHasActiveFilters(): boolean {
@@ -26,32 +28,60 @@ export default function SubmissionsToolbar({
   currentPage,
   totalPages,
   limit,
+  totalSubmissions,
 }: SubmissionsToolbarProps) {
   const [filtersOpen, setFiltersOpen] = useState(false);
   const hasActiveFilters = useHasActiveFilters();
 
+  const offset = (currentPage - 1) * limit;
+  const rangeFrom =
+    totalSubmissions === 0 ? 0 : Math.min(offset + 1, totalSubmissions);
+  const rangeTo =
+    totalSubmissions === 0
+      ? 0
+      : Math.min(offset + limit, totalSubmissions);
+
   return (
     <div className="w-full min-w-0 xl:w-auto xl:max-w-full">
-      {/* Mobile: Filtri + prev/next grouped on the right */}
-      <div className="flex w-full min-w-0 items-center justify-end gap-2 md:hidden">
-        <Button
-          variant="outline"
-          size="sm"
-          className={cn(
-            "inline-flex h-9 min-h-9 min-w-0 shrink-0 items-center gap-1.5 rounded-sm bg-white px-3 text-sm",
-            hasActiveFilters && "border-primary text-primary"
-          )}
-          onPress={() => setFiltersOpen(true)}
+      {/* Mobile: page & range (left) · Filtri + prev/next (right) */}
+      <div className="flex w-full min-w-0 items-center justify-between gap-2 md:hidden">
+        <div
+          className="min-w-0 flex-1 px-1 text-left text-sm  leading-snug text-gray-500"
+          aria-live="polite"
         >
-          <IconFilter size={16} aria-hidden />
-          Filtri
-        </Button>
-        <PaginationControl
-          variant="prevNext"
-          currentPage={currentPage}
-          totalPages={totalPages}
-          limit={limit}
-        />
+          {totalSubmissions === 0 ? (
+            <span className="text-default-700">Nav iesūtījumu</span>
+          ) : (
+            <>
+              <div className="font-medium text-default-800">
+                {currentPage}. lapa
+              </div>
+              <div className="tabular-nums text-gray-500">
+                {rangeFrom}–{rangeTo}/{totalSubmissions}
+              </div>
+            </>
+          )}
+        </div>
+        <div className="flex shrink-0 items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            className={cn(
+              "inline-flex h-9 min-h-9 min-w-0 shrink-0 items-center gap-1.5 rounded-sm bg-white px-3 text-sm",
+              hasActiveFilters && "border-primary text-primary"
+            )}
+            onPress={() => setFiltersOpen(true)}
+          >
+            <IconFilter size={16} aria-hidden />
+            Filtri
+          </Button>
+          <PaginationControl
+            variant="prevNext"
+            currentPage={currentPage}
+            totalPages={totalPages}
+            limit={limit}
+          />
+        </div>
       </div>
 
       <Modal>

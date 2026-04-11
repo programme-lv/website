@@ -24,8 +24,8 @@ export default function SubmissionsLoadingSkeleton() {
           </div>
         </div>
 
-        {/* Table with white background */}
-        <div className="overflow-x-auto w-full h-full min-w-full my-3 p-3 border-small border-divider rounded-sm bg-white">
+        {/* Match page: Tailwind border on md+ so responsive panel renders correctly */}
+        <div className="my-2 w-full min-w-0 md:my-3 md:overflow-x-auto md:rounded-sm md:border md:border-(--legacy-divider) md:bg-white md:p-3">
           <SubmissionTable
             skeleton={true}
             submissions={[]}

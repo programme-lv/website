@@ -22,7 +22,7 @@ export default async function SubmissionListServerComponent(props: {
   // Parse search params safely
   const page = Number(searchParams.page) || 1;
   const limit = Number(searchParams.limit) || 30;
-  const offset = (page - 1) * limit;
+  const queryOffset = (page - 1) * limit;
   const search = searchParams.search;
   const my = searchParams.my;
 
@@ -39,7 +39,7 @@ export default async function SubmissionListServerComponent(props: {
 
   let submissionsResponse: PaginatedSubmListResponse;
   try {
-    submissionsResponse = await listSubmissionsServerSide(offset, limit, search, actualMy);
+    submissionsResponse = await listSubmissionsServerSide(queryOffset, limit, search, actualMy);
   } catch (error: unknown) {
     console.error("Error fetching submissions:", error);
     return <div>Error fetching submissions</div>;
@@ -48,13 +48,14 @@ export default async function SubmissionListServerComponent(props: {
   const breadcrumbs = [{ label: "Iesūtījumi", href: "/submissions" }];
 
   // Calculate total pages for pagination
+  const { total, offset: paginationOffset, limit: pageLimit } =
+    submissionsResponse.pagination;
   const totalPages = Math.max(
     1,
-    Math.ceil(
-      submissionsResponse.pagination.total /
-        submissionsResponse.pagination.limit
-    )
+    Math.ceil(total / pageLimit)
   );
+  const rangeEnd =
+    total === 0 ? 0 : Math.min(paginationOffset + pageLimit, total);
 
   return (
     <Layout breadcrumbs={breadcrumbs} active="submissions">
@@ -62,9 +63,9 @@ export default async function SubmissionListServerComponent(props: {
         {/* Pagination above the table */}
         <div className="mb-2 mt-4 flex flex-wrap items-center justify-end gap-x-4 gap-y-2 xl:flex-nowrap xl:items-center xl:justify-between">
           <div className="hidden shrink-0 px-2 text-gray-500 xl:block">
-            {submissionsResponse.pagination.total === 0
+            {total === 0
               ? "Nav iesūtījumu"
-              : `Rāda iesūtījumus ${submissionsResponse.pagination.offset + 1}-${submissionsResponse.pagination.offset + submissionsResponse.pagination.limit} no ${submissionsResponse.pagination.total}.`}
+              : `Rāda iesūtījumus ${paginationOffset + 1}-${rangeEnd} no ${total}.`}
           </div>
           <Suspense
             fallback={
@@ -75,12 +76,13 @@ export default async function SubmissionListServerComponent(props: {
               currentPage={page}
               totalPages={totalPages}
               limit={limit}
+              totalSubmissions={total}
             />
           </Suspense>
         </div>
 
-        {/* Table with white background */}
-        <div className="overflow-x-auto w-full h-full min-w-full my-3 p-3 border-small border-divider rounded-sm bg-white">
+        {/* Bordered panel for table (md+): use Tailwind border-* so md: variants work; cards stay unframed on small screens */}
+        <div className="my-2 w-full min-w-0 md:my-3 md:overflow-x-auto md:rounded-sm md:border md:border-(--legacy-divider) md:bg-white md:p-3">
           <Suspense
             fallback={
               <div className="p-4 text-center">Ielādē iesūtījumus...</div>
