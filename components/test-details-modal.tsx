@@ -21,11 +21,11 @@ export const full_verdicts: Record<string, string> = {
 };
 
 export const verdict_colors: Record<string, string> = {
-  'W': 'text-danger-600',
-  'A': 'text-success-700',
-  'T': 'text-warning-500',
-  'M': 'text-warning-500',
-  'R': 'text-danger-600',
+  'W': 'text-subm-danger',
+  'A': 'text-subm-success',
+  'T': 'text-subm-warning',
+  'M': 'text-subm-warning',
+  'R': 'text-subm-danger',
   'I': 'text-default-600',
 };
 

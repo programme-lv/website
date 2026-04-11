@@ -5,9 +5,9 @@ import { statusTranslations } from "@/components/submission-table";
 
 function Score({ received, possible }: { received: number, possible: number }) {
     return <span className={cn(
-      { "text-success-700 font-medium": received === possible },
-      { "text-danger-600": received === 0 && possible > 0 },
-      { "text-warning-500": received > 0 && received < possible })}>
+      { "text-subm-success font-medium": received === possible },
+      { "text-subm-danger": received === 0 && possible > 0 },
+      { "text-subm-warning": received > 0 && received < possible })}>
       {received} / {possible}
     </span>;
   }
