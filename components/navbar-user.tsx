@@ -2,6 +2,7 @@
 import {
     Avatar,
     Badge,
+    Button,
     Dropdown,
     DropdownItem,
     DropdownMenu,
@@ -13,7 +14,6 @@ import { useContext, useState } from "react";
 import { AuthContext } from "@/app/providers";
 import { usePathname, useRouter } from "next/navigation";
 import { logoutUser } from "@/lib/auth";
-import GenericButton from "./generic-button";
 import AuthModal from "./auth-modal";
 
 export default function User() {
@@ -27,30 +27,18 @@ export default function User() {
     return (
         <div className="flex items-center gap-3">
             {!user && (
-                // <Button
-                //   className="font-medium gap-1 ps-4"
-                //   color="primary"
-                //   endContent={<IconChevronRight size={14} />}
-                //   radius="md"
-                //   size="sm"
-                //   variant="solid"
-                //   onPress={() => {
-                //     router.push(`/login${redirectParam}`);
-                //   }}
-                // >
-                //   Pieslēgties
-                // </Button>
                 <>
-                    <GenericButton
-                        variant="primary"
+                    <Button
+                        className="inline-flex items-center gap-1.5 rounded-md ps-4 font-medium"
                         size="sm"
-                        icon={<IconChevronRight size={16} />}
-                        onClick={() => {
+                        variant="primary"
+                        onPress={() => {
                             setIsAuthOpen(true);
                         }}
                     >
                         Pieslēgties
-                    </GenericButton>
+                        <IconChevronRight size={16} aria-hidden />
+                    </Button>
                     <AuthModal
                         type="login"
                         isOpen={isAuthOpen}

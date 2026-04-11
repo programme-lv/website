@@ -30,6 +30,19 @@ strong {
   background: linear-gradient(to left top, #1e1e1e, #141414);
 }
 
+/* HeroUI primary (`--accent` → primary buttons, focus ring, accent UI) */
+:root,
+.light,
+[data-theme="light"],
+[data-theme="default"] {
+  /* Tiny bit lighter than the earlier 0.54 tweak; still a bit below HeroUI default ~0.62 */
+  --accent: oklch(0.565 0.195 253.83);
+  /*
+   * Darken slightly on hover (HeroUI default lightens). Keep hover close to base—small mix only.
+   */
+  --color-accent-hover: color-mix(in oklab, var(--accent) 91%, black 9%);
+}
+
 :root {
   --bg-color: #FAFAFA;
   --legacy-divider: rgb(228 228 231);
