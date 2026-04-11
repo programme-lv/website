@@ -5,6 +5,7 @@ import {
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import Sidebar from "@/components/sidebar";
 
@@ -12,7 +13,6 @@ import User from "./navbar-user";
 import React, { useContext, useState } from "react";
 import { IconInbox, IconListDetails, IconInfoCircle } from "@tabler/icons-react";
 import { AuthContext } from "@/app/providers";
-import { TextLink } from "./text-link";
 
 interface BreadcrumbItem {
   label: string;
@@ -81,31 +81,54 @@ const MobileMenuButton = ({ onOpen }: { onOpen: () => void }) => (
   </div>
 );
 
-const Breadcrumbs = ({ items }: { items: BreadcrumbItem[] }) => (
-  <nav className="hidden sm:block">
-    <ol className="flex gap-x-1.5 text-sm font-mono">
-      {items.map((item, index) => (
-        <React.Fragment key={index}>
-          <li>
-            {item.href ? (
-              <Link
-                className={cn("text-default-500 hover:underline",{"text-default-800":index===items.length-1})}
-                href={item.href}
-              >
-                {item.label}
-              </Link>
-            ) : (
-              <span className={cn("text-default-500",{"text-default-800":index===items.length-1})}>
-                {item.label}
-              </span>
-            )}
-          </li>
-          {index < items.length - 1 && <span className="text-default-500"> / </span>}
-        </React.Fragment>
-      ))}
-    </ol>
-  </nav>
-);
+function breadcrumbHrefIsCurrentPath(pathname: string, href: string): boolean {
+  const norm = (p: string) =>
+    p.length > 1 && p.endsWith("/") ? p.slice(0, -1) : p;
+  return norm(pathname) === norm(href);
+}
+
+const Breadcrumbs = ({ items }: { items: BreadcrumbItem[] }) => {
+  const pathname = usePathname() ?? "";
+  return (
+    <nav className="hidden sm:block">
+      <ol className="flex gap-x-1.5 text-sm">
+        {items.map((item, index) => {
+          const isLast = index === items.length - 1;
+          const href = item.href;
+          const isCurrent =
+            href != null && breadcrumbHrefIsCurrentPath(pathname, href);
+          return (
+            <React.Fragment key={index}>
+              <li>
+                {href && !isCurrent ? (
+                  <Link
+                    className={cn("text-default-500 hover:underline", {
+                      "text-default-800": isLast,
+                    })}
+                    href={href}
+                  >
+                    {item.label}
+                  </Link>
+                ) : (
+                  <span
+                    className={cn("text-default-500", {
+                      "text-default-800": isLast,
+                    })}
+                  >
+                    {item.label}
+                  </span>
+                )}
+              </li>
+              {index < items.length - 1 && (
+                <span className="text-default-500"> / </span>
+              )}
+            </React.Fragment>
+          );
+        })}
+      </ol>
+    </nav>
+  );
+};
 
 const Header = ({
   breadcrumbs,
@@ -114,7 +137,7 @@ const Header = ({
   breadcrumbs: BreadcrumbItem[];
   onMobileMenuOpen: () => void;
 }) => (
-  <header className="flex items-center justify-between gap-1 border-b-small border-divider px-2 md:px-5 py-2 bg-white min-h-14">
+  <header className="flex items-center justify-between gap-1 border-b-small border-divider px-2 md:px-5 bg-white min-h-14">
     <div className="flex items-center justify-between w-full flex-wrap">
       <div className="flex gap-2 items-center">
         <MobileMenuButton onOpen={onMobileMenuOpen} />
