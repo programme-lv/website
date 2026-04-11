@@ -121,7 +121,7 @@ export default function AuthForm({
   const disableInputs = loginMutation.status === 'pending' || registerMutation.status === 'pending' || isRedirecting;
 
   return (
-    <div className="flex w-full max-w-md flex-col gap-4 pb-4 pt-4">
+    <div className="flex w-full flex-col gap-4 pb-4 pt-4">
       <p className="pb-2 text-xl flex gap-x-2">
         {type === "register" ? (
           <>
