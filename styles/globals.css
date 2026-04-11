@@ -119,6 +119,22 @@ strong {
   color: var(--legacy-default-900);
 }
 
+/*
+ * Submission score & test verdicts: mix theme status colors with body text so
+ * greens/reds/ambers read calmer on white cards than raw `text-success` etc.
+ */
+.text-subm-success {
+  color: color-mix(in oklab, var(--success) 62%, var(--foreground) 38%);
+}
+
+.text-subm-danger {
+  color: color-mix(in oklab, var(--danger) 84%, var(--foreground) 16%);
+}
+
+.text-subm-warning {
+  color: color-mix(in oklab, var(--warning) 80%, var(--foreground) 20%);
+}
+
 .bg-background {
   background-color: var(--legacy-background);
 }
