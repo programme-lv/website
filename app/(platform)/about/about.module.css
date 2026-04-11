@@ -1,3 +1,5 @@
+@reference "../../../styles/globals.css";
+
 .ul {
     @apply list-disc list-inside space-y-1;
 }
