@@ -54,7 +54,7 @@ export default function MySubmissionsCheckbox() {
                     <Checkbox.Indicator />
                 </Checkbox.Control>
                 <Checkbox.Content>
-                    <span className="text-sm text-default-800">Mani iesūtījumi</span>
+                    <span className="text-sm text-default-800">Tikai mani</span>
                 </Checkbox.Content>
             </Checkbox>
         </div>
