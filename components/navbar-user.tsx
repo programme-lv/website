@@ -6,6 +6,7 @@ import {
     Dropdown,
     DropdownItem,
     DropdownMenu,
+    DropdownPopover,
     DropdownTrigger,
 } from "@heroui/react";
 import { IconChevronRight, IconLogout, IconUser } from "@tabler/icons-react";
@@ -49,63 +50,69 @@ export default function User() {
             )}
             {user && (
                 <Dropdown>
-                    <DropdownTrigger>
-                        <button className="outline-none transition-transform flex gap-3 items-center">
-                            <div className="text-default-800 text-small">{user.username}</div>
+                    <DropdownTrigger className="text-default-800 flex h-auto min-w-0 max-w-full items-center gap-2 rounded-md px-2 py-1.5 hover:bg-default-100 data-[pressed]:bg-default-100">
+                        <span className="min-w-0 flex-1 truncate text-left text-small">
+                            {user.username}
+                        </span>
+                        <Badge.Anchor className="shrink-0">
+                            <Avatar size="sm">
+                                <Avatar.Fallback className="text-xs">
+                                    {user.username.slice(0, 2).toUpperCase()}
+                                </Avatar.Fallback>
+                            </Avatar>
                             <Badge
-                                className="border-transparent"
+                                className="ring-background min-h-2.5 min-w-2.5 border-0 p-0 ring-2"
                                 color="success"
-                                content=""
                                 placement="bottom-right"
                                 size="sm"
-                            >
-                                <Avatar size="sm" />
-                            </Badge>
-                        </button>
+                                variant="primary"
+                            />
+                        </Badge.Anchor>
                     </DropdownTrigger>
-                    <DropdownMenu aria-label="Profile Actions" onAction={async (key) => {
-                        const actionKey = String(key);
-                        if (actionKey === "profile") {
-                            router.push(`/users/${user.username}`);
-                            return;
-                        }
-                        if (actionKey === "logout") {
-                            sessionStorage.clear();
-                            const res = await logoutUser();
-                            if (res.status === "success") {
-                                authContext.setUser(null);
-                                window.location.href = "/";
-                            } else {
-                                alert("Kļūda: " + res.message);
-                            }
-                        }
-                    }}>
-                        <DropdownItem
-                            disableAnimation
-                            key="profile"
-                            className="flex gap-2 items-center justify-between rounded-md"
+                    <DropdownPopover className="min-w-[12rem]" placement="bottom end">
+                        <DropdownMenu
+                            aria-label="Profile Actions"
+                            onAction={async (key) => {
+                                const actionKey = String(key);
+                                if (actionKey === "profile") {
+                                    router.push(`/users/${user.username}`);
+                                    return;
+                                }
+                                if (actionKey === "logout") {
+                                    sessionStorage.clear();
+                                    const res = await logoutUser();
+                                    if (res.status === "success") {
+                                        authContext.setUser(null);
+                                        window.location.href = "/";
+                                    } else {
+                                        alert("Kļūda: " + res.message);
+                                    }
+                                }
+                            }}
                         >
-                            <div className="flex gap-2 items-center justify-between">
-                                <span>Profils</span>
-                                <span>
-                                    <IconUser size={16} />
+                            <DropdownItem
+                                key="profile"
+                                textValue="Profils"
+                                className="gap-3"
+                            >
+                                <span className="flex w-full items-center justify-between gap-3">
+                                    <span>Profils</span>
+                                    <IconUser size={16} className="shrink-0 text-default-400" aria-hidden />
                                 </span>
-                            </div>
-                        </DropdownItem>
-                        <DropdownItem
-                            disableAnimation
-                            key="logout"
-                            color="secondary"
-                            className="rounded-md"
-                        >
-                            <div className="flex gap-2 items-center justify-between">
-                                <span>Iziet no sistēmas</span>
-                                <span>
-                                    <IconLogout size={16} />
+                            </DropdownItem>
+                            <DropdownItem
+                                key="logout"
+                                variant="danger"
+                                textValue="Iziet no sistēmas"
+                                className="gap-3"
+                            >
+                                <span className="flex w-full items-center justify-between gap-3">
+                                    <span>Iziet no sistēmas</span>
+                                    <IconLogout size={16} className="shrink-0" aria-hidden />
                                 </span>
-                            </div>
-                        </DropdownItem>
-                    </DropdownMenu>
+                            </DropdownItem>
+                        </DropdownMenu>
+                    </DropdownPopover>
                 </Dropdown>
             )}
         </div>
