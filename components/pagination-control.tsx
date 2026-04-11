@@ -83,13 +83,13 @@ export default function PaginationControl({
     "min-w-8 rounded-small font-medium tabular-nums !bg-blue-600 !text-white shadow-sm hover:!bg-blue-700 data-[hovered]:!bg-blue-700";
 
   return (
-    <div className="min-h-[40px] w-[292px]">
+    <div className="box-border flex h-11 min-h-11 min-w-0 max-w-full flex-1 items-center rounded-sm border-small border-divider bg-white px-1.5">
       <Pagination
         size="sm"
-        className="text-sm bg-white rounded-sm p-2 border-small border-divider m-0 gap-0"
+        className="m-0 min-h-0 min-w-0 flex-1 gap-0 border-0 bg-transparent p-0 text-sm shadow-none"
       >
-        <Pagination.Content className="flex flex-wrap gap-1.5">
-          <Pagination.Item>
+        <Pagination.Content className="flex min-h-0 min-w-0 flex-nowrap items-center gap-1.5 overflow-x-auto overflow-y-hidden overscroll-x-contain py-0 [scrollbar-width:thin]">
+          <Pagination.Item className="shrink-0">
             <Pagination.Previous
               aria-label="Iepriekšējā lapa"
               className={navClass}
@@ -103,6 +103,7 @@ export default function PaginationControl({
           {pageTokens.map((token, idx) => (
             <Pagination.Item
               key={typeof token === "number" ? `page-${token}` : `gap-${idx}`}
+              className="shrink-0"
             >
               {token === "ellipsis" ? (
                 <Pagination.Ellipsis className="text-zinc-500" />
@@ -121,7 +122,7 @@ export default function PaginationControl({
             </Pagination.Item>
           ))}
 
-          <Pagination.Item>
+          <Pagination.Item className="shrink-0">
             <Pagination.Next
               aria-label="Nākamā lapa"
               className={navClass}
