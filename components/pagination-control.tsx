@@ -8,6 +8,8 @@ interface PaginationControlProps {
   currentPage: number;
   totalPages: number;
   limit?: number;
+  /** Full page list (default) or only previous/next for compact layouts. */
+  variant?: "full" | "prevNext";
 }
 
 /** Page numbers plus ellipsis markers for gaps (HeroUI v3 compound Pagination). */
@@ -27,7 +29,7 @@ function visiblePageTokens(
   pages.add(total);
   for (let p = left; p <= right; p++) pages.add(p);
 
-  const sorted = [...pages].sort((a, b) => a - b);
+  const sorted = Array.from(pages).sort((a, b) => a - b);
   const out: (number | "ellipsis")[] = [];
   for (let i = 0; i < sorted.length; i++) {
     if (i > 0 && sorted[i] - sorted[i - 1] > 1) {
@@ -42,6 +44,7 @@ export default function PaginationControl({
   currentPage,
   totalPages,
   limit,
+  variant = "full",
 }: PaginationControlProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -82,13 +85,51 @@ export default function PaginationControl({
   const pageActiveClass =
     "min-w-8 rounded-small font-medium tabular-nums !bg-blue-600 !text-white shadow-sm hover:!bg-blue-700 data-[hovered]:!bg-blue-700";
 
+  /* Compact nav pills for prev/next-only (e.g. mobile toolbar next to Filtri). */
+  const navClassCompact =
+    "rounded-small h-7 min-h-7 min-w-7 w-7 !bg-zinc-200 !text-zinc-800 shadow-sm transition-[background-color,color] hover:!bg-zinc-300 data-[hovered]:!bg-zinc-300 [&_svg]:size-3.5";
+
+  if (variant === "prevNext") {
+    return (
+      <div className="box-border inline-flex h-9 min-h-9 min-w-0 shrink-0 items-center rounded-sm border-small border-divider bg-white px-1">
+        <Pagination
+          size="sm"
+          className="m-0 min-h-0 min-w-0 gap-0 border-0 bg-transparent p-0 text-xs shadow-none"
+        >
+          <Pagination.Content className="flex min-h-0 min-w-0 flex-nowrap items-center gap-1 py-0">
+            <Pagination.Item className="shrink-0">
+              <Pagination.Previous
+                aria-label="Iepriekšējā lapa"
+                className={navClassCompact}
+                isDisabled={currentPage <= 1 || isChangingPage}
+                onPress={() => void handlePageChange(currentPage - 1)}
+              >
+                <Pagination.PreviousIcon />
+              </Pagination.Previous>
+            </Pagination.Item>
+            <Pagination.Item className="shrink-0">
+              <Pagination.Next
+                aria-label="Nākamā lapa"
+                className={navClassCompact}
+                isDisabled={currentPage >= totalPages || isChangingPage}
+                onPress={() => void handlePageChange(currentPage + 1)}
+              >
+                <Pagination.NextIcon />
+              </Pagination.Next>
+            </Pagination.Item>
+          </Pagination.Content>
+        </Pagination>
+      </div>
+    );
+  }
+
   return (
-    <div className="box-border flex h-11 min-h-11 min-w-0 max-w-full flex-1 items-center rounded-sm border-small border-divider bg-white px-1.5">
+    <div className="box-border inline-flex h-11 min-h-11 min-w-0 max-w-full items-center rounded-sm border-small border-divider bg-white px-1.5">
       <Pagination
         size="sm"
-        className="m-0 min-h-0 min-w-0 flex-1 gap-0 border-0 bg-transparent p-0 text-sm shadow-none"
+        className="m-0 min-h-0 w-auto min-w-0 gap-0 border-0 bg-transparent p-0 text-sm shadow-none"
       >
-        <Pagination.Content className="flex min-h-0 min-w-0 flex-nowrap items-center gap-1.5 overflow-x-auto overflow-y-hidden overscroll-x-contain py-0 [scrollbar-width:thin]">
+        <Pagination.Content className="flex min-h-0 min-w-0 max-w-full flex-nowrap items-center gap-1.5 overflow-x-auto overflow-y-hidden overscroll-x-contain py-0 [scrollbar-width:thin]">
           <Pagination.Item className="shrink-0">
             <Pagination.Previous
               aria-label="Iepriekšējā lapa"

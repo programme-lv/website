@@ -4,9 +4,7 @@ export const revalidate = 60; // 1 minute
 import Layout from "@/components/layout";
 import RealTimeSubmTable from "./live-subm-table";
 import { Suspense } from "react";
-import PaginationControl from "@/components/pagination-control";
-import SearchInput from "./search-input";
-import MySubmissionsCheckbox from "./my-checkbox";
+import SubmissionsToolbar from "./submissions-toolbar";
 import whoami from "@/lib/user/whoami";
 import { listSubmissionsServerSide } from "@/lib/subm/list-ss";
 import { PaginatedSubmListResponse } from "@/types/subm";
@@ -62,23 +60,23 @@ export default async function SubmissionListServerComponent(props: {
     <Layout breadcrumbs={breadcrumbs} active="submissions">
       <div className="px-4">
         {/* Pagination above the table */}
-        <div className="mb-2 mt-4 flex flex-wrap items-center justify-end gap-x-4 gap-y-2 xl:justify-between">
-          <div className="text-gray-500 px-2 hidden xl:block">
+        <div className="mb-2 mt-4 flex flex-wrap items-center justify-end gap-x-4 gap-y-2 xl:flex-nowrap xl:items-center xl:justify-between">
+          <div className="hidden shrink-0 px-2 text-gray-500 xl:block">
             {submissionsResponse.pagination.total === 0
               ? "Nav iesūtījumu"
               : `Rāda iesūtījumus ${submissionsResponse.pagination.offset + 1}-${submissionsResponse.pagination.offset + submissionsResponse.pagination.limit} no ${submissionsResponse.pagination.total}.`}
           </div>
-          <div className="flex min-w-0 max-w-full flex-row flex-wrap items-center justify-end gap-2">
-            <Suspense fallback={null}>
-              <MySubmissionsCheckbox />
-            </Suspense>
-            <SearchInput />
-            <PaginationControl
+          <Suspense
+            fallback={
+              <div className="h-11 w-full min-w-0 rounded-sm border border-divider bg-default-100/80 md:h-auto md:min-h-11" />
+            }
+          >
+            <SubmissionsToolbar
               currentPage={page}
               totalPages={totalPages}
               limit={limit}
             />
-          </div>
+          </Suspense>
         </div>
 
         {/* Table with white background */}

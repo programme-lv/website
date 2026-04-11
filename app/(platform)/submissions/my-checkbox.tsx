@@ -42,7 +42,7 @@ export default function MySubmissionsCheckbox() {
     }
 
     return (
-        <div className="box-border flex h-11 min-h-11 shrink-0 flex-row items-center rounded-sm border-small border-divider bg-white pe-3 px-2">
+        <div className="box-border flex h-11 min-h-11 shrink-0 flex-row items-center rounded-sm border-small border-divider bg-white px-2 pe-3">
             <Checkbox
                 className="gap-2"
                 isSelected={mySubmissions}
@@ -54,7 +54,7 @@ export default function MySubmissionsCheckbox() {
                     <Checkbox.Indicator />
                 </Checkbox.Control>
                 <Checkbox.Content>
-                    <span className="text-sm text-default-800">Mani</span>
+                    <span className="text-sm text-default-800">Mani iesūtījumi</span>
                 </Checkbox.Content>
             </Checkbox>
         </div>

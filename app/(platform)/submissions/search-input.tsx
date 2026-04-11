@@ -6,7 +6,12 @@ import { Button, Input } from "@heroui/react";
 import LoadingSpinner from "@/components/loading-spinner";
 import { IconSearch } from "@tabler/icons-react";
 
-export default function SearchInput() {
+export default function SearchInput({
+  fullWidth = false,
+}: {
+  /** Full-width field (e.g. filters drawer); default is fixed width for desktop toolbar. */
+  fullWidth?: boolean;
+}) {
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
@@ -48,7 +53,13 @@ export default function SearchInput() {
     }
 
     return (
-        <div className="box-border flex h-11 min-h-11 shrink-0 flex-row items-center gap-2 rounded-sm border-small border-divider bg-white px-1">
+        <div
+            className={
+                fullWidth
+                    ? "box-border flex h-11 min-h-11 w-full min-w-0 flex-row items-center gap-2 rounded-sm border-small border-divider bg-white px-1"
+                    : "box-border flex h-11 min-h-11 shrink-0 flex-row items-center gap-2 rounded-sm border-small border-divider bg-white px-1"
+            }
+        >
             {/* <TextInput
                 name="search"
                 placeholder="Meklēt"
@@ -63,7 +74,11 @@ export default function SearchInput() {
                 value={search}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)}
                 onKeyDown={handleKeyDown}
-                className="w-48 h-8"
+                className={
+                    fullWidth
+                        ? "h-8 min-w-0 flex-1"
+                        : "h-8 w-48"
+                }
                 variant="secondary"
             />
             <Button
