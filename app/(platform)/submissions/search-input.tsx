@@ -42,7 +42,7 @@ export default function SearchInput() {
     }
 
     return (
-        <div className="p-2 border-small border-divider rounded-sm bg-white flex flex-row gap-2 items-center">
+        <div className="box-border flex h-11 min-h-11 shrink-0 flex-row items-center gap-2 rounded-sm border-small border-divider bg-white px-1">
             {/* <TextInput
                 name="search"
                 placeholder="Meklēt"
@@ -57,7 +57,7 @@ export default function SearchInput() {
                 value={search}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)}
                 onKeyDown={handleKeyDown}
-                className="w-48"
+                className="w-48 min-h-8"
                 variant="secondary"
             />
             <GenericButton
