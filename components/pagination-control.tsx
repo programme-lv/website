@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Pagination } from "@heroui/react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
@@ -10,63 +10,129 @@ interface PaginationControlProps {
   limit?: number;
 }
 
-export default function PaginationControl({ 
-  currentPage, 
+/** Page numbers plus ellipsis markers for gaps (HeroUI v3 compound Pagination). */
+function visiblePageTokens(
+  current: number,
+  total: number,
+  siblings: number
+): (number | "ellipsis")[] {
+  if (total < 1) return [];
+  if (total === 1) return [1];
+
+  const left = Math.max(current - siblings, 1);
+  const right = Math.min(current + siblings, total);
+
+  const pages = new Set<number>();
+  pages.add(1);
+  pages.add(total);
+  for (let p = left; p <= right; p++) pages.add(p);
+
+  const sorted = [...pages].sort((a, b) => a - b);
+  const out: (number | "ellipsis")[] = [];
+  for (let i = 0; i < sorted.length; i++) {
+    if (i > 0 && sorted[i] - sorted[i - 1] > 1) {
+      out.push("ellipsis");
+    }
+    out.push(sorted[i]);
+  }
+  return out;
+}
+
+export default function PaginationControl({
+  currentPage,
   totalPages,
-  limit
+  limit,
 }: PaginationControlProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [isChangingPage, setIsChangingPage] = useState(false);
-  
-  // Reset isChangingPage when currentPage changes
+
   useEffect(() => {
     setIsChangingPage(false);
   }, [currentPage]);
-  
+
+  const pageTokens = useMemo(
+    () => visiblePageTokens(currentPage, totalPages, 1),
+    [currentPage, totalPages]
+  );
+
   const handlePageChange = async (page: number) => {
-    // Set loading state
+    if (page < 1 || page > totalPages || page === currentPage) return;
     setIsChangingPage(true);
-    
-    // Create new URLSearchParams
+
     const params = new URLSearchParams(searchParams.toString());
-    
-    // Update or add the page parameter
-    params.set('page', page.toString());
-    
-    // Keep the limit parameter if it exists
+    params.set("page", page.toString());
     if (limit) {
-      params.set('limit', limit.toString());
-    } else if (params.has('limit')) {
-      // Keep existing limit
+      params.set("limit", limit.toString());
     }
-    
-    // Navigate to the new URL
+
     await router.push(`${pathname}?${params.toString()}`);
-    
-    // We don't need to reset isChangingPage here as the useEffect will handle it
-    // when the currentPage prop changes after navigation
   };
 
+  if (totalPages < 1) {
+    return null;
+  }
+
+  /* Flat grey pills + blue active: HeroUI defaults are very low-contrast on white. */
+  const navClass =
+    "rounded-small !bg-zinc-200 !text-zinc-800 shadow-sm transition-[background-color,color] hover:!bg-zinc-300 data-[hovered]:!bg-zinc-300";
+  const pageIdleClass =
+    "min-w-8 rounded-small font-medium tabular-nums !bg-zinc-200 !text-zinc-800 shadow-sm transition-[background-color,color] hover:!bg-zinc-300 data-[hovered]:!bg-zinc-300";
+  const pageActiveClass =
+    "min-w-8 rounded-small font-medium tabular-nums !bg-blue-600 !text-white shadow-sm hover:!bg-blue-700 data-[hovered]:!bg-blue-700";
+
   return (
-    <div className="min-h-[40px] w-[292px]"> {/* Add fixed minimum dimensions */}
-      <Pagination 
-        initialPage={currentPage} 
-        total={totalPages} 
-        disableAnimation
-        onChange={handlePageChange}
-        className="text-sm bg-white rounded-sm p-2 border-small border-divider m-0"
-        classNames={{
-          item: "rounded-small"
-        }}
-        color="primary"
-        variant="flat"
+    <div className="min-h-[40px] w-[292px]">
+      <Pagination
         size="sm"
-        page={currentPage}
-        isDisabled={isChangingPage}
-        siblings={1}
-      />
+        className="text-sm bg-white rounded-sm p-2 border-small border-divider m-0 gap-0"
+      >
+        <Pagination.Content className="flex flex-wrap gap-1.5">
+          <Pagination.Item>
+            <Pagination.Previous
+              aria-label="Iepriekšējā lapa"
+              className={navClass}
+              isDisabled={currentPage <= 1 || isChangingPage}
+              onPress={() => void handlePageChange(currentPage - 1)}
+            >
+              <Pagination.PreviousIcon />
+            </Pagination.Previous>
+          </Pagination.Item>
+
+          {pageTokens.map((token, idx) => (
+            <Pagination.Item
+              key={typeof token === "number" ? `page-${token}` : `gap-${idx}`}
+            >
+              {token === "ellipsis" ? (
+                <Pagination.Ellipsis className="text-zinc-500" />
+              ) : (
+                <Pagination.Link
+                  isActive={token === currentPage}
+                  isDisabled={isChangingPage}
+                  className={
+                    token === currentPage ? pageActiveClass : pageIdleClass
+                  }
+                  onPress={() => void handlePageChange(token)}
+                >
+                  {token}
+                </Pagination.Link>
+              )}
+            </Pagination.Item>
+          ))}
+
+          <Pagination.Item>
+            <Pagination.Next
+              aria-label="Nākamā lapa"
+              className={navClass}
+              isDisabled={currentPage >= totalPages || isChangingPage}
+              onPress={() => void handlePageChange(currentPage + 1)}
+            >
+              <Pagination.NextIcon />
+            </Pagination.Next>
+          </Pagination.Item>
+        </Pagination.Content>
+      </Pagination>
     </div>
   );
-} 
+}
