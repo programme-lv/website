@@ -118,10 +118,31 @@ strong {
   .input {
     @apply rounded-sm;
   }
+
+  /*
+   * HeroUI fields use ring (box-shadow) with no offset; inside modals the
+   * dialog uses overflow hidden + scroll, so that ring is often clipped.
+   * An outline with positive offset reads clearly outside the border.
+   */
+  .input:focus:not([data-invalid="true"]):not([aria-invalid="true"]),
+  .input[data-focused="true"]:not([data-invalid="true"]):not([aria-invalid="true"]),
+  .input[data-focus-visible="true"]:not([data-invalid="true"]):not([aria-invalid="true"]) {
+    --tw-ring-shadow: 0 0 #0000;
+    box-shadow: none;
+    outline: 2px solid var(--color-focus);
+    outline-offset: 0px;
+  }
+
+  .textarea:focus:not([data-invalid="true"]):not([aria-invalid="true"]),
+  .textarea[data-focused="true"]:not([data-invalid="true"]):not([aria-invalid="true"]),
+  .textarea[data-focus-visible="true"]:not([data-invalid="true"]):not([aria-invalid="true"]) {
+    --tw-ring-shadow: 0 0 #0000;
+    box-shadow: none;
+    outline: 2px solid var(--color-focus);
+    outline-offset: 0px;
+  }
+
   .modal__dialog {
     @apply rounded-xl;
-  }
-  .modal__body {
-    @apply px-0.5;
   }
 }
