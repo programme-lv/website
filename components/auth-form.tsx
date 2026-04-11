@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import { AuthContext } from "@/app/providers";
@@ -18,7 +18,20 @@ function FormatError(error: string) {
   return error.charAt(0).toUpperCase() + error.slice(1) + ".";
 }
 
-export default function AuthForm({ type, redirect }: { type: "login" | "register"; redirect?: string }) {
+type AuthFormProps = {
+  type: "login" | "register";
+  redirect?: string;
+  /** When set (e.g. in AuthModal), login/register footer switches view instead of navigating. */
+  onSwitchToLogin?: () => void;
+  onSwitchToRegister?: () => void;
+};
+
+export default function AuthForm({
+  type,
+  redirect,
+  onSwitchToLogin,
+  onSwitchToRegister,
+}: AuthFormProps) {
   const searchParams = useSearchParams();
   const redirectParam = redirect ?? searchParams.get("redirect");
   const [username, setUsername] = useState("");
@@ -32,6 +45,11 @@ export default function AuthForm({ type, redirect }: { type: "login" | "register
   const [error, setError] = useState<string | null>(null);
   const toggleVisibility = () => setIsVisible(!isVisible);
   const [isRedirecting, setIsRedirecting] = useState(false);
+
+  useEffect(() => {
+    setError(null);
+  }, [type]);
+
   const registerMutation = useMutation({
     mutationFn: registerUser,
     onMutate: () => {
@@ -258,39 +276,73 @@ export default function AuthForm({ type, redirect }: { type: "login" | "register
         <div className="flex-1 border-t border-divider" />
       </div>
       <Suspense>
-        <GoToLoginOrRegister type={type} redirect={redirectParam ?? undefined} />
+        <GoToLoginOrRegister
+          type={type}
+          redirect={redirectParam ?? undefined}
+          onSwitchToLogin={onSwitchToLogin}
+          onSwitchToRegister={onSwitchToRegister}
+        />
       </Suspense>
     </div>
   );
 }
 
-function GoToLoginOrRegister({ type, redirect }: { type: "login" | "register"; redirect?: string }) {
+function GoToLoginOrRegister({
+  type,
+  redirect,
+  onSwitchToLogin,
+  onSwitchToRegister,
+}: {
+  type: "login" | "register";
+  redirect?: string;
+  onSwitchToLogin?: () => void;
+  onSwitchToRegister?: () => void;
+}) {
   const searchParams = useSearchParams();
   const redirectParam = redirect ?? searchParams.get("redirect");
+
+  const loginHref = redirectParam
+    ? `/login?redirect=${encodeURIComponent(redirectParam)}`
+    : `/login`;
+  const registerHref = redirectParam
+    ? `/register?redirect=${encodeURIComponent(redirectParam)}`
+    : `/register`;
 
   return (
     <p className="text-center text-small">
       {type === "register" ? (
         <>
           Jau ir konts?&nbsp;
-          <TextLink color="default" weight="medium" href={
-            redirectParam
-              ? `/login?redirect=${encodeURIComponent(redirectParam)}`
-              : `/login`
-          }>
-            Pieslēgties
-          </TextLink>
+          {onSwitchToLogin ? (
+            <button
+              type="button"
+              className="cursor-pointer border-0 bg-transparent p-0 text-blue-800 underline underline-offset-2 decoration-blue-800/30 hover:decoration-blue-800/90 font-medium"
+              onClick={onSwitchToLogin}
+            >
+              Pieslēgties
+            </button>
+          ) : (
+            <TextLink color="default" weight="medium" href={loginHref}>
+              Pieslēgties
+            </TextLink>
+          )}
         </>
       ) : (
         <>
           Nav konta?&nbsp;
-          <TextLink color="success" weight="medium" href={
-            redirectParam
-              ? `/register?redirect=${encodeURIComponent(redirectParam)}`
-              : `/register`
-          }>
-            Reģistrēties
-          </TextLink>
+          {onSwitchToRegister ? (
+            <button
+              type="button"
+              className="cursor-pointer border-0 bg-transparent p-0 text-green-700 underline underline-offset-2 decoration-green-700/30 hover:decoration-green-700/90 font-medium"
+              onClick={onSwitchToRegister}
+            >
+              Reģistrēties
+            </button>
+          ) : (
+            <TextLink color="success" weight="medium" href={registerHref}>
+              Reģistrēties
+            </TextLink>
+          )}
         </>
       )}
     </p>

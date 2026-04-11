@@ -1,6 +1,7 @@
 "use client";
 
 import { Modal } from "@heroui/react";
+import { useEffect, useState } from "react";
 import AuthForm from "./auth-form";
 
 interface AuthModalProps {
@@ -11,6 +12,14 @@ interface AuthModalProps {
 }
 
 export default function AuthModal({ type, isOpen, onOpenChange, redirect }: AuthModalProps) {
+  const [formType, setFormType] = useState<"login" | "register">(type);
+
+  useEffect(() => {
+    if (isOpen) {
+      setFormType(type);
+    }
+  }, [isOpen, type]);
+
   return (
     <Modal >
       <Modal.Backdrop
@@ -20,8 +29,13 @@ export default function AuthModal({ type, isOpen, onOpenChange, redirect }: Auth
       >
         <Modal.Container placement="center" scroll="inside" size="md">
           <Modal.Dialog>
-            <Modal.Body>
-              <AuthForm type={type} redirect={redirect} />
+            <Modal.Body className="px-1 sm:px-1.5">
+              <AuthForm
+                type={formType}
+                redirect={redirect}
+                onSwitchToLogin={() => setFormType("login")}
+                onSwitchToRegister={() => setFormType("register")}
+              />
             </Modal.Body>
           </Modal.Dialog>
         </Modal.Container>
