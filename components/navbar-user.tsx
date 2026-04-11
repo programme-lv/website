@@ -73,15 +73,28 @@ export default function User() {
                         className="min-w-48 rounded-md"
                         placement="bottom end"
                     >
-                        <DropdownMenu
-                            aria-label="Profile Actions"
-                            onAction={async (key) => {
-                                const actionKey = String(key);
-                                if (actionKey === "profile") {
+                        <DropdownMenu aria-label="Profile Actions">
+                            <DropdownItem
+                                id="profile"
+                                key="profile"
+                                textValue="Profils"
+                                className="gap-3 rounded-md"
+                                onAction={() => {
                                     router.push(`/users/${user.username}`);
-                                    return;
-                                }
-                                if (actionKey === "logout") {
+                                }}
+                            >
+                                <span className="flex w-full items-center justify-between gap-3">
+                                    <span>Profils</span>
+                                    <IconUser size={16} className="shrink-0 text-default-400" aria-hidden />
+                                </span>
+                            </DropdownItem>
+                            <DropdownItem
+                                id="logout"
+                                key="logout"
+                                variant="danger"
+                                textValue="Iziet no sistēmas"
+                                className="gap-3 rounded-md"
+                                onAction={async () => {
                                     sessionStorage.clear();
                                     const res = await logoutUser();
                                     if (res.status === "success") {
@@ -90,24 +103,7 @@ export default function User() {
                                     } else {
                                         alert("Kļūda: " + res.message);
                                     }
-                                }
-                            }}
-                        >
-                            <DropdownItem
-                                key="profile"
-                                textValue="Profils"
-                                className="gap-3 rounded-md"
-                            >
-                                <span className="flex w-full items-center justify-between gap-3">
-                                    <span>Profils</span>
-                                    <IconUser size={16} className="shrink-0 text-default-400" aria-hidden />
-                                </span>
-                            </DropdownItem>
-                            <DropdownItem
-                                key="logout"
-                                variant="danger"
-                                textValue="Iziet no sistēmas"
-                                className="gap-3 rounded-md"
+                                }}
                             >
                                 <span className="flex w-full items-center justify-between gap-3">
                                     <span>Iziet no sistēmas</span>

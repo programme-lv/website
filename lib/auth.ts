@@ -50,6 +50,26 @@ export const logoutUser = async (): Promise<ApiResponse<User>> => {
     credentials: "include",
   });
 
-  return response.json();
+  const text = await response.text();
+  if (!text.trim()) {
+    return response.ok
+      ? { status: "success", data: {} as User }
+      : {
+          status: "error",
+          data: null,
+          code: "http_error",
+          message: `HTTP ${response.status}`,
+        };
+  }
+  try {
+    return JSON.parse(text) as ApiResponse<User>;
+  } catch {
+    return {
+      status: "error",
+      data: null,
+      code: "parse_error",
+      message: "Invalid response from server",
+    };
+  }
 };
 
