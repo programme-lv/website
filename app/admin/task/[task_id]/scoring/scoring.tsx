@@ -102,7 +102,7 @@ export default function ScoringEditForm() {
                     <Checkbox
                         isSelected={useSubtasks}
 
-                        onValueChange={(value) => {
+                        onChange={(value) => {
                             setUseSubtasks(value);
                             setUseTestGroups(value ? false : useTestGroups);
                         }}
@@ -113,10 +113,7 @@ export default function ScoringEditForm() {
                         isSelected={useTestGroups && useSubtasks}
                         isDisabled={!useSubtasks}
                         className="bg-yellow-100 border-l border-divider"
-                        classNames={{
-                            wrapper: "bg-white"
-                        }}
-                        onValueChange={() => setUseTestGroups(!useTestGroups)}
+                        onChange={(value) => setUseTestGroups(value)}
                     >
                         Testu grupas
                     </Checkbox>

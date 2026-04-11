@@ -65,16 +65,8 @@ export default function Sidebar(props: SidebarProps) {
         </div>
         <nav className="mt-12 flex flex-col items-center gap-8 w-full">
           {filteredItems.map((item) => (
-            <Tooltip
-              disableAnimation
-              className="rounded-md"
-              delay={500}
-              closeDelay={0}
-              key={item.key}
-              content={item.title}
-              placement="right"
-            >
-              <div
+            <Tooltip key={item.key} delay={500} closeDelay={0}>
+              <Tooltip.Trigger
                 className={cn(
                   "flex items-center justify-center w-[38px] h-[38px] rounded-small",
                   props.active === item.key && "bg-gray-100",
@@ -89,7 +81,10 @@ export default function Sidebar(props: SidebarProps) {
                     ),
                   })}
                 </Link>
-              </div>
+              </Tooltip.Trigger>
+              <Tooltip.Content className="rounded-md" placement="right">
+                {item.title}
+              </Tooltip.Content>
             </Tooltip>
           ))}
         </nav>

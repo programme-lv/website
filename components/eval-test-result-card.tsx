@@ -141,7 +141,7 @@ const TestResultHeader: React.FC<TestResultHeaderProps> = ({
 			case "A":
 				return "success";
 			case "R":
-				return "secondary";
+				return "warning";
 			case "W":
 			case "M":
 			case "T":
@@ -167,7 +167,7 @@ const TestResultHeader: React.FC<TestResultHeaderProps> = ({
 		<div className="flex gap-4 flex-wrap">
 			<div className="flex gap-2 items-center">
 				<span className="text-sm">Tests</span> #{test_id}
-				<Chip color={chipColor} size="sm" variant="flat">
+				<Chip color={chipColor} size="sm" variant="soft">
 					{chipLabel}
 				</Chip>
 			</div>

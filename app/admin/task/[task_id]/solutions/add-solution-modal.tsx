@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Input, Textarea } from "@heroui/react";
+import { Input, Label, TextArea } from "@heroui/react";
 import { IconPlus, IconUpload } from "@tabler/icons-react";
 import FileUpload from "@/components/file-upload";
 import { listProgrammingLanguages } from "@/lib/langs";
@@ -144,17 +144,21 @@ export default function AddSolutionModal({ isOpen, onOpenChange, onSolutionAdded
 							Izvēlēties risinājuma failu
 						</FileUpload>
 
-						<Input
-							label="Faila nosaukums"
-							placeholder="piemēram, solution1.py"
-							value={formData.filename}
-							onChange={(e) => setFormData(prev => ({ ...prev, filename: e.target.value }))}
-							size="sm"
-							isRequired
-						/>
+						<div className="flex flex-col gap-1">
+							<Label>Faila nosaukums</Label>
+							<Input
+								aria-label="Faila nosaukums"
+								placeholder="piemēram, solution1.py"
+								value={formData.filename}
+								onChange={(e) => setFormData(prev => ({ ...prev, filename: e.target.value }))}
+								required
+								variant="secondary"
+								className="border-divider border rounded-md py-2 text-sm"
+							/>
+						</div>
 
 						<div className="flex flex-col gap-1">
-							<label className="text-sm font-medium">Programmēšanas valoda</label>
+							<Label>Programmēšanas valoda</Label>
 							<select
 								className="rounded-sm border border-divider bg-white px-3 py-2 text-sm"
 								value={formData.programmingLanguage}
@@ -168,32 +172,44 @@ export default function AddSolutionModal({ isOpen, onOpenChange, onSolutionAdded
 							</select>
 						</div>
 
-						<Input
-							label="Autors"
-							placeholder="Risinājuma autora vārds, uzvārds"
-							value={formData.author}
-							onChange={(e) => setFormData(prev => ({ ...prev, author: e.target.value }))}
-							size="sm"
-						/>
+						<div className="flex flex-col gap-1">
+							<Label>Autors</Label>
+							<Input
+								aria-label="Autors"
+								placeholder="Risinājuma autora vārds, uzvārds"
+								value={formData.author}
+								onChange={(e) => setFormData(prev => ({ ...prev, author: e.target.value }))}
+								variant="secondary"
+								className="border-divider border rounded-md py-2 text-sm"
+							/>
+						</div>
 
-						<Input
-							label="Sagaidāmais rezultāts"
-							placeholder="piemēram: 100/100 @ 1.00s & 256 MiB"
-							value={formData.expectedResult}
-							onChange={(e) => setFormData(prev => ({ ...prev, expectedResult: e.target.value }))}
-							size="sm"
-							isRequired
-						/>
+						<div className="flex flex-col gap-1">
+							<Label>Sagaidāmais rezultāts</Label>
+							<Input
+								aria-label="Sagaidāmais rezultāts"
+								placeholder="piemēram: 100/100 @ 1.00s & 256 MiB"
+								value={formData.expectedResult}
+								onChange={(e) => setFormData(prev => ({ ...prev, expectedResult: e.target.value }))}
+								required
+								variant="secondary"
+								className="border-divider border rounded-md py-2 text-sm"
+							/>
+						</div>
 
-						<Textarea
-							label="Kods"
-							placeholder="Risinājuma pirmkods"
-							value={formData.content}
-							onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
-							minRows={10}
-							maxRows={20}
-							isRequired
-						/>
+						<div className="flex flex-col gap-1">
+							<Label>Kods</Label>
+							<TextArea
+								aria-label="Kods"
+								placeholder="Risinājuma pirmkods"
+								value={formData.content}
+								onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
+								rows={12}
+								required
+								variant="secondary"
+								className="border-divider border rounded-md py-2 text-sm font-mono min-h-[16rem]"
+							/>
+						</div>
 					</div>
 				</div>
 

@@ -113,7 +113,7 @@ export default function SubmAdminList({ submPage }: { submPage: PaginatedSubmLis
                             <div className="flex justify-center items-center">
                                 <Checkbox
                                     isSelected={selectedSubmissions.has(subm.subm_uuid)}
-                                    onValueChange={(isChecked) => handleCheckboxChange(subm.subm_uuid, isChecked)}
+                                    onChange={(isChecked) => handleCheckboxChange(subm.subm_uuid, isChecked)}
                                 />
                             </div>
                         )

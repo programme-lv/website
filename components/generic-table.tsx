@@ -1,4 +1,3 @@
-import { animate } from "framer-motion";
 import { cn } from "./cn";
 import React from "react";
 
