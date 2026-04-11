@@ -62,14 +62,16 @@ export default async function SubmissionListServerComponent(props: {
     <Layout breadcrumbs={breadcrumbs} active="submissions">
       <div className="px-4">
         {/* Pagination above the table */}
-        <div className="flex justify-end xl:justify-between gap-x-4 flex-wrap items-center mt-4 mb-2 h-11">
+        <div className="mb-2 mt-4 flex flex-wrap items-center justify-end gap-x-4 gap-y-2 xl:justify-between">
           <div className="text-gray-500 px-2 hidden xl:block">
             {submissionsResponse.pagination.total === 0
               ? "Nav iesūtījumu"
               : `Rāda iesūtījumus ${submissionsResponse.pagination.offset + 1}-${submissionsResponse.pagination.offset + submissionsResponse.pagination.limit} no ${submissionsResponse.pagination.total}.`}
           </div>
-          <div className="flex flex-row gap-2 flex-wrap justify-end">
-            {user && <MySubmissionsCheckbox/>}
+          <div className="flex min-w-0 max-w-full flex-row flex-wrap items-center justify-end gap-2">
+            <Suspense fallback={null}>
+              <MySubmissionsCheckbox />
+            </Suspense>
             <SearchInput />
             <PaginationControl
               currentPage={page}

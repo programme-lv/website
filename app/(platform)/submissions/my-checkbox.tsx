@@ -1,10 +1,13 @@
 "use client";
 
-import { useState, useEffect, useTransition } from "react";
+import { useState, useEffect, useTransition, useContext } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Checkbox } from "@heroui/react";
 
+import { AuthContext } from "@/app/providers";
+
 export default function MySubmissionsCheckbox() {
+    const { user } = useContext(AuthContext);
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
@@ -17,6 +20,10 @@ export default function MySubmissionsCheckbox() {
             setMySubmissions(isMine);
         }
     }, [searchParams, mySubmissions]);
+
+    if (!user) {
+        return null;
+    }
 
     const handleToggle = (checked: boolean) => {
         const params = new URLSearchParams(searchParams.toString());
@@ -35,14 +42,21 @@ export default function MySubmissionsCheckbox() {
     }
 
     return (
-        <div className="p-2 px-3 border-small border-divider rounded-sm bg-white flex flex-row items-center">
+        <div className="box-border flex h-11 min-h-11 shrink-0 flex-row items-center rounded-sm border-small border-divider bg-white pe-3 px-2">
             <Checkbox
+                className="gap-2"
                 isSelected={mySubmissions}
-                disableAnimation={true}
-                onValueChange={handleToggle}
+                onChange={handleToggle}
                 isDisabled={isPending}
-            />
-            <span className="text-sm text-default-800">Mani</span>
+                variant="secondary"
+            >
+                <Checkbox.Control className="size-5">
+                    <Checkbox.Indicator />
+                </Checkbox.Control>
+                <Checkbox.Content>
+                    <span className="text-sm text-default-800">Mani</span>
+                </Checkbox.Content>
+            </Checkbox>
         </div>
     )
 }
