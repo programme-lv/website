@@ -21,13 +21,13 @@ export default function AuthModal({ type, isOpen, onOpenChange, redirect }: Auth
   }, [isOpen, type]);
 
   return (
-    <Modal >
+    <Modal>
       <Modal.Backdrop
         isOpen={isOpen}
         onOpenChange={onOpenChange}
         variant="blur"
       >
-        <Modal.Container placement="center" scroll="inside" size="md">
+        <Modal.Container placement="center" scroll="inside" size={formType === "register" ? "lg" : "md"}>
           <Modal.Dialog>
             <Modal.Body className="px-1 sm:px-1.5">
               <AuthForm
