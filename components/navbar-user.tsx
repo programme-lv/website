@@ -30,7 +30,7 @@ export default function User() {
             {!user && (
                 <>
                     <Button
-                        className="inline-flex items-center gap-1.5 rounded-md ps-4 font-medium"
+                        className="inline-flex h-8 min-h-8 items-center gap-1.5 rounded-md ps-4 font-medium"
                         size="sm"
                         variant="primary"
                         onPress={() => {

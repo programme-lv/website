@@ -67,6 +67,7 @@ const MobileMenuButton = ({ onOpen }: { onOpen: () => void }) => (
   <div className="flex md:hidden">
     <Button
       isIconOnly
+      className="h-8 min-h-8 w-8 min-w-8"
       size="sm"
       variant="ghost"
       onPress={onOpen}
