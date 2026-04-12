@@ -22,6 +22,11 @@ const nextConfig = {
         hostname: 'proglv-public.s3.eu-central-1.amazonaws.com',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'dvhk4hiwp1rmf.cloudfront.net',
+        pathname: '/**',
+      },
     ]
   },
 }
