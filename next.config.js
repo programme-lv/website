@@ -12,6 +12,7 @@ const nextConfig = {
     ]
   },
   images: {
+    dangerouslyAllowLocalIP: true,
     remotePatterns: [
       {
         protocol: 'https',
@@ -28,6 +29,12 @@ const nextConfig = {
         hostname: 'dvhk4hiwp1rmf.cloudfront.net',
         pathname: '/**',
       },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '8080',
+        pathname: '/**',
+      }
     ]
   },
 }
