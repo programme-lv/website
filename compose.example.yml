@@ -9,12 +9,10 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        # Docker service names only resolve inside containers. Because this is a
-        # NEXT_PUBLIC value, browser-side requests need a host-reachable URL
-        # unless you add a proxy/rewrite layer.
-        NEXT_PUBLIC_API_HOST: "http://backend:8080"
+        NEXT_PUBLIC_API_HOST: "https://api.programme.lv"
     environment:
-      NEXT_PUBLIC_API_HOST: "http://backend:8080"
+      NEXT_PUBLIC_API_HOST: "https://api.programme.lv"
+      SERVER_API_HOST: "http://backend:8080"
     ports:
       - "3000:3000"
     depends_on:

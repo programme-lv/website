@@ -2,14 +2,14 @@
 
 import { Task, TaskPreview } from "@/types/task";
 import { ApiResponse } from "../api-response";
-import { API_HOST } from "../config";
+import { SERVER_API_HOST } from "../config";
 import { cookies } from "next/headers";
 import { updateTag } from "next/cache";
 
 export const getTaskById = async (
   taskId: string,
 ): Promise<ApiResponse<Task>> => {
-  const response = await fetch(`${API_HOST}/tasks/${taskId}`, {
+  const response = await fetch(`${SERVER_API_HOST}/tasks/${taskId}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -32,7 +32,7 @@ export const getTaskById = async (
 };
 
 export const listTasks = async (): Promise<ApiResponse<TaskPreview[]>> => {
-  const response = await fetch(`${API_HOST}/tasks`, {
+  const response = await fetch(`${SERVER_API_HOST}/tasks`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -59,7 +59,7 @@ export const updateTaskStatement = async (
   taskId: string,
   data: UpdateStatementRequest
 ): Promise<ApiResponse<null>> => {
-  const response = await fetch(`${API_HOST}/tasks/${taskId}/statements/lv`, {
+  const response = await fetch(`${SERVER_API_HOST}/tasks/${taskId}/statements/lv`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -88,7 +88,7 @@ export const deleteTaskImage = async (taskId: string, filename: string): Promise
   // URL encode the filename since it may contain special characters
   const encodedFilename = encodeURIComponent(filename);
 
-  const response = await fetch(`${API_HOST}/tasks/${taskId}/images/${encodedFilename}`, {
+  const response = await fetch(`${SERVER_API_HOST}/tasks/${taskId}/images/${encodedFilename}`, {
     method: "DELETE",
     headers: {
       "Cookie": (await cookies()).toString(),

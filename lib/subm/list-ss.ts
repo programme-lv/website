@@ -2,7 +2,7 @@
 
 import { PaginatedSubmListResponse } from "@/types/subm";
 import { cookies } from "next/headers";
-import { API_HOST } from "@/lib/config";
+import { SERVER_API_HOST } from "@/lib/config";
 import { MaxScorePerTask } from "@/types/scores";
 
 export const listSubmissionsServerSide = async (
@@ -12,7 +12,7 @@ export const listSubmissionsServerSide = async (
   my?: string,
 ): Promise<PaginatedSubmListResponse> => {
   try {
-    let url = `${API_HOST}/subm?offset=${offset}&limit=${limit}&search=${encodeURIComponent(search || "")}`;
+    let url = `${SERVER_API_HOST}/subm?offset=${offset}&limit=${limit}&search=${encodeURIComponent(search || "")}`;
     if(my) {
       url += `&my=${my}`;
     }
@@ -44,7 +44,7 @@ export const listSubmissionsServerSide = async (
 export const getMaxScorePerTaskServerSide = async (
   username: string,
 ): Promise<MaxScorePerTask> => {
-  const response = await fetch(`${API_HOST}/subm/scores/${username}`, {
+  const response = await fetch(`${SERVER_API_HOST}/subm/scores/${username}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
