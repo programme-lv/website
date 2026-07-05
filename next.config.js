@@ -34,7 +34,12 @@ const nextConfig = {
         hostname: 'localhost',
         port: '8080',
         pathname: '/**',
-      }
+      },
+      {
+        protocol: 'https',
+        hostname: 'api.programme.lv',
+        pathname: '/**',
+      },
     ]
   },
 }
