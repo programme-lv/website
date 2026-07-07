@@ -43,9 +43,6 @@ export default function RealTimeSubmTable({
   // Ensure initial is always an array
   const initialSubmissions = Array.isArray(initial) ? initial : [];
 
-  // State to hold incoming WebSocket updates
-  const [updates, setUpdates] = useState<SubmListSseUpdate[]>([]);
-
   // State to manage the list of submissions
   const [submissions, setSubmissions] = useState<SubmListEntry[]>(initialSubmissions);
   const pathname = usePathname();
@@ -68,19 +65,14 @@ export default function RealTimeSubmTable({
     router.replace(nextUrl);
   }, [user, pathname, router, searchParams]);
 
-  // Fetch submissions data with a polling interval of 2 seconds
+  // Fetch submissions data with a polling interval of 10 seconds
   const { data, isLoading } = useQuery({
-      queryKey: ["submissions", initialPagination.offset, initialPagination.limit, search, my],
+      queryKey: ["submissions", initialPagination.offset, initialPagination.limit, search, my, user?.uuid],
       queryFn: async () => {
-        try {
-          if(user&&user.uuid) {
-            return await listSubmissionsClientSide(initialPagination.offset, initialPagination.limit, search, my);
-          } else {
-            return await listSubmissionsClientSide(initialPagination.offset, initialPagination.limit, search, undefined);
-          }
-        } catch {
-
+        if(user&&user.uuid) {
+          return await listSubmissionsClientSide(initialPagination.offset, initialPagination.limit, search, my);
         }
+        return await listSubmissionsClientSide(initialPagination.offset, initialPagination.limit, search, undefined);
       },
       refetchInterval: 10000,
       refetchOnWindowFocus: true,
@@ -102,18 +94,20 @@ export default function RealTimeSubmTable({
   }, [isLoading]);
 
   /**
-   * useEffect hook to subscribe to submission updates via WebSocket.
-   * It listens for incoming updates and appends them to the updates state.
-   * Ensures that the updates array does not exceed 10,000 entries.
+   * Subscribe to submission updates via SSE.
    */
   useEffect(() => {
     const unsubscribe = subscribeToSubmUpdates(
       (update: SubmListSseUpdate) => {
         // Only process real-time updates if we're on the first page
         if (initialPagination.offset === 0 || 'eval_update' in update) {
-          setUpdates((prev) => {
-            if (prev.length >= 10000) prev.shift(); // Remove the oldest update if limit is reached
-            return [...prev, update]; // Append the new update
+          setSubmissions((prev) => {
+            const updatedSubms = applyUpdatesToSubmissions(
+              prev,
+              [update],
+              initialPagination.offset
+            );
+            return sortSubmissions(updatedSubms);
           });
         }
       },
@@ -124,24 +118,15 @@ export default function RealTimeSubmTable({
   }, [initialPagination.offset]);
 
   /**
-   * useEffect hook to apply updates to the submissions list whenever
-   * the fetched data or incoming updates change.
-   * It merges the updates with the current submissions and sorts them.
+   * Fresh poll results are authoritative. SSE is only an optimistic live layer
+   * between polls, so stale partial updates cannot overwrite a later refetch.
    */
   useEffect(() => {
     if (data) {  // Only update when we have fresh data
       const dataArray = Array.isArray(data.page) ? data.page : [];
-      
-      setSubmissions(() => {
-        const updatedSubms = applyUpdatesToSubmissions(
-          dataArray,           // Always use the fresh data instead of fallback
-          updates,
-          initialPagination.offset
-        );
-        return sortSubmissions(updatedSubms);
-      });
+      setSubmissions(sortSubmissions(dataArray));
     }
-  }, [data, updates, initialPagination.offset]);
+  }, [data]);
 
   return (
     <>
@@ -167,7 +152,7 @@ export default function RealTimeSubmTable({
  * @returns A new array of sorted Submission objects
  */
 function sortSubmissions(submissions: SubmListEntry[]): SubmListEntry[] {
-  const sorted = submissions.sort((a, b) => {
+  const sorted = [...submissions].sort((a, b) => {
     const dateA = new Date(a.created_at);
     const dateB = new Date(b.created_at);
 
@@ -187,34 +172,36 @@ function applyUpdatesToSubmissions(
   updates: SubmListSseUpdate[],
   offset: number = 0
 ): SubmListEntry[] {
+  const nextSubmissions = submissions.map((submission) => ({ ...submission }));
+
   for(let update of updates) {
     if ('subm_created' in update && update.subm_created !== null) {  // Check for null
       // Only add new submissions if we're on the first page
       if (offset === 0) {
         const newSubmission = update.subm_created;  // No need for type assertion
-        if (!submissions.some(s => s.subm_uuid === newSubmission.subm_uuid)) {
-          submissions.push(newSubmission);
+        if (!nextSubmissions.some(s => s.subm_uuid === newSubmission.subm_uuid)) {
+          nextSubmissions.push(newSubmission);
         }
       }
     }
     else if ('eval_update' in update) {  // Simplified condition
       const evalData = update.eval_update;  // Get the SubmEval object
-      const index = submissions.findIndex(s => s.subm_uuid === evalData.subm_uuid);
+      const index = nextSubmissions.findIndex(s => s.subm_uuid === evalData.subm_uuid);
       if (index !== -1) {
         // Update status and score info
-        submissions[index].status = evalData.eval_stage;
+        nextSubmissions[index].status = evalData.eval_stage;
         if (evalData.eval_error) {
           if (evalData.eval_error === "compilation") {
-            submissions[index].status = "compile_error";
+            nextSubmissions[index].status = "compile_error";
           } else if (evalData.eval_error === "internal") {
-            submissions[index].status = "internal_error";
+            nextSubmissions[index].status = "internal_error";
           } else {
-            submissions[index].status = evalData.eval_error;
+            nextSubmissions[index].status = evalData.eval_error;
           }
         }
-        submissions[index].score_info = evalData.score_info;
+        nextSubmissions[index].score_info = evalData.score_info;
       }
     }
   }
-  return [...submissions];
+  return nextSubmissions;
 }

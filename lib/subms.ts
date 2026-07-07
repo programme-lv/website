@@ -71,15 +71,6 @@ export function subscribeToSubmUpdates(
     }
   };
 
-  eventSource.onerror = () => {
-    if (eventSource.readyState === EventSource.CLOSED) {
-      console.log("SSE connection closed, attempting to reconnect in 1s...");
-      setTimeout(() => {
-        subscribeToSubmUpdates(onUpdate);
-      }, 1000);
-    }
-  };
-
   return () => {
     eventSource.close();
   };
