@@ -111,7 +111,7 @@ const LeftSide = React.memo(function LeftSideInner({ task }: { task: Task }) {
 		<div
 			className="h-full max-h-full w-full overflow-hidden rounded-sm border-small border-divider p-2 bg-white overflow-y-auto"
 		>
-			<div className="h-full relative flex flex-col items-center gap-1 flex-grow">
+			<div className="@container relative mx-auto flex h-full w-full max-w-[80ch] flex-grow flex-col items-center gap-1">
 				<TaskHeader task_id={task.short_task_id} {...task} />
 
 				<div className="my-1 border-t border-divider" />
@@ -211,7 +211,7 @@ const MdView = React.memo(function MdViewInner({
 												<p className="text-small text-default-700 my-0.5 mb-1.5 select-none">
 													Piezīme:
 												</p>
-												<p className="text-sm">
+												<p className="text-sm text-left @xl:[text-align:justify]">
 													{example.md_note}
 												</p>
 											</div>
@@ -262,7 +262,9 @@ const MdView = React.memo(function MdViewInner({
 									header: "Apakšuzdevuma apraksts",
 									key: "desc",
 									render: (_item, i) => (
-										<div dangerouslySetInnerHTML={{ __html: subtaskDescriptions[i] }} />
+										<div className="w-full text-left @xl:[text-align:justify]">
+											<div dangerouslySetInnerHTML={{ __html: subtaskDescriptions[i] }} />
+										</div>
 									),
 								},
 								{
@@ -322,8 +324,8 @@ function Section({ title, content }: { title: string; content: string }) {
 	return (
 		<div>
 			<h2 className="text-small mb-1 font-semibold">{title}</h2>
-			<div>
-				<span dangerouslySetInnerHTML={{ __html: content }} />
+			<div className="w-full text-left @xl:[text-align:justify]">
+				<div dangerouslySetInnerHTML={{ __html: content }} />
 			</div>
 		</div>
 	);
@@ -333,7 +335,9 @@ function SectionNEW({title, md_content}: {title: string, md_content: string}) {
 	return (
 		<div>
 			<h2 className="text-small mb-1 font-semibold">{title}</h2>
-			<MarkdownRenderer content={md_content} />
+			<div className="w-full text-left @xl:[text-align:justify]">
+				<MarkdownRenderer content={md_content} />
+			</div>
 		</div>
 	);
 }
