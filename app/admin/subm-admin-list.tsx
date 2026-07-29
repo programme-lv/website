@@ -112,9 +112,16 @@ export default function SubmAdminList({ submPage }: { submPage: PaginatedSubmLis
                         render: (subm) => (
                             <div className="flex justify-center items-center">
                                 <Checkbox
+                                    aria-label={`Select submission ${subm.subm_uuid}`}
                                     isSelected={selectedSubmissions.has(subm.subm_uuid)}
                                     onChange={(isChecked) => handleCheckboxChange(subm.subm_uuid, isChecked)}
-                                />
+                                >
+                                    <Checkbox.Content>
+                                        <Checkbox.Control className="size-5">
+                                            <Checkbox.Indicator />
+                                        </Checkbox.Control>
+                                    </Checkbox.Content>
+                                </Checkbox>
                             </div>
                         )
                     },
