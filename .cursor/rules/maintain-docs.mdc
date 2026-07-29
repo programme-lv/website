@@ -1,0 +1,14 @@
+---
+description: Keep durable website engineering knowledge documented
+alwaysApply: true
+---
+
+# Maintain Website Documentation
+
+- Check `docs/` before investigating website architecture, dependency constraints, or known failure modes.
+- Add or update a focused document in `docs/` when work reveals durable, non-obvious information that would prevent repeated investigation.
+- Document the reason and invariant, not a chronological debugging transcript.
+- Include affected packages or files, compatibility constraints, symptoms, and a short verification method when relevant.
+- Update documentation in the same change that alters a documented constraint.
+- Do not document transient local state, one-off command output, guesses, secrets, or facts obvious from the code.
+- Keep `README.md` for setup and repository orientation; keep implementation details and troubleshooting knowledge in `docs/`.

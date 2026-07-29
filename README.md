@@ -57,3 +57,4 @@ yarn lint     # Run ESLint
 - `lib/` — backend API clients and shared utilities
 - `types/` — shared TypeScript types
 - `config/` — application metadata and UI configuration
+- `docs/` — implementation constraints and troubleshooting knowledge
