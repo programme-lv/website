@@ -14,8 +14,6 @@ import React, {
 import { useParams, useRouter } from "next/navigation";
 import { Resizable } from "re-resizable";
 import {
-
-	IconFileTypePdf,
 	IconGripVertical,
 	IconMenu2,
 	IconPencil,
@@ -347,7 +345,6 @@ type TaskHeaderProps = {
 	illustration_img?: IllustrationImage;
 	origin_olympiad?: string;
 	origin_notes?: Record<string, string>;
-	default_pdf_statement_url?: string;
 };
 
 function TaskHeader({
@@ -357,7 +354,6 @@ function TaskHeader({
 	illustration_img,
 	origin_olympiad,
 	origin_notes,
-	default_pdf_statement_url,
 }: TaskHeaderProps) {
 	const cardRef = useRef<HTMLDivElement>(null);
 	const [layout, setLayout] = useState<"xs" | "narrow" | "wide">("wide");
@@ -428,28 +424,15 @@ function TaskHeader({
 									)}
 								</div>
 								<div>
-									{(default_pdf_statement_url || userIsAdmin) && (
+									{userIsAdmin && (
 										<div className="flex items-center gap-2">
-											{default_pdf_statement_url && (
-												<a
-													aria-label="Atvērt oriģinālo PDF"
-													className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-divider text-default-700 transition-colors hover:bg-gray-50"
-													href={default_pdf_statement_url}
-													target="_blank"
-													rel="noreferrer"
-												>
-													<IconFileTypePdf height={20} width={20} />
-												</a>
-											)}
-											{userIsAdmin && (
-												<Link
-													aria-label="Rediģēt uzdevumu"
-													className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-divider text-default-700 transition-colors hover:bg-gray-50"
-													href={`/admin/task/${task_id}`}
-												>
-													<IconPencil height={18} width={18} />
-												</Link>
-											)}
+											<Link
+												aria-label="Rediģēt uzdevumu"
+												className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-divider text-default-700 transition-colors hover:bg-gray-50"
+												href={`/admin/task/${task_id}`}
+											>
+												<IconPencil height={18} width={18} />
+											</Link>
 											<Button isIconOnly size="sm" variant="outline" isDisabled>
 												<IconMenu2
 													className="text-default-700"

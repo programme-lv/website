@@ -11,12 +11,10 @@ type Task = {
     memory_limit_megabytes: number;
     cpu_time_limit_seconds: number;
     origin_olympiad: string;
-    lv_pdf_statement_sha: string;
     illustration_img?: IllustrationImage;
     difficulty_rating: 1 | 2 | 3 | 4 | 5;
     default_md_statement?: MarkdownStatement;
     examples?: Example[];
-    default_pdf_statement_url?: string;
     origin_notes?: Record<string, string>;
     visible_input_subtasks?: VisibleInputSubtask[];
     statement_subtasks?: SubtaskOverview[];
