@@ -13,6 +13,7 @@ services:
     environment:
       NEXT_PUBLIC_API_HOST: "https://api.programme.lv"
       SERVER_API_HOST: "http://backend:8080"
+      ADMIN_API_KEY: "replace-with-a-separate-long-random-secret"
     ports:
       - "3000:3000"
     depends_on:
@@ -34,6 +35,7 @@ services:
       dockerfile: Dockerfile
     environment:
       JWT_KEY: "replace-with-a-long-random-secret"
+      ADMIN_API_KEY: "replace-with-a-separate-long-random-secret"
       COOKIE_DOMAIN: "localhost"
 
       POSTGRES_HOST: "postgres"

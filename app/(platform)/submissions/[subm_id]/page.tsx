@@ -1,4 +1,4 @@
-import { getExec } from "@/lib/subms";
+import { getExec } from "@/lib/exec/get";
 import Layout from "@/components/layout";
 import SubmInfoHeader from "./header";
 import CodeBlock from "@/components/code-block";
@@ -30,7 +30,10 @@ export default async function Page({
 	if (!submData || !submData.curr_eval)
 		return <>Error: submission data is empty.</>;
 
-	const execData = await getExec(submData.curr_eval.eval_uuid);
+	const execData = await getExec(
+		submData.curr_eval.eval_uuid,
+		Boolean(submData.content),
+	);
 	if (!execData) return <>Error: execution data is empty.</>;
 
 	const breadcrumbs = [
