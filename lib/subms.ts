@@ -1,5 +1,4 @@
 import { API_HOST } from "./config";
-import { Execution } from "@/types/exec";
 import { SubmListEntry, SubmListSseUpdate } from "@/types/subm";
 import { MaxScorePerTask } from "@/types/scores";
 
@@ -74,23 +73,6 @@ export function subscribeToSubmUpdates(
   return () => {
     eventSource.close();
   };
-};
-
-export const getExec = async (execUuid: string): Promise<Execution> => {
-  const response = await fetch(`${API_HOST}/exec/${execUuid}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw { response: { data } };
-  }
-
-  return data.data;
 };
 
 export const getMaxScorePerTask = async (username: string): Promise<MaxScorePerTask> => {

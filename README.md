@@ -35,11 +35,14 @@ Create `.env.local` when overriding the production API:
 ```dotenv
 NEXT_PUBLIC_API_HOST=http://localhost:8080
 SERVER_API_HOST=http://localhost:8080
+ADMIN_API_KEY=replace-with-a-separate-long-random-secret
 ```
 
 `NEXT_PUBLIC_API_HOST` is used by the browser.
 `SERVER_API_HOST` is used by server-side requests and defaults to `NEXT_PUBLIC_API_HOST`.
 Both ultimately default to `https://api.programme.lv`.
+`ADMIN_API_KEY` authenticates server-side requests to protected backend endpoints and must match the backend value.
+Never expose it through a `NEXT_PUBLIC_` variable or browser-side code.
 
 ## Commands
 

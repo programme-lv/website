@@ -1,4 +1,4 @@
-import { getExec } from "@/lib/subms";
+import { getExec } from "@/lib/exec/get";
 import Layout from "@/components/layout";
 import SubmInfoHeader from "./header";
 import CodeBlock from "@/components/code-block";
