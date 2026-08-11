@@ -1,20 +1,17 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, Suspense } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import { AuthContext } from "@/app/providers";
 import { registerUser, loginUser } from "@/lib/auth";
 import Alert from "@/components/alert";
-import { Suspense } from "react";
 import { User } from "@/types/proglv";
 import GenericButton from "./generic-button";
+import AuthField from "./auth-field";
 import { IconEye, IconEyeOff, IconLogin2, IconUserPlus } from "@tabler/icons-react";
 import { TextLink } from "./text-link";
-import { Input, Label } from "@heroui/react";
-
+import Link from "next/link";
 
 function FormatError(error: string) {
-  // capitalize first letter
-  // add dot at the end
   return error.charAt(0).toUpperCase() + error.slice(1) + ".";
 }
 
@@ -83,11 +80,9 @@ export default function AuthForm({
           email: user.email,
           firstname: user.firstname,
           lastname: user.lastname,
-        } as User)
+        } as User);
 
         setIsRedirecting(true);
-
-        // Use hard navigation to ensure server components re-fetch data with new auth state
         window.location.href = redirectParam || "/tasks";
       } else {
         setError(FormatError(response.message));
@@ -103,7 +98,6 @@ export default function AuthForm({
     if (type === "register") {
       if (password !== repPassword) {
         setError("Paroles nesakrīt!");
-
         return;
       }
       registerMutation.mutate({
@@ -118,171 +112,149 @@ export default function AuthForm({
     }
   };
 
-  const disableInputs = loginMutation.status === 'pending' || registerMutation.status === 'pending' || isRedirecting;
+  const disableInputs =
+    loginMutation.status === "pending" ||
+    registerMutation.status === "pending" ||
+    isRedirecting;
 
   return (
-    <div className="flex w-full flex-col gap-4 pb-4 pt-4">
-      <p className="pb-2 text-xl flex gap-x-2">
-        {type === "register" ? (
-          <>
-            <span>Reģistrācija</span>
-          </>
-        ) : (
-          <>Sveicināts!</>
-        )}
-      </p>
-      <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
-        <div className="flex flex-col gap-1">
-          <Label>Lietotājvārds</Label>
-          <Input
-            aria-label="Lietotājvārds"
-            autoComplete="username"
-            className="border-divider border rounded-md py-3"
-            disabled={disableInputs}
-            name="username"
-            required
-            value={username}
-            variant="secondary"
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}
+    <div className="flex w-full flex-col gap-6">
+      <div className="flex flex-col gap-2">
+        <h1 className="text-[1.75rem] font-normal leading-tight tracking-tight text-[#161616]">
+          {type === "register" ? "Izveidot kontu" : "Pieslēgties"}
+        </h1>
+        <Suspense>
+          <GoToLoginOrRegister
+            type={type}
+            redirect={redirectParam ?? undefined}
+            onSwitchToLogin={onSwitchToLogin}
+            onSwitchToRegister={onSwitchToRegister}
           />
-        </div>
+        </Suspense>
+      </div>
+
+      <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+        <AuthField
+          label="Lietotājvārds"
+          name="username"
+          autoComplete="username"
+          required
+          disabled={disableInputs}
+          value={username}
+          onChange={setUsername}
+        />
+
         {type === "register" && (
           <>
-            <div className="flex flex-col md:flex-row gap-3">
-              <div className="flex flex-1 flex-col gap-1">
-                <Label>Vārds (neobligāts)</Label>
-                <Input
-                  aria-label="Vārds (neobligāts)"
-                  className="border-divider border rounded-md py-3"
-                  disabled={disableInputs}
+            <div className="flex flex-col gap-4 sm:flex-row sm:gap-3">
+              <div className="flex-1">
+                <AuthField
+                  label="Vārds (neobligāts)"
                   name="firstName"
-                  value={firstName}
-                  variant="secondary"
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFirstName(e.target.value)}
-                />
-              </div>
-              <div className="flex flex-1 flex-col gap-1">
-                <Label>Uzvārds (neobligāts)</Label>
-                <Input
-                  aria-label="Uzvārds (neobligāts)"
-                  className="border-divider border rounded-md py-3"
                   disabled={disableInputs}
+                  value={firstName}
+                  onChange={setFirstName}
+                />
+              </div>
+              <div className="flex-1">
+                <AuthField
+                  label="Uzvārds (neobligāts)"
                   name="lastName"
+                  disabled={disableInputs}
                   value={lastName}
-                  variant="secondary"
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setLastName(e.target.value)}
+                  onChange={setLastName}
                 />
               </div>
             </div>
-            <div className="flex flex-col gap-1">
-              <Label>E-pasta adrese</Label>
-              <Input
-                aria-label="E-pasta adrese"
-                autoComplete="email"
-                className="border-divider border rounded-md py-3"
-                disabled={disableInputs}
-                name="email"
-                type="email"
-                value={email}
-                variant="secondary"
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
-              />
-            </div>
+            <AuthField
+              label="E-pasta adrese"
+              name="email"
+              type="email"
+              autoComplete="email"
+              disabled={disableInputs}
+              value={email}
+              onChange={setEmail}
+            />
           </>
         )}
-        <div className="flex flex-col md:flex-row gap-3">
-          <div className="flex flex-1 flex-col gap-1">
-            <Label>Parole</Label>
-            <div className="relative">
-              <Input
-                aria-label="Parole"
-                autoComplete="password"
-                className="border-divider border rounded-md py-3 pr-10"
-                disabled={disableInputs}
-                name="password"
-                required
-                fullWidth
-                type={isVisible ? "text" : "password"}
-                value={password}
-                variant="secondary"
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
-              />
-              <div className="pointer-events-auto absolute inset-y-0 right-3 flex items-center">
-                <button type="button" onMouseDown={toggleVisibility}>
-                  {isVisible ? (
-                    <IconEyeOff className="text-default-500" size={22}
-                    />
-                  ) : (
-                    <IconEye className="text-default-500" size={22} />
-                  )}
-                </button>
-              </div>
-            </div>
-          </div>
-          {type === "register" && (
-            <div className="flex flex-1 flex-col gap-1">
-              <Label>Apstipriniet paroli</Label>
-              <Input
-                aria-label="Apstipriniet paroli"
-                autoComplete="new-password"
-                className="border-divider border rounded-md py-3"
-                disabled={disableInputs}
-                name="confirmPassword"
-                required
-                type="password"
-                value={repPassword}
-                variant="secondary"
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRepPassword(e.target.value)}
-              />
-            </div>
+
+        <div className="flex flex-col gap-1.5">
+          <AuthField
+            label="Parole"
+            name="password"
+            autoComplete={
+              type === "register" ? "new-password" : "current-password"
+            }
+            required
+            disabled={disableInputs}
+            type={isVisible ? "text" : "password"}
+            value={password}
+            onChange={setPassword}
+            endContent={
+              <button
+                type="button"
+                className="p-1 text-[#525252] hover:text-[#161616]"
+                aria-label={isVisible ? "Slēpt paroli" : "Rādīt paroli"}
+                onMouseDown={toggleVisibility}
+              >
+                {isVisible ? <IconEyeOff size={20} /> : <IconEye size={20} />}
+              </button>
+            }
+          />
+          {type === "login" && (
+            <p className="text-xs text-[#6f6f6f]">
+              <Link
+                href="/forgot-password"
+                className="text-[#6f6f6f] underline underline-offset-2 decoration-[#6f6f6f]/35 hover:text-[#525252] hover:decoration-[#525252]/70"
+              >
+                Aizmirsi paroli?
+              </Link>
+            </p>
           )}
         </div>
-        <div className="flex justify-center">
-          <GenericButton
-            rounded="lg"
-            variant={type === "register" ? "success" : "primary"}
-            icon={type === "register" ? <IconUserPlus size={22} /> : <IconLogin2 size={22} />}
-            className="w-full"
-            isLoading={
-              loginMutation.status === 'pending' ||
-              registerMutation.status === 'pending' ||
-              isRedirecting
-            }
-            type="submit"
-          >
-            {type === "register" ? "Reģistrēties" : "Pieslēgties"}
-          </GenericButton>
-          {/* <Button
-            className="flex-grow mt-4"
-            color="primary"
-            isLoading={
-              loginMutation.status === 'pending' ||
-              registerMutation.status === 'pending' ||
-              isRedirecting
-            }
-            type="submit"
-          >
-            {type === "register" ? "Reģistrēties" : "Pieslēgties"}
-          </Button> */}
-        </div>
-      </form>
 
-      {error && (
-        <Alert message={error} type="error" onClose={() => setError(null)} />
-      )}
-      <div className="flex items-center gap-4 py-2">
-        <div className="flex-1 border-t border-divider" />
-        <p className="shrink-0 text-small text-default-500">VAI</p>
-        <div className="flex-1 border-t border-divider" />
-      </div>
-      <Suspense>
-        <GoToLoginOrRegister
-          type={type}
-          redirect={redirectParam ?? undefined}
-          onSwitchToLogin={onSwitchToLogin}
-          onSwitchToRegister={onSwitchToRegister}
-        />
-      </Suspense>
+        {type === "register" && (
+          <AuthField
+            label="Apstipriniet paroli"
+            name="confirmPassword"
+            type="password"
+            autoComplete="new-password"
+            required
+            disabled={disableInputs}
+            value={repPassword}
+            onChange={setRepPassword}
+          />
+        )}
+
+        {error && (
+          <Alert message={error} type="error" onClose={() => setError(null)} />
+        )}
+
+        <GenericButton
+          className={`mt-2 !h-[44px] w-full !justify-between px-4 text-[0.95rem] !font-normal ${
+            type === "register"
+              ? ""
+              : "!bg-[#0f62fe] hover:!bg-[#0353e9]"
+          }`}
+          rounded="sm"
+          variant={type === "register" ? "success" : "primary"}
+          icon={
+            type === "register" ? (
+              <IconUserPlus size={20} stroke={1.75} />
+            ) : (
+              <IconLogin2 size={20} stroke={1.75} />
+            )
+          }
+          isLoading={
+            loginMutation.status === "pending" ||
+            registerMutation.status === "pending" ||
+            isRedirecting
+          }
+          type="submit"
+        >
+          {type === "register" ? "Reģistrēties" : "Turpināt"}
+        </GenericButton>
+      </form>
     </div>
   );
 }
@@ -309,37 +281,37 @@ function GoToLoginOrRegister({
     : `/register`;
 
   return (
-    <p className="text-center text-small">
+    <p className="text-sm text-[#525252]">
       {type === "register" ? (
         <>
-          Jau ir konts?&nbsp;
+          Jau ir konts?{" "}
           {onSwitchToLogin ? (
             <button
               type="button"
-              className="cursor-pointer border-0 bg-transparent p-0 text-blue-800 underline underline-offset-2 decoration-blue-800/30 hover:decoration-blue-800/90 font-medium"
+              className="cursor-pointer border-0 bg-transparent p-0 font-medium text-blue-800 underline underline-offset-2 decoration-blue-800/30 hover:decoration-blue-800/90"
               onClick={onSwitchToLogin}
             >
               Pieslēgties
             </button>
           ) : (
-            <TextLink color="default" weight="medium" href={loginHref}>
+            <TextLink color="primary" weight="medium" href={loginHref}>
               Pieslēgties
             </TextLink>
           )}
         </>
       ) : (
         <>
-          Nav konta?&nbsp;
+          Nav konta?{" "}
           {onSwitchToRegister ? (
             <button
               type="button"
-              className="cursor-pointer border-0 bg-transparent p-0 text-green-700 underline underline-offset-2 decoration-green-700/30 hover:decoration-green-700/90 font-medium"
+              className="cursor-pointer border-0 bg-transparent p-0 font-medium text-[#8a3ffc] underline underline-offset-2 decoration-[#8a3ffc]/30 hover:decoration-[#8a3ffc]/90"
               onClick={onSwitchToRegister}
             >
               Reģistrēties
             </button>
           ) : (
-            <TextLink color="success" weight="medium" href={registerHref}>
+            <TextLink color="accent" weight="medium" href={registerHref}>
               Reģistrēties
             </TextLink>
           )}

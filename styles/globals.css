@@ -143,6 +143,54 @@ strong {
   background-color: var(--legacy-content1);
 }
 
+/* Auth inputs: ring lives on the shell so browser autofill cannot thicken one edge */
+.auth-field-shell {
+  background-color: #e8e8e8;
+  box-shadow: inset 0 -1px 0 0 #8d8d8d;
+  transition: background-color 120ms ease, box-shadow 120ms ease;
+}
+
+.auth-field-shell:focus-within {
+  background-color: #f4f4f4;
+  box-shadow: inset 0 0 0 2px #0f62fe;
+}
+
+.auth-field-input {
+  border: 0;
+  outline: none;
+  background-color: transparent;
+  box-shadow: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.auth-field-input:focus,
+.auth-field-input:focus-visible {
+  border: 0;
+  outline: none;
+  box-shadow: none;
+}
+
+.auth-field-input:-webkit-autofill,
+.auth-field-input:-webkit-autofill:hover,
+.auth-field-input:-webkit-autofill:focus,
+.auth-field-input:autofill,
+.auth-field-input:autofill:hover,
+.auth-field-input:autofill:focus {
+  -webkit-text-fill-color: #161616;
+  caret-color: #161616;
+  border: 0;
+  outline: none;
+  /* Paint fill only; never put the focus ring on the input itself */
+  box-shadow: inset 0 0 0 1000px #e8e8e8 !important;
+  transition: background-color 99999s ease-out;
+}
+
+.auth-field-shell:focus-within .auth-field-input:-webkit-autofill,
+.auth-field-shell:focus-within .auth-field-input:autofill {
+  box-shadow: inset 0 0 0 1000px #f4f4f4 !important;
+}
+
 @layer components {
   .input {
     @apply rounded-sm;
