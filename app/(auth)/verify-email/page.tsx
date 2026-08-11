@@ -11,10 +11,10 @@ function VerifyEmailContent() {
   const searchParams = useSearchParams();
   const token = searchParams.get("token") ?? "";
   const [status, setStatus] = useState<"loading" | "success" | "error">(
-    token ? "loading" : "error"
+    token ? "loading" : "error",
   );
   const [message, setMessage] = useState(
-    token ? "Apstiprinām e-pastu…" : "Trūkst derīgas apstiprinājuma saites."
+    token ? "Apstiprinām e-pastu…" : "Trūkst derīgas apstiprinājuma saites.",
   );
 
   useEffect(() => {
@@ -22,18 +22,26 @@ function VerifyEmailContent() {
       return;
     }
     let cancelled = false;
-    confirmEmailVerification(token).then((response) => {
-      if (cancelled) {
-        return;
-      }
-      if (response.status === "success") {
-        setStatus("success");
-        setMessage("E-pasts apstiprināts.");
-        return;
-      }
-      setStatus("error");
-      setMessage(response.message || "Neizdevās apstiprināt e-pastu.");
-    });
+    confirmEmailVerification(token)
+      .then((response) => {
+        if (cancelled) {
+          return;
+        }
+        if (response.status === "success") {
+          setStatus("success");
+          setMessage("E-pasts apstiprināts.");
+          return;
+        }
+        setStatus("error");
+        setMessage(response.message || "Neizdevās apstiprināt e-pastu.");
+      })
+      .catch(() => {
+        if (cancelled) {
+          return;
+        }
+        setStatus("error");
+        setMessage("Neizdevās apstiprināt e-pastu.");
+      });
     return () => {
       cancelled = true;
     };
@@ -47,7 +55,11 @@ function VerifyEmailContent() {
       <Alert
         message={message}
         type={
-          status === "error" ? "error" : status === "success" ? "success" : "info"
+          status === "error"
+            ? "error"
+            : status === "success"
+              ? "success"
+              : "info"
         }
         onClose={() => undefined}
       />

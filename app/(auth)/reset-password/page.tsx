@@ -66,6 +66,10 @@ function ResetPasswordForm() {
         className="flex flex-col gap-4"
         onSubmit={(e) => {
           e.preventDefault();
+          if (password.length < 8) {
+            setError("Parolei jābūt vismaz 8 simbolus garai");
+            return;
+          }
           if (password !== confirm) {
             setError("Paroles nesakrīt");
             return;
