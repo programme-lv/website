@@ -65,8 +65,5 @@ interface Execution {
 
 export type {
     Execution,
-    RunData,
     TestRes,
-    PrLang,
-    TesterParams,
 };

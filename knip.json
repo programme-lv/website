@@ -1,0 +1,9 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "entry": ["app/**/*.{ts,tsx}"],
+  "project": ["**/*.{ts,tsx,js,mjs}"],
+  "ignoreDependencies": ["sharp", "@heroui/styles"],
+  "ignoreIssues": {
+    "lib/auth.ts": ["exports"]
+  }
+}

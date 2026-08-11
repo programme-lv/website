@@ -111,7 +111,7 @@ export default function TestingEditForm() {
             <section className="flex flex-col gap-3">
                 <h3 className="font-semibold">Testu kopa</h3>
                     <p className="">
-                        Pašlaik ir augšupielādēti <span className="font-semibold">{testCount} testi</span>. Skatīt <TextLink href="/admin/task/1/testing/testset">testu kopu</TextLink>.
+                        Pašlaik ir augšupielādēti <span className="font-semibold">{testCount} testi</span>.
                     </p>
                     <FileUpload
                         acceptedTypes=".zip"

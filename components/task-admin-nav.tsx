@@ -20,7 +20,7 @@ export default function TaskAdminNav({ taskId, activeTab }: TaskAdminNavProps) {
       href: `/admin/task/${taskId}`,
     },
     {
-      key: "statement", 
+      key: "statement",
       label: "Formulējums",
       href: `/admin/task/${taskId}/statement`,
     },
@@ -31,7 +31,7 @@ export default function TaskAdminNav({ taskId, activeTab }: TaskAdminNavProps) {
     },
     {
       key: "testing",
-      label: "Testēšana", 
+      label: "Testēšana",
       href: `/admin/task/${taskId}/testing`,
     },
     {
@@ -43,18 +43,6 @@ export default function TaskAdminNav({ taskId, activeTab }: TaskAdminNavProps) {
       key: "solutions",
       label: "Risinājumi",
       href: `/admin/task/${taskId}/solutions`,
-    },
-    {
-      key: "archive",
-      label: "Arhīvs",
-      href: `/admin/task/${taskId}?tab=archive`, 
-      disabled: true,
-    },
-    {
-      key: "history",
-      label: "Vēsture",
-      href: `/admin/task/${taskId}?tab=history`,
-      disabled: true,
     },
   ];
 
@@ -78,5 +66,3 @@ export default function TaskAdminNav({ taskId, activeTab }: TaskAdminNavProps) {
     </div>
   );
 }
-
-export { TaskAdminNav }; 

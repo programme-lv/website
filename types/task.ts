@@ -28,11 +28,6 @@ type SubtaskOverview = {
     descriptions: Record<string, string>;
 };
 
-type StInputs = {
-    subtask: number;
-    inputs: string[];
-};
-
 type VisibleInputSubtask = {
     subtask: number;
     inputs: TestWithOnlyInput[];
@@ -83,9 +78,7 @@ export type {
     Task,
     IllustrationImage,
     SubtaskOverview,
-    StInputs,
     VisibleInputSubtask,
-    TestWithOnlyInput,
     Example,
     MarkdownStatement,
     StatementImage,

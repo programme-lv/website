@@ -18,11 +18,6 @@ export const statusTranslations: Record<string, string> = {
     internal_error: "Servera kļūda",
 };
 
-export const errorTranslations: Record<string, string> = {
-    compile_error: "Kompilācijas kļūda",
-    internal_error: "Servera kļūda",
-};
-
 const narrowOnlyColsClass = "hidden xl:table-cell";
 const narrowOnlyColgroupClass = "hidden xl:table-column";
 
