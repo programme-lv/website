@@ -12,4 +12,4 @@ type ErrorResponse = {
 
 type ApiResponse<T> = SuccessResponse<T> | ErrorResponse;
 
-export type { ApiResponse, SuccessResponse, ErrorResponse };
+export type { ApiResponse };

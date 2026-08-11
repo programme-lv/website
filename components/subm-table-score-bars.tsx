@@ -1,25 +1,3 @@
-export function ErrorScoringBar() {
-    return (
-        <div className="flex justify-center flex-col items-center w-full min-w-36">
-            <div className="relative pt-1 w-full">
-                <div className="overflow-hidden h-1.5 text-xs flex rounded">
-                    <div
-                        className="flex flex-col text-center whitespace-nowrap text-white justify-center transition-all duration-1000 ease-in-out"
-                        style={{
-                            width: `${(1 * 100).toFixed(0)}%`,
-                            // background: "linear-gradient(90deg, #9F7AEA, #6B46C1)",
-                            // background: "linear-gradient(90deg, rgba(131,58,180,1) 0%, rgba(253,179,29,1) 100%)",
-                            background:
-                                "linear-gradient(90deg, rgba(131,58,180,1) 0%, rgba(152,126,208,1) 100%)",
-                        }}
-                    />
-                </div>
-            </div>
-        </div>
-    );
-}
-
-// Start of Selection
 export function SubmListScoreBar({
     green,
     red,

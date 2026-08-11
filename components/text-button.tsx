@@ -38,5 +38,3 @@ export default function TextButton({
     </button>
   );
 }
-
-export { TextButton }; 

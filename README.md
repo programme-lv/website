@@ -51,6 +51,7 @@ yarn dev      # Start the development server
 yarn build    # Create a production build
 yarn start    # Start the production server
 yarn lint     # Run ESLint
+yarn knip     # Find unused files, exports, and dependencies
 ```
 
 ## Repository layout
@@ -60,4 +61,4 @@ yarn lint     # Run ESLint
 - `lib/` — backend API clients and shared utilities
 - `types/` — shared TypeScript types
 - `config/` — application metadata and UI configuration
-- `docs/` — implementation constraints and troubleshooting knowledge
+- `docs/` — implementation constraints and troubleshooting knowledge (see also `docs/dead-code.md`)
