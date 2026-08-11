@@ -70,6 +70,10 @@ function ResetPasswordForm() {
             setError("Paroles nesakrīt");
             return;
           }
+          if (password.length < 8) {
+            setError("Parolei jābūt vismaz 8 simbolus garai");
+            return;
+          }
           mutation.mutate();
         }}
       >
