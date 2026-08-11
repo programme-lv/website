@@ -7,7 +7,7 @@ type TextLinkProps = {
     rel?: string;
     disabled?: boolean;
     weight?: "normal" | "medium" | "semibold" | "bold";
-    color?: "default" | "success";
+    color?: "default" | "success" | "accent" | "primary";
     isDisabled?: boolean;
 }
 
@@ -18,6 +18,14 @@ export function TextLink({ children, href, target, rel, disabled, color = "defau
 
     if (color === "success") {
         return <Link href={href} className={`text-green-700 underline underline-offset-2 decoration-green-700/30 hover:decoration-green-700/90 font-${weight}`} target={target} rel={rel}>{children}</Link>
+    }
+
+    if (color === "accent") {
+        return <Link href={href} className={`text-[#8a3ffc] underline underline-offset-2 decoration-[#8a3ffc]/30 hover:decoration-[#8a3ffc]/90 font-${weight}`} target={target} rel={rel}>{children}</Link>
+    }
+
+    if (color === "primary") {
+        return <Link href={href} className={`text-[#0f62fe] underline underline-offset-2 decoration-[#0f62fe]/30 hover:decoration-[#0f62fe]/90 font-${weight}`} target={target} rel={rel}>{children}</Link>
     }
 
     return (

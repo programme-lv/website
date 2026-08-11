@@ -54,6 +54,7 @@ type User = {
   email: string;
   firstname: string | null;
   lastname: string | null;
+  email_verified?: boolean;
 };
 
 type EvalStateUpdate = {

@@ -73,3 +73,52 @@ export const logoutUser = async (): Promise<ApiResponse<User>> => {
   }
 };
 
+type MessageData = { message: string };
+
+export const requestPasswordReset = async (
+  login: string
+): Promise<ApiResponse<MessageData>> => {
+  const response = await fetch(`${API_HOST}/password-reset/request`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ login }),
+  });
+  return response.json();
+};
+
+export const confirmPasswordReset = async (
+  token: string,
+  password: string
+): Promise<ApiResponse<MessageData>> => {
+  const response = await fetch(`${API_HOST}/password-reset/confirm`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ token, password }),
+  });
+  return response.json();
+};
+
+export const requestEmailVerification = async (): Promise<
+  ApiResponse<MessageData>
+> => {
+  const response = await fetch(`${API_HOST}/email-verification/request`, {
+    method: "POST",
+    credentials: "include",
+  });
+  return response.json();
+};
+
+export const confirmEmailVerification = async (
+  token: string
+): Promise<ApiResponse<MessageData>> => {
+  const response = await fetch(`${API_HOST}/email-verification/confirm`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ token }),
+  });
+  return response.json();
+};
+

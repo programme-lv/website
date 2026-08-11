@@ -1,47 +1,40 @@
 "use client";
 
 import React, { Suspense } from "react";
-import Image from "next/image";
-import Link from "next/link";
 
-import Buyukada from "@/public/buyukada-island2.webp";
-import LogoImage from "@/public/emoji-logo.png";
 import AuthForm from "./auth-form";
 
-export default function AuthCardWithBG(props: { type: "login" | "register" }) {
-  const { type } = props;
+type AuthCardType =
+  | "login"
+  | "register"
+  | "forgot-password"
+  | "reset-password"
+  | "verify-email";
+
+export default function AuthCardWithBG(props: {
+  type?: AuthCardType;
+  children?: React.ReactNode;
+}) {
+  const { type = "login", children } = props;
 
   return (
-    <div
-      className="flex min-h-screen relative w-screen items-center justify-center overflow-hidden bg-content1 p-2 pt-16 lg:px-8"
-      style={{
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
-        backgroundPosition: "center",
-      }}
-    >
-      {/* Brand Logo */}
-      <div className="absolute left-2 top-2">
-        <Link
-          className="flex items-center p-2 bg-white rounded-sm hover:bg-gray-50"
-          href="/"
-        >
-          <Image alt="programme.lv logo" height={22} src={LogoImage} />
-          <p
-            className="ms-2 me-1 dark:text-white text-medium font-mono text-default-800"
-            style={{ fontFamily: "sans-serif" }}
-          >
-            programme.lv
-          </p>
-        </Link>
-      </div>
+    <div className="flex min-h-screen w-full flex-col bg-white">
+      {/* Top spacer only when viewport has room; no brand mark */}
+      <div
+        aria-hidden
+        className="shrink-0 h-[clamp(0.75rem,10vh,5.5rem)]"
+      />
 
-
-      {/* Auth Form */}
-      <Suspense>
-        <div className="px-4 py-2 w-full max-w-md bg-white rounded-sm">
-          <AuthForm type={type} />
+      <main className="flex flex-1 justify-center px-4 pb-[clamp(1.5rem,8vh,4rem)] sm:px-6">
+        <div className="w-full max-w-[22.5rem]">
+          <Suspense>
+            {children ??
+              (type === "login" || type === "register" ? (
+                <AuthForm type={type} />
+              ) : null)}
+          </Suspense>
         </div>
-      </Suspense>
+      </main>
     </div>
   );
 }
