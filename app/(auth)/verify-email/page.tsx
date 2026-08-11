@@ -22,18 +22,26 @@ function VerifyEmailContent() {
       return;
     }
     let cancelled = false;
-    confirmEmailVerification(token).then((response) => {
-      if (cancelled) {
-        return;
-      }
-      if (response.status === "success") {
-        setStatus("success");
-        setMessage("E-pasts apstiprināts.");
-        return;
-      }
-      setStatus("error");
-      setMessage(response.message || "Neizdevās apstiprināt e-pastu.");
-    });
+    confirmEmailVerification(token)
+      .then((response) => {
+        if (cancelled) {
+          return;
+        }
+        if (response.status === "success") {
+          setStatus("success");
+          setMessage("E-pasts apstiprināts.");
+          return;
+        }
+        setStatus("error");
+        setMessage(response.message || "Neizdevās apstiprināt e-pastu.");
+      })
+      .catch(() => {
+        if (cancelled) {
+          return;
+        }
+        setStatus("error");
+        setMessage("Neizdevās apstiprināt e-pastu.");
+      });
     return () => {
       cancelled = true;
     };
