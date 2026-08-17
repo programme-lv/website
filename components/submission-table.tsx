@@ -20,6 +20,7 @@ export const statusTranslations: Record<string, string> = {
 
 const narrowOnlyColsClass = "hidden xl:table-cell";
 const narrowOnlyColgroupClass = "hidden xl:table-column";
+const submIdClassName = "font-mono text-sm";
 
 type SubmissionTableProps = {
     submissions: SubmListEntry[];
@@ -47,7 +48,7 @@ function SubmissionEntryCard({ item }: { item: SubmListEntry }) {
         >
             <div className="flex flex-wrap items-start justify-between gap-2">
                 <DateTimeCell dateTime={item.created_at} showTime={true} />
-                <span className="shrink-0 font-mono text-xs">
+                <span className={cn("shrink-0", submIdClassName)}>
                     <TextLink
                         isDisabled={item.status !== "finished" && item.status !== "compile_error"}
                         href={`/submissions/${item.id}`}
@@ -205,9 +206,11 @@ export default function SubmissionTable({ submissions, skeleton = false }: Submi
             header: "Iesūtījums",
             width: "120px",
             render: (item) => (
-                <TextLink isDisabled={item.status !== "finished" && item.status !== "compile_error"} href={`/submissions/${item.id}`}>
-                    {item.id}
-                </TextLink>
+                <span className={submIdClassName}>
+                    <TextLink isDisabled={item.status !== "finished" && item.status !== "compile_error"} href={`/submissions/${item.id}`}>
+                        {item.id}
+                    </TextLink>
+                </span>
             )
         }
     ];
