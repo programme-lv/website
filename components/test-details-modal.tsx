@@ -12,21 +12,27 @@ interface TestDetailsModalProps {
 
 // Shared verdict mappings
 export const full_verdicts: Record<string, string> = {
+  'Q': 'Gaida',
+  'X': 'Testē',
   'W': 'Nepareiza atbilde',
   'A': 'Atbilde ir pareiza',
   'T': 'Pārsniegts laiks',
   'M': 'Pārsniegta atmiņa',
   'R': 'Izpildes kļūda',
-  'I': 'Neieteikmē punktus',
+  'I': 'Neietekmē punktus',
+  'U': 'Nezināms',
 };
 
 export const verdict_colors: Record<string, string> = {
+  'Q': 'text-default-500',
+  'X': 'text-subm-warning',
   'W': 'text-subm-danger',
   'A': 'text-subm-success',
   'T': 'text-subm-warning',
   'M': 'text-subm-warning',
   'R': 'text-subm-danger',
-  'I': 'text-default-600',
+  'I': 'text-default-500',
+  'U': 'text-default-500',
 };
 
 export default function TestDetailsModal({ isOpen, onOpenChange, test, subm_eval }: TestDetailsModalProps) {

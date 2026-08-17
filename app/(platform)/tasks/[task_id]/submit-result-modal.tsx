@@ -19,7 +19,7 @@ const VERDICT_BOX_CLASS: Record<string, string> = {
 	T: "bg-[#ecc94b]",
 	M: "bg-[#ecc94b]",
 	R: "bg-[#f56565]",
-	I: "bg-[#a0aec0]",
+	I: "bg-transparent box-border border border-dashed border-[#718096]",
 	U: "bg-[#9F7AEA]",
 };
 
