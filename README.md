@@ -61,4 +61,4 @@ yarn knip     # Find unused files, exports, and dependencies
 - `lib/` — backend API clients and shared utilities
 - `types/` — shared TypeScript types
 - `config/` — application metadata and UI configuration
-- `docs/` — implementation constraints and troubleshooting knowledge (see also `docs/dead-code.md`)
+- `docs/` — implementation constraints and troubleshooting knowledge (see `docs/dead-code.md`, `docs/submission-ids.md`)

@@ -7,6 +7,7 @@ import TestResultTable from "@/components/test-result-table";
 import ShikiCodeBlock from "@/components/ro-shiki-code";
 import { getSubmission } from "@/lib/fetch-subm";
 import { Metadata } from "next";
+import { redirect } from "next/navigation";
 
 export async function generateMetadata({
 	params,
@@ -14,9 +15,16 @@ export async function generateMetadata({
 	params: Promise<{ subm_id: string }>;
 }): Promise<Metadata> {
 	const { subm_id } = await params;
-	return {
-		title: `Iesūtījums #${subm_id.slice(0, 8)}`,
-	};
+	try {
+		const subm = await getSubmission(subm_id);
+		return {
+			title: `Iesūtījums #${subm.id}`,
+		};
+	} catch {
+		return {
+			title: `Iesūtījums #${subm_id}`,
+		};
+	}
 }
 
 export default async function Page({
@@ -30,6 +38,10 @@ export default async function Page({
 	if (!submData || !submData.curr_eval)
 		return <>Error: submission data is empty.</>;
 
+	if (subm_id !== submData.id) {
+		redirect(`/submissions/${submData.id}`);
+	}
+
 	const execData = await getExec(
 		submData.curr_eval.eval_uuid,
 		Boolean(submData.content),
@@ -38,7 +50,7 @@ export default async function Page({
 
 	const breadcrumbs = [
 		{ label: "Iesūtījumi", href: "/submissions" },
-		{ label: subm_id, href: `/submissions/${subm_id}` },
+		{ label: submData.id, href: `/submissions/${submData.id}` },
 	];
 
 	return (

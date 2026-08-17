@@ -50,9 +50,9 @@ function SubmissionEntryCard({ item }: { item: SubmListEntry }) {
                 <span className="shrink-0 font-mono text-xs">
                     <TextLink
                         isDisabled={item.status !== "finished" && item.status !== "compile_error"}
-                        href={`/submissions/${item.subm_uuid}`}
+                        href={`/submissions/${item.id}`}
                     >
-                        {item.subm_uuid.slice(0, 8)}
+                        {item.id}
                     </TextLink>
                 </span>
             </div>
@@ -201,12 +201,12 @@ export default function SubmissionTable({ submissions, skeleton = false }: Submi
             render: (item) => statusTranslations[item.status] ?? item.status
         },
         {
-            key: "subm_uuid",
+            key: "id",
             header: "Iesūtījums",
             width: "120px",
             render: (item) => (
-                <TextLink isDisabled={item.status !== "finished" && item.status !== "compile_error"} href={`/submissions/${item.subm_uuid}`}>
-                    {item.subm_uuid.slice(0, 8)}
+                <TextLink isDisabled={item.status !== "finished" && item.status !== "compile_error"} href={`/submissions/${item.id}`}>
+                    {item.id}
                 </TextLink>
             )
         }

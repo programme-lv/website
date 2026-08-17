@@ -126,9 +126,9 @@ export default function SubmAdminList({ submPage }: { submPage: PaginatedSubmLis
                         )
                     },
                     {
-                        key: "uuid",
-                        header: "UUID",
-                        render: (subm) => subm.subm_uuid.slice(0, 8)
+                        key: "id",
+                        header: "ID",
+                        render: (subm) => subm.id
                     },
                     {
                         key: "username",

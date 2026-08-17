@@ -47,6 +47,7 @@ type TestGroup = {
 };
 
 export type SubmListEntry = {
+  id: string;
   subm_uuid: string;
   username: string;
   task_id: string;
@@ -59,6 +60,7 @@ export type SubmListEntry = {
 };
 
 export type DetailedSubmView = {
+  id: string;
   subm_uuid: string;
   content?: string;
   username: string;
