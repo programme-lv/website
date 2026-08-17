@@ -26,13 +26,9 @@ export type SubmEval = {
   eval_error: string;
   subtasks: Subtask[];
   test_groups: TestGroup[];
-  verdicts: Verdict[]; // q,ac,wa,tle,mle,re,ig -> "QAWTMRI"
+  verdicts: string; // one char per test: Q/X/A/W/T/M/R/I/U
   score_info: ScoreInfo;
 };
-
-// verdict is a string of characters, each character is a verdict
-// q,ac,wa,tle,mle,re,ig -> "QAWTMRI"
-export type Verdict = "Q" | "A" | "W" | "T" | "M" | "R" | "I";
 
 type Subtask = {
   points: number;

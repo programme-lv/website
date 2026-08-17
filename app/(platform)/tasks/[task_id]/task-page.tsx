@@ -11,7 +11,7 @@ import React, {
 	useContext,
 	useMemo,
 } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { Resizable } from "re-resizable";
 import {
 	IconGripVertical,
@@ -51,6 +51,8 @@ import LoadingSpinner from "@/components/loading-spinner";
 import { ProgrammingLanguage } from "@/types/proglv";
 import GenericTable from "@/components/generic-table";
 import MarkdownRenderer from "@/components/markdown-renderer";
+import SubmitResultModal from "./submit-result-modal";
+import { DetailedSubmView } from "@/types/subm";
 
 export default function TaskDetailsPage(props: { task: Task }) {
 	const { task_id } = useParams();
@@ -499,7 +501,8 @@ function RightSide({ taskCode }: { taskCode: string }) {
 	const queryClient = useQueryClient();
 	const [selectedLanguage, setSelectedLanguage] = useState<string>("");
 	const [isLoading, setIsLoading] = useState<boolean>(false);
-	const router = useRouter();
+	const [resultSubm, setResultSubm] = useState<DetailedSubmView | null>(null);
+	const [resultOpen, setResultOpen] = useState(false);
 
 	const { data: listLangsResponse } = useQuery({
 		queryKey: ["list-languages"],
@@ -544,16 +547,16 @@ int main() {
 	const submitSolution = async () => {
 		setIsLoading(true);
 		try {
-			await createSubmission(
+			const created = await createSubmission(
 				code,
 				authContext.user?.username ?? "",
 				selectedLanguage,
 				taskCode
 			);
 			await queryClient.invalidateQueries({ queryKey: ["submissions"] });
-			await router.push(`/submissions?my=true`);
+			setResultSubm(created);
+			setResultOpen(true);
 		} catch (error: unknown) {
-			setIsLoading(false);
 			if (error && typeof error === 'object' && 'response' in error) {
 				const errorWithResponse = error as { response?: { data?: { message?: string } } };
 				const data = errorWithResponse.response?.data;
@@ -565,6 +568,8 @@ int main() {
 			} else {
 				alert("Kļūda iesūtot risinājumu. Lūdzu, mēģiniet vēlreiz!");
 			}
+		} finally {
+			setIsLoading(false);
 		}
 	};
 
@@ -618,6 +623,11 @@ int main() {
 					</div>
 				</div>
 			</div>
+			<SubmitResultModal
+				subm={resultSubm}
+				isOpen={resultOpen}
+				onOpenChange={setResultOpen}
+			/>
 		</div>
 	);
 }

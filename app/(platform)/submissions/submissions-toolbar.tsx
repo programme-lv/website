@@ -1,13 +1,12 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Button, Modal, cn } from "@heroui/react";
 import { IconFilter } from "@tabler/icons-react";
 
 import PaginationControl from "@/components/pagination-control";
 import SearchInput from "./search-input";
-import MySubmissionsCheckbox from "./my-checkbox";
 
 type SubmissionsToolbarProps = {
   currentPage: number;
@@ -20,8 +19,7 @@ type SubmissionsToolbarProps = {
 function useHasActiveFilters(): boolean {
   const searchParams = useSearchParams();
   const q = (searchParams.get("search") ?? "").trim();
-  const mine = searchParams.get("my") === "true";
-  return q !== "" || mine;
+  return q !== "";
 }
 
 export default function SubmissionsToolbar({
@@ -43,7 +41,6 @@ export default function SubmissionsToolbar({
 
   return (
     <div className="w-full min-w-0 xl:w-auto xl:max-w-full">
-      {/* Mobile: page & range (left) · Filtri + prev/next (right) */}
       <div className="flex w-full min-w-0 items-center justify-between gap-2 md:hidden">
         <div
           className="min-w-0 flex-1 px-1 text-left text-sm  leading-snug text-gray-500"
@@ -99,9 +96,6 @@ export default function SubmissionsToolbar({
                 <Modal.CloseTrigger aria-label="Aizvērt" />
               </Modal.Header>
               <Modal.Body className="flex flex-col gap-4 px-4 py-4">
-                <Suspense fallback={null}>
-                  <MySubmissionsCheckbox />
-                </Suspense>
                 <SearchInput fullWidth />
               </Modal.Body>
             </Modal.Dialog>
@@ -109,11 +103,7 @@ export default function SubmissionsToolbar({
         </Modal.Backdrop>
       </Modal>
 
-      {/* Tablet/desktop: one row beside count at xl; may wrap on md–lg */}
       <div className="hidden min-w-0 max-w-full flex-row flex-wrap items-center justify-end gap-2 md:flex md:justify-end xl:flex-nowrap xl:items-center xl:gap-3">
-        <Suspense fallback={null}>
-          <MySubmissionsCheckbox />
-        </Suspense>
         <SearchInput />
         <PaginationControl
           currentPage={currentPage}
