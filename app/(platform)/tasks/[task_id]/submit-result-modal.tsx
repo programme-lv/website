@@ -6,8 +6,10 @@ import { Modal } from "@heroui/react";
 import { SubmListScoreBar } from "@/components/subm-table-score-bars";
 import { statusTranslations } from "@/components/submission-table";
 import { TextLink } from "@/components/text-link";
-import { subscribeToSubmUpdates } from "@/lib/subms";
+import { getSubmissionClient, subscribeToSubmUpdates } from "@/lib/subms";
 import { DetailedSubmView, SubmEval, SubmListSseUpdate } from "@/types/subm";
+
+const EVAL_POLL_MS = 2000;
 
 const VERDICT_BOX_CLASS: Record<string, string> = {
 	Q: "bg-[#a0aec0]",
@@ -81,6 +83,37 @@ export default function SubmitResultModal({
 			return;
 		}
 
+		let cancelled = false;
+		const evalRef = { current: subm.curr_eval ?? null };
+
+		const applyEval = (next: SubmEval) => {
+			evalRef.current = next;
+			setEvalData(next);
+		};
+
+		const pull = async () => {
+			if (evalRef.current && isEvalDone(evalRef.current)) {
+				return;
+			}
+			try {
+				const latest = await getSubmissionClient(subm.id);
+				if (cancelled || !latest.curr_eval) {
+					return;
+				}
+				if (evalRef.current && isEvalDone(evalRef.current)) {
+					return;
+				}
+				applyEval(latest.curr_eval);
+			} catch {
+				// next poll or SSE
+			}
+		};
+
+		void pull();
+		const interval = setInterval(() => {
+			void pull();
+		}, EVAL_POLL_MS);
+
 		const unsubscribe = subscribeToSubmUpdates((update: SubmListSseUpdate) => {
 			if (!("eval_update" in update) || !update.eval_update) {
 				return;
@@ -88,10 +121,14 @@ export default function SubmitResultModal({
 			if (update.eval_update.subm_uuid !== subm.subm_uuid) {
 				return;
 			}
-			setEvalData(update.eval_update);
+			applyEval(update.eval_update);
 		});
 
-		return unsubscribe;
+		return () => {
+			cancelled = true;
+			clearInterval(interval);
+			unsubscribe();
+		};
 	}, [isOpen, subm]);
 
 	const done = evalData ? isEvalDone(evalData) : false;

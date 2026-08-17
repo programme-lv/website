@@ -56,6 +56,26 @@ export const createSubmission = async (
   return data;
 };
 
+export async function getSubmissionClient(
+  submId: string,
+): Promise<DetailedSubmView> {
+  const response = await fetch(`${API_HOST}/subm/${submId}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw { response: { data } };
+  }
+
+  return data.data;
+}
+
 export function subscribeToSubmUpdates(
   onUpdate: (update: SubmListSseUpdate) => void,
 ) {
