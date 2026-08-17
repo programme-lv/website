@@ -1,13 +1,15 @@
 "use client";
 
-import type { ReactNode } from "react";
+import type { ChangeEvent, ReactNode } from "react";
 import Image from "next/image";
-import { Button } from "@heroui/react";
+import { Button, Input, ListBox, Select } from "@heroui/react";
+import { IconSearch } from "@tabler/icons-react";
 
 import lioLogo from "@/public/lio-logo-small-no-text.webp";
 import { cn } from "@/components/cn";
 
 export type TaskFilterSelection = {
+  query: string;
   originId: string | null;
   yearId: string | null;
   stageId: string | null;
@@ -15,6 +17,7 @@ export type TaskFilterSelection = {
 };
 
 export const emptyTaskFilters: TaskFilterSelection = {
+  query: "",
   originId: null,
   yearId: null,
   stageId: null,
@@ -22,15 +25,16 @@ export const emptyTaskFilters: TaskFilterSelection = {
 };
 
 export function taskFiltersAreActive(value: TaskFilterSelection): boolean {
-  return value.originId != null;
+  return (value.query ?? "").trim() !== "" || value.originId != null;
 }
 
-type AgeGroupId = "junior" | "senior";
+type AgeGroupId = "junior" | "senior" | "both";
 type StageId = "school" | "municipal" | "national" | "selection";
 
 type AgeGroupNode = {
   id: AgeGroupId;
   label: string;
+  description?: string;
   count: number;
 };
 
@@ -57,9 +61,14 @@ type OriginNode = {
   years: YearNode[];
 };
 
-const AGE_GROUPS: { id: AgeGroupId; label: string }[] = [
+const AGE_GROUPS: {
+  id: AgeGroupId;
+  label: string;
+  description?: string;
+}[] = [
   { id: "junior", label: "Jaunākā (8.–10. kl.)" },
   { id: "senior", label: "Vecākā (11.–12. kl.)" },
+  { id: "both", label: "Abas", description: "Jaunākā un vecākā" },
 ];
 
 const STAGES: { id: StageId; label: string }[] = [
@@ -68,6 +77,8 @@ const STAGES: { id: StageId; label: string }[] = [
   { id: "national", label: "Valsts" },
   { id: "selection", label: "Atlases" },
 ];
+
+const ALL_YEARS_KEY = "all";
 
 function ageGroups(counts: Partial<Record<AgeGroupId, number>>): AgeGroupNode[] {
   return AGE_GROUPS.flatMap((group) => {
@@ -104,19 +115,39 @@ function origin(node: Omit<OriginNode, "count"> & { count?: number }): OriginNod
 
 function lioYear(
   id: string,
-  opts: { national?: boolean; selection?: boolean } = {},
+  opts: { national?: boolean; selection?: boolean; both?: boolean } = {},
 ): YearNode {
+  const schoolCounts: Partial<Record<AgeGroupId, number>> = opts.both
+    ? { junior: 2, senior: 2, both: 1 }
+    : { junior: 2, senior: 2 };
+  const nationalCounts: Partial<Record<AgeGroupId, number>> = opts.both
+    ? { junior: 3, senior: 3, both: 1 }
+    : { junior: 3, senior: 3 };
   const stages = [
-    stage("school", { junior: 2, senior: 2 }),
+    stage("school", schoolCounts),
     stage("municipal", { junior: 2, senior: 2 }),
   ];
   if (opts.national) {
-    stages.push(stage("national", { junior: 3, senior: 3 }));
+    stages.push(stage("national", nationalCounts));
   }
   if (opts.selection) {
     stages.push(stage("selection", { senior: 3 }));
   }
   return year(id, stages);
+}
+
+function lioYears(): YearNode[] {
+  const years: YearNode[] = [];
+  for (let y = 2026; y >= 1988; y -= 1) {
+    years.push(
+      lioYear(String(y), {
+        national: true,
+        selection: y >= 2005 && y !== 2026,
+        both: y >= 2016,
+      }),
+    );
+  }
+  return years;
 }
 
 /** Placeholder catalog. Options and counts are not loaded from the API. */
@@ -126,16 +157,7 @@ const MOCK_ORIGINS: OriginNode[] = [
     label: "LIO",
     fullName: "Latvijas informātikas olimpiāde",
     logo: "lio",
-    years: [
-      lioYear("2026", { national: true }),
-      lioYear("2025", { national: true, selection: true }),
-      lioYear("2024", { national: true, selection: true }),
-      lioYear("2023", { national: true, selection: true }),
-      lioYear("2022", { national: true }),
-      lioYear("2021", { national: true }),
-      lioYear("2020", { national: true }),
-      lioYear("2019", { national: true }),
-    ],
+    years: lioYears(),
   }),
   origin({
     id: "BOI",
@@ -211,15 +233,15 @@ export function TaskFilters({ value, onChange, showTitle = true }: TaskFiltersPr
   const selectOrigin = (originId: string) => {
     onChange(
       value.originId === originId
-        ? emptyTaskFilters
-        : { originId, yearId: null, stageId: null, ageGroupId: null },
+        ? { ...emptyTaskFilters, query: value.query }
+        : { ...value, originId, yearId: null, stageId: null, ageGroupId: null },
     );
   };
 
-  const selectYear = (yearId: string) => {
+  const selectYear = (yearId: string | null) => {
     onChange({
       ...value,
-      yearId: value.yearId === yearId ? null : yearId,
+      yearId,
       stageId: null,
       ageGroupId: null,
     });
@@ -262,6 +284,21 @@ export function TaskFilters({ value, onChange, showTitle = true }: TaskFiltersPr
         </Button>
       </div>
 
+      <div className="box-border flex h-9 min-h-9 w-full min-w-0 flex-row items-center gap-1.5 rounded-sm border-small border-divider bg-white px-2">
+        <IconSearch size={16} className="shrink-0 text-default-500" aria-hidden />
+        <Input
+          name="task-search"
+          placeholder="Meklēt"
+          value={value.query ?? ""}
+          aria-label="Meklēt uzdevumus"
+          variant="secondary"
+          className="h-7 min-w-0 flex-1"
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            onChange({ ...value, query: e.target.value })
+          }
+        />
+      </div>
+
       <FilterSection title="Olimpiāde">
         {MOCK_ORIGINS.map((item) => (
           <FilterOption
@@ -277,17 +314,13 @@ export function TaskFilters({ value, onChange, showTitle = true }: TaskFiltersPr
       </FilterSection>
 
       {selectedOrigin && selectedOrigin.years.length > 0 && (
-        <FilterSection title="Gads">
-          {selectedOrigin.years.map((item) => (
-            <FilterOption
-              key={item.id}
-              selected={value.yearId === item.id}
-              label={item.label}
-              count={item.count}
-              onSelect={() => selectYear(item.id)}
-            />
-          ))}
-        </FilterSection>
+        <FilterField title="Gads">
+          <YearSelect
+            years={selectedOrigin.years}
+            selectedYearId={value.yearId}
+            onSelect={selectYear}
+          />
+        </FilterField>
       )}
 
       {selectedYear && selectedYear.stages.length > 0 && (
@@ -311,6 +344,7 @@ export function TaskFilters({ value, onChange, showTitle = true }: TaskFiltersPr
               key={item.id}
               selected={value.ageGroupId === item.id}
               label={item.label}
+              description={item.description}
               count={item.count}
               onSelect={() => selectAgeGroup(item.id)}
             />
@@ -318,6 +352,67 @@ export function TaskFilters({ value, onChange, showTitle = true }: TaskFiltersPr
         </FilterSection>
       )}
     </div>
+  );
+}
+
+function YearSelect({
+  years,
+  selectedYearId,
+  onSelect,
+}: {
+  years: YearNode[];
+  selectedYearId: string | null;
+  onSelect: (yearId: string | null) => void;
+}) {
+  return (
+    <Select
+      className="w-full"
+      variant="secondary"
+      selectedKey={selectedYearId ?? ALL_YEARS_KEY}
+      onSelectionChange={(key) => {
+        if (key == null || key === ALL_YEARS_KEY) {
+          onSelect(null);
+          return;
+        }
+        onSelect(String(key));
+      }}
+    >
+      <Select.Trigger
+        className="h-8 min-h-8 w-full justify-between gap-2 rounded-sm px-3 text-sm font-normal"
+      >
+        <Select.Value />
+        <Select.Indicator />
+      </Select.Trigger>
+      <Select.Popover className="overflow-hidden rounded-sm">
+        <ListBox className="max-h-72 overflow-y-auto rounded-sm">
+          <ListBox.Item id={ALL_YEARS_KEY} textValue="Visi gadi">
+            Visi gadi
+          </ListBox.Item>
+          {years.map((item) => (
+            <ListBox.Item key={item.id} id={item.id} textValue={item.label}>
+              {item.label}
+            </ListBox.Item>
+          ))}
+        </ListBox>
+      </Select.Popover>
+    </Select>
+  );
+}
+
+function FilterField({
+  title,
+  children,
+}: {
+  title: string;
+  children: ReactNode;
+}) {
+  return (
+    <section className="flex flex-col gap-1">
+      <h3 className="px-2 text-[11px] font-medium uppercase tracking-wide text-gray-500">
+        {title}
+      </h3>
+      {children}
+    </section>
   );
 }
 
