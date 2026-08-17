@@ -1,5 +1,5 @@
 import { API_HOST } from "./config";
-import { SubmListEntry, SubmListSseUpdate } from "@/types/subm";
+import { DetailedSubmView, SubmListSseUpdate } from "@/types/subm";
 import { MaxScorePerTask } from "@/types/scores";
 
 // New function to reevaluate selected submissions
@@ -32,7 +32,7 @@ export const createSubmission = async (
   username: string,
   programmingLangId: string,
   taskCodeId: string,
-): Promise<SubmListEntry> => {
+): Promise<DetailedSubmView> => {
   const response = await fetch(`${API_HOST}/subm`, {
     method: "POST",
     headers: {

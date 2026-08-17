@@ -67,7 +67,7 @@ export default async function RunPage({
       eval_error: "test",
       subtasks: [],
       test_groups: [],
-      verdicts: [],
+      verdicts: "",
       score_info: {
         score_bar: {
           green: 0,

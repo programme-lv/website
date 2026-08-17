@@ -9,13 +9,9 @@ export const listSubmissionsServerSide = async (
   offset: number = 0,
   limit: number = 30,
   search?: string,
-  my?: string,
 ): Promise<PaginatedSubmListResponse> => {
   try {
-    let url = `${SERVER_API_HOST}/subm?offset=${offset}&limit=${limit}&search=${encodeURIComponent(search || "")}`;
-    if(my) {
-      url += `&my=${my}`;
-    }
+    const url = `${SERVER_API_HOST}/subm?offset=${offset}&limit=${limit}&search=${encodeURIComponent(search || "")}`;
     const response = await fetch(url, {
       method: "GET",
       headers: {

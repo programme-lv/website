@@ -1,31 +1,17 @@
-"use client"; // Declare this as a client-side component
+"use client";
 
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import { subscribeToSubmUpdates } from "@/lib/subms";
 import { SubmListEntry, SubmListSseUpdate } from "@/types/subm";
 import SubmissionTable from "@/components/submission-table";
 import { listSubmissionsClientSide } from "@/lib/subm/list";
-import { AuthContext } from "@/app/providers";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-/**
- * RealTimeSubmTable Component
- *
- * This component is responsible for displaying a table of submissions and handling real-time updates.
- *
- * Props:
- * - initial: An array of initial BriefSubmission objects to populate the table.
- * - initialPagination: Initial pagination state
- * - currentPage: Current page number
- */
 export default function RealTimeSubmTable({
   initial,
   initialPagination,
-
   search,
-  my,
 }: {
   initial: SubmListEntry[];
   initialPagination: {
@@ -34,72 +20,38 @@ export default function RealTimeSubmTable({
     limit: number;
     hasMore: boolean;
   };
-
   search?: string;
-  my?: string;
 }) {
   const [isChangingPage, setIsChangingPage] = useState(false);
-
-  // Ensure initial is always an array
   const initialSubmissions = Array.isArray(initial) ? initial : [];
-
-  // State to manage the list of submissions
   const [submissions, setSubmissions] = useState<SubmListEntry[]>(initialSubmissions);
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const router = useRouter();
 
-  const { user } = useContext(AuthContext);
-
-  useEffect(() => {
-    if (searchParams.get("my") !== "true" || user) {
-      return;
-    }
-
-    const params = new URLSearchParams(searchParams.toString());
-    params.delete("my");
-
-    const nextQuery = params.toString();
-    const nextUrl = nextQuery ? `${pathname}?${nextQuery}` : pathname;
-
-    router.replace(nextUrl);
-  }, [user, pathname, router, searchParams]);
-
-  // Fetch submissions data with a polling interval of 10 seconds
   const { data, isLoading } = useQuery({
-      queryKey: ["submissions", initialPagination.offset, initialPagination.limit, search, my, user?.uuid],
+      queryKey: ["submissions", initialPagination.offset, initialPagination.limit, search],
       queryFn: async () => {
-        if(user&&user.uuid) {
-          return await listSubmissionsClientSide(initialPagination.offset, initialPagination.limit, search, my);
-        }
-        return await listSubmissionsClientSide(initialPagination.offset, initialPagination.limit, search, undefined);
+        return await listSubmissionsClientSide(initialPagination.offset, initialPagination.limit, search);
       },
       refetchInterval: 10000,
       refetchOnWindowFocus: true,
       refetchOnMount: true,
-      staleTime: 0,        // Consider data stale immediately
-      enabled: true,       // Always enable the query
+      staleTime: 0,
+      enabled: true,
       initialData: {
         page: initialSubmissions,
         pagination: initialPagination
-      }, // Provide initial data to prevent flash of loading state
+      },
       refetchOnReconnect: true
   });
-  
-  // Reset isChangingPage when loading state changes
+
   useEffect(() => {
     if (!isLoading) {
       setIsChangingPage(false);
     }
   }, [isLoading]);
 
-  /**
-   * Subscribe to submission updates via SSE.
-   */
   useEffect(() => {
     const unsubscribe = subscribeToSubmUpdates(
       (update: SubmListSseUpdate) => {
-        // Only process real-time updates if we're on the first page
         if (initialPagination.offset === 0 || 'eval_update' in update) {
           setSubmissions((prev) => {
             const updatedSubms = applyUpdatesToSubmissions(
@@ -113,16 +65,11 @@ export default function RealTimeSubmTable({
       },
     );
 
-    // Cleanup subscription when the component unmounts
     return () => unsubscribe();
   }, [initialPagination.offset]);
 
-  /**
-   * Fresh poll results are authoritative. SSE is only an optimistic live layer
-   * between polls, so stale partial updates cannot overwrite a later refetch.
-   */
   useEffect(() => {
-    if (data) {  // Only update when we have fresh data
+    if (data) {
       const dataArray = Array.isArray(data.page) ? data.page : [];
       setSubmissions(sortSubmissions(dataArray));
     }
@@ -133,35 +80,24 @@ export default function RealTimeSubmTable({
       <div className="w-full">
         <SubmissionTable
           skeleton={isChangingPage || isLoading}
-          submissions={submissions} // Pass the submissions data to the table component
+          submissions={submissions}
         />
       </div>
     </>
   );
 }
 
-// Sorting and update logic can remain the same as the original code
-
-/**
- * sortSubmissions Function
- *
- * Sorts the array of submissions first by creation date in descending order,
- * and then by submission UUID in descending order if dates are identical.
- *
- * @param submissions - Array of Submission objects to be sorted
- * @returns A new array of sorted Submission objects
- */
 function sortSubmissions(submissions: SubmListEntry[]): SubmListEntry[] {
   const sorted = [...submissions].sort((a, b) => {
     const dateA = new Date(a.created_at);
     const dateB = new Date(b.created_at);
 
-    if (dateA < dateB) return 1; // Newer submissions come first
+    if (dateA < dateB) return 1;
     if (dateA > dateB) return -1;
-    if (a.subm_uuid < b.subm_uuid) return 1; // If dates are equal, sort by UUID
+    if (a.subm_uuid < b.subm_uuid) return 1;
     if (a.subm_uuid > b.subm_uuid) return -1;
 
-    return 0; // If both date and UUID are equal
+    return 0;
   });
 
   return sorted;
@@ -175,20 +111,18 @@ function applyUpdatesToSubmissions(
   const nextSubmissions = submissions.map((submission) => ({ ...submission }));
 
   for(let update of updates) {
-    if ('subm_created' in update && update.subm_created !== null) {  // Check for null
-      // Only add new submissions if we're on the first page
+    if ('subm_created' in update && update.subm_created !== null) {
       if (offset === 0) {
-        const newSubmission = update.subm_created;  // No need for type assertion
+        const newSubmission = update.subm_created;
         if (!nextSubmissions.some(s => s.subm_uuid === newSubmission.subm_uuid)) {
           nextSubmissions.push(newSubmission);
         }
       }
     }
-    else if ('eval_update' in update) {  // Simplified condition
-      const evalData = update.eval_update;  // Get the SubmEval object
+    else if ('eval_update' in update && update.eval_update) {
+      const evalData = update.eval_update;
       const index = nextSubmissions.findIndex(s => s.subm_uuid === evalData.subm_uuid);
       if (index !== -1) {
-        // Update status and score info
         nextSubmissions[index].status = evalData.eval_stage;
         if (evalData.eval_error) {
           if (evalData.eval_error === "compilation") {
