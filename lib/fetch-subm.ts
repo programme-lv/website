@@ -6,9 +6,9 @@ import { SERVER_API_HOST } from "./config";
 
 
 export async function getSubmission(
-    submUuid: string,
+    submId: string,
 ): Promise<DetailedSubmView> {
-    const response = await fetch(`${SERVER_API_HOST}/subm/${submUuid}`, {
+    const response = await fetch(`${SERVER_API_HOST}/subm/${submId}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",

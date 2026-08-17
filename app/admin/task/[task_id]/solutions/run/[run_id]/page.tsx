@@ -54,7 +54,8 @@ export default async function RunPage({
     { label: run_id.slice(0, 8), href: `/admin/task/${task.short_task_id}/solutions/run/${run_id}` },
   ];
 
-  const submData: DetailedSubmView = {
+	const submData: DetailedSubmView = {
+    id: run_id.slice(0, 6),
     subm_uuid: run_id,
     content: "test",
     username: "test",
