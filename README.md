@@ -48,11 +48,13 @@ Never expose it through a `NEXT_PUBLIC_` variable or browser-side code.
 
 ```bash
 yarn dev      # Start the development server
-yarn build    # Create a production build
+yarn build    # Create a production build (includes TypeScript)
 yarn start    # Start the production server
 yarn lint     # Run ESLint
 yarn knip     # Find unused files, exports, and dependencies
 ```
+
+Pull requests run `yarn build`. Docker image publish on `v*` tags runs it again inside the image. See `docs/production-build.md`.
 
 ## Repository layout
 
@@ -61,4 +63,4 @@ yarn knip     # Find unused files, exports, and dependencies
 - `lib/` — backend API clients and shared utilities
 - `types/` — shared TypeScript types
 - `config/` — application metadata and UI configuration
-- `docs/` — implementation constraints and troubleshooting knowledge (see `docs/dead-code.md`, `docs/submission-ids.md`)
+- `docs/` — implementation constraints and troubleshooting knowledge (see `docs/dead-code.md`, `docs/production-build.md`, `docs/submission-ids.md`)

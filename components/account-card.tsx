@@ -87,7 +87,7 @@ export default function AccountCard({ user }: { user: User }) {
     onSuccess: (response) => {
       if (response.status === "success") {
         setVerifyInfo(
-          response.message || "Apstiprinājuma e-pasts ir nosūtīts."
+          response.data.message || "Apstiprinājuma e-pasts ir nosūtīts."
         );
         return;
       }
