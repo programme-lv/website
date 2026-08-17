@@ -59,7 +59,7 @@ type StatementImage = {
     http_url: string;
     width_px: number;
     height_px: number;
-    s3_uri: string;
+    object_key: string;
     sz_in_bytes: number;
 };
 
