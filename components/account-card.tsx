@@ -44,7 +44,12 @@ export default function AccountCard({ user }: { user: User }) {
     onMutate: () => setProfileError(null),
     onSuccess: (response) => {
       if (response.status === "success") {
-        setUser(response.data);
+        setUser((prev) => ({
+          ...prev,
+          ...response.data,
+          email_verified:
+            response.data.email_verified ?? prev?.email_verified,
+        }));
         toast.success("Profils saglabāts");
         return;
       }
@@ -97,7 +102,7 @@ export default function AccountCard({ user }: { user: User }) {
     onError: () => setVerifyError("Neizdevās nosūtīt apstiprinājuma e-pastu."),
   });
 
-  const unverified = user.email_verified === false;
+  const unverified = user.email_verified !== true;
 
   return (
     <div className="bg-white p-3 rounded-sm border-small border-divider">
@@ -123,9 +128,9 @@ export default function AccountCard({ user }: { user: User }) {
               onChange={() => undefined}
             />
             <p className="text-xs text-[#6f6f6f]">
-              {user.email_verified
-                ? "E-pasts ir apstiprināts."
-                : "E-pasts nav apstiprināts."}
+              {unverified
+                ? "E-pasts nav apstiprināts."
+                : "E-pasts ir apstiprināts."}
             </p>
           </div>
         </div>
@@ -175,10 +180,9 @@ export default function AccountCard({ user }: { user: User }) {
           <div className="flex flex-col gap-4 sm:flex-row sm:gap-3">
             <div className="flex-1">
               <AuthField
-                label="Vārds"
+                label="Vārds (neobligāts)"
                 name="firstname"
                 autoComplete="given-name"
-                required
                 disabled={profileMutation.isPending}
                 value={firstname}
                 onChange={setFirstname}
@@ -186,10 +190,9 @@ export default function AccountCard({ user }: { user: User }) {
             </div>
             <div className="flex-1">
               <AuthField
-                label="Uzvārds"
+                label="Uzvārds (neobligāts)"
                 name="lastname"
                 autoComplete="family-name"
-                required
                 disabled={profileMutation.isPending}
                 value={lastname}
                 onChange={setLastname}
