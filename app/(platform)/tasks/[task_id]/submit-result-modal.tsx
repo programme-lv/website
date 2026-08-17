@@ -39,6 +39,38 @@ function isEvalDone(ev: SubmEval): boolean {
 	return ev.eval_stage === "finished" || Boolean(ev.eval_error);
 }
 
+const STAGE_RANK: Record<string, number> = {
+	waiting: 0,
+	received: 1,
+	compiling: 2,
+	testing: 3,
+	finished: 4,
+};
+
+function evalProgress(ev: SubmEval): number {
+	let verdictScore = 0;
+	for (const c of ev.verdicts) {
+		if (c === "Q") {
+			continue;
+		}
+		verdictScore += c === "X" ? 1 : 2;
+	}
+	return (STAGE_RANK[ev.eval_stage] ?? 0) * 1_000_000 + verdictScore;
+}
+
+function shouldApplyEval(current: SubmEval | null, next: SubmEval): boolean {
+	if (!current) {
+		return true;
+	}
+	if (isEvalDone(current)) {
+		return false;
+	}
+	if (isEvalDone(next)) {
+		return true;
+	}
+	return evalProgress(next) > evalProgress(current);
+}
+
 function finishCopy(ev: SubmEval): string | null {
 	if (ev.eval_error === "compilation") {
 		return "Kompilācijas kļūda";
@@ -87,6 +119,9 @@ export default function SubmitResultModal({
 		const evalRef = { current: subm.curr_eval ?? null };
 
 		const applyEval = (next: SubmEval) => {
+			if (!shouldApplyEval(evalRef.current, next)) {
+				return;
+			}
 			evalRef.current = next;
 			setEvalData(next);
 		};
@@ -98,9 +133,6 @@ export default function SubmitResultModal({
 			try {
 				const latest = await getSubmissionClient(subm.id);
 				if (cancelled || !latest.curr_eval) {
-					return;
-				}
-				if (evalRef.current && isEvalDone(evalRef.current)) {
 					return;
 				}
 				applyEval(latest.curr_eval);
