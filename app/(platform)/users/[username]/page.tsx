@@ -4,8 +4,10 @@ import Layout from "@/components/layout";
 import { getMaxScorePerTask } from "@/lib/subms";
 import { useQuery } from "@tanstack/react-query";
 import { Toaster } from 'react-hot-toast';
-import { use } from 'react';
+import { use, useContext } from 'react';
 import UserScoresTable from "@/components/user-scores-table";
+import AccountCard from "@/components/account-card";
+import { AuthContext } from "@/app/providers";
 
 export default function UserPage({
   params,
@@ -13,6 +15,8 @@ export default function UserPage({
   params: Promise<{ username: string }>;
 }) {
   const { username } = use(params);
+  const { user } = useContext(AuthContext);
+  const isOwner = user?.username === username;
   const { data: response, isLoading, error } = useQuery({
     queryKey: ['userScores', username],
     queryFn: () => getMaxScorePerTask(username),
@@ -27,7 +31,9 @@ export default function UserPage({
   if (isLoading) {
     return (
       <Layout breadcrumbs={breadcrumbs} active="tasks">
-        <div className="m-3">
+        <Toaster/>
+        <div className="m-3 flex flex-col gap-3">
+          {isOwner && user && <AccountCard user={user} />}
           <div className="bg-white p-3 rounded-small border-small border-divider">
             <p>Loading...</p>
           </div>
@@ -39,7 +45,9 @@ export default function UserPage({
   if (error || !response) {
     return (
       <Layout breadcrumbs={breadcrumbs} active="tasks">
-        <div className="m-3">
+        <Toaster/>
+        <div className="m-3 flex flex-col gap-3">
+          {isOwner && user && <AccountCard user={user} />}
           <div className="bg-white p-3 rounded-small border-small border-divider">
             <p>Error loading user data</p>
           </div>
@@ -59,7 +67,8 @@ export default function UserPage({
   return (
     <Layout breadcrumbs={breadcrumbs} active="tasks">
       <Toaster/>
-      <div className="m-3">
+      <div className="m-3 flex flex-col gap-3">
+        {isOwner && user && <AccountCard user={user} />}
         <div className="bg-white p-3 rounded-sm border-small border-divider">
           <h1 className="text-2xl">{username}</h1>
           {/* <p>Lietotājs izveidots {new Date(response.created_at).toLocaleDateString()}</p> */}

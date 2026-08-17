@@ -122,3 +122,64 @@ export const confirmEmailVerification = async (
   return response.json();
 };
 
+type UpdateProfileInput = {
+  firstname: string;
+  lastname: string;
+};
+
+export const updateProfile = async (
+  input: UpdateProfileInput
+): Promise<ApiResponse<User>> => {
+  const response = await fetch(`${API_HOST}/users/me`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify(input),
+  });
+  return response.json();
+};
+
+type ChangePasswordInput = {
+  current_password: string;
+  password: string;
+};
+
+export const changePassword = async (
+  input: ChangePasswordInput
+): Promise<ApiResponse<MessageData>> => {
+  const response = await fetch(`${API_HOST}/password`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify(input),
+  });
+  return parseMaybeEmptyResponse(response, { message: "parole nomainīta" });
+};
+
+async function parseMaybeEmptyResponse<T>(
+  response: Response,
+  emptySuccess: T
+): Promise<ApiResponse<T>> {
+  const text = await response.text();
+  if (!text.trim()) {
+    return response.ok
+      ? { status: "success", data: emptySuccess }
+      : {
+          status: "error",
+          data: null,
+          code: "http_error",
+          message: `HTTP ${response.status}`,
+        };
+  }
+  try {
+    return JSON.parse(text) as ApiResponse<T>;
+  } catch {
+    return {
+      status: "error",
+      data: null,
+      code: "parse_error",
+      message: "Invalid response from server",
+    };
+  }
+}
+
