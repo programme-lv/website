@@ -26,6 +26,9 @@ export default function TestResultTable({ visible_details, subm_eval, test_resul
         return testgroups.filter(tg => tg.tg_tests.some(x => x[0] <= test.id && x[1] >= test.id));
     }
 
+    const isIgnored = (test: TestRes) =>
+        test.ign || subm_eval.verdicts[test.id - 1] === "I";
+
     let columns: Column<typeof test_results[0]>[] = [
         {
             key: "id",
@@ -56,19 +59,23 @@ export default function TestResultTable({ visible_details, subm_eval, test_resul
             key: "cpu",
             header: "CPU laiks [s]",
             width: "110px",
-            render: (test) => test.subm_rd?.cpu_ms ? (test.subm_rd.cpu_ms / 1000).toFixed(3) : "N/A"
+            render: (test) => isIgnored(test)
+                ? "—"
+                : test.subm_rd?.cpu_ms ? (test.subm_rd.cpu_ms / 1000).toFixed(3) : "N/A"
         },
         {
             key: "mem",
             header: "Atmiņa [MiB]",
             width: "120px",
-            render: (test) => test.subm_rd?.mem_kib ? (test.subm_rd.mem_kib / 1024).toFixed(2) : "N/A"
+            render: (test) => isIgnored(test)
+                ? "—"
+                : test.subm_rd?.mem_kib ? (test.subm_rd.mem_kib / 1024).toFixed(2) : "N/A"
         },
         {
             key: "details",
             header: "Detaļas",
             width: "100px",
-            render: (test) => (
+            render: (test) => isIgnored(test) ? null : (
                 <Button
                     variant="ghost"
                     size="sm"
