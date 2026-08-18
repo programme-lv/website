@@ -64,9 +64,9 @@ export default function ForgotPasswordPage() {
               onChange={setLogin}
             />
             <GenericButton
-              className="mt-2 !h-[44px] w-full !justify-between px-4 text-[0.95rem] !font-normal !bg-[#0f62fe] hover:!bg-[#0353e9]"
+              className="mt-2"
+              fullWidth
               isLoading={mutation.isPending}
-              rounded="sm"
               type="submit"
               variant="primary"
               icon={<IconSend size={20} stroke={1.75} />}

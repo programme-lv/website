@@ -231,12 +231,8 @@ export default function AuthForm({
         )}
 
         <GenericButton
-          className={`mt-2 !h-[44px] w-full !justify-between px-4 text-[0.95rem] !font-normal ${
-            type === "register"
-              ? ""
-              : "!bg-[#0f62fe] hover:!bg-[#0353e9]"
-          }`}
-          rounded="sm"
+          className="mt-2"
+          fullWidth
           variant={type === "register" ? "success" : "primary"}
           icon={
             type === "register" ? (

@@ -3,10 +3,11 @@
 import React, { useContext, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
-import { Button, Modal, cn } from "@heroui/react";
+import { Modal, cn } from "@heroui/react";
 import { IconFilter } from "@tabler/icons-react";
 
 import Alert from "@/components/alert";
+import Button from "@/components/button";
 import { listTasks } from "@/lib/task/tasks";
 import TaskCard from "@/components/task-list-card";
 import { TaskPreview } from "@/types/task";
@@ -56,15 +57,13 @@ export function TaskList(props: { tasks: TaskPreview[]; userMaxScores?: MaxScore
         <div className="min-w-0 flex-1">
           <div className="mb-2 flex justify-end lg:hidden">
             <Button
-              variant="outline"
               size="sm"
-              className={cn(
-                "inline-flex h-9 min-h-9 min-w-0 items-center gap-1.5 rounded-sm bg-white px-3 text-sm",
-                filtersActive && "border-primary text-primary",
-              )}
-              onPress={() => setFiltersOpen(true)}
+              variant="default"
+              icon={<IconFilter size={16} aria-hidden />}
+              iconPosition="start"
+              className={cn(filtersActive && "text-[#0f62fe]")}
+              onClick={() => setFiltersOpen(true)}
             >
-              <IconFilter size={16} aria-hidden />
               Filtri
             </Button>
           </div>
@@ -91,7 +90,7 @@ export function TaskList(props: { tasks: TaskPreview[]; userMaxScores?: MaxScore
           </div>
         </div>
         <aside className="hidden w-[17.5rem] shrink-0 lg:block" aria-label="Filtri">
-          <div className="sticky top-3 max-h-[calc(100vh-1.5rem)] overflow-y-auto rounded-sm border border-zinc-200 bg-white p-3">
+          <div className="sticky top-3 flex max-h-[calc(100vh-1.5rem)] flex-col overflow-hidden rounded-sm border border-zinc-200 bg-white p-3">
             <TaskFilters value={filters} onChange={setFilters} />
           </div>
         </aside>
@@ -111,7 +110,7 @@ export function TaskList(props: { tasks: TaskPreview[]; userMaxScores?: MaxScore
                 </Modal.Heading>
                 <Modal.CloseTrigger aria-label="Aizvērt" />
               </Modal.Header>
-              <Modal.Body className="px-3 py-4">
+              <Modal.Body className="flex max-h-[min(70vh,32rem)] flex-col overflow-hidden px-3 py-4">
                 <TaskFilters showTitle={false} value={filters} onChange={setFilters} />
               </Modal.Body>
             </Modal.Dialog>

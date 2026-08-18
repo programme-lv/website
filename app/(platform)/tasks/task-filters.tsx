@@ -1,10 +1,12 @@
 "use client";
 
-import type { ChangeEvent, ReactNode } from "react";
+import type { ReactNode } from "react";
 import Image from "next/image";
-import { Button, Input, ListBox, Select } from "@heroui/react";
+import { ListBox, Select } from "@heroui/react";
 import { IconSearch } from "@tabler/icons-react";
 
+import Button from "@/components/button";
+import TextField from "@/components/text-field";
 import lioLogo from "@/public/lio-logo-small-no-text.webp";
 import { cn } from "@/components/cn";
 
@@ -263,43 +265,39 @@ export function TaskFilters({ value, onChange, showTitle = true }: TaskFiltersPr
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex items-start justify-between gap-2 px-1">
-        <div>
-          {showTitle && (
-            <h2 className="text-sm font-medium text-default-800">Filtri</h2>
-          )}
-          <p className={cn("text-xs text-gray-500", showTitle && "mt-0.5")}>
-            {uzdevumiLabel(count)}
-          </p>
+    <div className="flex min-h-0 flex-1 flex-col">
+      <div className="sticky top-0 z-10 shrink-0 space-y-4 bg-white pb-3">
+        <div className="flex items-start justify-between gap-2 px-1">
+          <div>
+            {showTitle && (
+              <h2 className="text-sm font-medium text-default-800">Filtri</h2>
+            )}
+            <p className={cn("text-xs text-gray-500", showTitle && "mt-0.5")}>
+              {uzdevumiLabel(count)}
+            </p>
+          </div>
+          <Button
+            size="sm"
+            variant="ghost"
+            isDisabled={!canClear}
+            onClick={() => onChange(emptyTaskFilters)}
+          >
+            Notīrīt
+          </Button>
         </div>
-        <Button
-          size="sm"
-          variant="ghost"
-          isDisabled={!canClear}
-          className="h-7 min-h-7 px-2 text-xs text-default-600"
-          onPress={() => onChange(emptyTaskFilters)}
-        >
-          Notīrīt
-        </Button>
-      </div>
 
-      <div className="box-border flex h-9 min-h-9 w-full min-w-0 flex-row items-center gap-1.5 rounded-sm border-small border-divider bg-white px-2">
-        <IconSearch size={16} className="shrink-0 text-default-500" aria-hidden />
-        <Input
+        <TextField
           name="task-search"
           placeholder="Meklēt"
           value={value.query ?? ""}
           aria-label="Meklēt uzdevumus"
-          variant="secondary"
-          className="h-7 min-w-0 flex-1"
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            onChange({ ...value, query: e.target.value })
-          }
+          onChange={(query) => onChange({ ...value, query })}
+          startContent={<IconSearch size={16} aria-hidden />}
         />
       </div>
 
-      <FilterSection title="Olimpiāde">
+      <div className="min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-y-contain">
+        <FilterSection title="Olimpiāde">
         {MOCK_ORIGINS.map((item) => (
           <FilterOption
             key={item.id}
@@ -351,6 +349,7 @@ export function TaskFilters({ value, onChange, showTitle = true }: TaskFiltersPr
           ))}
         </FilterSection>
       )}
+      </div>
     </div>
   );
 }
