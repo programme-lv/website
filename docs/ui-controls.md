@@ -22,6 +22,7 @@ The look is the login field: gray fill (`#e8e8e8`), bottom edge, blue inset focu
 - `icon` with optional `iconPosition`: `end` (login: label left, icon right) or `start`.
 - Omit `children` for icon-only; set `aria-label`.
 - `isLoading` replaces the icon (or centers a spinner if there is no icon).
+- `isDisabled` / native `disabled` map to the DOM attribute as `true` or omitted (`undefined`). Do not pass `false` or `null`; React 19 SSR omits those and hydrates as a mismatch.
 
 `GenericButton` re-exports `Button`. Existing admin call sites keep working; new code can import `Button` directly.
 

@@ -69,15 +69,16 @@ export default function Button({
   children,
   onClick,
   type = "button",
+  disabled: disabledProp,
   ...props
 }: ButtonProps) {
-  const disabled = isDisabled || isLoading || props.disabled;
+  const isOff = Boolean(isDisabled || isLoading || disabledProp);
   const hasLabel = children != null && children !== false && children !== "";
   const showIcon = Boolean(icon) && !isLoading;
   const iconOnly = !hasLabel;
 
   const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
-    if (disabled) {
+    if (isOff) {
       e.preventDefault();
       return;
     }
@@ -94,7 +95,7 @@ export default function Button({
     <button
       {...props}
       type={type}
-      disabled={disabled}
+      disabled={isOff ? true : undefined}
       onClick={handleClick}
       className={cn(
         "relative inline-flex cursor-pointer items-center font-normal transition-colors focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0f62fe] disabled:cursor-not-allowed disabled:opacity-50",
