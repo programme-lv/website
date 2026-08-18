@@ -67,27 +67,7 @@ export function TaskList(props: { tasks: TaskPreview[]; userMaxScores?: MaxScore
               Filtri
             </Button>
           </div>
-          <div className="grid grid-cols-1 min-[1620px]:grid-cols-2 min-[2240px]:grid-cols-3 gap-3 ">
-            {tasks && tasks.length > 0 ? (
-              tasks.map((task) => (
-                <Link
-                  key={task.short_id}
-                  className="contents"
-                  href={`/tasks/${task.short_id}`}
-                  prefetch={true}
-                >
-                  {userMaxScores && (
-                    <TaskCard key={task.short_id} {...task} user_max_score={userMaxScores[task.short_id]}/>
-                  )}
-                  {!userMaxScores && (
-                    <TaskCard key={task.short_id} {...task} />
-                  )}
-                </Link>
-              ))
-            ) : (
-              <></>
-            )}
-          </div>
+          <TaskCardGrid tasks={tasks} userMaxScores={userMaxScores} />
         </div>
         <aside className="hidden w-[17.5rem] shrink-0 lg:block" aria-label="Filtri">
           <div className="sticky top-3 flex max-h-[calc(100dvh-1.5rem)] flex-col overflow-hidden rounded-sm border border-zinc-200 bg-white p-3">
@@ -120,3 +100,35 @@ export function TaskList(props: { tasks: TaskPreview[]; userMaxScores?: MaxScore
     </main>
   );
 }
+
+const TaskCardGrid = React.memo(function TaskCardGrid({
+  tasks,
+  userMaxScores,
+}: {
+  tasks: TaskPreview[];
+  userMaxScores?: MaxScorePerTask;
+}) {
+  return (
+    <div className="grid grid-cols-1 min-[1620px]:grid-cols-2 min-[2240px]:grid-cols-3 gap-3 ">
+      {tasks && tasks.length > 0 ? (
+        tasks.map((task) => (
+          <Link
+            key={task.short_id}
+            className="contents"
+            href={`/tasks/${task.short_id}`}
+            prefetch={true}
+          >
+            {userMaxScores && (
+              <TaskCard key={task.short_id} {...task} user_max_score={userMaxScores[task.short_id]}/>
+            )}
+            {!userMaxScores && (
+              <TaskCard key={task.short_id} {...task} />
+            )}
+          </Link>
+        ))
+      ) : (
+        <></>
+      )}
+    </div>
+  );
+});

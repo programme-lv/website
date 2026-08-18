@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import Image from "next/image";
 import { ListBox, Select } from "@heroui/react";
 import { IconSearch } from "@tabler/icons-react";
@@ -226,16 +226,18 @@ type TaskFiltersProps = {
 };
 
 export function TaskFilters({ value, onChange, showTitle = true }: TaskFiltersProps) {
+  const [searchResetKey, setSearchResetKey] = useState(0);
+  const [searchActive, setSearchActive] = useState(() => (value.query ?? "").trim() !== "");
   const selectedOrigin = MOCK_ORIGINS.find((item) => item.id === value.originId);
   const selectedYear = selectedOrigin?.years.find((item) => item.id === value.yearId);
   const selectedStage = selectedYear?.stages.find((item) => item.id === value.stageId);
   const count = selectedCount(value);
-  const canClear = taskFiltersAreActive(value);
+  const canClear = searchActive || value.originId != null;
 
   const selectOrigin = (originId: string) => {
     onChange(
       value.originId === originId
-        ? { ...emptyTaskFilters, query: value.query }
+        ? emptyTaskFilters
         : { ...value, originId, yearId: null, stageId: null, ageGroupId: null },
     );
   };
@@ -280,19 +282,20 @@ export function TaskFilters({ value, onChange, showTitle = true }: TaskFiltersPr
             size="sm"
             variant="ghost"
             isDisabled={!canClear}
-            onClick={() => onChange(emptyTaskFilters)}
+            onClick={() => {
+              setSearchResetKey((key) => key + 1);
+              setSearchActive(false);
+              onChange(emptyTaskFilters);
+            }}
           >
             Notīrīt
           </Button>
         </div>
 
-        <TextField
-          name="task-search"
-          placeholder="Meklēt"
-          value={value.query ?? ""}
-          aria-label="Meklēt uzdevumus"
-          onChange={(query) => onChange({ ...value, query })}
-          startContent={<IconSearch size={16} aria-hidden />}
+        <TaskSearchField
+          key={searchResetKey}
+          initialQuery={value.query ?? ""}
+          onActiveChange={setSearchActive}
         />
       </div>
 
@@ -351,6 +354,34 @@ export function TaskFilters({ value, onChange, showTitle = true }: TaskFiltersPr
       )}
       </div>
     </div>
+  );
+}
+
+function TaskSearchField({
+  initialQuery,
+  onActiveChange,
+}: {
+  initialQuery: string;
+  onActiveChange: (active: boolean) => void;
+}) {
+  const [query, setQuery] = useState(initialQuery);
+
+  return (
+    <TextField
+      name="task-search"
+      placeholder="Meklēt"
+      value={query}
+      aria-label="Meklēt uzdevumus"
+      onChange={(next) => {
+        setQuery(next);
+        const nextActive = next.trim() !== "";
+        const prevActive = query.trim() !== "";
+        if (nextActive !== prevActive) {
+          onActiveChange(nextActive);
+        }
+      }}
+      startContent={<IconSearch size={16} aria-hidden />}
+    />
   );
 }
 
