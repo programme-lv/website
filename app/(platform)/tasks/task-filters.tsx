@@ -5,8 +5,8 @@ import Image from "next/image";
 import { ListBox, Select } from "@heroui/react";
 import { IconSearch } from "@tabler/icons-react";
 
-import Button from "@/components/button";
-import TextField from "@/components/text-field";
+import Button from "@/components/ui/button";
+import TextField from "@/components/ui/text-field";
 import lioLogo from "@/public/lio-logo-small-no-text.webp";
 import { cn } from "@/components/cn";
 

@@ -1,6 +1,6 @@
 "use client";
 
-import TextField, { type TextFieldProps } from "@/components/text-field";
+import TextField, { type TextFieldProps } from "@/components/ui/text-field";
 
 export type AuthFieldProps = Pick<
   TextFieldProps,

@@ -7,7 +7,7 @@ import { Modal, cn } from "@heroui/react";
 import { IconFilter } from "@tabler/icons-react";
 
 import Alert from "@/components/alert";
-import Button from "@/components/button";
+import Button from "@/components/ui/button";
 import { listTasks } from "@/lib/task/tasks";
 import TaskCard from "@/components/task-list-card";
 import { TaskPreview } from "@/types/task";

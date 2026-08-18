@@ -1,6 +1,6 @@
 # Text field and button
 
-Use `components/text-field.tsx` and `components/button.tsx` for new form controls. Do not add HeroUI `Input` or `Button` for these.
+Use `components/ui/text-field.tsx` and `components/ui/button.tsx` for new form controls. Do not add HeroUI `Input` or `Button` for these. Put further shared primitives in `components/ui/`.
 
 The look is the login field: gray fill (`#e8e8e8`), bottom edge, blue inset focus (`#0f62fe`). Focus lives on the shell so browser autofill cannot thicken one edge. CSS: `.field-shell` / `.field-input` in `styles/globals.css`.
 
