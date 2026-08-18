@@ -69,9 +69,39 @@ type TaskPreview = {
     illustr_img?: IllustrationImage;
     difficulty_rating: 1 | 2 | 3 | 4 | 5;
     origin_olympiad?: string;
+    origin_year?: string;
+    olymp_stage?: string;
+    origin_divisions?: string[];
     origin_note?: string;
     origin_note_short?: string;
     md_statement_story: string;
+};
+
+type TaskFilterDivision = {
+    id: string;
+    count: number;
+};
+
+type TaskFilterStage = {
+    id: string;
+    count: number;
+    divisions: TaskFilterDivision[];
+};
+
+type TaskFilterYear = {
+    id: string;
+    count: number;
+    stages: TaskFilterStage[];
+};
+
+type TaskFilterOlympiad = {
+    id: string;
+    count: number;
+    years: TaskFilterYear[];
+};
+
+type TaskFilterTree = {
+    olympiads: TaskFilterOlympiad[];
 };
 
 export type {
@@ -83,4 +113,9 @@ export type {
     MarkdownStatement,
     StatementImage,
     TaskPreview,
+    TaskFilterTree,
+    TaskFilterOlympiad,
+    TaskFilterYear,
+    TaskFilterStage,
+    TaskFilterDivision,
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import Image from "next/image";
 import { ListBox, Select } from "@heroui/react";
 import { IconSearch } from "@tabler/icons-react";
@@ -10,183 +10,26 @@ import TextField from "@/components/ui/text-field";
 import lioLogo from "@/public/lio-logo-small-no-text.webp";
 import { cn } from "@/components/cn";
 
-export type TaskFilterSelection = {
-  query: string;
-  originId: string | null;
-  yearId: string | null;
-  stageId: string | null;
-  ageGroupId: string | null;
-};
+import {
+  decorateOriginTree,
+  emptyTaskFilters,
+  taskFiltersAreActive,
+  type OriginNode,
+  type TaskFilterSelection,
+  type YearNode,
+} from "./origin-filter";
+import { TaskFilterOlympiad } from "@/types/task";
 
-export const emptyTaskFilters: TaskFilterSelection = {
-  query: "",
-  originId: null,
-  yearId: null,
-  stageId: null,
-  ageGroupId: null,
-};
-
-export function taskFiltersAreActive(value: TaskFilterSelection): boolean {
-  return (value.query ?? "").trim() !== "" || value.originId != null;
-}
-
-type AgeGroupId = "junior" | "senior" | "both";
-type StageId = "school" | "municipal" | "national" | "selection";
-
-type AgeGroupNode = {
-  id: AgeGroupId;
-  label: string;
-  description?: string;
-  count: number;
-};
-
-type StageNode = {
-  id: StageId;
-  label: string;
-  count: number;
-  ageGroups: AgeGroupNode[];
-};
-
-type YearNode = {
-  id: string;
-  label: string;
-  count: number;
-  stages: StageNode[];
-};
-
-type OriginNode = {
-  id: string;
-  label: string;
-  fullName: string;
-  count: number;
-  logo?: "lio";
-  years: YearNode[];
-};
-
-const AGE_GROUPS: {
-  id: AgeGroupId;
-  label: string;
-  description?: string;
-}[] = [
-  { id: "junior", label: "Jaunākā (8.–10. kl.)" },
-  { id: "senior", label: "Vecākā (11.–12. kl.)" },
-  { id: "both", label: "Abas", description: "Jaunākā un vecākā" },
-];
-
-const STAGES: { id: StageId; label: string }[] = [
-  { id: "school", label: "Skolas" },
-  { id: "municipal", label: "Novada" },
-  { id: "national", label: "Valsts" },
-  { id: "selection", label: "Atlases" },
-];
+export { emptyTaskFilters, taskFiltersAreActive };
+export type { TaskFilterSelection };
 
 const ALL_YEARS_KEY = "all";
 
-function ageGroups(counts: Partial<Record<AgeGroupId, number>>): AgeGroupNode[] {
-  return AGE_GROUPS.flatMap((group) => {
-    const count = counts[group.id] ?? 0;
-    return count > 0 ? [{ ...group, count }] : [];
-  });
-}
-
-function stage(id: StageId, counts: Partial<Record<AgeGroupId, number>>): StageNode {
-  const groups = ageGroups(counts);
-  return {
-    id,
-    label: STAGES.find((item) => item.id === id)?.label ?? id,
-    count: groups.reduce((sum, group) => sum + group.count, 0),
-    ageGroups: groups,
-  };
-}
-
-function year(id: string, stages: StageNode[], count?: number): YearNode {
-  return {
-    id,
-    label: `${id}.\u00A0g.`,
-    count: count ?? stages.reduce((sum, item) => sum + item.count, 0),
-    stages,
-  };
-}
-
-function origin(node: Omit<OriginNode, "count"> & { count?: number }): OriginNode {
-  return {
-    ...node,
-    count: node.count ?? node.years.reduce((sum, item) => sum + item.count, 0),
-  };
-}
-
-function lioYear(
-  id: string,
-  opts: { national?: boolean; selection?: boolean; both?: boolean } = {},
-): YearNode {
-  const schoolCounts: Partial<Record<AgeGroupId, number>> = opts.both
-    ? { junior: 2, senior: 2, both: 1 }
-    : { junior: 2, senior: 2 };
-  const nationalCounts: Partial<Record<AgeGroupId, number>> = opts.both
-    ? { junior: 3, senior: 3, both: 1 }
-    : { junior: 3, senior: 3 };
-  const stages = [
-    stage("school", schoolCounts),
-    stage("municipal", { junior: 2, senior: 2 }),
-  ];
-  if (opts.national) {
-    stages.push(stage("national", nationalCounts));
-  }
-  if (opts.selection) {
-    stages.push(stage("selection", { senior: 3 }));
-  }
-  return year(id, stages);
-}
-
-function lioYears(): YearNode[] {
-  const years: YearNode[] = [];
-  for (let y = 2026; y >= 1988; y -= 1) {
-    years.push(
-      lioYear(String(y), {
-        national: true,
-        selection: y >= 2005 && y !== 2026,
-        both: y >= 2016,
-      }),
-    );
-  }
-  return years;
-}
-
-/** Placeholder catalog. Options and counts are not loaded from the API. */
-const MOCK_ORIGINS: OriginNode[] = [
-  origin({
-    id: "LIO",
-    label: "LIO",
-    fullName: "Latvijas informātikas olimpiāde",
-    logo: "lio",
-    years: lioYears(),
-  }),
-  origin({
-    id: "BOI",
-    label: "BOI",
-    fullName: "Baltijas informātikas olimpiāde",
-    years: [year("2026", [], 6), year("2025", [], 6), year("2024", [], 6)],
-  }),
-  origin({
-    id: "IOI",
-    label: "IOI",
-    fullName: "Starptautiskā informātikas olimpiāde",
-    years: [year("2025", [], 6), year("2024", [], 6), year("2023", [], 6)],
-  }),
-  origin({
-    id: "other",
-    label: "Citi",
-    fullName: "Uzdevumi bez olimpiādes izcelsmes",
-    years: [],
-    count: 8,
-  }),
-];
-
-function selectedCount(value: TaskFilterSelection): number {
+function selectedCount(origins: OriginNode[], value: TaskFilterSelection): number {
   if (!value.originId) {
-    return MOCK_ORIGINS.reduce((sum, item) => sum + item.count, 0);
+    return origins.reduce((sum, item) => sum + item.count, 0);
   }
-  const originNode = MOCK_ORIGINS.find((item) => item.id === value.originId);
+  const originNode = origins.find((item) => item.id === value.originId);
   if (!originNode) {
     return 0;
   }
@@ -222,17 +65,33 @@ function uzdevumiLabel(count: number): string {
 type TaskFiltersProps = {
   value: TaskFilterSelection;
   onChange: (next: TaskFilterSelection) => void;
+  olympiads: TaskFilterOlympiad[];
+  searchResetKey: number;
+  initialQuery: string;
+  queryActive: boolean;
+  onQueryChange: (query: string) => void;
+  onClear: () => void;
   showTitle?: boolean;
 };
 
-export function TaskFilters({ value, onChange, showTitle = true }: TaskFiltersProps) {
-  const [searchResetKey, setSearchResetKey] = useState(0);
-  const [searchActive, setSearchActive] = useState(() => (value.query ?? "").trim() !== "");
-  const selectedOrigin = MOCK_ORIGINS.find((item) => item.id === value.originId);
+export function TaskFilters({
+  value,
+  onChange,
+  olympiads,
+  searchResetKey,
+  initialQuery,
+  queryActive,
+  onQueryChange,
+  onClear,
+  showTitle = true,
+}: TaskFiltersProps) {
+  const origins = decorateOriginTree(olympiads);
+  const [searchActive, setSearchActive] = useState(() => initialQuery.trim() !== "");
+  const selectedOrigin = origins.find((item) => item.id === value.originId);
   const selectedYear = selectedOrigin?.years.find((item) => item.id === value.yearId);
   const selectedStage = selectedYear?.stages.find((item) => item.id === value.stageId);
-  const count = selectedCount(value);
-  const canClear = searchActive || value.originId != null;
+  const count = selectedCount(origins, value);
+  const canClear = searchActive || queryActive || value.originId != null;
 
   const selectOrigin = (originId: string) => {
     onChange(
@@ -283,9 +142,8 @@ export function TaskFilters({ value, onChange, showTitle = true }: TaskFiltersPr
             variant="ghost"
             isDisabled={!canClear}
             onClick={() => {
-              setSearchResetKey((key) => key + 1);
               setSearchActive(false);
-              onChange(emptyTaskFilters);
+              onClear();
             }}
           >
             Notīrīt
@@ -294,14 +152,15 @@ export function TaskFilters({ value, onChange, showTitle = true }: TaskFiltersPr
 
         <TaskSearchField
           key={searchResetKey}
-          initialQuery={value.query ?? ""}
+          initialQuery={initialQuery}
           onActiveChange={setSearchActive}
+          onDebouncedChange={onQueryChange}
         />
       </div>
 
       <div className="min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-y-contain">
         <FilterSection title="Olimpiāde">
-        {MOCK_ORIGINS.map((item) => (
+        {origins.map((item) => (
           <FilterOption
             key={item.id}
             selected={value.originId === item.id}
@@ -360,11 +219,20 @@ export function TaskFilters({ value, onChange, showTitle = true }: TaskFiltersPr
 function TaskSearchField({
   initialQuery,
   onActiveChange,
+  onDebouncedChange,
 }: {
   initialQuery: string;
   onActiveChange: (active: boolean) => void;
+  onDebouncedChange: (query: string) => void;
 }) {
   const [query, setQuery] = useState(initialQuery);
+
+  useEffect(() => {
+    const timeout = window.setTimeout(() => {
+      onDebouncedChange(query);
+    }, 200);
+    return () => window.clearTimeout(timeout);
+  }, [query, onDebouncedChange]);
 
   return (
     <TextField
@@ -503,7 +371,7 @@ function FilterOption({
         >
           {label}
         </span>
-        {description && (
+        {description && description !== label && (
           <span className="block truncate text-xs text-gray-500">{description}</span>
         )}
       </span>
