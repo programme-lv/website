@@ -3,7 +3,7 @@ export const revalidate = 120; // 2 minutes
 import React from "react";
 import { Metadata } from "next";
 
-import { listTasks } from "@/lib/task/tasks";
+import { listTaskFilters, listTasks } from "@/lib/task/tasks";
 import Layout from "@/components/layout";
 
 import { TaskList } from "./task-list";
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 };
 
 export default async function TaskListServerComponent() {
-  const tasks = await listTasks();
+  const [tasks, filterTree] = await Promise.all([listTasks(), listTaskFilters()]);
 
   // Load current user and their per-task scores on the server
   const me = await whoami();
@@ -35,7 +35,11 @@ export default async function TaskListServerComponent() {
   return (
     <Layout breadcrumbs={breadcrumbs} active="tasks">
       <div className="px-2 sm:px-4 pt-1">
-        <TaskList tasks={tasks.data ?? []} userMaxScores={userMaxScores} />
+        <TaskList
+          tasks={tasks.data ?? []}
+          filterTree={filterTree.status === "success" ? filterTree.data : undefined}
+          userMaxScores={userMaxScores}
+        />
       </div>
     </Layout>
   );

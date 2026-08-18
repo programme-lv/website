@@ -1,6 +1,6 @@
 'use server';
 
-import { Task, TaskPreview } from "@/types/task";
+import { Task, TaskPreview, TaskFilterTree } from "@/types/task";
 import { ApiResponse } from "../api-response";
 import { SERVER_API_HOST } from "../config";
 import { cookies } from "next/headers";
@@ -33,6 +33,20 @@ export const getTaskById = async (
 
 export const listTasks = async (): Promise<ApiResponse<TaskPreview[]>> => {
   const response = await fetch(`${SERVER_API_HOST}/tasks`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Headers": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+      "Access-Control-Allow-Origin": "*",
+    },
+  });
+
+  return response.json();
+};
+
+export const listTaskFilters = async (): Promise<ApiResponse<TaskFilterTree>> => {
+  const response = await fetch(`${SERVER_API_HOST}/task-filters`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

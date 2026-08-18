@@ -7,3 +7,5 @@ For an icon-only checkbox, omit the visible label and set `aria-label` on `Check
 
 This applies to checkbox usage under `app/`, including the admin submission list and scoring pages.
 After changing a checkbox, open the affected page, verify that the control is visible, and toggle it to confirm that `isSelected` and `onChange` remain connected.
+
+Do not use HeroUI `Input` or `Button` for new fields. Use [TextField and Button](ui-controls.md).

@@ -2,7 +2,6 @@
 import {
     Avatar,
     Badge,
-    Button,
     Dropdown,
     DropdownItem,
     DropdownMenu,
@@ -13,6 +12,7 @@ import { IconChevronRight, IconLogout, IconUser } from "@tabler/icons-react";
 import { useContext, useState } from "react";
 
 import { AuthContext } from "@/app/providers";
+import Button from "@/components/ui/button";
 import { usePathname, useRouter } from "next/navigation";
 import { logoutUser } from "@/lib/auth";
 import AuthModal from "./auth-modal";
@@ -30,15 +30,16 @@ export default function User() {
             {!user && (
                 <>
                     <Button
-                        className="inline-flex h-8 min-h-8 items-center gap-1.5 rounded-md ps-4 font-medium"
+                        className="ps-4 font-medium"
                         size="sm"
+                        rounded="md"
                         variant="primary"
-                        onPress={() => {
+                        icon={<IconChevronRight size={16} aria-hidden />}
+                        onClick={() => {
                             setIsAuthOpen(true);
                         }}
                     >
                         Pieslēgties
-                        <IconChevronRight size={16} aria-hidden />
                     </Button>
                     <AuthModal
                         type="login"

@@ -143,18 +143,21 @@ strong {
   background-color: var(--legacy-content1);
 }
 
-/* Auth inputs: ring lives on the shell so browser autofill cannot thicken one edge */
+/* Text fields: ring lives on the shell so browser autofill cannot thicken one edge */
+.field-shell,
 .auth-field-shell {
   background-color: #e8e8e8;
   box-shadow: inset 0 -1px 0 0 #8d8d8d;
   transition: background-color 120ms ease, box-shadow 120ms ease;
 }
 
+.field-shell:focus-within,
 .auth-field-shell:focus-within {
   background-color: #f4f4f4;
   box-shadow: inset 0 0 0 2px #0f62fe;
 }
 
+.field-input,
 .auth-field-input {
   border: 0;
   outline: none;
@@ -164,6 +167,8 @@ strong {
   appearance: none;
 }
 
+.field-input:focus,
+.field-input:focus-visible,
 .auth-field-input:focus,
 .auth-field-input:focus-visible {
   border: 0;
@@ -171,6 +176,12 @@ strong {
   box-shadow: none;
 }
 
+.field-input:-webkit-autofill,
+.field-input:-webkit-autofill:hover,
+.field-input:-webkit-autofill:focus,
+.field-input:autofill,
+.field-input:autofill:hover,
+.field-input:autofill:focus,
 .auth-field-input:-webkit-autofill,
 .auth-field-input:-webkit-autofill:hover,
 .auth-field-input:-webkit-autofill:focus,
@@ -186,6 +197,8 @@ strong {
   transition: background-color 99999s ease-out;
 }
 
+.field-shell:focus-within .field-input:-webkit-autofill,
+.field-shell:focus-within .field-input:autofill,
 .auth-field-shell:focus-within .auth-field-input:-webkit-autofill,
 .auth-field-shell:focus-within .auth-field-input:autofill {
   box-shadow: inset 0 0 0 1000px #f4f4f4 !important;
