@@ -23,14 +23,9 @@ export default function UserPage({
     enabled: !!username,
   });
 
-  const breadcrumbs = [
-    { label: "Lietotāji" },
-    { label: username, href: `/users/${username}` },
-  ];
-
   if (isLoading) {
     return (
-      <Layout breadcrumbs={breadcrumbs} active="tasks">
+      <Layout active="tasks">
         <Toaster/>
         <div className="m-3 flex flex-col gap-3">
           {isOwner && user && <AccountCard user={user} />}
@@ -44,7 +39,7 @@ export default function UserPage({
 
   if (error || !response) {
     return (
-      <Layout breadcrumbs={breadcrumbs} active="tasks">
+      <Layout active="tasks">
         <Toaster/>
         <div className="m-3 flex flex-col gap-3">
           {isOwner && user && <AccountCard user={user} />}
@@ -65,7 +60,7 @@ export default function UserPage({
   );
 
   return (
-    <Layout breadcrumbs={breadcrumbs} active="tasks">
+    <Layout active="tasks">
       <Toaster/>
       <div className="m-3 flex flex-col gap-3">
         {isOwner && user && <AccountCard user={user} />}

@@ -7,7 +7,7 @@ import { confirmPasswordReset } from "@/lib/auth";
 import Alert from "@/components/alert";
 import AuthField from "@/components/auth-field";
 import GenericButton from "@/components/generic-button";
-import { TextLink } from "@/components/text-link";
+import { TextLink } from "@/components/ui/text-link";
 import AuthCardWithBG from "@/components/auth-card-with-bg";
 import { IconKey } from "@tabler/icons-react";
 

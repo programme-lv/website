@@ -35,15 +35,8 @@ export default async function StatementPage({
     }
     const task = response.data;
 
-    const breadcrumbs = [
-        { label: "Admin", href: "/admin" },
-        { label: "Uzdevumi" },
-        { label: task.task_full_name, href: `/admin/task/${task.short_task_id}` },
-        { label: "Formulējums" },
-    ];
-
     return (
-        <Layout breadcrumbs={breadcrumbs} active="admin">
+        <Layout active="admin">
             <div className="flex gap-3 mr-3">
                 <TaskAdminNav taskId={task.short_task_id} activeTab="statement" />
                 <StatementEditForm task={task} />

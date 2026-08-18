@@ -1,43 +1,44 @@
 "use client";
-import {
-  Button,
-  cn,
-} from "@heroui/react";
-import { Icon } from "@iconify/react";
+
+import { cn } from "./cn";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-
-import Sidebar from "@/components/sidebar";
-
-import User from "./navbar-user";
 import React, { useContext, useState } from "react";
-import { IconInbox, IconListDetails, IconInfoCircle } from "@tabler/icons-react";
-import { AuthContext } from "@/app/providers";
+import { IconInbox, IconListDetails, IconMenu2, IconTerminal2 } from "@tabler/icons-react";
 
-interface BreadcrumbItem {
-  label: string;
-  href?: string;
-}
+import { AuthContext } from "@/app/providers";
+import Button from "@/components/ui/button";
+import Footer from "@/components/footer";
+import User from "./navbar-user";
+
+type NavKey = "tasks" | "submissions" | "admin" | "about";
 
 interface LayoutProps {
   children: React.ReactNode;
-  breadcrumbs: BreadcrumbItem[];
-  active: "tasks" | "submissions" | "admin" | "about";
+  active: NavKey;
+  wide?: boolean;
 }
+
+const navItems: { key: NavKey; href: string; label: string; icon: React.ElementType; adminOnly?: boolean }[] = [
+  { key: "tasks", href: "/tasks", label: "Uzdevumi", icon: IconListDetails },
+  { key: "submissions", href: "/submissions", label: "Iesūtījumi", icon: IconInbox },
+  { key: "admin", href: "/admin", label: "Admin", icon: IconTerminal2, adminOnly: true },
+];
+
+const pageInner = "mx-auto flex h-12 w-full max-w-(--page-max) items-center gap-4 px-4";
 
 const MobileNavigationModal = ({
   isOpen,
-  onOpenChange,
   onClose,
+  items,
 }: {
   isOpen: boolean;
-  onOpenChange: (open: boolean) => void;
   onClose: () => void;
+  items: typeof navItems;
 }) => (
   !isOpen ? null : (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 md:hidden"
-      onClick={() => onOpenChange(false)}
+      onClick={onClose}
     >
       <div
         className="w-full max-w-sm rounded-md bg-white shadow-xl"
@@ -53,127 +54,101 @@ const MobileNavigationModal = ({
             Aizvērt
           </button>
         </div>
-        <div className="flex flex-col gap-8 px-8 py-6">
-          <Link href="/tasks" className="flex items-center gap-2" onClick={onClose}><IconListDetails />Uzdevumi </Link>
-          <Link href="/submissions" className="flex items-center gap-2" onClick={onClose}><IconInbox />Iesūtījumi </Link>
-          <Link href="/about" className="flex items-center gap-2" onClick={onClose}><IconInfoCircle />Par mums </Link>
+        <div className="flex flex-col gap-6 px-8 py-6">
+          {items.map((item) => (
+            <Link
+              key={item.key}
+              className="flex items-center gap-2"
+              href={item.href}
+              onClick={onClose}
+            >
+              {React.createElement(item.icon, { size: 20, "aria-hidden": true })}
+              {item.label}
+            </Link>
+          ))}
         </div>
       </div>
     </div>
   )
 );
 
-const MobileMenuButton = ({ onOpen }: { onOpen: () => void }) => (
-  <div className="flex md:hidden">
-    <Button
-      isIconOnly
-      className="h-8 min-h-8 w-8 min-w-8"
-      size="sm"
-      variant="ghost"
-      onPress={onOpen}
-    >
-      <Icon
-        className="text-default-800"
-        height={26}
-        icon="solar:hamburger-menu-outline"
-        width={26}
-      />
-    </Button>
-  </div>
-);
-
-function breadcrumbHrefIsCurrentPath(pathname: string, href: string): boolean {
-  const norm = (p: string) =>
-    p.length > 1 && p.endsWith("/") ? p.slice(0, -1) : p;
-  return norm(pathname) === norm(href);
+function Header({
+  active,
+  items,
+  onMobileMenuOpen,
+}: {
+  active: NavKey;
+  items: typeof navItems;
+  onMobileMenuOpen: () => void;
+}) {
+  return (
+    <header className="border-b-small border-divider bg-white">
+      <div className={pageInner}>
+        <Button
+          aria-label="Izvēlne"
+          className="md:hidden"
+          icon={<IconMenu2 size={22} aria-hidden />}
+          size="sm"
+          variant="ghost"
+          onClick={onMobileMenuOpen}
+        />
+        <nav className="hidden h-12 min-w-0 flex-1 items-stretch gap-5 md:flex">
+          {items.map((item) => (
+            <Link
+              key={item.key}
+              className={cn(
+                "inline-flex items-center border-b-[3px] text-sm",
+                active === item.key
+                  ? "border-[#0f62fe] font-medium text-default-900"
+                  : "border-transparent text-default-600 hover:text-default-900",
+              )}
+              href={item.href}
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
+        <div className="ml-auto shrink-0">
+          <User />
+        </div>
+      </div>
+    </header>
+  );
 }
 
-const Breadcrumbs = ({ items }: { items: BreadcrumbItem[] }) => {
-  const pathname = usePathname() ?? "";
-  return (
-    <nav className="hidden sm:block">
-      <ol className="flex gap-x-1.5 text-sm">
-        {items.map((item, index) => {
-          const isLast = index === items.length - 1;
-          const href = item.href;
-          const isCurrent =
-            href != null && breadcrumbHrefIsCurrentPath(pathname, href);
-          return (
-            <React.Fragment key={index}>
-              <li>
-                {href && !isCurrent ? (
-                  <Link
-                    className={cn("text-default-500 hover:underline", {
-                      "text-default-800": isLast,
-                    })}
-                    href={href}
-                  >
-                    {item.label}
-                  </Link>
-                ) : (
-                  <span
-                    className={cn("text-default-500", {
-                      "text-default-800": isLast,
-                    })}
-                  >
-                    {item.label}
-                  </span>
-                )}
-              </li>
-              {index < items.length - 1 && (
-                <span className="text-default-500"> / </span>
-              )}
-            </React.Fragment>
-          );
-        })}
-      </ol>
-    </nav>
-  );
-};
-
-const Header = ({
-  breadcrumbs,
-  onMobileMenuOpen
-}: {
-  breadcrumbs: BreadcrumbItem[];
-  onMobileMenuOpen: () => void;
-}) => (
-  <header className="flex items-center justify-between gap-1 border-b-small border-divider px-2 md:px-5 bg-white min-h-14">
-    <div className="flex items-center justify-between w-full flex-wrap">
-      <div className="flex gap-2 items-center">
-        <MobileMenuButton onOpen={onMobileMenuOpen} />
-        <Breadcrumbs items={breadcrumbs} />
-      </div>
-      <User />
-    </div>
-  </header>
-);
-
-const Layout: React.FC<LayoutProps> = ({ children, breadcrumbs, active }) => {
+const Layout: React.FC<LayoutProps> = ({ children, active, wide = false }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
   const { user } = useContext(AuthContext);
   const userIsAdmin = user?.username === "admin";
+  const items = navItems.filter((item) => !item.adminOnly || userIsAdmin);
 
   return (
     <>
       <MobileNavigationModal
         isOpen={isMobileMenuOpen}
-        onOpenChange={setIsMobileMenuOpen}
+        items={items}
         onClose={() => setIsMobileMenuOpen(false)}
       />
 
-      <div className="w-full">
-        <Sidebar active={active} userIsAdmin={userIsAdmin}/>
+      <div className="flex min-h-screen flex-col">
+        <Header
+          active={active}
+          items={items}
+          onMobileMenuOpen={() => setIsMobileMenuOpen(true)}
+        />
 
-        <div className="md:ml-16">
-          <Header
-            breadcrumbs={breadcrumbs}
-            onMobileMenuOpen={() => setIsMobileMenuOpen(true)}
-          />
-
-          {children}
-        </div>
+        {wide ? (
+          <div className="flex h-[calc(100vh-3rem)] min-h-0 flex-col overflow-hidden">
+            {children}
+          </div>
+        ) : (
+          <>
+            <main className="mx-auto w-full max-w-(--page-max) flex-1 px-4 pb-8 min-h-[calc(100vh-3rem)]">
+              {children}
+            </main>
+            <Footer />
+          </>
+        )}
       </div>
     </>
   );

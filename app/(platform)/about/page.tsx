@@ -1,6 +1,6 @@
 import Layout from "@/components/layout";
 import styles from "./about.module.css";
-import { TextLink } from "@/components/text-link";
+import { TextLink } from "@/components/ui/text-link";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -81,20 +81,9 @@ function Content() {
 }
 export default function AboutPage() {
 	return (
-		<Layout
-			active="about"
-			breadcrumbs={[
-				{ label: "Par mums", href: "/about" }
-			]}
-		>
-			<div className="min-h-screen absolute top-0 left-0 pointer-events-none md:pl-16 w-full pt-14 flex">
-				<div className="bg-white flex-grow">
-					<div className="max-w-4xl lg:mx-auto py-2 md:mx-2">
-						<div className="rounded-sm px-4 pointer-events-auto">
-							<Content />
-						</div>
-					</div>
-				</div>
+		<Layout active="about">
+			<div className="py-2">
+				<Content />
 			</div>
 		</Layout>
 	);

@@ -78,7 +78,7 @@ export default function TaskDetailsPage(props: { task: Task }) {
 	}
 
 	return (
-		<main className="my-2 md:mx-2 flex-grow w-full overflow-visible relative pointer-events-auto">
+		<main className="relative h-full min-h-0 w-full flex-1 overflow-hidden p-2">
 			{/* Desktop View */}
 			<div
 				ref={pageRefXL}

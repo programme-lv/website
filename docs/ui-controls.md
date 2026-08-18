@@ -1,6 +1,6 @@
 # Text field and button
 
-Use `components/ui/text-field.tsx` and `components/ui/button.tsx` for new form controls. Do not add HeroUI `Input` or `Button` for these. Put further shared primitives in `components/ui/`.
+Use `components/ui/text-field.tsx`, `components/ui/button.tsx`, and `components/ui/text-link.tsx` for new form controls and inline links. Do not add HeroUI `Input` or `Button` for these. Put further shared primitives in `components/ui/`.
 
 The look is the login field: gray fill (`#e8e8e8`), bottom edge, blue inset focus (`#0f62fe`). Focus lives on the shell so browser autofill cannot thicken one edge. CSS: `.field-shell` / `.field-input` in `styles/globals.css`.
 
@@ -25,6 +25,10 @@ The look is the login field: gray fill (`#e8e8e8`), bottom edge, blue inset focu
 - `isDisabled` / native `disabled` map to the DOM attribute as `true` or omitted (`undefined`). Do not pass `false` or `null`; React 19 SSR omits those and hydrates as a mismatch.
 
 `GenericButton` re-exports `Button`. Existing admin call sites keep working; new code can import `Button` directly.
+
+## TextLink
+
+Underlined inline link (`underline-offset-2`, faint decoration that darkens on hover). `color`: `default` (blue-800), `primary` (`#0f62fe`), `accent`, `success`. `disabled` / `isDisabled` render a span. Default for in-prose and footer links.
 
 ## Verification
 

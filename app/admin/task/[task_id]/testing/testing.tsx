@@ -2,7 +2,7 @@
 
 import FileUpload from "@/components/file-upload";
 import GenericButton from "@/components/generic-button";
-import { TextLink } from "@/components/text-link";
+import { TextLink } from "@/components/ui/text-link";
 import { IconDeviceFloppy, IconEdit } from "@tabler/icons-react";
 import { useState } from "react";
 import CheckerEditModal from "./checker-edit-modal";

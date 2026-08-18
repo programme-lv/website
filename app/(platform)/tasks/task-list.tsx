@@ -88,7 +88,7 @@ export function TaskList(props: {
   }
 
   return (
-    <main className="mt-3 flex-grow w-full overflow-visible">
+    <div className="mt-3 w-full overflow-visible">
       <div className="flex items-stretch gap-3 lg:gap-4">
         <div className="min-w-0 flex-1">
           <div className="mb-2 flex justify-end lg:hidden">
@@ -157,7 +157,7 @@ export function TaskList(props: {
           </Modal.Container>
         </Modal.Backdrop>
       </Modal>
-    </main>
+    </div>
   );
 }
 
@@ -169,7 +169,7 @@ const TaskCardGrid = React.memo(function TaskCardGrid({
   userMaxScores?: MaxScorePerTask;
 }) {
   return (
-    <div className="grid grid-cols-1 min-[1620px]:grid-cols-2 min-[2240px]:grid-cols-3 gap-3 ">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
       {tasks.map((task) => (
         <Link
           key={task.short_id}

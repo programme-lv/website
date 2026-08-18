@@ -45,15 +45,6 @@ export default async function RunPage({
   // const { tab } = await searchParams;
   // const _currentTab = tab || "task";
 
-  const breadcrumbs = [
-    { label: "Admin", href: "/admin" },
-    { label: "Uzdevumi"},
-    { label: task.task_full_name, href: `/admin/task/${task.short_task_id}` },
-    { label: "Risinājumi"},
-    { label: "Izpilde"},
-    { label: run_id.slice(0, 8), href: `/admin/task/${task.short_task_id}/solutions/run/${run_id}` },
-  ];
-
 	const submData: DetailedSubmView = {
     id: run_id.slice(0, 6),
     subm_uuid: run_id,
@@ -120,7 +111,7 @@ export default async function RunPage({
   };
 
   return (
-    <Layout breadcrumbs={breadcrumbs} active="admin">
+    <Layout active="admin">
         <div className="m-3 flex flex-col gap-3">
             <div className="bg-white p-3 rounded-sm border-small border-divider overflow-x-auto">
                 {!submData.content && (

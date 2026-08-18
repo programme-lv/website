@@ -34,20 +34,10 @@ export default async function TaskPageServerComponent({
     return <div>{JSON.stringify(response)}</div>;
   }
 
-  const breadcrumbs = [
-    { label: "Uzdevumi", href: "/tasks" },
-    { label: task.task_full_name, href: `/tasks/${task_id}` },
-  ];
-
   return (
-    <Layout breadcrumbs={breadcrumbs} active="tasks">
+    <Layout wide active="tasks">
       <Toaster/>
-
-      <div className="flex min-h-screen absolute pt-14 w-full left-0 md:pl-16 top-0 pointer-events-none overflow-hidden">
-        {/* <div className="px-3 flex flex-grow"> */}
-          <TaskDetailsPage task={task} />
-        {/* </div> */}
-      </div>
+      <TaskDetailsPage task={task} />
     </Layout>
   );
 }

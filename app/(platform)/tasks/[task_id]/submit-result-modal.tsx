@@ -5,7 +5,7 @@ import { Modal } from "@heroui/react";
 
 import { SubmListScoreBar } from "@/components/subm-table-score-bars";
 import { statusTranslations } from "@/components/submission-table";
-import { TextLink } from "@/components/text-link";
+import { TextLink } from "@/components/ui/text-link";
 import { getSubmissionClient, subscribeToSubmUpdates } from "@/lib/subms";
 import { DetailedSubmView, SubmEval, SubmListSseUpdate } from "@/types/subm";
 

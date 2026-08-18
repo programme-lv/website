@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { Task } from "@/types/task";
 import { useRouter } from "next/navigation";
-import { TextLink } from "@/components/text-link";
+import { TextLink } from "@/components/ui/text-link";
 import GenericButton from "@/components/generic-button";
 import { uploadTaskIllustration, deleteTaskIllustration } from "@/lib/task/upload-image";
 import { IconExternalLink } from "@tabler/icons-react";

@@ -1,4 +1,4 @@
-import { TextLink } from "./text-link";
+import { TextLink } from "@/components/ui/text-link";
 import GenericTable, { Column } from "./generic-table";
 import { DateTimeCell } from "./datetime-cell";
 
