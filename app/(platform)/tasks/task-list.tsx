@@ -53,7 +53,7 @@ export function TaskList(props: { tasks: TaskPreview[]; userMaxScores?: MaxScore
 
   return (
     <main className="mt-3 flex-grow w-full overflow-visible">
-      <div className="flex items-start gap-3 lg:gap-4">
+      <div className="flex items-stretch gap-3 lg:gap-4">
         <div className="min-w-0 flex-1">
           <div className="mb-2 flex justify-end lg:hidden">
             <Button
@@ -90,7 +90,7 @@ export function TaskList(props: { tasks: TaskPreview[]; userMaxScores?: MaxScore
           </div>
         </div>
         <aside className="hidden w-[17.5rem] shrink-0 lg:block" aria-label="Filtri">
-          <div className="sticky top-3 flex max-h-[calc(100vh-1.5rem)] flex-col overflow-hidden rounded-sm border border-zinc-200 bg-white p-3">
+          <div className="sticky top-3 flex max-h-[calc(100dvh-1.5rem)] flex-col overflow-hidden rounded-sm border border-zinc-200 bg-white p-3">
             <TaskFilters value={filters} onChange={setFilters} />
           </div>
         </aside>
