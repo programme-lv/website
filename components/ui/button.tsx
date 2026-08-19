@@ -95,7 +95,9 @@ export default function Button({
     <button
       {...props}
       type={type}
-      disabled={isOff ? true : undefined}
+      // @ts-expect-error React 19 omits autocomplete on <button>; Firefox persists disabled without it.
+      autoComplete="off"
+      disabled={isOff}
       onClick={handleClick}
       className={cn(
         "relative inline-flex cursor-pointer items-center font-normal transition-colors focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0f62fe] disabled:cursor-not-allowed disabled:opacity-50",

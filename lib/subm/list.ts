@@ -2,14 +2,16 @@
 
 import { PaginatedSubmListResponse } from "@/types/subm";
 import { API_HOST } from "@/lib/config";
+import { ListSubmissionsOpts, submListQuery } from "@/lib/subm/query";
 
 export const listSubmissionsClientSide = async (
   offset: number = 0,
   limit: number = 30,
   search?: string,
+  opts?: ListSubmissionsOpts,
 ): Promise<PaginatedSubmListResponse> => {
   try {
-    const url = `${API_HOST}/subm?offset=${offset}&limit=${limit}&search=${encodeURIComponent(search || "")}`;
+    const url = `${API_HOST}/subm?${submListQuery(offset, limit, search, opts)}`;
     const response = await fetch(url, {
       method: "GET",
       headers: {

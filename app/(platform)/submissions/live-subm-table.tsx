@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
+import { AuthContext } from "@/app/providers";
 import { subscribeToSubmUpdates } from "@/lib/subms";
 import { SubmListEntry, SubmListSseUpdate } from "@/types/subm";
 import SubmissionTable from "@/components/submission-table";
@@ -12,6 +13,8 @@ export default function RealTimeSubmTable({
   initial,
   initialPagination,
   search,
+  taskId,
+  mine,
 }: {
   initial: SubmListEntry[];
   initialPagination: {
@@ -21,15 +24,24 @@ export default function RealTimeSubmTable({
     hasMore: boolean;
   };
   search?: string;
+  taskId?: string;
+  mine?: boolean;
 }) {
+  const { user } = useContext(AuthContext);
+  const mineUsername = mine ? user?.username : undefined;
   const [isChangingPage, setIsChangingPage] = useState(false);
   const initialSubmissions = Array.isArray(initial) ? initial : [];
   const [submissions, setSubmissions] = useState<SubmListEntry[]>(initialSubmissions);
 
   const { data, isLoading } = useQuery({
-      queryKey: ["submissions", initialPagination.offset, initialPagination.limit, search],
+      queryKey: ["submissions", initialPagination.offset, initialPagination.limit, search, taskId, mine],
       queryFn: async () => {
-        return await listSubmissionsClientSide(initialPagination.offset, initialPagination.limit, search);
+        return await listSubmissionsClientSide(
+          initialPagination.offset,
+          initialPagination.limit,
+          search,
+          { taskId, mine },
+        );
       },
       refetchInterval: 10000,
       refetchOnWindowFocus: true,
@@ -57,7 +69,8 @@ export default function RealTimeSubmTable({
             const updatedSubms = applyUpdatesToSubmissions(
               prev,
               [update],
-              initialPagination.offset
+              initialPagination.offset,
+              { taskId, mineUsername },
             );
             return sortSubmissions(updatedSubms);
           });
@@ -66,7 +79,7 @@ export default function RealTimeSubmTable({
     );
 
     return () => unsubscribe();
-  }, [initialPagination.offset]);
+  }, [initialPagination.offset, taskId, mineUsername]);
 
   useEffect(() => {
     if (data) {
@@ -106,7 +119,8 @@ function sortSubmissions(submissions: SubmListEntry[]): SubmListEntry[] {
 function applyUpdatesToSubmissions(
   submissions: SubmListEntry[],
   updates: SubmListSseUpdate[],
-  offset: number = 0
+  offset: number = 0,
+  filter: { taskId?: string; mineUsername?: string } = {},
 ): SubmListEntry[] {
   const nextSubmissions = submissions.map((submission) => ({ ...submission }));
 
@@ -114,6 +128,12 @@ function applyUpdatesToSubmissions(
     if ('subm_created' in update && update.subm_created !== null) {
       if (offset === 0) {
         const newSubmission = update.subm_created;
+        if (filter.taskId && newSubmission.task_id !== filter.taskId) {
+          continue;
+        }
+        if (filter.mineUsername && newSubmission.username !== filter.mineUsername) {
+          continue;
+        }
         if (!nextSubmissions.some(s => s.subm_uuid === newSubmission.subm_uuid)) {
           nextSubmissions.push(newSubmission);
         }

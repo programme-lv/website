@@ -42,7 +42,11 @@ export default function TaskEditor({ taskCode, onClose, backHref }: TaskEditorPr
 
 	useEffect(() => {
 		if (!languages) return;
-		if (selectedLanguage !== "") return;
+
+		const currentOk = languages.some(
+			(lang) => lang.id === selectedLanguage && lang.enabled,
+		);
+		if (currentOk) return;
 
 		const savedLang = sessionStorage.getItem(`lang-${taskCode}`);
 		const savedOk = languages.some((lang) => lang.id === savedLang && lang.enabled);
@@ -51,8 +55,9 @@ export default function TaskEditor({ taskCode, onClose, backHref }: TaskEditorPr
 			return;
 		}
 
-		const defaultLang = languages.find((lang) => lang.id === "cpp17");
-		setSelectedLanguage(defaultLang ? "cpp17" : languages[0].id);
+		const defaultLang = languages.find((lang) => lang.id === "cpp17" && lang.enabled);
+		const firstEnabled = languages.find((lang) => lang.enabled);
+		setSelectedLanguage(defaultLang?.id ?? firstEnabled?.id ?? "");
 	}, [languages, selectedLanguage, taskCode]);
 
 	useEffect(() => {
@@ -303,26 +308,15 @@ function LanguageSelect({
 	selectedLanguage,
 	setSelectedLanguage,
 }: LanguageSelectProps) {
-	if (!languages?.length) {
+	const enabled = languages?.filter((lang) => lang.enabled) ?? [];
+	if (!enabled.length) {
 		return null;
 	}
 
-	const disabledKeys = new Set(
-		languages.filter((lang) => !lang.enabled).map((lang) => lang.id),
-	);
-
-	const sorted = [...languages].sort((a, b) => {
-		const aDis = disabledKeys.has(a.id);
-		const bDis = disabledKeys.has(b.id);
-		if (aDis && !bDis) return 1;
-		if (!aDis && bDis) return -1;
-		return a.fullName.localeCompare(b.fullName);
-	});
+	const sorted = [...enabled].sort((a, b) => a.fullName.localeCompare(b.fullName));
 
 	const selectedKey =
-		selectedLanguage ||
-		sorted.find((l) => l.enabled)?.id ||
-		sorted[0]?.id;
+		sorted.find((lang) => lang.id === selectedLanguage)?.id || sorted[0].id;
 
 	return (
 		<Select
@@ -344,12 +338,7 @@ function LanguageSelect({
 			<Select.Popover className="overflow-hidden rounded-sm">
 				<ListBox className="rounded-sm">
 					{sorted.map((lang) => (
-						<ListBox.Item
-							key={lang.id}
-							id={lang.id}
-							isDisabled={!lang.enabled}
-							textValue={lang.fullName}
-						>
+						<ListBox.Item key={lang.id} id={lang.id} textValue={lang.fullName}>
 							{lang.fullName}
 						</ListBox.Item>
 					))}

@@ -4,14 +4,16 @@ import { PaginatedSubmListResponse } from "@/types/subm";
 import { cookies } from "next/headers";
 import { SERVER_API_HOST } from "@/lib/config";
 import { MaxScorePerTask } from "@/types/scores";
+import { ListSubmissionsOpts, submListQuery } from "@/lib/subm/query";
 
 export const listSubmissionsServerSide = async (
   offset: number = 0,
   limit: number = 30,
   search?: string,
+  opts?: ListSubmissionsOpts,
 ): Promise<PaginatedSubmListResponse> => {
   try {
-    const url = `${SERVER_API_HOST}/subm?offset=${offset}&limit=${limit}&search=${encodeURIComponent(search || "")}`;
+    const url = `${SERVER_API_HOST}/subm?${submListQuery(offset, limit, search, opts)}`;
     const response = await fetch(url, {
       method: "GET",
       headers: {

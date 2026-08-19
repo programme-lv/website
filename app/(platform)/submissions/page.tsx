@@ -14,17 +14,30 @@ export const metadata: Metadata = {
 };
 
 export default async function SubmissionListServerComponent(props: {
-  searchParams: Promise<{ page?: string; limit?: string; search?: string }>;
+  searchParams: Promise<{
+    page?: string;
+    limit?: string;
+    search?: string;
+    task_id?: string;
+    mine?: string;
+  }>;
 }) {
   const searchParams = await props.searchParams;
   const page = Number(searchParams.page) || 1;
   const limit = Number(searchParams.limit) || 30;
   const queryOffset = (page - 1) * limit;
   const search = searchParams.search;
+  const taskId = searchParams.task_id?.trim() || undefined;
+  const mine = searchParams.mine === "1" || searchParams.mine === "true";
 
   let submissionsResponse: PaginatedSubmListResponse;
   try {
-    submissionsResponse = await listSubmissionsServerSide(queryOffset, limit, search);
+    submissionsResponse = await listSubmissionsServerSide(
+      queryOffset,
+      limit,
+      search,
+      { taskId, mine },
+    );
   } catch (error: unknown) {
     console.error("Error fetching submissions:", error);
     return <div>Error fetching submissions</div>;
@@ -72,6 +85,8 @@ export default async function SubmissionListServerComponent(props: {
               initial={submissionsResponse.page}
               initialPagination={submissionsResponse.pagination}
               search={search}
+              taskId={taskId}
+              mine={mine}
             />
           </Suspense>
         </div>
