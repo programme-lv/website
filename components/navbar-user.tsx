@@ -30,7 +30,7 @@ export default function User() {
             {!user && (
                 <>
                     <Button
-                        className="ps-4 font-medium"
+                        // className="ps-4 font-medium"
                         size="sm"
                         rounded="md"
                         variant="primary"
