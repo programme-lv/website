@@ -38,7 +38,7 @@ export default function TaskDetailsPage({ task }: { task: Task }) {
 						/>
 					)}
 				</article>
-				<aside className="w-full shrink-0 lg:max-w-sm">
+				<aside className="w-full shrink-0 lg:max-w-xs">
 					<div className="lg:sticky lg:top-3">
 						<TaskMeta task={task} />
 					</div>

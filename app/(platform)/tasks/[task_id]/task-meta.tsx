@@ -11,6 +11,7 @@ import Button from "@/components/ui/button";
 import { Task } from "@/types/task";
 
 import SubmitModal from "./submit-modal";
+import TaskSubmList from "./task-subm-list";
 
 function submitAfterLoginKey(taskId: string) {
 	return `open-submit:${taskId}`;
@@ -44,12 +45,15 @@ export default function TaskMeta({ task }: { task: Task }) {
 
 	return (
 		<div className="flex flex-col gap-2">
-			<div className="border border-zinc-200 bg-white p-3 text-sm">
-				<div>
-					CPU: <strong>{task.cpu_time_limit_seconds}</strong> s
-				</div>
-				<div className="mt-1">
-					RAM: <strong>{task.memory_limit_megabytes}</strong> MB
+			<div className="border border-zinc-200 bg-white p-3">
+				<div className="text-sm flex flex-row gap-1 text-zinc-800">
+					Izpildes ierobežojumi:
+					<span>
+						<strong>{task.cpu_time_limit_seconds}</strong> s CPU
+					</span>
+					<span>
+						<strong>{task.memory_limit_megabytes}</strong> MB RAM
+					</span>
 				</div>
 				<div className="mt-3 flex flex-col gap-2">
 					{user ? (
@@ -69,7 +73,7 @@ export default function TaskMeta({ task }: { task: Task }) {
 								variant="primary"
 								onClick={() => setSubmitOpen(true)}
 							>
-								Atvērt sūtīšanas logu
+								Atvērt risinājuma iesūtīšanas logu
 							</Button>
 						</>
 					) : (
@@ -93,19 +97,25 @@ export default function TaskMeta({ task }: { task: Task }) {
 								variant="primary"
 								onClick={openLoginForSubmit}
 							>
-								Atvērt sūtīšanas logu
+								Atvērt risinājuma iesūtīšanas logu
 							</Button>
 						</>
 					)}
+					{user && (
+						<TaskSubmList taskId={task.short_task_id} username={user.username} />
+					)}
 					{userIsAdmin && (
-						<Link
-							aria-label="Rediģēt uzdevumu"
-							className="inline-flex h-8 items-center justify-center gap-2 rounded-sm border border-divider text-sm text-default-700 hover:bg-gray-50"
-							href={`/admin/task/${task.short_task_id}`}
+						<Button
+							fullWidth
+							icon={<IconPencil size={16} aria-hidden />}
+							iconPosition="end"
+							size="sm"
+							type="button"
+							variant="default"
+							onClick={() => router.push(`/admin/task/${task.short_task_id}`)}
 						>
-							<IconPencil height={16} width={16} />
-							Rediģēt
-						</Link>
+							Rediģēt uzdevumu
+						</Button>
 					)}
 				</div>
 			</div>

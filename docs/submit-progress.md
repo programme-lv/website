@@ -8,4 +8,5 @@ Iesūtīt stays disabled with a loading spinner until that eval is finished (or 
 - `curr_eval.verdicts` is a string, one character per test (`Q` queued, `X` running, `A/W/T/M/R/I/U`).
 - Test boxes: `T` (TLE) is red (`#f56565`), same as `W`/`R`. `X` (running) stays yellow pulse. `M` (MLE) stays yellow.
 - `I` means the tester skipped the test because another test in the same scoring group (or subtask) already failed; it does not affect points. Ignored boxes use dark gray (`#4a5568`) so they are not confused with queued `Q` (lighter `#a0aec0`).
-- The public `/submissions` list has search, not an “only mine” filter.
+- The public `/submissions` list has search. `task_id` and `mine=1` AND-filter the same way as `GET /subm`.
+- The task-page sidebar (logged in) lists the viewer’s latest 5 submissions for that task: underlined `YYYY-MM-DD HH:MM` → `/submissions/{id}`, then the score bar + `received / possible`. Caption links to `/submissions?task_id={id}&mine=1`. The client also filters by username and `task_id` so an older backend that ignores those params cannot dump the global list into the sidebar. SSE `/subm-updates` patches matching rows.

@@ -19,7 +19,9 @@ type SubmissionsToolbarProps = {
 function useHasActiveFilters(): boolean {
   const searchParams = useSearchParams();
   const q = (searchParams.get("search") ?? "").trim();
-  return q !== "";
+  const taskId = (searchParams.get("task_id") ?? "").trim();
+  const mine = searchParams.get("mine") === "1" || searchParams.get("mine") === "true";
+  return q !== "" || taskId !== "" || mine;
 }
 
 export default function SubmissionsToolbar({
