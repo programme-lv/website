@@ -50,8 +50,9 @@ export default async function Page({
 
 	return (
 		<Layout active="submissions">
-			<div className="m-3 flex flex-col gap-3">
+			<div className="flex flex-col gap-3 py-4">
 				<SubmInfoHeader
+					subm_id={submData.id}
 					possible={submData.curr_eval.score_info.possible}
 					received={submData.curr_eval.score_info.received}
 					language={submData.pr_lang.display}

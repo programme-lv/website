@@ -8,12 +8,20 @@ const difficultyConfig: Record<1 | 2 | 3 | 4 | 5, { label: string; className: st
   5: { label: "ļoti grūts", className: "bg-red-100 text-red-800" },
 };
 
-export default function TaskDifficultyChip({ difficulty_rating }: { difficulty_rating: 1 | 2 | 3 | 4 | 5 }) {
+type TaskDifficultyChipProps = {
+  difficulty_rating: 1 | 2 | 3 | 4 | 5;
+  size?: "sm" | "md" | "lg";
+};
+
+export default function TaskDifficultyChip({
+  difficulty_rating,
+  size = "sm",
+}: TaskDifficultyChipProps) {
   const config = difficultyConfig[difficulty_rating];
   if (!config) return null;
 
   return (
-    <Chip className={config.className} size="sm" variant="soft">
+    <Chip className={config.className} size={size} variant="soft">
       <span className="sm:hidden">{difficulty_rating}</span>
       <span className="hidden sm:inline font-normal px-0.5">{config.label}</span>
     </Chip>

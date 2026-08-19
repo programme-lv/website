@@ -21,7 +21,7 @@ function Content() {
 				kā arī atbalstīt augsti godājamos skolotājus un pasniedzējus.
 			</p>
 			<br />
-			<h3 className={styles.h3}>Mūsu mērķi 🎯</h3>
+			<h3 className={styles.h3}>Mūsu mērķi</h3>
 			<ul className={styles.ul}>
 				<li>Samazināt barjeras iesācējiem, spiežot pirmos taustiņus programmēšanā</li>
 				<li>Arhivēt, uzturēt un publicēt olimpiāžu uzdevumus</li>
@@ -29,7 +29,7 @@ function Content() {
 				<li>Veicināt kopienu, organizējot konkursus un pasākumus</li>
 			</ul>
 			<br />
-			<h3 className={styles.h3}>Iecerētās funkcijas 💡</h3>
+			<h3 className={styles.h3}>Iecerētās funkcijas</h3>
 			<ul className={styles.ul}>
 				<li>Atbalsts populārākajām programmēšanas valodām</li>
 				<li>Daļēji pareizu risinājumu atbalsts ar apakšuzdevumiem</li>
@@ -38,7 +38,7 @@ function Content() {
 				<li>Iebūvēts koda redaktors tepat pārlūkprogrammā</li>
 			</ul>
 			<br />
-			<h3 className={styles.h3}>Vēsture 📜</h3>
+			<h3 className={styles.h3}>Vēsture</h3>
 			<ol className={styles.ol}>
 				<li>2001. gadā LIIS (Latvijas Izglītības Informatizācijas Sistēma) ietvaros tapa risinājumu pārbaudes serveris <TextLink href="http://olimps.lio.lv/" target="_blank">olimps.lv</TextLink>!</li>
 				<li>2014. gadā Jānis Gruzis izstrādāja <TextLink href="https://clevercode.lv" target="_blank">CleverCode.lv</TextLink> kā bakalaura darbu un to aktīvi uzturēja līdz ~2021. gadam</li>
@@ -48,7 +48,7 @@ function Content() {
 				<li>2025. gadā Krišjānis to prezentēja kā savu kvalifikācijas darbu Latvijas Universitātē, un turpina pie tā strādāt</li>
 			</ol>
 			<br />
-			<h3 className={styles.h3}>Paldies 🎖️</h3>
+			<h3 className={styles.h3}>Paldies</h3>
 			<ul className={styles.ul}>
 				<li>Jānim Gruzim par CleverCode.lv izveidi un uzturēšanu. Tīmekļa vietne ir bijis milzīgs ieguvums visai Latvijai</li>
 				<li>Raivim Ieviņam, <TextLink href="https://pps.lv" target="_blank">PPS</TextLink> direktoram, un Veronikai Lohmanovai par iedvesmošanu, atbalstu un idejām</li>
@@ -56,15 +56,15 @@ function Content() {
 				<li>Elīzai Bergai par uzdevumu ilustrāciju gleznošanu dzīvīgākai lietotājpieredzei. Tās (gandrīz visas) nav &quot;ģenerētas&quot;</li>
 			</ul>
 			<br />
-			<h3 className={styles.h3}>Saziņa ✉️</h3>
+			<h3 className={styles.h3}>Saziņa</h3>
 			<p className={styles.p}>
 				Ja jums ir jautājumi vai ieteikumi, lūdzu rakstīt.
-				Esmu atvērts jaunām idejām un sadarbībai. 🙂
+				Esmu atvērts jaunām idejām un sadarbībai.
 				<br />
 				Epasts: krisjanispetrucena at džī mail punkts com
 			</p>
 			<br />
-			<h3 className={styles.h3}>Ieteiktās saites 📚</h3>
+			<h3 className={styles.h3}>Ieteiktās saites</h3>
 			<p className={styles.p}>
 				<TextLink href="https://clevercode.lv" target="_blank">clevercode.lv</TextLink>{" | "}
 				<TextLink href="https://lio.lv/" target="_blank">lio.lv</TextLink>{" | "}

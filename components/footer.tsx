@@ -10,7 +10,7 @@ export default function Footer() {
   useEffect(() => {
     const timer = window.setTimeout(() => {
       setEmail(["krisjanispetrucena", "gmail.com"].join("@"));
-    }, 5000);
+    }, 2000);
     return () => window.clearTimeout(timer);
   }, []);
 

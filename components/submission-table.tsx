@@ -120,8 +120,8 @@ export default function SubmissionTable({ submissions, skeleton = false }: Submi
     const columns: Column<SubmListEntry>[] = [
         {
             key: "created_at",
-            header: "Datums & laiks",
-            width: "130px",
+            header: "Datums, laiks",
+            width: "120px",
             render: (item) => <DateTimeCell dateTime={item.created_at} showTime={true} />
         },
         {
@@ -171,8 +171,8 @@ export default function SubmissionTable({ submissions, skeleton = false }: Submi
         },
         {
             key: "cpu_time",
-            header: "CPU laiks [s]",
-            width: "120px",
+            header: "CPU [s]",
+            width: "80px",
             columnClassName: narrowOnlyColsClass,
             colgroupClassName: narrowOnlyColgroupClass,
             render: (item) => (
@@ -183,8 +183,8 @@ export default function SubmissionTable({ submissions, skeleton = false }: Submi
         },
         {
             key: "memory",
-            header: "Atmiņa [MiB]",
-            width: "120px",
+            header: "RAM [MiB]",
+            width: "100px",
             columnClassName: narrowOnlyColsClass,
             colgroupClassName: narrowOnlyColgroupClass,
             render: (item) => (

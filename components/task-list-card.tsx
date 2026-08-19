@@ -41,7 +41,7 @@ function SolveStateBadge({ state }: { state: "solved" | "attempted" }) {
 			<Tooltip.Trigger
 				aria-label={label}
 				className={cn(
-					"ml-auto inline-flex shrink-0",
+					"inline-flex shrink-0",
 					solved ? "text-green-700" : "text-amber-600",
 				)}
 			>
@@ -101,10 +101,10 @@ function TaskCard(props: TaskCardProps) {
 	const lioLogoWidth = Math.round(lioLogoHeight * lioLogoAspectRatio);
 
 	return (
-		(<div
+		<div
 			ref={cardRef}
 			className={
-				cn("relative",
+				cn("relative overflow-hidden",
 					{ "bg-yellow-50": solve_state === "attempted" },
 					{ "bg-white": solve_state === "todo" },
 					{ "bg-green-50": solve_state === "solved" },
@@ -117,88 +117,65 @@ function TaskCard(props: TaskCardProps) {
 				)
 			}
 		>
-			<div className={cn("flex w-full flex-col py-2 px-2 sm:px-2.5 overflow-hidden", { "pl-3": !props.illustr_img })}>
-				<div className="flex w-full flex-row items-start">
-					<div className="hidden sm:block">
-						{props.illustr_img && (
-							<>
-								{illstrImgLoading && (
-									<Skeleton className="w-[80px] h-[80px] absolute rounded-sm" />
-								)}
-								<div className="w-[80px] max-w-[80px] flex-shrink-0">
-									<Image
-										alt={props.full_name}
-										className="h-full object-cover rounded-sm"
-										height={80}
-										src={props.illustr_img.http_url}
-										width={80}
-										onLoad={() => setIllstrImgLoading(false)}
-									/>
-								</div>
-							</>
+			<div className="flex w-full">
+				{props.illustr_img && (
+					<div className="relative min-h-[70px] w-[70px] shrink-0 self-stretch sm:min-h-[80px] sm:w-[80px]">
+						{illstrImgLoading && (
+							<Skeleton className="absolute inset-0 rounded-l-sm rounded-r-none" />
 						)}
+						<Image
+							alt={props.full_name}
+							className="object-cover rounded-l-sm rounded-r-none"
+							fill
+							sizes="80px"
+							src={props.illustr_img.http_url}
+							onLoad={() => setIllstrImgLoading(false)}
+						/>
 					</div>
-					<div className="block sm:hidden">
-						{props.illustr_img && (
-							<>
-								{illstrImgLoading && (
-									<Skeleton className="w-[70px] h-[70px] absolute rounded-sm" />
-								)}
-								<div className="w-[70px] max-w-[70px] flex-shrink-0">
-									<Image
-										alt={props.full_name}
-										className="h-full object-cover rounded-sm"
-										height={70}
-										src={props.illustr_img.http_url}
-										width={70}
-										onLoad={() => setIllstrImgLoading(false)}
-									/>
-								</div>
-							</>
-						)}
+				)}
+				<div
+					className={cn(
+						"flex min-w-0 flex-1 flex-col justify-between py-2 pe-2 sm:pe-2.5",
+						props.illustr_img ? "ps-2.5" : "ps-3",
+					)}
+				>
+					<div className="flex w-full min-w-0 items-center gap-x-2">
+						<h3 className="truncate text-base font-medium">
+							{props.full_name}
+						</h3>
+						{props.difficulty_rating > 0 && <TaskDifficultyChip
+							difficulty_rating={props.difficulty_rating}
+						/>}
 					</div>
-					{props.illustr_img && (<span className="mx-1"></span>)}
-					<div className="flex min-w-0 flex-1 flex-col justify-between">
-						<div className="flex w-full items-center justify-between gap-x-2">
-							<div className="flex items-center gap-x-2 min-w-0">
-								<h3 className="text-base font-medium truncate">
-									{props.full_name}
-								</h3>
-								{props.difficulty_rating > 0 && <TaskDifficultyChip
-									difficulty_rating={props.difficulty_rating}
-								/>}
-							</div>
-							{solve_state !== "todo" && <SolveStateBadge state={solve_state} />}
-						</div>
 
-						<div className="flex justify-between items-center mt-1.5">
-							<div className="flex items-center min-w-0">
-								{props.origin_olympiad === "LIO" && (
-									<div style={{ width: `${lioLogoWidth}px`, height: `${lioLogoHeight}px`, minWidth: `${lioLogoWidth}px` }}>
-										{olympLogoLoading && (
-											<Skeleton style={{ width: `${lioLogoWidth}px`, height: `${lioLogoHeight}px` }} className="absolute rounded-sm" />
-										)}
-										<Image
-											alt="Latvijas informātikas olimpiādes logo"
-											className="h-auto"
-											src={lio_logo.src}
-											width={lioLogoWidth}
-											height={lioLogoHeight}
-											onLoad={() => setOlympLogoLoading(false)}
-										/>
-									</div>
-								)}
-								{originNote && (
-									<div className="ms-1 min-w-0 max-w-[22ch] text-xs leading-4 text-gray-800 text-balance line-clamp-2 sm:ms-2">
-										{originNote}
-									</div>
-								)}
-							</div>
+					<div className="mt-1.5 flex items-end justify-between gap-x-2">
+						<div className="flex min-w-0 items-center">
+							{props.origin_olympiad === "LIO" && (
+								<div style={{ width: `${lioLogoWidth}px`, height: `${lioLogoHeight}px`, minWidth: `${lioLogoWidth}px` }}>
+									{olympLogoLoading && (
+										<Skeleton style={{ width: `${lioLogoWidth}px`, height: `${lioLogoHeight}px` }} className="absolute rounded-sm" />
+									)}
+									<Image
+										alt="Latvijas informātikas olimpiādes logo"
+										className="h-auto"
+										src={lio_logo.src}
+										width={lioLogoWidth}
+										height={lioLogoHeight}
+										onLoad={() => setOlympLogoLoading(false)}
+									/>
+								</div>
+							)}
+							{originNote && (
+								<div className="ms-1 min-w-0 max-w-[22ch] text-sm leading-4 text-gray-800 text-balance line-clamp-2 sm:ms-2">
+									{originNote}
+								</div>
+							)}
 						</div>
+						{solve_state !== "todo" && <SolveStateBadge state={solve_state} />}
 					</div>
 				</div>
 			</div>
-		</div>)
+		</div>
 	);
 };
 
