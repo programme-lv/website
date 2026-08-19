@@ -21,13 +21,9 @@ export default async function AdminPage() {
     const tasks = await listTasks();
     const submPage = await listSubmissionsServerSide(0, 10);
 
-    const breadcrumbs = [
-        { label: "Admin", href: "/admin" },
-    ];
-
     return (
-        <Layout breadcrumbs={breadcrumbs} active="admin">
-            <div className="container mx-auto py-2 px-2">
+        <Layout active="admin">
+            <div className="py-2">
                 <h2 className="text-xl font-semibold mb-4">Iesūtījumu saraksts</h2>
                 <SubmAdminList submPage={submPage} />
                 <br/>

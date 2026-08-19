@@ -1,7 +1,8 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
 
 type TextLinkProps = {
-    children: React.ReactNode;
+    children: ReactNode;
     href: string;
     target?: string;
     rel?: string;

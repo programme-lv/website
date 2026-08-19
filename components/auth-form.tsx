@@ -8,7 +8,7 @@ import { User } from "@/types/proglv";
 import GenericButton from "./generic-button";
 import AuthField from "./auth-field";
 import { IconEye, IconEyeOff, IconLogin2, IconUserPlus } from "@tabler/icons-react";
-import { TextLink } from "./text-link";
+import { TextLink } from "@/components/ui/text-link";
 import Link from "next/link";
 
 function FormatError(error: string) {

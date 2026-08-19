@@ -60,17 +60,9 @@ export default function SearchInput({
                     : "box-border flex h-11 min-h-11 shrink-0 flex-row items-center gap-2 rounded-sm border-small border-divider bg-white px-1"
             }
         >
-            {/* <TextInput
-                name="search"
-                placeholder="Meklēt"
-                value={search}
-                onChange={setSearch}
-                onKeyDown={handleKeyDown}
-                className="w-48"
-            /> */}
             <Input
                 name="search"
-                placeholder="Meklēt"
+                placeholder="Uzdevums, autors, valoda"
                 value={search}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)}
                 onKeyDown={handleKeyDown}

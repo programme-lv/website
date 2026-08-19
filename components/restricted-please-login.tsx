@@ -1,6 +1,6 @@
 'use client'
 
-import { TextLink } from "./text-link"
+import { TextLink } from "@/components/ui/text-link"
 
 import { usePathname } from 'next/navigation'
 

@@ -35,7 +35,7 @@ const variantClasses: Record<ButtonVariant, string> = {
   warning: "bg-amber-500 text-white hover:bg-amber-600",
   danger: "bg-red-600 text-white hover:bg-red-700",
   ghost: "bg-transparent text-[#525252] hover:bg-[#e8e8e8] hover:text-[#161616]",
-  default: "bg-[#e0e0e0] text-[#161616] hover:bg-[#c6c6c6]",
+  default: "bg-[#ebebec] text-[#161616] hover:bg-[#e0e0e0]",
 };
 
 const sizeClasses: Record<ButtonSize, string> = {

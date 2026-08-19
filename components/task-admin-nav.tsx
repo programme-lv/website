@@ -1,4 +1,4 @@
-import { TextLink } from "@/components/text-link";
+import { TextLink } from "@/components/ui/text-link";
 
 interface TaskAdminNavProps {
   taskId: string;

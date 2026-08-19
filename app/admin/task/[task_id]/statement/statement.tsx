@@ -4,7 +4,7 @@ import Image from "next/image";
 import { MarkdownStatement, StatementImage, Task } from "@/types/task";
 import { updateTaskStatement, UpdateStatementRequest, deleteTaskImage, revalidateTask } from "@/lib/task/tasks";
 import { usePathname, useRouter } from "next/navigation";
-import { TextLink } from "@/components/text-link";
+import { TextLink } from "@/components/ui/text-link";
 import GenericTable, { Column } from "@/components/generic-table";
 import GenericButton from "@/components/generic-button";
 import FileUpload from "@/components/file-upload";

@@ -74,7 +74,6 @@ type TaskPreview = {
     origin_divisions?: string[];
     origin_note?: string;
     origin_note_short?: string;
-    md_statement_story: string;
 };
 
 type TaskFilterDivision = {

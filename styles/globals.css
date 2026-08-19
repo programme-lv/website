@@ -25,11 +25,6 @@ strong {
   font-weight: 600;
 }
 
-.sidebar-bg-dark {
-  /* background-color: #1e1e1e; */
-  background: linear-gradient(to left top, #1e1e1e, #141414);
-}
-
 /* HeroUI primary (`--accent` → primary buttons, focus ring, accent UI) */
 :root,
 .light,
@@ -44,6 +39,7 @@ strong {
 }
 
 :root {
+  --page-max: 68rem;
   --bg-color: #FAFAFA;
   --legacy-divider: rgb(228 228 231);
   --legacy-default-300: rgb(212 212 216);

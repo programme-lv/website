@@ -162,7 +162,6 @@ export function taskMatchesFilters(
     task.full_name,
     task.origin_note,
     task.origin_note_short,
-    task.md_statement_story,
   ]
     .filter(Boolean)
     .join(" ")

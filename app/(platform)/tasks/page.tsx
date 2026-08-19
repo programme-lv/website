@@ -30,17 +30,13 @@ export default async function TaskListServerComponent() {
     }
   }
 
-  const breadcrumbs = [{ label: "Uzdevumi", href: "/tasks" }];
-
   return (
-    <Layout breadcrumbs={breadcrumbs} active="tasks">
-      <div className="px-2 sm:px-4 pt-1">
-        <TaskList
-          tasks={tasks.data ?? []}
-          filterTree={filterTree.status === "success" ? filterTree.data : undefined}
-          userMaxScores={userMaxScores}
-        />
-      </div>
+    <Layout active="tasks">
+      <TaskList
+        tasks={tasks.data ?? []}
+        filterTree={filterTree.status === "success" ? filterTree.data : undefined}
+        userMaxScores={userMaxScores}
+      />
     </Layout>
   );
 }

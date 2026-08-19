@@ -48,15 +48,11 @@ export default async function Page({
 	);
 	if (!execData) return <>Error: execution data is empty.</>;
 
-	const breadcrumbs = [
-		{ label: "Iesūtījumi", href: "/submissions" },
-		{ label: submData.id, href: `/submissions/${submData.id}` },
-	];
-
 	return (
-		<Layout breadcrumbs={breadcrumbs} active="submissions">
-			<div className="m-3 flex flex-col gap-3">
+		<Layout active="submissions">
+			<div className="flex flex-col gap-3 py-4">
 				<SubmInfoHeader
+					subm_id={submData.id}
 					possible={submData.curr_eval.score_info.possible}
 					received={submData.curr_eval.score_info.received}
 					language={submData.pr_lang.display}

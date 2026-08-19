@@ -14,6 +14,7 @@ function Score({ received, possible }: { received: number, possible: number }) {
 
 
 type SubmInfoHeaderProps = {
+    subm_id: string;
     received: number;
     possible: number;
     language: string;
@@ -24,7 +25,7 @@ type SubmInfoHeaderProps = {
     eval_status: string;
   }
   
-  export default function SubmInfoHeader({ received, possible, language, created_at, task_name, task_id, username, eval_status }: SubmInfoHeaderProps) {
+  export default function SubmInfoHeader({ subm_id, received, possible, language, created_at, task_name, task_id, username, eval_status }: SubmInfoHeaderProps) {
     const entries = [
       { label: "Autors", value: username },
       { label: "Uzdevums", value: <BlueLink href={`/tasks/${task_id}`}>{task_name}</BlueLink> },
@@ -32,6 +33,7 @@ type SubmInfoHeaderProps = {
       { label: "Iesūtīts", value: new Date(created_at).toLocaleString("lv") },
       { label: "Statuss", value: statusTranslations[eval_status] },
       { label: "Rezultāts", value: <Score received={received} possible={possible} /> },
+      { label: "ID", value: <span className="font-mono font-light text-default-500">{subm_id}</span> },
     ];
   
     return (

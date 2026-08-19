@@ -2,11 +2,9 @@ import Layout from "@/components/layout";
 import SubmissionTable from "@/components/submission-table";
 
 export default function SubmissionsLoadingSkeleton() {
-  const breadcrumbs = [{ label: "Iesūtījumi", href: "/submissions" }];
-
   return (
-    <Layout breadcrumbs={breadcrumbs} active="submissions">
-      <div className="px-4">
+    <Layout active="submissions">
+      <div className="py-2">
         {/* Skeleton for pagination/controls above the table */}
         <div className="flex justify-end xl:justify-between gap-x-4 flex-wrap items-center mt-4 mb-2">
           {/* Skeleton for the "Rāda iesūtījumus..." text */}

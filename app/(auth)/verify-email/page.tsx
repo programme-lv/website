@@ -4,7 +4,7 @@ import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { confirmEmailVerification } from "@/lib/auth";
 import Alert from "@/components/alert";
-import { TextLink } from "@/components/text-link";
+import { TextLink } from "@/components/ui/text-link";
 import AuthCardWithBG from "@/components/auth-card-with-bg";
 
 function VerifyEmailContent() {

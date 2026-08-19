@@ -237,7 +237,7 @@ function TaskSearchField({
   return (
     <TextField
       name="task-search"
-      placeholder="Meklēt"
+      placeholder="Nosaukums, apraksts"
       value={query}
       aria-label="Meklēt uzdevumus"
       onChange={(next) => {

@@ -2,7 +2,7 @@
 import GenericTable, { Column } from "@/components/generic-table";
 import GenericButton from "@/components/generic-button";
 import { IconPlus } from "@tabler/icons-react";
-import { TextLink } from "@/components/text-link";
+import { TextLink } from "@/components/ui/text-link";
 import TextButton from "@/components/text-button";
 import AddSolutionModal, { SolutionFormData } from "@/app/admin/task/[task_id]/solutions/add-solution-modal";
 import ViewSolutionModal from "@/app/admin/task/[task_id]/solutions/view-solution-modal";

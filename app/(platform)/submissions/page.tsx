@@ -30,8 +30,6 @@ export default async function SubmissionListServerComponent(props: {
     return <div>Error fetching submissions</div>;
   }
 
-  const breadcrumbs = [{ label: "Iesūtījumi", href: "/submissions" }];
-
   const { total, offset: paginationOffset, limit: pageLimit } =
     submissionsResponse.pagination;
   const totalPages = Math.max(
@@ -42,10 +40,10 @@ export default async function SubmissionListServerComponent(props: {
     total === 0 ? 0 : Math.min(paginationOffset + pageLimit, total);
 
   return (
-    <Layout breadcrumbs={breadcrumbs} active="submissions">
-      <div className="px-4">
+    <Layout active="submissions">
+      <div className="py-2">
         <div className="mb-2 mt-4 flex flex-wrap items-center justify-end gap-x-4 gap-y-2 xl:flex-nowrap xl:items-center xl:justify-between">
-          <div className="hidden shrink-0 px-2 text-gray-500 xl:block">
+          <div className="hidden shrink-0 px-0.5 text-gray-500 xl:block">
             {total === 0
               ? "Nav iesūtījumu"
               : `Rāda iesūtījumus ${paginationOffset + 1}-${rangeEnd} no ${total}.`}

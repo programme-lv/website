@@ -41,14 +41,8 @@ export default async function TaskEditPage({
   const { tab } = await searchParams;
   const currentTab = tab || "task";
 
-  const breadcrumbs = [
-    { label: "Admin", href: "/admin" },
-    { label: "Uzdevumi"},
-    { label: task.task_full_name},
-  ];
-
   return (
-    <Layout breadcrumbs={breadcrumbs} active="admin">
+    <Layout active="admin">
       <div className="flex gap-3">
         <TaskAdminNav taskId={task.short_task_id} activeTab="task" />
         <div className="flex-1 min-w-0">

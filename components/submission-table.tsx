@@ -1,6 +1,6 @@
 import { SubmListScoreBar } from "./subm-table-score-bars";
 import { SubmListEntry } from "@/types/subm";
-import { TextLink } from "./text-link";
+import { TextLink } from "@/components/ui/text-link";
 import GenericTable, { Column } from "./generic-table";
 import { DateTimeCell } from "./datetime-cell";
 import { cn } from "./cn";
@@ -120,8 +120,8 @@ export default function SubmissionTable({ submissions, skeleton = false }: Submi
     const columns: Column<SubmListEntry>[] = [
         {
             key: "created_at",
-            header: "Datums & laiks",
-            width: "190px",
+            header: "Datums, laiks",
+            width: "120px",
             render: (item) => <DateTimeCell dateTime={item.created_at} showTime={true} />
         },
         {
@@ -171,8 +171,8 @@ export default function SubmissionTable({ submissions, skeleton = false }: Submi
         },
         {
             key: "cpu_time",
-            header: "CPU laiks [s]",
-            width: "120px",
+            header: "CPU [s]",
+            width: "80px",
             columnClassName: narrowOnlyColsClass,
             colgroupClassName: narrowOnlyColgroupClass,
             render: (item) => (
@@ -183,8 +183,8 @@ export default function SubmissionTable({ submissions, skeleton = false }: Submi
         },
         {
             key: "memory",
-            header: "Atmiņa [MiB]",
-            width: "120px",
+            header: "RAM [MiB]",
+            width: "100px",
             columnClassName: narrowOnlyColsClass,
             colgroupClassName: narrowOnlyColgroupClass,
             render: (item) => (
@@ -204,7 +204,7 @@ export default function SubmissionTable({ submissions, skeleton = false }: Submi
         {
             key: "id",
             header: "Iesūtījums",
-            width: "120px",
+            width: "90px",
             render: (item) => (
                 <span className={submIdClassName}>
                     <TextLink isDisabled={item.status !== "finished" && item.status !== "compile_error"} href={`/submissions/${item.id}`}>
