@@ -8,6 +8,7 @@ import {
 	SubtaskOverview,
 	Task,
 	VisibleInputSubtask,
+	illustrationUrl,
 } from "@/types/task";
 import "katex/dist/katex.min.css";
 import renderMd, { renderMdLite } from "@/lib/render-md";
@@ -58,7 +59,8 @@ function TaskHeader({ task }: { task: Task }) {
 					alt={task.task_full_name}
 					className="h-[100px] w-[100px] shrink-0 rounded-sm object-cover"
 					height={100}
-					src={task.illustration_img.http_url}
+					src={illustrationUrl(task.illustration_img, "view")}
+					unoptimized
 					width={100}
 				/>
 			)}

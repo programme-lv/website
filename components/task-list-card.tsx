@@ -9,7 +9,7 @@ import { IconCircleCheck, IconProgress } from "@tabler/icons-react";
 import TaskDifficultyChip from "./task-difficulty-chip";
 import { cn } from "./cn";
 import { MaxScore } from "@/types/scores";
-import { IllustrationImage } from "@/types/task";
+import { IllustrationImage, illustrationUrl } from "@/types/task";
 
 type TaskCardProps = {
 	full_name: string;
@@ -128,7 +128,8 @@ function TaskCard(props: TaskCardProps) {
 							className="object-cover rounded-l-sm rounded-r-none"
 							fill
 							sizes="80px"
-							src={props.illustr_img.http_url}
+							src={illustrationUrl(props.illustr_img, "list")}
+							unoptimized
 							onLoad={() => setIllstrImgLoading(false)}
 						/>
 					</div>
