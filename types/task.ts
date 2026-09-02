@@ -1,9 +1,21 @@
 type IllustrationImage = {
     http_url: string;
+    list_http_url?: string;
+    view_http_url?: string;
     width_px: number;
     height_px: number;
     sz_in_bytes: number;
 };
+
+export function illustrationUrl(img: IllustrationImage, variant: "list" | "view" | "full"): string {
+    if (variant === "list") {
+        return img.list_http_url || img.http_url;
+    }
+    if (variant === "view") {
+        return img.view_http_url || img.http_url;
+    }
+    return img.http_url;
+}
 
 type Task = {
     short_task_id: string;

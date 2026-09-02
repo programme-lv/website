@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { Task } from "@/types/task";
+import { Task, illustrationUrl } from "@/types/task";
 import { useRouter } from "next/navigation";
 import { TextLink } from "@/components/ui/text-link";
 import GenericButton from "@/components/generic-button";
@@ -138,15 +138,16 @@ export default function TaskEditForm({ task }: TaskEditFormProps) {
                 <div className="mt-2">
                     <div className="flex items-start gap-4">
                         <Image 
-                            src={task.illustration_img.http_url} 
+                            src={illustrationUrl(task.illustration_img, "view")} 
                             alt={task.task_full_name}
                             className="w-32 h-32 object-cover rounded-md border"
                             width={128}
                             height={128}
+                            unoptimized
                         />
                         <div className="flex flex-col gap-2">
                             <TextLink 
-                                href={task.illustration_img.http_url} 
+                                href={illustrationUrl(task.illustration_img, "full")} 
                                 target="_blank" 
                                 rel="noopener noreferrer"
                             >
