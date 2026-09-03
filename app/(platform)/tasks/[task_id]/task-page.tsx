@@ -16,7 +16,7 @@ import CodeBlock from "@/components/code-block";
 import GenericTable from "@/components/generic-table";
 import MarkdownRenderer from "@/components/markdown-renderer";
 import TaskDifficultyChip from "@/components/task-difficulty-chip";
-import LIO_LOGO from "@/public/lio-logo-small-no-text.webp";
+import LIO_LOGO from "@/public/lio-logo-transparent.png";
 
 import TaskMeta from "./task-meta";
 
@@ -77,9 +77,10 @@ function TaskHeader({ task }: { task: Task }) {
 							<Image
 								alt="Latvijas Informātikas olimpiādes logo"
 								className="h-auto shrink-0"
-								height={71*0.6}
-								src={LIO_LOGO.src}
-								width={64*0.6}
+								height={42}
+								src={LIO_LOGO}
+								width={42}
+								sizes="42px"
 							/>
 						)}
 						{originNote && (
