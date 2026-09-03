@@ -7,7 +7,7 @@ import { IconSearch } from "@tabler/icons-react";
 
 import Button from "@/components/ui/button";
 import TextField from "@/components/ui/text-field";
-import lioLogo from "@/public/lio-logo-small-no-text.webp";
+import lioLogo from "@/public/lio-logo-transparent.png";
 import { cn } from "@/components/cn";
 
 import {
@@ -381,15 +381,15 @@ function FilterOption({
 }
 
 function LioLogo() {
-  const height = 22;
-  const width = Math.round(height * (9 / 10));
+  const size = 22;
   return (
     <Image
       alt=""
       src={lioLogo}
-      width={width}
-      height={height}
-      className="h-[22px] w-auto shrink-0"
+      width={size}
+      height={size}
+      sizes="22px"
+      className="size-[22px] shrink-0"
     />
   );
 }
@@ -398,7 +398,7 @@ function OriginMark({ label }: { label: string }) {
   return (
     <span
       aria-hidden
-      className="flex h-[22px] w-[20px] shrink-0 items-center justify-center rounded-sm bg-zinc-100 text-[9px] font-medium text-default-600"
+      className="flex size-[22px] shrink-0 items-center justify-center rounded-sm bg-zinc-100 text-[9px] font-medium text-default-600"
     >
       {label.slice(0, 2)}
     </span>

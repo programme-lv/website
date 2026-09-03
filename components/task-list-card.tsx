@@ -1,5 +1,5 @@
 "use client";
-import lio_logo from "@/public/lio-logo-small-no-text.webp";
+import lio_logo from "@/public/lio-logo-transparent.png";
 import Image from "next/image";
 
 import React, { useRef, useState } from "react";
@@ -73,7 +73,6 @@ function TaskCard(props: TaskCardProps) {
 	const cardRef = useRef<HTMLDivElement>(null);
 	// const [isWide, setIsWide] = useState(true);
 	const [illstrImgLoading, setIllstrImgLoading] = useState(true);
-	const [olympLogoLoading, setOlympLogoLoading] = useState(true);
 
 	// useEffect(() => {
 	// 	const handleResize = () => {
@@ -96,9 +95,7 @@ function TaskCard(props: TaskCardProps) {
 		props.origin_note_short || props.origin_note,
 	);
 
-	const lioLogoAspectRatio = 9/10; // width/height
-	const lioLogoHeight = 28;
-	const lioLogoWidth = Math.round(lioLogoHeight * lioLogoAspectRatio);
+	const lioLogoSize = 28;
 
 	return (
 		<div
@@ -117,9 +114,14 @@ function TaskCard(props: TaskCardProps) {
 				)
 			}
 		>
-			<div className="flex w-full">
+			<div
+				className={cn(
+					"grid w-full",
+					props.illustr_img ? "grid-cols-[auto_minmax(0,1fr)]" : "grid-cols-1",
+				)}
+			>
 				{props.illustr_img && (
-					<div className="relative min-h-[70px] w-[70px] shrink-0 self-stretch sm:min-h-[80px] sm:w-[80px]">
+					<div className="relative aspect-square h-full min-h-[4.375rem] sm:min-h-20">
 						{illstrImgLoading && (
 							<Skeleton className="absolute inset-0 rounded-l-sm rounded-r-none" />
 						)}
@@ -152,22 +154,20 @@ function TaskCard(props: TaskCardProps) {
 					<div className="mt-1.5 flex items-end justify-between gap-x-2">
 						<div className="flex min-w-0 items-center">
 							{props.origin_olympiad === "LIO" && (
-								<div style={{ width: `${lioLogoWidth}px`, height: `${lioLogoHeight}px`, minWidth: `${lioLogoWidth}px` }}>
-									{olympLogoLoading && (
-										<Skeleton style={{ width: `${lioLogoWidth}px`, height: `${lioLogoHeight}px` }} className="absolute rounded-sm" />
-									)}
+								<div style={{ width: `${lioLogoSize}px`, height: `${lioLogoSize}px`, minWidth: `${lioLogoSize}px` }}>
 									<Image
 										alt="Latvijas informātikas olimpiādes logo"
 										className="h-auto"
-										src={lio_logo.src}
-										width={lioLogoWidth}
-										height={lioLogoHeight}
-										onLoad={() => setOlympLogoLoading(false)}
+										src={lio_logo}
+										width={lioLogoSize}
+										height={lioLogoSize}
+										sizes={`${lioLogoSize}px`}
+										loading="eager"
 									/>
 								</div>
 							)}
 							{originNote && (
-								<div className="ms-1 min-w-0 max-w-[22ch] text-sm leading-4 text-gray-800 text-balance line-clamp-2 sm:ms-2">
+								<div className="ms-1 min-w-0 max-w-[22ch] text-sm leading-4 text-gray-800 text-balance line-clamp-2 sm:ms-1.5">
 									{originNote}
 								</div>
 							)}
