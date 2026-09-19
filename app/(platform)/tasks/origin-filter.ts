@@ -14,6 +14,78 @@ export const emptyTaskFilters: TaskFilterSelection = {
   ageGroupId: null,
 };
 
+export const TASK_LIST_SEARCH_KEYS = {
+  query: "q",
+  origin: "origin",
+  year: "year",
+  stage: "stage",
+  age: "age",
+} as const;
+
+type SearchParamValue = string | string[] | undefined;
+type SearchParamGetter = { get(name: string): string | null };
+type SearchParamInput =
+  | SearchParamGetter
+  | Readonly<Record<string, SearchParamValue>>;
+
+function firstSearchParam(value: SearchParamValue | null): string | null {
+  if (value == null) {
+    return null;
+  }
+  const raw = Array.isArray(value) ? value[0] : value;
+  const trimmed = raw.trim();
+  return trimmed === "" ? null : trimmed;
+}
+
+function readSearchParam(input: SearchParamInput, key: string): string | null {
+  if ("get" in input && typeof input.get === "function") {
+    return firstSearchParam(input.get(key));
+  }
+  return firstSearchParam(input[key]);
+}
+
+export function parseTaskListSearchParams(input: SearchParamInput): {
+  filters: TaskFilterSelection;
+  query: string;
+} {
+  const originId = readSearchParam(input, TASK_LIST_SEARCH_KEYS.origin);
+  return {
+    query: readSearchParam(input, TASK_LIST_SEARCH_KEYS.query) ?? "",
+    filters: {
+      originId,
+      yearId: originId ? readSearchParam(input, TASK_LIST_SEARCH_KEYS.year) : null,
+      stageId: originId ? readSearchParam(input, TASK_LIST_SEARCH_KEYS.stage) : null,
+      ageGroupId: originId ? readSearchParam(input, TASK_LIST_SEARCH_KEYS.age) : null,
+    },
+  };
+}
+
+export function taskListSearchHref(
+  pathname: string,
+  filters: TaskFilterSelection,
+  query: string,
+): string {
+  const params = new URLSearchParams();
+  const trimmedQuery = query.trim();
+  if (trimmedQuery !== "") {
+    params.set(TASK_LIST_SEARCH_KEYS.query, trimmedQuery);
+  }
+  if (filters.originId) {
+    params.set(TASK_LIST_SEARCH_KEYS.origin, filters.originId);
+    if (filters.yearId) {
+      params.set(TASK_LIST_SEARCH_KEYS.year, filters.yearId);
+    }
+    if (filters.stageId) {
+      params.set(TASK_LIST_SEARCH_KEYS.stage, filters.stageId);
+    }
+    if (filters.ageGroupId) {
+      params.set(TASK_LIST_SEARCH_KEYS.age, filters.ageGroupId);
+    }
+  }
+  const qs = params.toString();
+  return qs === "" ? pathname : `${pathname}?${qs}`;
+}
+
 export function taskFiltersAreActive(value: TaskFilterSelection): boolean {
   return value.originId != null;
 }
