@@ -1,0 +1,49 @@
+import { isAdmin } from "@/lib/dal";
+import Layout from "@/components/layout";
+import RestrictedPleaseLogin from "@/components/restricted-please-login";
+import { getTaskById } from "@/lib/task/tasks";
+import TaskAdminNav from "@/components/task-admin-nav";
+import ArchiveEditForm from "./archive";
+import { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ task_id: string }>;
+}): Promise<Metadata> {
+  const { task_id } = await params;
+  const response = await getTaskById(task_id);
+  const task = response.data;
+  return {
+    title: task ? `Arhīvs: ${task.task_full_name}` : `Admin: ${task_id}`,
+  };
+}
+
+export default async function ArchivePage({
+  params,
+}: {
+  params: Promise<{ task_id: string }>;
+}) {
+  if (!(await isAdmin())) {
+    return <RestrictedPleaseLogin />;
+  }
+
+  const response = await getTaskById((await params).task_id);
+  if (response.status != "success") {
+    return (
+      <div>
+        Error {response.code}: {response.message}
+      </div>
+    );
+  }
+  const task = response.data;
+
+  return (
+    <Layout active="admin">
+      <div className="flex gap-3 mr-3">
+        <TaskAdminNav taskId={task.short_task_id} activeTab="archive" />
+        <ArchiveEditForm taskId={task.short_task_id} />
+      </div>
+    </Layout>
+  );
+}
