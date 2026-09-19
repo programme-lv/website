@@ -3,6 +3,27 @@
 Task statements are converted to HTML by `lib/render-md.ts` using Remark, Rehype, and `rehype-katex`.
 Some newer statement sections use `components/markdown-renderer.tsx`, but both paths rely on KaTeX markup and its matching stylesheet.
 
+## Pandoc image attributes
+
+Olympiad statements use Pandoc attribute lists on images:
+
+```markdown
+![Dzelzceļu tīkla piemērs, N=10](pacelam.png){width=24em}
+```
+
+CommonMark leaves `{width=24em}` as text. `lib/pandoc-image-attrs.ts` consumes that suffix and both renderers apply it as CSS `width` / `height`.
+
+- Bare number: pixels (`{width=300}` → `300px`)
+- Allowed units: `%`, `em`, `rem`, `px`, `ex`, `ch`, `vw`, `vh`, `cm`, `mm`, `in`, `pt`, `pc`
+- Other values are ignored (do not put them in `style`)
+- HTML `<img width=300>` still works; `rehypeFixImages` only fills width from the stored file when neither an HTML nor a CSS width is set
+
+After changing the parser:
+
+1. Render a story containing `![alt](file.png){width=24em}`.
+2. Confirm `{width=24em}` is not visible as text.
+3. Confirm the image's computed width is `24em`.
+
 ## KaTeX version constraint
 
 `rehype-katex` 7 renders with KaTeX 0.16 and expects the KaTeX 0.16 CSS class names.
