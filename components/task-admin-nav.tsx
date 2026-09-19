@@ -44,6 +44,11 @@ export default function TaskAdminNav({ taskId, activeTab }: TaskAdminNavProps) {
       label: "Risinājumi",
       href: `/admin/task/${taskId}/solutions`,
     },
+    {
+      key: "archive",
+      label: "Arhīvs",
+      href: `/admin/task/${taskId}/archive`,
+    },
   ];
 
   return (
