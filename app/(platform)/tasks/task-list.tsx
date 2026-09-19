@@ -1,8 +1,16 @@
 "use client";
 
-import React, { useCallback, useContext, useMemo, useState } from "react";
+import React, {
+  Suspense,
+  useCallback,
+  useContext,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
+import { usePathname, useSearchParams } from "next/navigation";
 import { Modal, cn } from "@heroui/react";
 import { IconFilter } from "@tabler/icons-react";
 
@@ -21,16 +29,104 @@ import {
   taskFiltersAreActive,
   TaskFilterSelection,
 } from "./task-filters";
-import { taskMatchesFilters } from "./origin-filter";
+import {
+  parseTaskListSearchParams,
+  taskListSearchHref,
+  taskMatchesFilters,
+} from "./origin-filter";
 
-export function TaskList(props: {
+type TaskListProps = {
   tasks: TaskPreview[];
   filterTree?: TaskFilterTree;
   userMaxScores?: MaxScorePerTask;
+  initialFilters?: TaskFilterSelection;
+  initialQuery?: string;
+};
+
+export function TaskList(props: TaskListProps) {
+  return (
+    <Suspense
+      fallback={
+        <TaskListView
+          {...props}
+          filters={props.initialFilters ?? emptyTaskFilters}
+          query={props.initialQuery ?? ""}
+        />
+      }
+    >
+      <TaskListFromUrl {...props} />
+    </Suspense>
+  );
+}
+
+function TaskListFromUrl(props: TaskListProps) {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const { filters, query } = useMemo(
+    () => parseTaskListSearchParams(searchParams),
+    [searchParams],
+  );
+  const filtersRef = useRef(filters);
+  const queryRef = useRef(query);
+  filtersRef.current = filters;
+  queryRef.current = query;
+
+  const replaceSearch = useCallback(
+    (nextFilters: TaskFilterSelection, nextQuery: string) => {
+      window.history.replaceState(
+        null,
+        "",
+        taskListSearchHref(pathname, nextFilters, nextQuery),
+      );
+    },
+    [pathname],
+  );
+
+  const onFiltersChange = useCallback(
+    (next: TaskFilterSelection) => {
+      replaceSearch(next, queryRef.current);
+    },
+    [replaceSearch],
+  );
+  const onQueryChange = useCallback(
+    (next: string) => {
+      replaceSearch(filtersRef.current, next);
+    },
+    [replaceSearch],
+  );
+  const onClearFilters = useCallback(() => {
+    replaceSearch(emptyTaskFilters, "");
+  }, [replaceSearch]);
+
+  return (
+    <TaskListView
+      {...props}
+      filters={filters}
+      query={query}
+      onFiltersChange={onFiltersChange}
+      onQueryChange={onQueryChange}
+      onClearFilters={onClearFilters}
+    />
+  );
+}
+
+function TaskListView({
+  tasks: initialTasks,
+  filterTree,
+  userMaxScores: initialUserMaxScores,
+  filters,
+  query,
+  onFiltersChange,
+  onQueryChange,
+  onClearFilters,
+}: TaskListProps & {
+  filters: TaskFilterSelection;
+  query: string;
+  onFiltersChange?: (next: TaskFilterSelection) => void;
+  onQueryChange?: (next: string) => void;
+  onClearFilters?: () => void;
 }) {
   const authContext = useContext(AuthContext);
-  const [filters, setFilters] = useState<TaskFilterSelection>(emptyTaskFilters);
-  const [query, setQuery] = useState("");
   const [searchResetKey, setSearchResetKey] = useState(0);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const filtersActive = taskFiltersAreActive(filters) || query.trim() !== "";
@@ -38,7 +134,7 @@ export function TaskList(props: {
   const userMaxScoresQuery = useQuery({
     queryKey: ["userScores", authContext.user?.username],
     queryFn: () => getMaxScorePerTask(authContext.user?.username ?? ""),
-    enabled: !props.userMaxScores && !!authContext.user?.username,
+    enabled: !initialUserMaxScores && !!authContext.user?.username,
   });
   const listTasksQuery = useQuery({
     queryKey: ["tasks"],
@@ -47,8 +143,8 @@ export function TaskList(props: {
   const filterTreeQuery = useQuery({
     queryKey: ["task-filters"],
     queryFn: listTaskFilters,
-    initialData: props.filterTree
-      ? { status: "success" as const, data: props.filterTree }
+    initialData: filterTree
+      ? { status: "success" as const, data: filterTree }
       : undefined,
   });
 
@@ -59,27 +155,22 @@ export function TaskList(props: {
   const tasks = useMemo(() => {
     const list = listTasksQuery.data?.status === "success"
       ? (listTasksQuery.data.data ?? [])
-      : props.tasks;
+      : initialTasks;
     return [...list].sort(
       (a, b) => a.difficulty_rating - b.difficulty_rating,
     );
-  }, [listTasksQuery.data, props.tasks]);
+  }, [listTasksQuery.data, initialTasks]);
   const visibleTasks = useMemo(
     () => tasks.filter((task) => taskMatchesFilters(task, filters, query)),
     [tasks, filters, query],
   );
 
-  const onQueryChange = useCallback((next: string) => {
-    setQuery(next);
-  }, []);
-
-  const onClearFilters = useCallback(() => {
-    setQuery("");
+  const handleClear = useCallback(() => {
     setSearchResetKey((key) => key + 1);
-    setFilters(emptyTaskFilters);
-  }, []);
+    onClearFilters?.();
+  }, [onClearFilters]);
 
-  let userMaxScores = props.userMaxScores ?? userMaxScoresQuery.data;
+  let userMaxScores = initialUserMaxScores ?? userMaxScoresQuery.data;
 
   if (listTasksQuery.error) {
     return (
@@ -113,13 +204,13 @@ export function TaskList(props: {
           <div className="sticky top-3 flex max-h-[calc(100dvh-1.5rem)] flex-col overflow-hidden rounded-sm border border-zinc-200 bg-white p-3">
             <TaskFilters
               value={filters}
-              onChange={setFilters}
+              onChange={onFiltersChange ?? (() => {})}
               olympiads={olympiads}
               searchResetKey={searchResetKey}
               initialQuery={query}
               queryActive={query.trim() !== ""}
-              onQueryChange={onQueryChange}
-              onClear={onClearFilters}
+              onQueryChange={onQueryChange ?? (() => {})}
+              onClear={handleClear}
             />
           </div>
         </aside>
@@ -144,13 +235,13 @@ export function TaskList(props: {
                   key={filtersOpen ? `open-${searchResetKey}` : "closed"}
                   showTitle={false}
                   value={filters}
-                  onChange={setFilters}
+                  onChange={onFiltersChange ?? (() => {})}
                   olympiads={olympiads}
                   searchResetKey={searchResetKey}
                   initialQuery={query}
                   queryActive={query.trim() !== ""}
-                  onQueryChange={onQueryChange}
-                  onClear={onClearFilters}
+                  onQueryChange={onQueryChange ?? (() => {})}
+                  onClear={handleClear}
                 />
               </Modal.Body>
             </Modal.Dialog>

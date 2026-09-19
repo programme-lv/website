@@ -228,6 +228,10 @@ function TaskSearchField({
   const [query, setQuery] = useState(initialQuery);
 
   useEffect(() => {
+    setQuery((prev) => (prev === initialQuery ? prev : initialQuery));
+  }, [initialQuery]);
+
+  useEffect(() => {
     const timeout = window.setTimeout(() => {
       onDebouncedChange(query);
     }, 200);
