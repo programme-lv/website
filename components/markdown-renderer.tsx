@@ -7,6 +7,7 @@ import GenericTable, { Column } from "./generic-table";
 import { cn } from "./cn";
 import rehypeKatex from "rehype-katex";
 import remarkMath from "remark-math";
+import { cssLength, remarkPandocImageAttrs } from "@/lib/pandoc-image-attrs";
 import 'katex/dist/katex.min.css' // `rehype-katex` does not import the CSS for you
 
 type JsonComponent = {
@@ -97,10 +98,23 @@ export default function MarkdownRenderer({ content }: { content: string }) {
         p: ({node, children, className, ...props}) => {
             return <p className={cn(className, "mb-2")} {...props}>{children}</p>;
         },
+        img: ({ width, height, style, alt, ...props }) => {
+            const sizedStyle: React.CSSProperties =
+                typeof style === "object" && style != null ? { ...style } : {};
+            const cssWidth = width != null ? cssLength(String(width)) : undefined;
+            const cssHeight = height != null ? cssLength(String(height)) : undefined;
+            if (cssWidth) {
+                sizedStyle.width = cssWidth;
+            }
+            if (cssHeight) {
+                sizedStyle.height = cssHeight;
+            }
+            return <img alt={alt} style={sizedStyle} {...props} />;
+        },
     };
     return (
         <ReactMarkdown
-            remarkPlugins={[remarkGfm, remarkMath]}
+            remarkPlugins={[remarkGfm, remarkMath, remarkPandocImageAttrs]}
             rehypePlugins={[rehypeKatex]}
             components={components}
         >

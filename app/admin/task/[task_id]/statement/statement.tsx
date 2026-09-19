@@ -331,7 +331,8 @@ function StatementImageTable({ task }: { task: Task }) {
                             Lai iekļaut attēlu formulējumā, <code>{'![2. attēls: Adapteru izmēri](1.png)'}</code>
                         </li>
                         <li>
-                            Ja nepieciešams cits platums, <code>{'<img src="2.png" alt="1. attēls: Laukuma piemērs" width=300/>'}</code>
+                            Ja nepieciešams cits platums, <code>{'![1. attēls: Laukuma piemērs](2.png){width=24em}'}</code>
+                            {" "}vai <code>{'<img src="2.png" alt="1. attēls: Laukuma piemērs" width=300/>'}</code>
                         </li>
                     </ul>
                     P.s., jā, es apzinos, ka &quot;alt&quot; atrībuts &quot;img&quot; elemntā nav paredzēts, lai norādīt &quot;figcaption&quot;, bet šādi ir krietni ērtāk.

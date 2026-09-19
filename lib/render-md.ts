@@ -11,6 +11,35 @@ import { Node } from "unist";
 import { Element } from "hast";
 import { visit } from "unist-util-visit";
 import { StatementImage } from "@/types/task";
+import { cssLength, isUnitlessNumber, remarkPandocImageAttrs, styleHasDimension } from "./pandoc-image-attrs";
+
+function applyDeclaredImageSize(node: Element) {
+  let style = typeof node.properties.style === "string" ? node.properties.style : "";
+
+  const width = node.properties.width;
+  if (width != null && !styleHasDimension(style, "width")) {
+    const css = cssLength(String(width));
+    if (css) {
+      style += `width: ${css};`;
+      if (typeof width === "string" && !isUnitlessNumber(width)) {
+        delete node.properties.width;
+      }
+    }
+  }
+
+  const height = node.properties.height;
+  if (height != null && !styleHasDimension(style, "height")) {
+    const css = cssLength(String(height));
+    if (css) {
+      style += `height: ${css};`;
+      if (typeof height === "string" && !isUnitlessNumber(height)) {
+        delete node.properties.height;
+      }
+    }
+  }
+
+  node.properties.style = style;
+}
 
 // Plugin to add Tailwind classes
 function rehypeAddClasses() {
@@ -94,6 +123,7 @@ function rehypeAddClasses() {
           // node.properties.className = ["w-2/3"]
           node.properties.style =
             "margin-top: .3rem; margin-bottom: .3rem; object-fit:contain;";
+          applyDeclaredImageSize(node);
           // node.properties.loading = "lazy";
           // Wrap the image in a figure and add a caption
           if (parent && parent.children) {
@@ -142,8 +172,8 @@ function rehypeFixImages(images: StatementImage[]) {
           node.properties.src = img.http_url;
           const aspect_ratio = img.width_px / img.height_px;
 
-          // add width if not already present
-          if(!node.properties.width) {
+          // add width if not already present (HTML width= or CSS from Pandoc {width=...})
+          if (!node.properties.width && !styleHasDimension(node.properties.style, "width")) {
             node.properties.style += `width: ${img.width_px}px;`;
           }
 
@@ -171,6 +201,7 @@ export default function renderMd(md: string, images: StatementImage[] = []): str
     .use(remarkParse)
     .use(remarkGfm)
     .use(remarkMath)
+    .use(remarkPandocImageAttrs)
     .use(remarkRehype, {allowDangerousHtml: true})
     .use(rehypeRaw)
     .use(rehypeSanitize)
@@ -190,6 +221,7 @@ export function renderMdLite(md: string): string {
     .use(remarkParse)
     .use(remarkGfm)
     .use(remarkMath)
+    .use(remarkPandocImageAttrs)
     .use(remarkRehype, {allowDangerousHtml: true})
     .use(rehypeRaw)
     .use(rehypeSanitize)
