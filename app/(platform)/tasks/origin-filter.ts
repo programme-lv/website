@@ -37,8 +37,12 @@ function firstSearchParam(value: SearchParamValue | null): string | null {
   return trimmed === "" ? null : trimmed;
 }
 
+function isSearchParamGetter(input: SearchParamInput): input is SearchParamGetter {
+  return typeof (input as SearchParamGetter).get === "function";
+}
+
 function readSearchParam(input: SearchParamInput, key: string): string | null {
-  if ("get" in input && typeof input.get === "function") {
+  if (isSearchParamGetter(input)) {
     return firstSearchParam(input.get(key));
   }
   return firstSearchParam(input[key]);
