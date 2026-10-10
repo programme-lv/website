@@ -4,6 +4,7 @@ import { TextLink } from "@/components/ui/text-link";
 import GenericTable, { Column } from "./generic-table";
 import { DateTimeCell } from "./datetime-cell";
 import { cn } from "./cn";
+import Link from "next/link";
 
 export const statusTranslations: Record<string, string> = {
     waiting: "Gaida",
@@ -20,7 +21,96 @@ export const statusTranslations: Record<string, string> = {
 
 const narrowOnlyColsClass = "hidden xl:table-cell";
 const narrowOnlyColgroupClass = "hidden xl:table-column";
-const submIdClassName = "font-mono text-sm";
+
+const errorStatuses = new Set([
+    "error",
+    "compile_error",
+    "runtime_error",
+    "checker_error",
+    "internal_error",
+]);
+
+/**
+ * "Rezultāts" is split across two cells (bar, then text) as before, but the
+ * status is folded into the text cell and both cells link to the submission
+ * detail page. The submission id lives in the hover title (id column removed).
+ */
+function SubmissionScoreBarLink({ item }: { item: SubmListEntry }) {
+    return (
+        <Link
+            href={`/submissions/${item.id}`}
+            title={`Iesūtījums #${item.id}`}
+            aria-label={`Iesūtījums #${item.id}`}
+            className="block w-full"
+        >
+            <SubmListScoreBar
+                green={item.score_info.score_bar.green}
+                red={item.score_info.score_bar.red}
+                gray={item.score_info.score_bar.gray}
+                yellow={item.score_info.score_bar.yellow}
+                purple={item.score_info.score_bar.purple}
+            />
+        </Link>
+    );
+}
+
+function SubmissionResultText({ item }: { item: SubmListEntry }) {
+    const isFinished = item.status === "finished";
+    const isError = errorStatuses.has(item.status);
+    const isFullScore =
+        isFinished &&
+        item.score_info.possible > 0 &&
+        item.score_info.received === item.score_info.possible;
+    const text = isFinished
+        ? `${item.score_info.received} / ${item.score_info.possible}`
+        : isError
+            ? "kļūda"
+            : (statusTranslations[item.status] ?? item.status).toLowerCase();
+
+    // Underline colour encodes the outcome; shades match the score bar.
+    // Partial scores stay neutral (current text colour) — being wrong along
+    // the way is normal, not an error state. 1px at rest, thicker on hover.
+    const underline = isError
+        ? "decoration-[#6B46C1] hover:decoration-2"
+        : isFinished
+            ? isFullScore
+                ? "decoration-[#2c7a7b] hover:decoration-2"
+                : "decoration-current hover:decoration-2"
+            : "decoration-blue-800/30 hover:decoration-blue-800/90";
+
+    return (
+        <Link
+            href={`/submissions/${item.id}`}
+            title={`Iesūtījums #${item.id}`}
+            className={cn(
+                "underline underline-offset-2",
+                underline,
+                isError && "text-[#6B46C1]",
+                isFinished && "tabular-nums text-default-700",
+                !isFinished && !isError && "text-default-500",
+            )}
+        >
+            {text}
+        </Link>
+    );
+}
+
+/**
+ * Date/time is the second link to the submission (the result text is the
+ * first). Kept in the default text colour with no resting underline so it
+ * does not compete with the author/task/result links; underlines on hover.
+ */
+function SubmissionDateTimeLink({ item }: { item: SubmListEntry }) {
+    return (
+        <Link
+            href={`/submissions/${item.id}`}
+            title={`Iesūtījums #${item.id}`}
+            className="underline underline-offset-2 decoration-current/30 hover:decoration-current/90"
+        >
+            <DateTimeCell dateTime={item.created_at} showTime={true} />
+        </Link>
+    );
+}
 
 type SubmissionTableProps = {
     submissions: SubmListEntry[];
@@ -46,17 +136,7 @@ function SubmissionEntryCard({ item }: { item: SubmListEntry }) {
                 "rounded-sm border-small border-divider bg-white px-5 py-3 flex flex-col gap-2 text-sm"
             )}
         >
-            <div className="flex flex-wrap items-start justify-between gap-2">
-                <DateTimeCell dateTime={item.created_at} showTime={true} />
-                <span className={cn("shrink-0", submIdClassName)}>
-                    <TextLink
-                        isDisabled={item.status !== "finished" && item.status !== "compile_error"}
-                        href={`/submissions/${item.id}`}
-                    >
-                        {item.id}
-                    </TextLink>
-                </span>
-            </div>
+            <SubmissionDateTimeLink item={item} />
             <div className="flex flex-col gap-1 text-default-800">
                 <div>
                     <span className="text-default-500">Autors: </span>
@@ -71,23 +151,14 @@ function SubmissionEntryCard({ item }: { item: SubmListEntry }) {
                     {item.pr_lang_name}
                 </div>
             </div>
-            <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1">
+            <div className="flex min-w-0 items-center gap-x-3 gap-y-1">
                 <div className="min-w-0 flex-1 basis-[10rem]">
-                    <SubmListScoreBar
-                        green={item.score_info.score_bar.green}
-                        red={item.score_info.score_bar.red}
-                        gray={item.score_info.score_bar.gray}
-                        yellow={item.score_info.score_bar.yellow}
-                        purple={item.score_info.score_bar.purple}
-                    />
+                    <SubmissionScoreBarLink item={item} />
                 </div>
-                <span className="shrink-0 tabular-nums text-default-700">
-                    {item.score_info.received} / {item.score_info.possible}
-                </span>
+                <SubmissionResultText item={item} />
             </div>
             <p className="text-xs text-default-500">
-                CPU {formatCpu(item)} s · Atmiņa {formatMem(item)} MiB ·{" "}
-                {statusTranslations[item.status] ?? item.status}
+                CPU {formatCpu(item)} s · Atmiņa {formatMem(item)} MiB
             </p>
         </article>
     );
@@ -122,7 +193,7 @@ export default function SubmissionTable({ submissions, skeleton = false }: Submi
             key: "created_at",
             header: "Datums, laiks",
             width: "120px",
-            render: (item) => <DateTimeCell dateTime={item.created_at} showTime={true} />
+            render: (item) => <SubmissionDateTimeLink item={item} />
         },
         {
             key: "username",
@@ -143,31 +214,17 @@ export default function SubmissionTable({ submissions, skeleton = false }: Submi
             render: (item) => item.pr_lang_name
         },
         {
-            key: "score_bar",
+            key: "result_bar",
             header: "Rezultāts",
             width: "120px",
             headerColSpan: 2,
-            render: (item) => (
-                <SubmListScoreBar
-                    green={item.score_info.score_bar.green}
-                    red={item.score_info.score_bar.red}
-                    gray={item.score_info.score_bar.gray}
-                    yellow={item.score_info.score_bar.yellow}
-                    purple={item.score_info.score_bar.purple}
-                />
-            )
+            render: (item) => <SubmissionScoreBarLink item={item} />
         },
         {
-            key: "score",
+            key: "result",
             header: "",
             width: "100px",
-            render: (item) => (
-                <div className="flex flex-wrap gap-x-1 gap-y-1 min-w-20">
-                    <span>{item.score_info.received}</span>
-                    <span>/</span>
-                    <span>{item.score_info.possible}</span>
-                </div>
-            )
+            render: (item) => <SubmissionResultText item={item} />
         },
         {
             key: "cpu_time",
@@ -191,26 +248,6 @@ export default function SubmissionTable({ submissions, skeleton = false }: Submi
                 item.score_info.exceeded_mem ? 
                 <span>&gt; {item.score_info.max_mem_kib / 1024}</span> : 
                 <span>{(item.score_info.max_mem_kib / 1024).toFixed(2)}</span>
-            )
-        },
-        {
-            key: "status",
-            header: "Statuss",
-            width: "120px",
-            columnClassName: narrowOnlyColsClass,
-            colgroupClassName: narrowOnlyColgroupClass,
-            render: (item) => statusTranslations[item.status] ?? item.status
-        },
-        {
-            key: "id",
-            header: "Iesūtījums",
-            width: "90px",
-            render: (item) => (
-                <span className={submIdClassName}>
-                    <TextLink isDisabled={item.status !== "finished" && item.status !== "compile_error"} href={`/submissions/${item.id}`}>
-                        {item.id}
-                    </TextLink>
-                </span>
             )
         }
     ];

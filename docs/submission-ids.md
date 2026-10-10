@@ -3,6 +3,9 @@
 Public submission pages use the backend `id` field (6-character base62), not `subm_uuid`.
 
 - List/detail links: `/submissions/${item.id}`
+- The list's `Rezultāts` text and the date/time both link to `/submissions/${item.id}`
+  (the score-bar cell links there too); the submission id is not a column — it is exposed
+  via the link `title` tooltips
 - Task-page sidebar (logged in): time is the visible link; href still uses `id`
 - Detail header shows the public `id` last, light weight, de-emphasized
 - React keys and SSE matching stay on `subm_uuid`

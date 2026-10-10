@@ -45,8 +45,7 @@ export default async function Page({
 	const execData = await getExec(
 		submData.curr_eval.eval_uuid,
 		Boolean(submData.content),
-	);
-	if (!execData) return <>Error: execution data is empty.</>;
+	).catch(() => null);
 
 	return (
 		<Layout active="submissions">
@@ -74,20 +73,28 @@ export default async function Page({
 						</ShikiCodeBlock>
 					)}
 				</div>
-				{(!execData.subm_comp || execData.subm_comp.exit === 0) && (
-					<div className="bg-white p-3 rounded-sm border-small border-divider overflow-x-auto">
-						<TestResultTable
-							visible_details={!!submData.content}
-							subm_eval={submData.curr_eval}
-							test_results={execData.test_res.map((x) => ({ ...x }))}
-						/>
+				{execData === null ? (
+					<div className="bg-white p-3 rounded-sm border-small border-divider text-default-700">
+						Rezultāti vēl nav pieejami — iesūtījums tiek apstrādāts.
 					</div>
-				)}
-				{execData.subm_comp && (
-					<div className="bg-white p-3 rounded-sm border-small border-divider overflow-x-auto">
-						<p className="text-small text-default-900 select-none mb-1">Kompilācijas izvaddati:</p>
-						<CodeBlock content={execData.subm_comp.out + execData.subm_comp.err || ""}/>
-					</div>
+				) : (
+					<>
+						{(!execData.subm_comp || execData.subm_comp.exit === 0) && (
+							<div className="bg-white p-3 rounded-sm border-small border-divider overflow-x-auto">
+								<TestResultTable
+									visible_details={!!submData.content}
+									subm_eval={submData.curr_eval}
+									test_results={execData.test_res.map((x) => ({ ...x }))}
+								/>
+							</div>
+						)}
+						{execData.subm_comp && (
+							<div className="bg-white p-3 rounded-sm border-small border-divider overflow-x-auto">
+								<p className="text-small text-default-900 select-none mb-1">Kompilācijas izvaddati:</p>
+								<CodeBlock content={execData.subm_comp.out + execData.subm_comp.err || ""}/>
+							</div>
+						)}
+					</>
 				)}
 			</div>
 		</Layout>
