@@ -2,6 +2,13 @@
 const nextConfig = {
   // reactStrictMode: false,
   output: 'standalone',
+  allowedDevOrigins: process.env.DEV_PUBLIC_HOST ? [process.env.DEV_PUBLIC_HOST] : [],
+  async rewrites() {
+    return process.env.API_PROXY_TARGET ? [{
+      source: '/api/:path*',
+      destination: `${process.env.API_PROXY_TARGET}/:path*`,
+    }] : []
+  },
   async redirects() {
     return [
       {
@@ -35,6 +42,11 @@ const nextConfig = {
         port: '8080',
         pathname: '/**',
       },
+      ...(process.env.DEV_PUBLIC_HOST ? [{
+        protocol: 'https',
+        hostname: process.env.DEV_PUBLIC_HOST,
+        pathname: '/api/**',
+      }] : []),
       {
         protocol: 'https',
         hostname: 'api.programme.lv',
