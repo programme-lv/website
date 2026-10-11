@@ -54,7 +54,7 @@ export default async function SubmissionListServerComponent(props: {
 
   return (
     <Layout active="submissions">
-      <div className="py-2">
+      <div className="pb-2">
         <div className="mb-2 mt-4 flex flex-wrap items-center justify-end gap-x-4 gap-y-2 xl:flex-nowrap xl:items-center xl:justify-between">
           <div className="hidden shrink-0 px-0.5 text-gray-500 xl:block">
             {total === 0

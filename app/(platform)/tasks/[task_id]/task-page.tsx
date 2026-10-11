@@ -22,38 +22,36 @@ import TaskMeta from "./task-meta";
 
 export default function TaskDetailsPage({ task }: { task: Task }) {
 	return (
-		<div className="flex flex-col gap-4 py-4">
-			<TaskHeader task={task} />
-			<div className="flex flex-col gap-4 lg:flex-row lg:items-start">
-				<article
-					className="-mx-4 min-w-0 flex-1 rounded-none border-x-0 border-y border-zinc-200 bg-white px-3 py-3 md:mx-0 md:p-3"
-					lang="lv"
-				>
-					{task.default_md_statement && (
-						<MdView
-							statement_images={task.statement_images}
-							examples={task.examples}
-							md_statement={task.default_md_statement}
-							statement_subtasks={task.statement_subtasks}
-							vis_inp_st_inputs={task.visible_input_subtasks}
-						/>
-					)}
-				</article>
-				<aside className="w-full shrink-0 lg:max-w-xs">
-					<div className="lg:sticky lg:top-3">
-						<TaskMeta task={task} />
-					</div>
+		<div className="mx-auto flex w-full max-w-[75ch] flex-col gap-4 py-4">
+			<div className="grid min-w-0 grid-cols-1 gap-4 md:grid-cols-[minmax(0,1fr)_auto] md:items-start">
+				<TaskHeader task={task} />
+				<aside className="shrink-0" aria-label="Risinājuma iesūtīšana">
+					<TaskMeta task={task} />
 				</aside>
 			</div>
+			<article
+				className="min-w-0 py-3"
+				lang="lv"
+			>
+				{task.default_md_statement && (
+					<MdView
+						statement_images={task.statement_images}
+						examples={task.examples}
+						md_statement={task.default_md_statement}
+						statement_subtasks={task.statement_subtasks}
+						vis_inp_st_inputs={task.visible_input_subtasks}
+					/>
+				)}
+			</article>
 		</div>
 	);
 }
 
 function TaskHeader({ task }: { task: Task }) {
-	const originNote = task.origin_notes?.lv;
+	const originNote = task.origin_notes_short?.lv || task.origin_notes?.lv;
 
 	return (
-		<header className="flex items-start gap-4">
+		<header className="flex min-w-0 items-start gap-4">
 			{task.illustration_img && (
 				<Image
 					alt={task.task_full_name}
@@ -66,30 +64,32 @@ function TaskHeader({ task }: { task: Task }) {
 			)}
 			<div className="min-w-0 flex-1">
 				<div className="flex flex-wrap items-center gap-3">
-					<h1 className="text-2xl font-semibold leading-tight">{task.task_full_name}</h1>
+					<h1 className="min-w-0 break-words text-xl font-semibold leading-tight">{task.task_full_name}</h1>
 					{task.difficulty_rating > 0 && (
 						<TaskDifficultyChip difficulty_rating={task.difficulty_rating} size="md" />
 					)}
 				</div>
+				<div className="mt-3 flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
 				{(task.origin_olympiad === "LIO" || originNote) && (
-					<div className="mt-2 flex text-sm items-start min-w-0">
+					<div className="flex text-sm items-start min-w-0">
 						{task.origin_olympiad === "LIO" && (
 							<Image
 								alt="Latvijas Informātikas olimpiādes logo"
 								className="h-auto shrink-0"
-								height={42}
+								height={40}
 								src={LIO_LOGO}
-								width={42}
-								sizes="42px"
+								width={40}
+								sizes="40px"
 							/>
 						)}
 						{originNote && (
-							<p className="ms-2 leading-5 text-gray-700 text-balance max-w-[60ch]">
+							<p className="ms-2 min-w-0 max-w-[26ch] break-words text-balance leading-5 text-gray-700">
 								{originNote}
 							</p>
 						)}
 					</div>
 				)}
+				</div>
 			</div>
 		</header>
 	);
@@ -127,7 +127,7 @@ function renderSections(md_statement: MarkdownStatement, statement_images: State
 }
 
 const statementProseClass =
-	"w-full text-left md:[&_p]:text-justify md:[&_p]:hyphens-auto md:[&_p]:[-webkit-hyphens:auto] md:[&_li]:text-justify md:[&_li]:hyphens-auto md:[&_li]:[-webkit-hyphens:auto]";
+	"w-full text-left";
 
 type MdViewProps = {
 	md_statement: MarkdownStatement;
@@ -154,41 +154,9 @@ function MdView({
 			{sections.input && <Section title="Ievaddati" content={sections.input} />}
 			{sections.output && <Section title="Izvaddati" content={sections.output} />}
 			{sections.talk && <SectionNEW title="Komunikācija" md_content={sections.talk} />}
-			{sections.example && <SectionNEW title="Piemērs" md_content={sections.example} />}
-
-			{examples && !sections.example && (
-				<div>
-					<h2 className="my-1 mb-2 text-small font-semibold">Piemēri</h2>
-					<div className="flex w-full max-w-full flex-wrap gap-3">
-						{examples.map((example) => (
-							<div
-								key={example.input + example.output}
-								className="w-[350px] max-w-full flex-grow rounded-sm border-small border-default-300 p-2"
-							>
-								<div className="flex flex-wrap gap-2 gap-x-4">
-									<CodeBlockWithTitle title="Ievaddati" content={example.input} />
-									<CodeBlockWithTitle title="Izvaddati" content={example.output} />
-									{example.md_note && (
-										<div className="min-w-[175px] flex-grow basis-0 overflow-hidden">
-											<div className="flex flex-col">
-												<p className="my-0.5 mb-1.5 select-none text-small text-default-700">
-													Piezīme:
-												</p>
-												<p className="text-left text-sm">
-													{example.md_note}
-												</p>
-											</div>
-										</div>
-									)}
-								</div>
-							</div>
-						))}
-					</div>
-				</div>
-			)}
 
 			{statement_subtasks && statement_subtasks.length > 0 && (
-				<div>
+				<div className="max-w-[75ch]">
 					<h2 className="my-1 mb-2 text-small font-semibold">
 						Apakšuzdevumi un to vērtēšana
 					</h2>
@@ -239,6 +207,39 @@ function MdView({
 				</div>
 			)}
 
+			{sections.example && <SectionNEW title="Piemērs" md_content={sections.example} />}
+
+			{examples && !sections.example && (
+				<div>
+					<h2 className="my-1 mb-2 text-small font-semibold">Piemēri</h2>
+					<div className="flex w-full max-w-full flex-wrap gap-3">
+						{examples.map((example) => (
+							<div
+								key={example.input + example.output}
+								className="w-[350px] max-w-full flex-grow rounded-sm border-small border-default-300 p-2"
+							>
+								<div className="flex flex-wrap gap-2 gap-x-4">
+									<CodeBlockWithTitle title="Ievaddati" content={example.input} />
+									<CodeBlockWithTitle title="Izvaddati" content={example.output} />
+									{example.md_note && (
+										<div className="min-w-[175px] flex-grow basis-0 overflow-hidden">
+											<div className="flex flex-col">
+												<p className="my-0.5 mb-1.5 select-none text-small text-default-700">
+													Piezīme:
+												</p>
+												<p className="text-left text-sm">
+													{example.md_note}
+												</p>
+											</div>
+										</div>
+									)}
+								</div>
+							</div>
+						))}
+					</div>
+				</div>
+			)}
+
 			{md_statement.notes && (
 				<div>
 					<h2 className="mb-1 text-small font-semibold">Piezīmes</h2>
@@ -273,7 +274,7 @@ function MdView({
 
 function Section({ title, content }: { title: string; content: string }) {
 	return (
-		<div>
+		<div className="max-w-[75ch]">
 			<h2 className="mb-1 text-small font-semibold">{title}</h2>
 			<div className={statementProseClass}>
 				<div dangerouslySetInnerHTML={{ __html: content }} />

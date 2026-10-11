@@ -44,6 +44,12 @@ Both ultimately default to `https://api.programme.lv`.
 `ADMIN_API_KEY` authenticates server-side requests to protected backend endpoints and must match the backend value.
 Never expose it through a `NEXT_PUBLIC_` variable or browser-side code.
 
+For a development tunnel with a single HTTPS hostname, optionally set
+`API_PROXY_TARGET=http://localhost:8081` to proxy `/api/*` to the backend.
+Set `NEXT_PUBLIC_API_HOST=https://<hostname>/api`, `SERVER_API_HOST` to the
+internal backend URL, and `DEV_PUBLIC_HOST=<hostname>` for development assets
+and API images. Configure backend public URLs and cookies for that hostname.
+
 ## Commands
 
 ```bash

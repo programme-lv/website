@@ -28,6 +28,7 @@ type Task = {
     default_md_statement?: MarkdownStatement;
     examples?: Example[];
     origin_notes?: Record<string, string>;
+    origin_notes_short?: Record<string, string>;
     visible_input_subtasks?: VisibleInputSubtask[];
     statement_subtasks?: SubtaskOverview[];
     statement_images?: StatementImage[];

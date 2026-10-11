@@ -3,8 +3,9 @@
 import { useEffect, useState } from "react";
 
 import { TextLink } from "@/components/ui/text-link";
+import { cn } from "@/components/cn";
 
-export default function Footer() {
+export default function Footer({ readingWidth = false }: { readingWidth?: boolean }) {
   const [email, setEmail] = useState<string | null>(null);
 
   useEffect(() => {
@@ -16,7 +17,8 @@ export default function Footer() {
 
   return (
     <footer className="border-t border-divider bg-white">
-      <div className="mx-auto flex w-full max-w-(--page-max) flex-wrap items-center justify-between gap-x-4 gap-y-1 px-4 py-3 text-sm text-default-600">
+      <div className={cn("mx-auto w-full max-w-(--page-max) px-4", readingWidth && "max-w-[calc(75ch+2rem)]")}>
+      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 py-3 text-sm text-default-600">
         <p>© {new Date().getFullYear()} programme.lv</p>
         <p className="flex flex-wrap items-center gap-x-4 gap-y-1">
           <TextLink href="/about">
@@ -24,6 +26,7 @@ export default function Footer() {
           </TextLink>
           <span>Epasts: {email ?? "..."}</span>
         </p>
+      </div>
       </div>
     </footer>
   );

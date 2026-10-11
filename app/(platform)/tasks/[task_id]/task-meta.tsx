@@ -11,7 +11,7 @@ import Button from "@/components/ui/button";
 import { Task } from "@/types/task";
 
 import SubmitModal from "./submit-modal";
-import TaskSubmList from "./task-subm-list";
+import TaskSubmissionsLink from "./task-submissions-link";
 
 function submitAfterLoginKey(taskId: string) {
 	return `open-submit:${taskId}`;
@@ -44,22 +44,18 @@ export default function TaskMeta({ task }: { task: Task }) {
 	};
 
 	return (
-		<div className="flex flex-col gap-2">
-			<div className="border border-zinc-200 bg-white p-3">
-				<div className="text-sm flex flex-row gap-1 text-zinc-800">
-					Izpildes ierobežojumi:
-					<span>
-						<strong>{task.cpu_time_limit_seconds}</strong> s CPU
-					</span>
-					<span>
-						<strong>{task.memory_limit_megabytes}</strong> MB RAM
-					</span>
+		<div className="flex flex-col gap-3 sm:flex-row sm:items-start">
+			<div className="w-full bg-white sm:w-48 sm:shrink-0">
+				<div className="flex flex-wrap gap-x-1 text-sm text-zinc-800">
+					Ierobežojumi:
+					<span className="whitespace-nowrap"><strong>{task.cpu_time_limit_seconds}</strong> s</span>
+					<span className="whitespace-nowrap"><strong>{task.memory_limit_megabytes}</strong> MB</span>
 				</div>
 				<div className="mt-3 flex flex-col gap-2">
 					{user ? (
 						<>
 							<Link
-								className="inline-flex h-8 w-full items-center justify-center rounded-sm bg-[#0f62fe] px-3 text-sm text-white hover:bg-[#0353e9] md:hidden"
+								className="inline-flex h-8 w-full items-center justify-center rounded-sm bg-[#ebebec] px-3 text-sm text-[#161616] hover:bg-[#e0e0e0] md:hidden"
 								href={submitHref}
 							>
 								Iesūtīt risinājumu
@@ -70,10 +66,10 @@ export default function TaskMeta({ task }: { task: Task }) {
 								icon={<IconAppWindow size={16} aria-hidden />}
 								size="sm"
 								type="button"
-								variant="primary"
+								variant="default"
 								onClick={() => setSubmitOpen(true)}
 							>
-								Atvērt risinājuma iesūtīšanas logu
+								Iesūtīt risinājumu
 							</Button>
 						</>
 					) : (
@@ -83,7 +79,7 @@ export default function TaskMeta({ task }: { task: Task }) {
 								fullWidth
 								size="sm"
 								type="button"
-								variant="primary"
+								variant="default"
 								onClick={openLoginForSubmit}
 							>
 								Iesūtīt risinājumu
@@ -94,15 +90,15 @@ export default function TaskMeta({ task }: { task: Task }) {
 								icon={<IconAppWindow size={16} aria-hidden />}
 								size="sm"
 								type="button"
-								variant="primary"
+								variant="default"
 								onClick={openLoginForSubmit}
 							>
-								Atvērt risinājuma iesūtīšanas logu
+								Iesūtīt risinājumu
 							</Button>
 						</>
 					)}
 					{user && (
-						<TaskSubmList taskId={task.short_task_id} username={user.username} />
+						<TaskSubmissionsLink taskId={task.short_task_id} username={user.username} />
 					)}
 					{userIsAdmin && (
 						<Button
