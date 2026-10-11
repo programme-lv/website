@@ -35,7 +35,7 @@ export default async function TaskPageServerComponent({
   }
 
   return (
-    <Layout active="tasks">
+    <Layout active="tasks" background="white" readingWidth>
       <Toaster/>
       <TaskDetailsPage task={task} />
     </Layout>

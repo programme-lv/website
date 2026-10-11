@@ -95,23 +95,6 @@ function SubmissionResultText({ item }: { item: SubmListEntry }) {
     );
 }
 
-/**
- * Date/time is the second link to the submission (the result text is the
- * first). Kept in the default text colour with no resting underline so it
- * does not compete with the author/task/result links; underlines on hover.
- */
-function SubmissionDateTimeLink({ item }: { item: SubmListEntry }) {
-    return (
-        <Link
-            href={`/submissions/${item.id}`}
-            title={`Iesūtījums #${item.id}`}
-            className="underline underline-offset-2 decoration-current/30 hover:decoration-current/90"
-        >
-            <DateTimeCell dateTime={item.created_at} showTime={true} />
-        </Link>
-    );
-}
-
 type SubmissionTableProps = {
     submissions: SubmListEntry[];
     skeleton?: boolean;
@@ -136,7 +119,7 @@ function SubmissionEntryCard({ item }: { item: SubmListEntry }) {
                 "rounded-sm border-small border-divider bg-white px-5 py-3 flex flex-col gap-2 text-sm"
             )}
         >
-            <SubmissionDateTimeLink item={item} />
+            <DateTimeCell dateTime={item.created_at} showTime={true} />
             <div className="flex flex-col gap-1 text-default-800">
                 <div>
                     <span className="text-default-500">Autors: </span>
@@ -193,7 +176,7 @@ export default function SubmissionTable({ submissions, skeleton = false }: Submi
             key: "created_at",
             header: "Datums, laiks",
             width: "120px",
-            render: (item) => <SubmissionDateTimeLink item={item} />
+            render: (item) => <DateTimeCell dateTime={item.created_at} showTime={true} />
         },
         {
             key: "username",
@@ -204,7 +187,7 @@ export default function SubmissionTable({ submissions, skeleton = false }: Submi
         {
             key: "task_name",
             header: "Uzdevums",
-            width: "140px",
+            width: "180px",
             render: (item) => <TextLink href={`/tasks/${item.task_id}`}>{item.task_name}</TextLink>
         },
         {
@@ -212,19 +195,6 @@ export default function SubmissionTable({ submissions, skeleton = false }: Submi
             header: "Valoda",
             width: "120px",
             render: (item) => item.pr_lang_name
-        },
-        {
-            key: "result_bar",
-            header: "Rezultāts",
-            width: "120px",
-            headerColSpan: 2,
-            render: (item) => <SubmissionScoreBarLink item={item} />
-        },
-        {
-            key: "result",
-            header: "",
-            width: "100px",
-            render: (item) => <SubmissionResultText item={item} />
         },
         {
             key: "cpu_time",
@@ -249,6 +219,19 @@ export default function SubmissionTable({ submissions, skeleton = false }: Submi
                 <span>&gt; {item.score_info.max_mem_kib / 1024}</span> : 
                 <span>{(item.score_info.max_mem_kib / 1024).toFixed(2)}</span>
             )
+        },
+        {
+            key: "result_bar",
+            header: "Rezultāts",
+            width: "120px",
+            headerColSpan: 2,
+            render: (item) => <SubmissionScoreBarLink item={item} />
+        },
+        {
+            key: "result",
+            header: "",
+            width: "100px",
+            render: (item) => <SubmissionResultText item={item} />
         }
     ];
 

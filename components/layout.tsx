@@ -16,6 +16,8 @@ interface LayoutProps {
   children: React.ReactNode;
   active: NavKey;
   wide?: boolean;
+  background?: "white";
+  readingWidth?: boolean;
 }
 
 const navItems: { key: NavKey; href: string; label: string; icon: React.ElementType; adminOnly?: boolean }[] = [
@@ -76,14 +78,16 @@ function Header({
   active,
   items,
   onMobileMenuOpen,
+  readingWidth,
 }: {
   active: NavKey;
   items: typeof navItems;
   onMobileMenuOpen: () => void;
+  readingWidth?: boolean;
 }) {
   return (
     <header className="border-b-small border-divider bg-white">
-      <div className={pageInner}>
+      <div className={cn(pageInner, readingWidth && "max-w-[calc(75ch+2rem)]")}>
         <Button
           aria-label="Izvēlne"
           className="md:hidden"
@@ -116,7 +120,7 @@ function Header({
   );
 }
 
-const Layout: React.FC<LayoutProps> = ({ children, active, wide = false }) => {
+const Layout: React.FC<LayoutProps> = ({ children, active, wide = false, background, readingWidth }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user } = useContext(AuthContext);
   const userIsAdmin = user?.username === "admin";
@@ -130,10 +134,11 @@ const Layout: React.FC<LayoutProps> = ({ children, active, wide = false }) => {
         onClose={() => setIsMobileMenuOpen(false)}
       />
 
-      <div className="flex min-h-screen flex-col">
+      <div className={cn("flex min-h-screen flex-col", background === "white" && "bg-white")}>
         <Header
           active={active}
           items={items}
+          readingWidth={readingWidth}
           onMobileMenuOpen={() => setIsMobileMenuOpen(true)}
         />
 
@@ -146,7 +151,7 @@ const Layout: React.FC<LayoutProps> = ({ children, active, wide = false }) => {
             <main className="mx-auto w-full max-w-(--page-max) flex-1 px-4 pb-8 min-h-[calc(100vh-3rem)]">
               {children}
             </main>
-            <Footer />
+            <Footer readingWidth={readingWidth} />
           </>
         )}
       </div>

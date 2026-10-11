@@ -179,7 +179,7 @@ function TaskListView({
   }
 
   return (
-    <div className="mt-3 w-full overflow-visible">
+    <div className="mt-4 w-full overflow-visible">
       <div className="flex items-stretch gap-3 lg:gap-4">
         <div className="min-w-0 flex-1">
           <div className="mb-2 flex justify-end lg:hidden">
