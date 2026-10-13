@@ -24,6 +24,13 @@ After changing the parser:
 2. Confirm `{width=24em}` is not visible as text.
 3. Confirm the image's computed width is `24em`.
 
+## Interactive task traces
+
+Interactive tasks store each example as a single trace (`examples[].trace` on the task API) instead of an input/output pair.
+`app/(platform)/tasks/[task_id]/interaction-trace.tsx` splits it into messages on lines that contain exactly `---` and renders alternating blocks: the first block comes from the judging system, the second from the solver, and so on.
+A leading `---` makes the solver speak first, and messages may span multiple lines.
+The per-example note (`examples[].md_note`) is markdown and can contain KaTeX.
+
 ## KaTeX version constraint
 
 `rehype-katex` 7 renders with KaTeX 0.16 and expects the KaTeX 0.16 CSS class names.

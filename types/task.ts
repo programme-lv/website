@@ -54,6 +54,7 @@ type TestWithOnlyInput = {
 type Example = {
     input: string;
     output: string;
+    trace?: string;
     md_note?: string;
 };
 
