@@ -98,6 +98,16 @@ export default function MarkdownRenderer({ content }: { content: string }) {
         p: ({node, children, className, ...props}) => {
             return <p className={cn(className, "mb-2")} {...props}>{children}</p>;
         },
+        a: ({node, children, ...props}) => {
+            return (
+                <a
+                    className="text-blue-800 underline underline-offset-2 decoration-blue-800/30 hover:decoration-blue-800/90"
+                    {...props}
+                >
+                    {children}
+                </a>
+            );
+        },
         img: ({ width, height, style, alt, ...props }) => {
             const sizedStyle: React.CSSProperties =
                 typeof style === "object" && style != null ? { ...style } : {};

@@ -21,6 +21,8 @@ import LIO_LOGO from "@/public/lio-logo-transparent.png";
 import InteractionTrace from "./interaction-trace";
 import TaskMeta from "./task-meta";
 
+const INTERACTIVE_NOTE = 'Lai garantētu, ka jūsu programmas "vaicājumus" saņem vērtēšanas sistēma, jums ir "jāsinhronizē" ( *flush* ) izvaddatu plūsma ( *stdout* ) pēc katra vaicājuma. Vairāk par datu ievadi un izvadi interaktīvajos uzdevumos lasiet [šeit](/help/interactive).';
+
 export default function TaskDetailsPage({ task }: { task: Task }) {
 	return (
 		<div className="mx-auto flex w-full max-w-[75ch] flex-col gap-4 py-4">
@@ -41,6 +43,7 @@ export default function TaskDetailsPage({ task }: { task: Task }) {
 						md_statement={task.default_md_statement}
 						statement_subtasks={task.statement_subtasks}
 						vis_inp_st_inputs={task.visible_input_subtasks}
+						interactive={task.testing_type === "interactor"}
 					/>
 				)}
 			</article>
@@ -136,6 +139,7 @@ type MdViewProps = {
 	vis_inp_st_inputs?: VisibleInputSubtask[];
 	statement_subtasks?: SubtaskOverview[];
 	statement_images?: StatementImage[];
+	interactive?: boolean;
 };
 
 function MdView({
@@ -144,8 +148,10 @@ function MdView({
 	vis_inp_st_inputs,
 	statement_subtasks,
 	statement_images,
+	interactive,
 }: MdViewProps) {
 	const sections = renderSections(md_statement, statement_images ?? []);
+	const notes = sections.notes || (interactive ? INTERACTIVE_NOTE : "");
 	const subtaskDescriptions =
 		statement_subtasks?.map((subtask) => renderMdLite(subtask.descriptions["lv"])) ?? [];
 
@@ -245,11 +251,11 @@ function MdView({
 				</div>
 			)}
 
-			{md_statement.notes && (
+			{notes && (
 				<div>
 					<h2 className="mb-1 text-small font-semibold">Piezīmes</h2>
 					<div className={statementProseClass}>
-						<MarkdownRenderer content={sections.notes} />
+						<MarkdownRenderer content={notes} />
 					</div>
 				</div>
 			)}
