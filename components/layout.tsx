@@ -10,7 +10,7 @@ import Button from "@/components/ui/button";
 import Footer from "@/components/footer";
 import User from "./navbar-user";
 
-type NavKey = "tasks" | "submissions" | "admin" | "about";
+type NavKey = "tasks" | "submissions" | "admin" | "about" | "help";
 
 interface LayoutProps {
   children: React.ReactNode;
