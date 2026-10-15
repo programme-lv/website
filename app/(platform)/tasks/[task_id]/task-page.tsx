@@ -18,6 +18,7 @@ import MarkdownRenderer from "@/components/markdown-renderer";
 import TaskDifficultyChip from "@/components/task-difficulty-chip";
 import LIO_LOGO from "@/public/lio-logo-transparent.png";
 
+import InteractionTrace from "./interaction-trace";
 import TaskMeta from "./task-meta";
 
 export default function TaskDetailsPage({ task }: { task: Task }) {
@@ -213,29 +214,33 @@ function MdView({
 				<div>
 					<h2 className="my-1 mb-2 text-small font-semibold">Piemēri</h2>
 					<div className="flex w-full max-w-full flex-wrap gap-3">
-						{examples.map((example) => (
-							<div
-								key={example.input + example.output}
-								className="w-[350px] max-w-full flex-grow rounded-sm border-small border-default-300 p-2"
-							>
-								<div className="flex flex-wrap gap-2 gap-x-4">
-									<CodeBlockWithTitle title="Ievaddati" content={example.input} />
-									<CodeBlockWithTitle title="Izvaddati" content={example.output} />
-									{example.md_note && (
-										<div className="min-w-[175px] flex-grow basis-0 overflow-hidden">
-											<div className="flex flex-col">
-												<p className="my-0.5 mb-1.5 select-none text-small text-default-700">
-													Piezīme:
-												</p>
-												<p className="text-left text-sm">
-													{example.md_note}
-												</p>
+						{examples.map((example, i) =>
+							example.trace ? (
+								<InteractionTrace key={i} example={example} />
+							) : (
+								<div
+									key={i}
+									className="w-[350px] max-w-full flex-grow rounded-sm border-small border-default-300 p-2"
+								>
+									<div className="flex flex-wrap gap-2 gap-x-4">
+										<CodeBlockWithTitle title="Ievaddati" content={example.input} />
+										<CodeBlockWithTitle title="Izvaddati" content={example.output} />
+										{example.md_note && (
+											<div className="min-w-[175px] flex-grow basis-0 overflow-hidden">
+												<div className="flex flex-col">
+													<p className="my-0.5 mb-1.5 select-none text-small text-default-700">
+														Piezīme:
+													</p>
+													<p className="text-left text-sm">
+														{example.md_note}
+													</p>
+												</div>
 											</div>
-										</div>
-									)}
+										)}
+									</div>
 								</div>
-							</div>
-						))}
+							)
+						)}
 					</div>
 				</div>
 			)}
