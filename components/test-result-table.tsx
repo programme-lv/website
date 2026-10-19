@@ -3,13 +3,12 @@
 import { useState } from "react";
 import { Button } from "@heroui/react";
 import { IconChevronDown } from "@tabler/icons-react";
-import TestDetailsModal, { full_verdicts, verdict_colors } from "@/components/test-details-modal";
+import TestDetailsModal, { full_verdicts, short_verdicts, verdict_colors } from "@/components/test-details-modal";
 import { TestRes } from "@/types/exec";
 import GenericTable, { Column } from "@/components/generic-table";
 import { renderMdLite } from "@/lib/render-md";
 import "katex/dist/katex.min.css";
 import { SubmEval } from "@/types/subm";
-import { cn } from "./cn";
 
 type TestGroupDetailsProps = {
     label?: string;
@@ -28,8 +27,23 @@ function maxOf<T>(items: T[], pick: (item: T) => number | null | undefined): num
     return values.length > 0 ? Math.max(...values) : null;
 }
 
-// Colours mirror the score bar: teal = full, amber = partial, red = none.
-const fullScoreClass = "text-[#2c7a7b]";
+// Below `md` the test table has to fit the viewport, so headers, padding and status text
+// are compacted; `md` and up keep the original presentation.
+const compactCellClass = "max-md:px-1.5 max-md:text-xs";
+
+function ResponsiveHeader({ short, long }: { short: string; long: string }) {
+    return (
+        <>
+            <span className="max-md:hidden">{long}</span>
+            <span className="md:hidden">{short}</span>
+        </>
+    );
+}
+
+// Colours mirror the score bar: green = full, amber = partial, red = none.
+// A full score is bold (positive reinforcement); amber/red stay regular weight so a bad
+// result does not read as an error shout.
+const fullScoreClass = "text-subm-success font-semibold";
 const partialScoreClass = "text-[#d69e2e]";
 const zeroScoreClass = "text-[#c53030]";
 
@@ -65,22 +79,22 @@ function TestGroupDetails({ label, groupNumber, tests, points, scoreUnit, verdic
     const memTones = limitTones(maxMemKiB, memLimitKiB);
 
     return (
-        <details className="group rounded-sm border-small border-divider">
-            <summary className="flex cursor-pointer select-none items-center gap-x-4 px-3 py-2 text-sm hover:bg-gray-50 [&::-webkit-details-marker]:hidden">
-                <span className="flex w-20 shrink-0 items-baseline">
+        <details className="group rounded-sm border-small border-divider" suppressHydrationWarning>
+            <summary className="flex cursor-pointer select-none items-center gap-x-1.5 px-2 py-2 text-sm hover:bg-gray-50 sm:gap-x-4 sm:px-3 [&::-webkit-details-marker]:hidden">
+                <span className="flex min-w-0 flex-1 items-baseline truncate sm:w-20 sm:flex-none sm:shrink-0">
                     {groupNumber != null ? (
                         <>
                             <span className="w-5 shrink-0 text-right font-medium tabular-nums">{groupNumber}.</span>
-                            <span className="text-default-500">&nbsp;grupa</span>
+                            <span className="min-w-0 truncate text-default-500">&nbsp;grupa</span>
                         </>
                     ) : (
                         <span className="font-medium">{label ?? ""}</span>
                     )}
                 </span>
-                <span className={cn("w-16 shrink-0 tabular-nums font-medium", scoreToneClass)}>
-                    {scoreText ?? ""}
+                <span className={`w-[62px] shrink-0 whitespace-nowrap tabular-nums sm:w-20 ${scoreToneClass}`}>
+                    {scoreText != null ? `${scoreText} p` : ""}
                 </span>
-                <span className="w-16 shrink-0 tabular-nums">
+                <span className="w-[56px] shrink-0 whitespace-nowrap tabular-nums sm:w-16">
                     {maxCpuMs == null ? (
                         <span className={cpuTones.value}>—</span>
                     ) : (
@@ -90,7 +104,7 @@ function TestGroupDetails({ label, groupNumber, tests, points, scoreUnit, verdic
                         </>
                     )}
                 </span>
-                <span className="w-20 shrink-0 tabular-nums">
+                <span className="w-[64px] shrink-0 whitespace-nowrap tabular-nums sm:w-20">
                     {maxMemKiB == null ? (
                         <span className={memTones.value}>—</span>
                     ) : (
@@ -146,14 +160,18 @@ export default function TestResultTable({ visible_details, subm_eval, test_resul
     let columns: Column<typeof test_results[0]>[] = [
         {
             key: "id",
-            header: "Tests #",
+            header: <ResponsiveHeader long="Tests #" short="#" />,
             width: "60px",
+            colgroupClassName: "max-md:w-[32px]",
+            columnClassName: compactCellClass,
             render: (test) => test.id
         },
         {
             key: "test_group",
-            header: "Grupa",
+            header: <ResponsiveHeader long="Grupa" short="Gr." />,
             width: "60px",
+            colgroupClassName: "max-md:w-[36px]",
+            columnClassName: compactCellClass,
             render: (test) => {
                 const tgs = test_testgroups(test);
                 return tgs.map(x => `${x.id}.`).join(", ");
@@ -163,32 +181,44 @@ export default function TestResultTable({ visible_details, subm_eval, test_resul
             key: "verdict",
             header: "Vērtējums",
             width: "170px",
-            render: (test) => (
-                <span className={`whitespace-nowrap ${verdict_colors[subm_eval.verdicts[test.id - 1]] || ''}`}>
-                    {full_verdicts[subm_eval.verdicts[test.id - 1]] || 'Nezināms'}
-                </span>
-            )
+            colgroupClassName: "max-md:w-[84px]",
+            columnClassName: compactCellClass,
+            render: (test) => {
+                const verdict = subm_eval.verdicts[test.id - 1];
+                return (
+                    <span className={`whitespace-nowrap ${verdict_colors[verdict] || ''}`}>
+                        <span className="max-md:hidden">{full_verdicts[verdict] || 'Nezināms'}</span>
+                        <span className="md:hidden">{short_verdicts[verdict] || full_verdicts[verdict] || 'Nezināms'}</span>
+                    </span>
+                );
+            }
         },
         {
             key: "cpu",
-            header: "CPU laiks [s]",
+            header: <ResponsiveHeader long="CPU laiks [s]" short="CPU" />,
             width: "110px",
+            colgroupClassName: "max-md:w-[46px]",
+            columnClassName: compactCellClass,
             render: (test) => isIgnored(test)
                 ? "—"
                 : test.subm_rd?.cpu_ms ? (test.subm_rd.cpu_ms / 1000).toFixed(3) : "N/A"
         },
         {
             key: "mem",
-            header: "Atmiņa [MiB]",
+            header: <ResponsiveHeader long="Atmiņa [MiB]" short="Atm." />,
             width: "120px",
+            colgroupClassName: "max-md:w-[44px]",
+            columnClassName: compactCellClass,
             render: (test) => isIgnored(test)
                 ? "—"
                 : test.subm_rd?.mem_kib ? (test.subm_rd.mem_kib / 1024).toFixed(2) : "N/A"
         },
         {
             key: "details",
-            header: "Detaļas",
+            header: <ResponsiveHeader long="Detaļas" short="Skatīt" />,
             width: "100px",
+            colgroupClassName: "max-md:w-[62px]",
+            columnClassName: compactCellClass,
             render: (test) => isIgnored(test) ? null : (
                 <Button
                     variant="ghost"

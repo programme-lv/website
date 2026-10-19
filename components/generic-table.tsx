@@ -2,7 +2,7 @@ import { cn } from "./cn";
 import React from "react";
 
 export type Column<T> = {
-  header: string;
+  header: React.ReactNode;
   key: string;
   width?: string;
   render: (item: T, index: number) => React.ReactNode;

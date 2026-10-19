@@ -1,4 +1,5 @@
 import { getExec } from "@/lib/exec/get";
+import { isAdmin } from "@/lib/dal";
 import Layout from "@/components/layout";
 import SubmInfoHeader from "./header";
 import CodeBlock from "@/components/code-block";
@@ -42,16 +43,20 @@ export default async function Page({
 		redirect(`/submissions/${submData.id}`);
 	}
 
+	// Test details (input, expected answer, stderr, checker output) are admin-only: they leak
+	// test data for tasks with short inputs, which users could then hardcode.
+	// Fail closed: a `/role` failure must not expose them.
+	const admin = await isAdmin().catch(() => false);
+
 	const execData = await getExec(
 		submData.curr_eval.eval_uuid,
-		Boolean(submData.content),
+		admin,
 	).catch(() => null);
 
 	return (
 		<Layout active="submissions">
 			<div className="flex flex-col gap-3 py-4">
 				<SubmInfoHeader
-					subm_id={submData.id}
 					possible={submData.curr_eval.score_info.possible}
 					received={submData.curr_eval.score_info.received}
 					language={submData.pr_lang.display}
@@ -82,7 +87,7 @@ export default async function Page({
 						{(!execData.subm_comp || execData.subm_comp.exit === 0) && (
 							<div className="bg-white p-3 rounded-sm border-small border-divider overflow-x-auto">
 								<TestResultTable
-									visible_details={!!submData.content}
+									visible_details={admin}
 									subm_eval={submData.curr_eval}
 									test_results={execData.test_res.map((x) => ({ ...x }))}
 									limits={execData.params}
