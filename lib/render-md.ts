@@ -12,6 +12,7 @@ import { Element } from "hast";
 import { visit } from "unist-util-visit";
 import { StatementImage } from "@/types/task";
 import { cssLength, isUnitlessNumber, remarkPandocImageAttrs, styleHasDimension } from "./pandoc-image-attrs";
+import { rehypeNoBreakParens } from "./rehype-no-break-parens";
 
 function applyDeclaredImageSize(node: Element) {
   let style = typeof node.properties.style === "string" ? node.properties.style : "";
@@ -206,6 +207,7 @@ export default function renderMd(md: string, images: StatementImage[] = []): str
     .use(rehypeRaw)
     .use(rehypeSanitize)
     .use(rehypeKatex)
+    .use(rehypeNoBreakParens)
     .use(rehypeAddClasses)
     .use(() => rehypeFixImages(images))
     .use(rehypeStringify)
@@ -226,6 +228,7 @@ export function renderMdLite(md: string): string {
     .use(rehypeRaw)
     .use(rehypeSanitize)
     .use(rehypeKatex)
+    .use(rehypeNoBreakParens)
     // .use(rehypeAddClasses)
     .use(rehypeRemoveImages) // Add the image removal plugin
     .use(rehypeStringify)

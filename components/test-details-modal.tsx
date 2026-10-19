@@ -35,6 +35,19 @@ export const verdict_colors: Record<string, string> = {
   'U': 'text-default-500',
 };
 
+// Compact verdict labels for narrow screens, where the full text does not fit.
+export const short_verdicts: Record<string, string> = {
+  'Q': 'Gaida',
+  'X': 'Testē',
+  'W': 'Nepareizi',
+  'A': 'Pareizi',
+  'T': 'Par ilgu',
+  'M': 'Atmiņa',
+  'R': 'Kļūda',
+  'I': 'Neietekmē',
+  'U': 'Nezināms',
+};
+
 export default function TestDetailsModal({ isOpen, onOpenChange, test, subm_eval }: TestDetailsModalProps) {
   if (!isOpen || !test) return null;
   

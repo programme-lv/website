@@ -1,37 +1,78 @@
-import CodeBlock from "@/components/code-block";
+import { IconInfoCircle, IconRobot, IconUserCode } from "@tabler/icons-react";
+
 import MarkdownRenderer from "@/components/markdown-renderer";
 import { Example } from "@/types/task";
 
+import TraceMessage from "./trace-message";
+
+type Side = "judge" | "solution";
+
 type Message = {
-	side: "judge" | "solution";
+	side: Side;
 	text: string;
 };
 
-export default function InteractionTrace({ example }: { example: Example }) {
+function SideLabel({ side }: { side: Side }) {
+	const isJudge = side === "judge";
+
+	return (
+		<p className="flex select-none items-center gap-1 text-tiny leading-4 text-default-700">
+			{isJudge ? (
+				<IconRobot
+					aria-hidden
+					size={14}
+				/>
+			) : (
+				<IconUserCode
+					aria-hidden
+					size={14}
+				/>
+			)}
+			{isJudge ? "Vērtēšanas sistēma" : "Jūsu programma"}
+		</p>
+	);
+}
+
+export default function InteractionTrace({
+	example,
+	bordered = true,
+}: {
+	example: Example;
+	bordered?: boolean;
+}) {
 	const messages = parseTrace(example.trace ?? "");
 
 	return (
-		<div className="w-full max-w-full rounded-sm border-small border-default-300 p-2">
-			<div className="flex flex-col gap-2">
-				{messages.map((message, i) => (
-					<div key={i}>
-						<p className="my-0.5 mb-1.5 select-none text-small text-default-700">
-							{message.side === "judge" ? "Vērtēšanas sistēma" : "Jūsu programma"}
-						</p>
-						<CodeBlock content={message.text} />
-					</div>
-				))}
+		<div className="@container w-full max-w-full">
+			<div className="mb-2 flex flex-wrap gap-x-4 gap-y-1">
+				<SideLabel side="judge" />
+				<SideLabel side="solution" />
 			</div>
-			{example.md_note && (
-				<div className="mt-2">
-					<p className="my-0.5 mb-1.5 select-none text-small text-default-700">
-						Piezīme:
-					</p>
-					<div className="w-full text-left text-sm">
+			<div
+				className={`flex flex-wrap items-start gap-x-3 gap-y-2${
+					bordered ? " rounded-sm border-small border-default-300 p-2" : ""
+				}`}
+			>
+				<div className="min-w-0 flex-[1_1_280px]">
+					<ol aria-label="Saziņas piemērs" className="m-0 flex list-none flex-col gap-1 p-0">
+						{messages.map((message, i) => (
+							<TraceMessage key={i} side={message.side} text={message.text} />
+						))}
+					</ol>
+				</div>
+				{example.md_note && (
+					<div className="w-full min-w-0 break-words text-left text-sm @min-[32rem]:w-max @min-[32rem]:max-w-[33%]">
+						<p className="mb-0.5 flex select-none items-center gap-1 text-tiny leading-4 text-default-700">
+							<IconInfoCircle
+								aria-hidden
+								size={14}
+							/>
+							Piezīme
+						</p>
 						<MarkdownRenderer content={example.md_note} />
 					</div>
-				</div>
-			)}
+				)}
+			</div>
 		</div>
 	);
 }

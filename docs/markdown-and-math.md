@@ -24,6 +24,15 @@ After changing the parser:
 2. Confirm `{width=24em}` is not visible as text.
 3. Confirm the image's computed width is `24em`.
 
+## Parentheses around inline math
+
+Inline math is an unbreakable unit, but browsers may still break the line between an opening parenthesis and the math, leaving `(` dangling at the end of a line.
+`lib/rehype-no-break-parens.ts` wraps inline math that is directly adjacent to `(` or `)` — with optional whitespace — in a `<span style="white-space: nowrap">`.
+It runs after `rehype-katex` in both pipelines (`lib/render-md.ts` for statements and `components/markdown-renderer.tsx` for React-rendered sections), and skips display math wrapped in `katex-display`.
+The visitor must keep returning `SKIP`, otherwise the newly created wrapper is visited again and the math gets wrapped repeatedly.
+
+Verify with a statement containing `($1 \leq K \leq 99$)`: slowly narrow the text column (or resize the viewport) and confirm the `(` never ends a line.
+
 ## Interactive task traces
 
 Interactive tasks store each example as a single trace (`examples[].trace` on the task API) instead of an input/output pair.
