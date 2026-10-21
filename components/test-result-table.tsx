@@ -16,6 +16,7 @@ type TestGroupDetailsProps = {
     tests: TestRes[];
     points: number | null;
     scoreUnit: string;
+    scoreUnitReceivedTenths?: number;
     verdicts: string;
     columns: Column<TestRes>[];
     cpuLimitMs?: number;
@@ -53,6 +54,10 @@ function scoreClass(earned: number, total: number): string {
     return zeroScoreClass;
 }
 
+function formatPoints(value: number): string {
+    return Number.isInteger(value) ? String(value) : value.toFixed(1);
+}
+
 // Over-limit is red; otherwise the value is dark and the unit stays muted.
 function limitTones(value: number | null, limit: number | undefined) {
     const over = value != null && limit != null && limit > 0 && value > limit;
@@ -66,14 +71,20 @@ function limitTones(value: number | null, limit: number | undefined) {
  * One collapsible test group. The summary (always visible) shows the group
  * score and the maximum CPU/RAM over its tests; expanding reveals the tests.
  */
-function TestGroupDetails({ label, groupNumber, tests, points, scoreUnit, verdicts, columns, cpuLimitMs, memLimitKiB }: TestGroupDetailsProps) {
+function TestGroupDetails({ label, groupNumber, tests, points, scoreUnit, scoreUnitReceivedTenths, verdicts, columns, cpuLimitMs, memLimitKiB }: TestGroupDetailsProps) {
     const acceptedCount = tests.filter(t => verdicts[t.id - 1] === "A").length;
     const isFull = tests.length > 0 && acceptedCount === tests.length;
-    const earned = points == null ? null : scoreUnit === "test" ? acceptedCount : isFull ? points : 0;
+    const earned = points == null
+        ? null
+        : scoreUnitReceivedTenths != null
+            ? scoreUnitReceivedTenths / 10
+            : scoreUnit === "test"
+                ? acceptedCount
+                : isFull ? points : 0;
     const total = points == null ? null : scoreUnit === "test" ? tests.length : points;
     const maxCpuMs = maxOf(tests, t => t.subm_rd?.cpu_ms);
     const maxMemKiB = maxOf(tests, t => t.subm_rd?.mem_kib);
-    const scoreText = earned != null && total != null ? `${earned} / ${total}` : null;
+    const scoreText = earned != null && total != null ? `${formatPoints(earned)} / ${formatPoints(total)}` : null;
     const scoreToneClass = earned != null && total != null ? scoreClass(earned, total) : "text-default-500";
     const cpuTones = limitTones(maxCpuMs, cpuLimitMs);
     const memTones = limitTones(maxMemKiB, memLimitKiB);
@@ -185,10 +196,12 @@ export default function TestResultTable({ visible_details, subm_eval, test_resul
             columnClassName: compactCellClass,
             render: (test) => {
                 const verdict = subm_eval.verdicts[test.id - 1];
+                const percent = subm_eval.test_scores?.[test.id - 1];
+                const suffix = verdict === "P" && percent != null ? ` (${percent}%)` : "";
                 return (
                     <span className={`whitespace-nowrap ${verdict_colors[verdict] || ''}`}>
-                        <span className="max-md:hidden">{full_verdicts[verdict] || 'Nezināms'}</span>
-                        <span className="md:hidden">{short_verdicts[verdict] || full_verdicts[verdict] || 'Nezināms'}</span>
+                        <span className="max-md:hidden">{full_verdicts[verdict] || 'Nezināms'}{suffix}</span>
+                        <span className="md:hidden">{short_verdicts[verdict] || full_verdicts[verdict] || 'Nezināms'}{suffix}</span>
                     </span>
                 );
             }
@@ -261,6 +274,7 @@ export default function TestResultTable({ visible_details, subm_eval, test_resul
             tests={tests_of_group(tg)}
             points={tg.points}
             scoreUnit={subm_eval.score_unit}
+            scoreUnitReceivedTenths={tg.received_tenths}
             verdicts={subm_eval.verdicts}
             columns={groupColumns}
             cpuLimitMs={limits?.cpu_ms}
@@ -291,6 +305,9 @@ export default function TestResultTable({ visible_details, subm_eval, test_resul
                             <div key={subtask.description}>
                                 <p className="text-sm pl-1 mt-2 mb-1">
                                     <span className="text-default-900">{i + 1}.</span>{" "}<span className="text-default-600">apakšuzdevums:</span>{" "}<span className="font-medium text-default-foreground" dangerouslySetInnerHTML={{ __html: renderMdLite(subtask.description).replaceAll("<p>", "").replaceAll("</p>", "") }} />
+                                    {subtask.received_tenths != null && (
+                                        <span className="text-default-500"> — {formatPoints(subtask.received_tenths / 10)} / {formatPoints(subtask.points)} p</span>
+                                    )}
                                 </p>
                                 <div className="flex flex-col gap-2">
                                     {testgroups.filter(tg => tg.subtasks.includes(i + 1)).map(renderGroup)}
@@ -323,6 +340,9 @@ export default function TestResultTable({ visible_details, subm_eval, test_resul
                     <div key={subtask.description}>
                         <p className="text-sm pl-1 mt-2 mb-1">
                             <span className="text-default-900">{i + 1}.</span>{" "}<span className="text-default-600">apakšuzdevums:</span>{" "}<span className="font-medium text-default-foreground" dangerouslySetInnerHTML={{ __html: renderMdLite(subtask.description).replaceAll("<p>", "").replaceAll("</p>", "") }} />
+                            {subtask.received_tenths != null && (
+                                <span className="text-default-500"> — {formatPoints(subtask.received_tenths / 10)} / {formatPoints(subtask.points)} p</span>
+                            )}
                         </p>
                         <GenericTable
                             data={test_results.filter(test => subtask.st_tests.some(x => x[0] <= test.id && x[1] >= test.id))}

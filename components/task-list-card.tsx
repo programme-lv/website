@@ -25,7 +25,9 @@ function getSolveState(user_max_score: MaxScore | undefined): "solved" | "attemp
 	if (!user_max_score) {
 		return "todo";
 	}
-	if (user_max_score.received >= user_max_score.possible) {
+	const received = user_max_score.received_tenths ?? user_max_score.received * 10;
+	const possible = user_max_score.possible_tenths ?? user_max_score.possible * 10;
+	if (received >= possible) {
 		return "solved";
 	}
 	return "attempted";

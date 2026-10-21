@@ -1,6 +1,7 @@
 import { SubmListScoreBar } from "./subm-table-score-bars";
 import { SubmListEntry } from "@/types/subm";
 import { TextLink } from "@/components/ui/text-link";
+import { formatScore } from "@/lib/format-score";
 import GenericTable, { Column } from "./generic-table";
 import { DateTimeCell } from "./datetime-cell";
 import { cn } from "./cn";
@@ -57,12 +58,14 @@ function SubmissionScoreBarLink({ item }: { item: SubmListEntry }) {
 function SubmissionResultText({ item }: { item: SubmListEntry }) {
     const isFinished = item.status === "finished";
     const isError = errorStatuses.has(item.status);
+    const received = item.score_info.received_tenths ?? item.score_info.received * 10;
+    const possible = item.score_info.possible_tenths ?? item.score_info.possible * 10;
     const isFullScore =
         isFinished &&
-        item.score_info.possible > 0 &&
-        item.score_info.received === item.score_info.possible;
+        possible > 0 &&
+        received === possible;
     const text = isFinished
-        ? `${item.score_info.received} / ${item.score_info.possible}`
+        ? formatScore(item.score_info.received, item.score_info.possible, item.score_info.received_tenths, item.score_info.possible_tenths)
         : isError
             ? "kļūda"
             : (statusTranslations[item.status] ?? item.status).toLowerCase();

@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { SubmListScoreBar } from "@/components/subm-table-score-bars";
 import { TextLink } from "@/components/ui/text-link";
+import { formatScore } from "@/lib/format-score";
 import { listSubmissionsClientSide } from "@/lib/subm/list";
 import { subscribeToSubmUpdates } from "@/lib/subms";
 import { SubmListEntry, SubmListSseUpdate } from "@/types/subm";
@@ -83,7 +84,7 @@ export default function TaskSubmList({ taskId, username }: TaskSubmListProps) {
 								/>
 							</div>
 							<span className="shrink-0 tabular-nums text-xs text-default-700">
-								{item.score_info.received} / {item.score_info.possible}
+								{formatScore(item.score_info.received, item.score_info.possible, item.score_info.received_tenths, item.score_info.possible_tenths)}
 							</span>
 						</div>
 					</li>

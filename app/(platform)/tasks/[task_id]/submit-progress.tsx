@@ -9,6 +9,7 @@ import { SubmListScoreBar } from "@/components/subm-table-score-bars";
 import { statusTranslations } from "@/components/submission-table";
 import { TextLink } from "@/components/ui/text-link";
 import { getMaxScorePerTask, getSubmissionClient, subscribeToSubmUpdates } from "@/lib/subms";
+import { formatScore } from "@/lib/format-score";
 import { listTasks } from "@/lib/task/tasks";
 import { MaxScore, MaxScorePerTask } from "@/types/scores";
 import { DetailedSubmView, SubmEval, SubmListSseUpdate } from "@/types/subm";
@@ -25,6 +26,7 @@ const VERDICT_BOX_CLASS: Record<string, string> = {
 	M: "bg-[#ecc94b]",
 	R: "bg-[#f56565]",
 	I: "bg-[#4a5568]",
+	P: "bg-[#ecc94b]",
 	U: "bg-[#9F7AEA]",
 };
 
@@ -37,6 +39,7 @@ const VERDICT_LABEL: Record<string, string> = {
 	M: "Pārsniegta atmiņa",
 	R: "Izpildes kļūda",
 	I: "Neietekmē punktus",
+	P: "Daļēji pareizi",
 	U: "Nezināms",
 };
 
@@ -121,6 +124,16 @@ function NextTaskLink({ currentTaskId }: { currentTaskId: string }) {
 	);
 }
 
+function isFullScore(score: SubmEval["score_info"]): boolean {
+	const received = score.received_tenths ?? score.received * 10;
+	const possible = score.possible_tenths ?? score.possible * 10;
+	return possible > 0 && received === possible;
+}
+
+function isZeroScore(score: SubmEval["score_info"]): boolean {
+	return (score.received_tenths ?? score.received * 10) === 0;
+}
+
 function finishCopy(ev: SubmEval): string | null {
 	if (ev.eval_error === "compilation") {
 		return "Kompilācijas kļūda";
@@ -131,11 +144,10 @@ function finishCopy(ev: SubmEval): string | null {
 	if (ev.eval_stage !== "finished") {
 		return null;
 	}
-	const { received, possible } = ev.score_info;
-	if (possible > 0 && received === possible) {
+	if (isFullScore(ev.score_info)) {
 		return "Apsveicu!";
 	}
-	if (received === 0) {
+	if (isZeroScore(ev.score_info)) {
 		return "Mēģini vēlreiz";
 	}
 	return "Daļējs rezultāts";
@@ -214,8 +226,7 @@ export default function SubmitProgress({ subm, onRunningChange, onClose }: Submi
 		if (
 			!evalData ||
 			evalData.eval_stage !== "finished" ||
-			evalData.score_info.possible <= 0 ||
-			evalData.score_info.received !== evalData.score_info.possible
+			!isFullScore(evalData.score_info)
 		) {
 			return;
 		}
@@ -250,8 +261,7 @@ export default function SubmitProgress({ subm, onRunningChange, onClose }: Submi
 	const fullySolved = Boolean(
 		evalData &&
 			evalData.eval_stage === "finished" &&
-			evalData.score_info.possible > 0 &&
-			evalData.score_info.received === evalData.score_info.possible,
+			isFullScore(evalData.score_info),
 	);
 	const showBoxes =
 		evalData &&
@@ -310,7 +320,12 @@ export default function SubmitProgress({ subm, onRunningChange, onClose }: Submi
 							/>
 						</div>
 						<span className="shrink-0 tabular-nums text-default-700">
-							{evalData.score_info.received} / {evalData.score_info.possible}
+							{formatScore(
+								evalData.score_info.received,
+								evalData.score_info.possible,
+								evalData.score_info.received_tenths,
+								evalData.score_info.possible_tenths,
+							)}
 						</span>
 					</div>
 				)}

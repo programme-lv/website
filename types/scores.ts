@@ -3,6 +3,8 @@ export type MaxScore = {
     task_full_name: string;
     received: number;
     possible: number;
+    received_tenths?: number;
+    possible_tenths?: number;
     created_at: string;
 }
 

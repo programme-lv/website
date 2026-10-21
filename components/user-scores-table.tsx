@@ -1,11 +1,14 @@
 import { TextLink } from "@/components/ui/text-link";
 import GenericTable, { Column } from "./generic-table";
 import { DateTimeCell } from "./datetime-cell";
+import { formatScore } from "@/lib/format-score";
 
 type UserScore = {
   task_full_name: string;
   received: number;
   possible: number;
+  received_tenths?: number;
+  possible_tenths?: number;
   created_at: string;
 };
 
@@ -35,7 +38,7 @@ export default function UserScoresTable({ scores, skeleton = false }: UserScores
     {
       key: "points",
       header: "Punkti",
-      render: (item) => `${item.score.received}/${item.score.possible}`
+      render: (item) => formatScore(item.score.received, item.score.possible, item.score.received_tenths, item.score.possible_tenths)
     },
     {
       key: "completed_at",
