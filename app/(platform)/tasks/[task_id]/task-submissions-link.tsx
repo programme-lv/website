@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { TextLink } from "@/components/ui/text-link";
 import { listSubmissionsClientSide } from "@/lib/subm/list";
 import { getMaxScorePerTask } from "@/lib/subms";
+import { formatScore } from "@/lib/format-score";
 
 export default function TaskSubmissionsLink({ taskId, username }: { taskId: string; username: string }) {
 	const { data } = useQuery({
@@ -28,7 +29,7 @@ export default function TaskSubmissionsLink({ taskId, username }: { taskId: stri
 			<TextLink href={`/submissions?task_id=${encodeURIComponent(taskId)}&mine=1`}>
 				Mani iesūtījumi
 			</TextLink>
-			{best && ` (${best.received}/${best.possible} punkti)`}
+			{best && ` (${formatScore(best.received, best.possible, best.received_tenths, best.possible_tenths)} punkti)`}
 		</div>
 	);
 }

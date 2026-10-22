@@ -1,14 +1,18 @@
 import { cn } from "@heroui/react";
 import { TextLink } from "@/components/ui/text-link";
 import { statusTranslations } from "@/components/submission-table";
+import { formatScore } from "@/lib/format-score";
 
 
-function Score({ received, possible }: { received: number, possible: number }) {
+function Score({ received, possible, receivedTenths, possibleTenths }: { received: number, possible: number, receivedTenths?: number, possibleTenths?: number }) {
+    const exact = receivedTenths != null;
+    const receivedValue = exact ? receivedTenths / 10 : received;
+    const possibleValue = exact ? (possibleTenths ?? possible * 10) / 10 : possible;
     return <span className={cn(
-      { "text-subm-success font-medium": received === possible },
-      { "text-subm-danger": received === 0 && possible > 0 },
-      { "text-subm-warning": received > 0 && received < possible })}>
-      {received} / {possible}
+      { "text-subm-success font-medium": receivedValue === possibleValue },
+      { "text-subm-danger": receivedValue === 0 && possibleValue > 0 },
+      { "text-subm-warning": receivedValue > 0 && receivedValue < possibleValue })}>
+      {formatScore(received, possible, receivedTenths, possibleTenths)}
     </span>;
   }
 
@@ -16,6 +20,8 @@ function Score({ received, possible }: { received: number, possible: number }) {
 type SubmInfoHeaderProps = {
     received: number;
     possible: number;
+    receivedTenths?: number;
+    possibleTenths?: number;
     language: string;
     created_at: string;
     task_name: string;
@@ -24,14 +30,14 @@ type SubmInfoHeaderProps = {
     eval_status: string;
   }
   
-  export default function SubmInfoHeader({ received, possible, language, created_at, task_name, task_id, username, eval_status }: SubmInfoHeaderProps) {
+  export default function SubmInfoHeader({ received, possible, receivedTenths, possibleTenths, language, created_at, task_name, task_id, username, eval_status }: SubmInfoHeaderProps) {
     const entries = [
       { label: "Autors", value: <TextLink href={`/users/${username}`}>{username}</TextLink> },
       { label: "Uzdevums", value: <TextLink href={`/tasks/${task_id}`}>{task_name}</TextLink> },
       { label: "Valoda", value: language },
       { label: "Iesūtīts", value: new Date(created_at).toLocaleString("lv") },
       { label: "Statuss", value: statusTranslations[eval_status] },
-      { label: "Rezultāts", value: <Score received={received} possible={possible} /> },
+      { label: "Rezultāts", value: <Score received={received} possible={possible} receivedTenths={receivedTenths} possibleTenths={possibleTenths} /> },
     ];
   
     return (

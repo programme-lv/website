@@ -20,6 +20,7 @@ export const full_verdicts: Record<string, string> = {
   'M': 'Pārsniegta atmiņa',
   'R': 'Izpildes kļūda',
   'I': 'Neietekmē punktus',
+  'P': 'Daļēji pareizi',
   'U': 'Nezināms',
 };
 
@@ -32,6 +33,7 @@ export const verdict_colors: Record<string, string> = {
   'M': 'text-subm-warning',
   'R': 'text-subm-danger',
   'I': 'text-default-500',
+  'P': 'text-subm-warning',
   'U': 'text-default-500',
 };
 
@@ -45,6 +47,7 @@ export const short_verdicts: Record<string, string> = {
   'M': 'Atmiņa',
   'R': 'Kļūda',
   'I': 'Neietekmē',
+  'P': 'Daļēji',
   'U': 'Nezināms',
 };
 
@@ -62,6 +65,7 @@ export default function TestDetailsModal({ isOpen, onOpenChange, test, subm_eval
               <span className="text-sm">Tests #{test.id}</span>
               <span className={`text-sm ${verdict_colors[verdict] || ''}`}>
                 {full_verdicts[verdict] || 'Nezināms vērtējums'}
+                {verdict === 'P' && subm_eval.test_scores ? ` (${subm_eval.test_scores[test.id - 1]}%)` : ''}
               </span>
             </div>
             <button

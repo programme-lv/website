@@ -59,6 +59,8 @@ export default async function Page({
 				<SubmInfoHeader
 					possible={submData.curr_eval.score_info.possible}
 					received={submData.curr_eval.score_info.received}
+					receivedTenths={submData.curr_eval.score_info.received_tenths}
+					possibleTenths={submData.curr_eval.score_info.possible_tenths}
 					language={submData.pr_lang.display}
 					created_at={submData.created_at}
 					task_name={submData.task_name}

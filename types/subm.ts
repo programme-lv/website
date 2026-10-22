@@ -12,6 +12,8 @@ type ScoreInfo = {
   };
   received: number;
   possible: number;
+  received_tenths?: number;
+  possible_tenths?: number;
   max_cpu_ms: number;
   max_mem_kib: number;
   exceeded_cpu: boolean;
@@ -22,11 +24,12 @@ export type SubmEval = {
   eval_uuid: string;
   subm_uuid: string;
   eval_stage: string;
-  score_unit: "test" | "group";
+  score_unit: "test" | "group" | "subtask";
   eval_error: string;
   subtasks: Subtask[];
   test_groups: TestGroup[];
-  verdicts: string; // one char per test: Q/X/A/W/T/M/R/I/U
+  verdicts: string; // one char per test: Q/X/A/W/T/M/R/I/P/U
+  test_scores?: number[]; // percentage per test
   score_info: ScoreInfo;
 };
 
@@ -34,12 +37,14 @@ type Subtask = {
   points: number;
   description: string;
   st_tests: number[][];
+  received_tenths?: number;
 };
 
 type TestGroup = {
   points: number;
   subtasks: number[];
   tg_tests: [number, number][]; // [start, end]
+  received_tenths?: number;
 };
 
 export type SubmListEntry = {

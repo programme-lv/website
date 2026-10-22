@@ -216,7 +216,7 @@ function MdView({
 
 			{sections.example && <SectionNEW title="Piemērs" md_content={sections.example} />}
 
-			{examples && !sections.example && (
+			{examples && examples.length > 0 && !sections.example && (
 				<div>
 					<h2 className="my-1 mb-2 text-small font-semibold">
 						{examples.length === 1 ? "Piemērs" : "Piemēri"}
