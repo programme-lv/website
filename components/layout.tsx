@@ -39,7 +39,7 @@ const MobileNavigationModal = ({
 }) => (
   !isOpen ? null : (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 md:hidden"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 md:hidden print:hidden"
       onClick={onClose}
     >
       <div
@@ -86,7 +86,7 @@ function Header({
   readingWidth?: boolean;
 }) {
   return (
-    <header className="border-b-small border-divider bg-white">
+    <header className="border-b-small border-divider bg-white print:hidden">
       <div className={cn(pageInner, readingWidth && "max-w-[calc(75ch+2rem)]")}>
         <Button
           aria-label="Izvēlne"
@@ -135,7 +135,7 @@ const Layout: React.FC<LayoutProps> = ({ children, active, wide = false, backgro
         onClose={() => setIsMobileMenuOpen(false)}
       />
 
-      <div className={cn("flex min-h-screen flex-col", background === "white" && "bg-white")}>
+      <div className={cn("flex min-h-screen flex-col print:min-h-0", background === "white" && "bg-white")}>
         <Header
           active={active}
           items={items}
@@ -149,7 +149,7 @@ const Layout: React.FC<LayoutProps> = ({ children, active, wide = false, backgro
           </div>
         ) : (
           <>
-            <main className="mx-auto w-full max-w-(--page-max) flex-1 px-4 pb-8 min-h-[calc(100vh-3rem)]">
+            <main className="mx-auto w-full max-w-(--page-max) flex-1 px-4 pb-8 min-h-[calc(100vh-3rem)] print:min-h-0 print:pb-0">
               {children}
             </main>
             <Footer readingWidth={readingWidth} />

@@ -16,7 +16,7 @@ export default function Footer({ readingWidth = false }: { readingWidth?: boolea
   }, []);
 
   return (
-    <footer className="border-t border-divider bg-white">
+    <footer className="border-t border-divider bg-white print:hidden">
       <div className={cn("mx-auto w-full max-w-(--page-max) px-4", readingWidth && "max-w-[calc(75ch+2rem)]")}>
       <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 py-3 text-sm text-default-600">
         <p>© {new Date().getFullYear()} programme.lv</p>

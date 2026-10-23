@@ -51,7 +51,7 @@ export default function TaskMeta({ task }: { task: Task }) {
 					<span className="whitespace-nowrap"><strong>{task.cpu_time_limit_seconds}</strong> s</span>
 					<span className="whitespace-nowrap"><strong>{task.memory_limit_megabytes}</strong> MB</span>
 				</div>
-				<div className="mt-3 flex flex-col gap-2">
+				<div className="mt-3 flex flex-col gap-2 print:hidden">
 					{user ? (
 						<>
 							<Link
