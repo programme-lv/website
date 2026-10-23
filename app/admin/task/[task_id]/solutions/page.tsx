@@ -2,7 +2,7 @@ import { isAdmin } from "@/lib/dal";
 import Layout from "@/components/layout";
 import RestrictedPleaseLogin from "@/components/restricted-please-login";
 import { getTaskById } from "@/lib/task/tasks";
-import { listTaskSolutions } from "@/lib/task/profiles";
+import { getTaskCalibration, listTaskSolutions } from "@/lib/task/profiles";
 import SolutionsEditForm from "./solutions";
 import TaskAdminNav from "@/components/task-admin-nav";
 import { Metadata } from "next";
@@ -37,9 +37,15 @@ export default async function SolutionsPage({
     }
     const task = response.data;
 
-    const solutionsResponse = await listTaskSolutions(task.short_task_id);
+    const [solutionsResponse, calibrationResponse] = await Promise.all([
+        listTaskSolutions(task.short_task_id),
+        getTaskCalibration(task.short_task_id),
+    ]);
     if (solutionsResponse.status != "success") {
         return <div>Error {solutionsResponse.code}: {solutionsResponse.message}</div>
+    }
+    if (calibrationResponse.status != "success") {
+        return <div>Error {calibrationResponse.code}: {calibrationResponse.message}</div>
     }
 
     return (
@@ -49,6 +55,7 @@ export default async function SolutionsPage({
                 <SolutionsEditForm
                     task_id={task.short_task_id}
                     solutions={solutionsResponse.data}
+                    calibration={calibrationResponse.data}
                     testsVersion={task.tests_version ?? 0}
                 />
             </div>
