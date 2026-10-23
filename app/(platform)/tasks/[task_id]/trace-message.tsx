@@ -32,7 +32,7 @@ export default function TraceMessage({ side, text }: {
 					aria-label={`Kopēt izvadi: ${label}`}
 					title="Kopēt izvadi"
 					onClick={copy}
-					className="m-0.5 flex size-6 shrink-0 items-center justify-center rounded text-default-500 transition-opacity [@media(hover:hover)]:opacity-0 group-hover:opacity-100 focus-visible:opacity-100 hover:bg-gray-200 hover:text-default-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current"
+					className="m-0.5 flex size-6 shrink-0 items-center justify-center rounded text-default-500 transition-opacity [@media(hover:hover)]:opacity-0 group-hover:opacity-100 focus-visible:opacity-100 hover:bg-gray-200 hover:text-default-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current print:hidden"
 				>
 					<IconCopy size={14} aria-hidden />
 				</button>

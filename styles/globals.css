@@ -232,3 +232,33 @@ strong {
     @apply rounded-xl;
   }
 }
+
+/*
+ * Printing a task statement should read like a paper handout: the site shell
+ * and interactive-only controls hide themselves via Tailwind's `print:`
+ * variant (header, footer, submit/edit buttons, copy icons). These rules only
+ * cover what utilities cannot express.
+ */
+@media print {
+  html,
+  body {
+    background: #fff;
+  }
+
+  /* Keep examples, tables, and code from splitting at awkward points. */
+  table,
+  pre,
+  code {
+    break-inside: avoid;
+  }
+
+  /*
+   * Browsers skip background colors when "print backgrounds" is off, but keep
+   * them exact for users who print with backgrounds (code blocks, dividers).
+   */
+  code,
+  pre {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}

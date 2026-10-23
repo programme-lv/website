@@ -15,3 +15,9 @@ For signed-in users with submissions for the task, the controls show Mani iesūt
 `/submissions/{id}` uses the same `main` `px-4` as other pages. The public `id` is last in the metadata row, light and muted.
 
 Default `main` is `min-h-[calc(100vh-3rem)]`, so the footer sits below the first viewport. Auth routes do not use this shell.
+
+## Printing
+
+Browser printing (`Ctrl+P`) is handled with Tailwind `print:` utilities, not JavaScript. The shell hides its header, footer, and mobile menu; the task page hides the submit/edit/Mani iesūtījumi controls and all copy icons. The CPU/RAM limits stay visible because they belong to the printed statement.
+
+`main` and the page wrapper drop their viewport min-heights in print so a trailing blank sheet is not added. `styles/globals.css` adds the rules utilities cannot express: a white page background, `break-inside: avoid` for tables/code, and exact color adjustment for code blocks. Keep interactive-only controls out of print by adding `print:hidden` at the control, not by hiding whole content sections.

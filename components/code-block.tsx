@@ -27,7 +27,7 @@ export default function CodeBlock({ content }: { content: string }) {
             <IconCopy
                 width={16}
                 height={16}
-                className="text-gray-400 hover:text-gray-700 cursor-pointer absolute top-1 right-1 m-1 rounded-md"
+                className="text-gray-400 hover:text-gray-700 cursor-pointer absolute top-1 right-1 m-1 rounded-md print:hidden"
                 title={copied ? "Nokopēts!" : "Kopēt kodu"}
                 onClick={handleCopy}
             />
