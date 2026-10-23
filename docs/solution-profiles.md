@@ -10,12 +10,18 @@ calibration profile for any of them.
   to the client table.
 - `components/task-calibration-card.tsx` renders the aggregate CPU and memory
   intervals, the padded intersection, the current-limit verdicts, warnings for
-  unclassified/missing/stale profiles, and the CPU-origin note.
+  unclassified/missing/stale profiles, and the CPU-origin note. It is a client
+  component because it also has inline CPU/memory inputs; saving them calls
+  `updateTaskLimits` and refreshes the page without rerunning any profile.
 - `app/admin/task/[task_id]/solutions/solutions.tsx` starts a profile through
   the `startSolutionProfile` server action and navigates to the profile page.
-  The “Profilēt visus” button calls `startAllSolutionProfiles`, stays on the
-  list, reports started/skipped/failed counts, and refreshes the page. The
-  backend skips solutions that already have a running profile.
+  The batch button calls `startAllSolutionProfiles` with one run and an
+  `only` filter (`all`, `stale`, `mismatched`), stays on the list, reports
+  started/skipped/filtered/failed counts, and refreshes the page. The backend
+  skips solutions that already have a running profile.
+- `app/admin/task/[task_id]/solutions/edit-solution-modal.tsx` edits a
+  solution's source and declared subtasks through `updateTaskSolution`. The
+  old profile is not deleted; its solution hash mismatch marks it stale.
 - `app/admin/task/[task_id]/solutions/profile/[profile_id]/page.tsx` renders
   the two charts, the current-limit prediction and the per-run table.
 - `lib/task/profiles.ts` is `"use server"`; it forwards the request cookies to
@@ -25,8 +31,9 @@ calibration profile for any of them.
 
 The backend endpoints and scoring math are documented in
 `backend/docs/solution-profiles.md`. The page expects the backend that exposes
-`GET /tasks/{taskId}/solutions`, `GET /tasks/{taskId}/solutions/calibration`
-and `GET /solution-profiles/{profileId}`; deploy the backend first.
+`GET /tasks/{taskId}/solutions`, `GET /tasks/{taskId}/solutions/calibration`,
+`GET /solution-profiles/{profileId}`, and the admin `PATCH` endpoints for limits
+and solutions; deploy the backend first.
 
 ## Charts
 

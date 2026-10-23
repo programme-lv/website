@@ -56,6 +56,7 @@ export default async function SolutionsPage({
                     task_id={task.short_task_id}
                     solutions={solutionsResponse.data}
                     calibration={calibrationResponse.data}
+                    allSubtasks={task.statement_subtasks ?? []}
                     testsVersion={task.tests_version ?? 0}
                 />
             </div>

@@ -12,17 +12,20 @@ import TaskCalibrationCard from "@/components/task-calibration-card";
 import ProfileAutoRefresh from "@/components/profile-auto-refresh";
 import { startAllSolutionProfiles, startSolutionProfile } from "@/lib/task/profiles";
 import type { SolutionCalibration, SolutionSummary, TaskCalibration } from "@/types/profile";
+import type { SubtaskOverview } from "@/types/task";
 
+import EditSolutionModal from "./edit-solution-modal";
 import ViewSolutionModal from "./view-solution-modal";
 
 interface SolutionsEditFormProps {
     task_id: string;
     solutions: SolutionSummary[];
     calibration: TaskCalibration;
+    allSubtasks: SubtaskOverview[];
     testsVersion: number;
 }
 
-export default function SolutionsEditForm({ task_id, solutions, calibration, testsVersion }: SolutionsEditFormProps) {
+export default function SolutionsEditForm({ task_id, solutions, calibration, allSubtasks, testsVersion }: SolutionsEditFormProps) {
     const router = useRouter();
     const calibrationByFname = new Map<string, SolutionCalibration>(
         calibration.solutions.map((solution) => [solution.fname, solution]),
@@ -34,6 +37,9 @@ export default function SolutionsEditForm({ task_id, solutions, calibration, tes
     const [error, setError] = useState<string | null>(null);
     const [selectedSolution, setSelectedSolution] = useState<SolutionSummary | null>(null);
     const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+    const [editingSolution, setEditingSolution] = useState<SolutionSummary | null>(null);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [profileFilter, setProfileFilter] = useState<"" | "stale" | "mismatched">("");
 
     const allRunning =
         solutions.length > 0 &&
@@ -64,15 +70,18 @@ export default function SolutionsEditForm({ task_id, solutions, calibration, tes
         setIsStartingAll(true);
         startTransition(async () => {
             try {
-                const response = await startAllSolutionProfiles(task_id);
+                const response = await startAllSolutionProfiles(task_id, 1, profileFilter);
                 if (response.status !== "success") {
                     setError(response.message);
                     return;
                 }
-                const { started, skipped, failed } = response.data;
+                const { started, skipped, filtered, failed } = response.data;
                 let message = `Sākti profili: ${started}.`;
                 if (skipped.length > 0) {
                     message += ` Jau notiek: ${skipped.length}.`;
+                }
+                if (filtered.length > 0) {
+                    message += ` Atlasē neietilpst: ${filtered.length}.`;
                 }
                 if (failed.length > 0) {
                     message += ` Neizdevās: ${failed.length} (${failed.map((item) => item.fname).join(", ")}).`;
@@ -238,6 +247,19 @@ export default function SolutionsEditForm({ task_id, solutions, calibration, tes
                             </TextButton>{" "}
                             ]
                         </div>
+                        <div>
+                            [{" "}
+                            <TextButton
+                                variant="warning"
+                                onClick={() => {
+                                    setEditingSolution(item);
+                                    setIsEditModalOpen(true);
+                                }}
+                            >
+                                Rediģēt
+                            </TextButton>{" "}
+                            ]
+                        </div>
                     </div>
                 );
             },
@@ -259,7 +281,7 @@ export default function SolutionsEditForm({ task_id, solutions, calibration, tes
                 </p>
             </div>
 
-            <TaskCalibrationCard calibration={calibration} />
+            <TaskCalibrationCard taskId={task_id} calibration={calibration} />
 
             {error && (
                 <div className="rounded-sm border border-red-300 bg-red-50 p-2 text-sm text-red-800">
@@ -268,6 +290,18 @@ export default function SolutionsEditForm({ task_id, solutions, calibration, tes
             )}
 
             <div className="flex flex-wrap items-center gap-3">
+                <select
+                    className="h-8 rounded-sm border border-divider bg-white px-2 text-sm"
+                    value={profileFilter}
+                    onChange={(event) =>
+                        setProfileFilter(event.target.value as "" | "stale" | "mismatched")
+                    }
+                    aria-label="Profilējamo risinājumu atlase"
+                >
+                    <option value="">Visi risinājumi</option>
+                    <option value="mismatched">Tikai neatbilstošie</option>
+                    <option value="stale">Tikai novecojušie</option>
+                </select>
                 <GenericButton
                     size="sm"
                     icon={<IconPlayerPlay size={18} />}
@@ -281,8 +315,13 @@ export default function SolutionsEditForm({ task_id, solutions, calibration, tes
                         allRunning
                     }
                 >
-                    {allRunning ? "Visi jau notiek" : "Profilēt visus"}
+                    {allRunning
+                        ? "Visi jau notiek"
+                        : profileFilter === ""
+                          ? "Profilēt visus"
+                          : "Profilēt atlasītos"}
                 </GenericButton>
+                <span className="text-xs text-default-600">1 mēģinājums katram</span>
                 {notice && <span className="text-sm text-default-700">{notice}</span>}
             </div>
 
@@ -323,6 +362,14 @@ export default function SolutionsEditForm({ task_id, solutions, calibration, tes
                         : ""
                 }
                 content={selectedSolution?.content || ""}
+            />
+
+            <EditSolutionModal
+                isOpen={isEditModalOpen}
+                onOpenChange={() => setIsEditModalOpen(!isEditModalOpen)}
+                taskId={task_id}
+                solution={editingSolution}
+                allSubtasks={allSubtasks}
             />
         </div>
     );
