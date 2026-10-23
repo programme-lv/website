@@ -1,3 +1,10 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+
+import GenericButton from "@/components/generic-button";
+import { updateTaskLimits } from "@/lib/task/tasks";
 import type { AxisCalibration, TaskCalibration } from "@/types/profile";
 
 const KIB_PER_MB = 976.5625;
@@ -121,14 +128,62 @@ function AxisCard({
 }
 
 export default function TaskCalibrationCard({
+    taskId,
     calibration,
 }: {
+    taskId: string;
     calibration: TaskCalibration;
 }) {
+    const router = useRouter();
+    const [cpuSeconds, setCpuSeconds] = useState((calibration.cpu.current / 1000).toFixed(2));
+    const [memoryMb, setMemoryMb] = useState(
+        String(Math.round(calibration.mem.current / KIB_PER_MB)),
+    );
+    const [saving, setSaving] = useState(false);
+    const [message, setMessage] = useState<string | null>(null);
+    const currentCpuMs = calibration.cpu.current;
+    const currentMemKiB = calibration.mem.current;
+
+    useEffect(() => {
+        setCpuSeconds((currentCpuMs / 1000).toFixed(2));
+        setMemoryMb(String(Math.round(currentMemKiB / KIB_PER_MB)));
+    }, [currentCpuMs, currentMemKiB]);
+
     const hasWarnings =
         calibration.unclassified.length > 0 ||
         calibration.missing_profiles.length > 0 ||
         calibration.stale_profiles.length > 0;
+
+    const handleSaveLimits = async () => {
+        const cpuMs = Math.round(Number(cpuSeconds) * 1000);
+        const memMib = Math.round(Number(memoryMb));
+        if (
+            !Number.isFinite(cpuMs) ||
+            cpuMs < 100 ||
+            cpuMs > 10_000 ||
+            !Number.isFinite(memMib) ||
+            memMib < 1 ||
+            memMib > 1024
+        ) {
+            setMessage("Nederīgi limiti: CPU 0.10–10 s, atmiņa 1–1024 MB.");
+            return;
+        }
+        setSaving(true);
+        setMessage(null);
+        try {
+            const response = await updateTaskLimits(taskId, cpuMs, memMib);
+            if (response.status !== "success") {
+                setMessage(response.message);
+                return;
+            }
+            setMessage("Limiti saglabāti; kalibrācija pārrēķināta no esošajiem profiliem.");
+            router.refresh();
+        } catch {
+            setMessage("Neizdevās saglabāt limitus.");
+        } finally {
+            setSaving(false);
+        }
+    };
 
     return (
         <section className="flex flex-col gap-3 rounded-sm border border-divider bg-white p-3">
@@ -185,6 +240,40 @@ export default function TaskCalibrationCard({
                 pie 1 GiB, atmiņas gadījumā laiks fiksēts pie 10 s. Pašreizējais pāris tiek
                 pārbaudīts kopā katra risinājuma vereditā.
             </p>
+
+            <div className="flex flex-wrap items-end gap-3 rounded-sm border border-divider bg-gray-50 p-3">
+                <label className="flex flex-col gap-1 text-xs text-default-700">
+                    CPU limits (s)
+                    <input
+                        type="number"
+                        min={0.1}
+                        max={10}
+                        step={0.1}
+                        value={cpuSeconds}
+                        onChange={(event) => setCpuSeconds(event.target.value)}
+                        className="h-9 w-28 rounded-sm border border-divider bg-white px-2 text-sm"
+                    />
+                </label>
+                <label className="flex flex-col gap-1 text-xs text-default-700">
+                    Atmiņa (MB)
+                    <input
+                        type="number"
+                        min={1}
+                        max={1024}
+                        step={16}
+                        value={memoryMb}
+                        onChange={(event) => setMemoryMb(event.target.value)}
+                        className="h-9 w-28 rounded-sm border border-divider bg-white px-2 text-sm"
+                    />
+                </label>
+                <GenericButton size="sm" onClick={handleSaveLimits} isLoading={saving}>
+                    Saglabāt limitus
+                </GenericButton>
+                <span className="text-xs text-default-600">
+                    Profili netiek pārrēķināti; veredikti tiek pārrēķināti no esošajiem mērījumiem.
+                </span>
+                {message && <span className="text-xs text-default-800">{message}</span>}
+            </div>
 
             {hasWarnings && (
                 <div className="rounded-sm border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900">

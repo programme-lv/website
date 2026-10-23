@@ -58,14 +58,15 @@ export const startSolutionProfile = async (
 
 export const startAllSolutionProfiles = async (
   taskId: string,
-  runs = 3,
+  runs = 1,
+  only: "" | "stale" | "mismatched" = "",
 ): Promise<ApiResponse<StartAllProfilesResponse>> => {
   const response = await fetch(
     `${SERVER_API_HOST}/tasks/${encodeURIComponent(taskId)}/solutions/profile`,
     {
       method: "POST",
       headers: await adminHeaders(),
-      body: JSON.stringify({ runs }),
+      body: JSON.stringify({ runs, only }),
       cache: "no-store",
     },
   );

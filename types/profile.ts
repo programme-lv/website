@@ -114,6 +114,7 @@ export type AxisCalibration = {
 export type StartAllProfilesResponse = {
   started: number;
   skipped: string[];
+  filtered: string[];
   failed: { fname: string; error: string }[];
 };
 

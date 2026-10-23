@@ -120,3 +120,52 @@ export const deleteTaskImage = async (taskId: string, filename: string): Promise
 
   return response.json();
 }
+export type UpdateTaskLimitsResult = { revision: number };
+
+export const updateTaskLimits = async (
+  taskId: string,
+  cpuMs: number,
+  memMib: number,
+): Promise<ApiResponse<UpdateTaskLimitsResult>> => {
+  const response = await fetch(`${SERVER_API_HOST}/tasks/${taskId}/limits`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Cookie: (await cookies()).toString(),
+    },
+    body: JSON.stringify({ cpu_ms: cpuMs, mem_mib: memMib }),
+    cache: "no-store",
+  });
+  const data = await response.json();
+  if (data.status === "success") {
+    updateTag(`task-${taskId}`);
+  }
+  return data;
+};
+
+export type UpdateTaskSolutionResult = { revision: number };
+
+export const updateTaskSolution = async (
+  taskId: string,
+  fname: string,
+  content: string,
+  subtasks: number[],
+): Promise<ApiResponse<UpdateTaskSolutionResult>> => {
+  const response = await fetch(
+    `${SERVER_API_HOST}/tasks/${taskId}/solutions/${encodeURIComponent(fname)}`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: (await cookies()).toString(),
+      },
+      body: JSON.stringify({ content, subtasks }),
+      cache: "no-store",
+    },
+  );
+  const data = await response.json();
+  if (data.status === "success") {
+    updateTag(`task-${taskId}`);
+  }
+  return data;
+};
