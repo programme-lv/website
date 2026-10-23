@@ -33,6 +33,7 @@ type Task = {
     statement_subtasks?: SubtaskOverview[];
     statement_images?: StatementImage[];
     testing_type: "checker" | "interactor";
+    tests_version?: number;
 };
 
 type SubtaskOverview = {

@@ -6,12 +6,11 @@ interface ViewSolutionModalProps {
     onOpenChange: () => void;
     filename: string;
     pr_lang: string;
-    author: string;
     expected_result: string;
     content: string;
 }
 
-export default function ViewSolutionModal({ isOpen, onOpenChange, filename, pr_lang, author, expected_result, content }: ViewSolutionModalProps) {
+export default function ViewSolutionModal({ isOpen, onOpenChange, filename, pr_lang, expected_result, content }: ViewSolutionModalProps) {
     if (!isOpen) {
         return null;
     }
@@ -23,7 +22,7 @@ export default function ViewSolutionModal({ isOpen, onOpenChange, filename, pr_l
                     <div className="flex flex-col">
                         <span className="text-lg font-semibold">Risinājuma kods</span>
                         <span className="text-sm text-default-600">
-                            {filename} • {pr_lang} • {author} • {content.split('\n').length} rindas • {content.length} simboli • {expected_result}
+                            {filename} • {pr_lang} • {content.split('\n').length} rindas • {content.length} simboli • {expected_result}
                         </span>
                     </div>
                 </div>
