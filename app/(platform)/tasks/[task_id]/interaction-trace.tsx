@@ -43,13 +43,13 @@ export default function InteractionTrace({
 	const messages = parseTrace(example.trace ?? "");
 
 	return (
-		<div className="@container w-full max-w-full">
+		<div className="@container w-full max-w-full print:break-inside-avoid">
 			<div className="mb-2 flex flex-wrap gap-x-4 gap-y-1">
 				<SideLabel side="judge" />
 				<SideLabel side="solution" />
 			</div>
 			<div
-				className={`flex flex-wrap items-start gap-x-3 gap-y-2${
+				className={`flex flex-wrap items-start gap-x-3 gap-y-2 print:block${
 					bordered ? " rounded-sm border-small border-default-300 p-2" : ""
 				}`}
 			>

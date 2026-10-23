@@ -245,6 +245,13 @@ strong {
     background: #fff;
   }
 
+  /* Keep section headings with the content that follows them. */
+  h1,
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+
   /* Keep examples, tables, and code from splitting at awkward points. */
   table,
   pre,

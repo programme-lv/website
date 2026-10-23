@@ -25,7 +25,7 @@ const INTERACTIVE_NOTE = 'Lai garantētu, ka jūsu programmas "vaicājumus" saņ
 
 export default function TaskDetailsPage({ task }: { task: Task }) {
 	return (
-		<div className="mx-auto flex w-full max-w-[75ch] flex-col gap-4 py-4">
+		<div className="mx-auto flex w-full max-w-[75ch] flex-col gap-4 py-4 print:pb-0">
 			<div className="grid min-w-0 grid-cols-1 gap-4 md:grid-cols-[minmax(0,1fr)_auto] md:items-start">
 				<TaskHeader task={task} />
 				<aside className="shrink-0" aria-label="Risinājuma iesūtīšana">
@@ -33,7 +33,7 @@ export default function TaskDetailsPage({ task }: { task: Task }) {
 				</aside>
 			</div>
 			<article
-				className="min-w-0 py-3"
+				className="min-w-0 py-3 print:pb-0"
 				lang="lv"
 			>
 				{task.default_md_statement && (
@@ -156,7 +156,7 @@ function MdView({
 		statement_subtasks?.map((subtask) => renderMdLite(subtask.descriptions["lv"])) ?? [];
 
 	return (
-		<div className="my-1 flex w-full flex-grow flex-col gap-4 pb-4">
+		<div className="my-1 flex w-full flex-grow flex-col gap-4 pb-4 print:pb-0">
 			<Section title="Stāsts" content={sections.story} />
 			{sections.input && <Section title="Ievaddati" content={sections.input} />}
 			{sections.output && <Section title="Izvaddati" content={sections.output} />}
@@ -221,7 +221,7 @@ function MdView({
 					<h2 className="my-1 mb-2 text-small font-semibold">
 						{examples.length === 1 ? "Piemērs" : "Piemēri"}
 					</h2>
-					<div className="flex w-full max-w-full flex-wrap gap-3">
+					<div className="flex w-full max-w-full flex-wrap gap-3 print:block">
 						{examples.map((example, i) =>
 							example.trace ? (
 								<InteractionTrace
@@ -232,13 +232,13 @@ function MdView({
 							) : (
 								<div
 									key={i}
-									className={`w-[350px] max-w-full flex-grow${
+									className={`w-[350px] max-w-full flex-grow print:w-full print:break-inside-avoid${
 										examples.length === 1
 											? ""
 											: " rounded-sm border-small border-default-300 p-2"
 									}`}
 								>
-									<div className="flex flex-wrap gap-2 gap-x-4">
+									<div className="flex flex-wrap gap-2 gap-x-4 print:block">
 										<CodeBlockWithTitle title="Ievaddati" content={example.input} />
 										<CodeBlockWithTitle title="Izvaddati" content={example.output} />
 										{example.md_note && (
@@ -275,13 +275,13 @@ function MdView({
 					<h2 className="my-1 mb-2 text-small font-semibold">
 						{vis_inp_st_input.subtask}. apakšuzdevuma ievaddati
 					</h2>
-					<div className="flex w-full max-w-full flex-wrap gap-3">
+					<div className="flex w-full max-w-full flex-wrap gap-3 print:block">
 						{vis_inp_st_input.inputs.map((test) => (
 							<div
 								key={test.test_id}
-								className="w-[350px] max-w-full flex-grow rounded-sm border-small border-divider p-2"
+								className="w-[350px] max-w-full flex-grow rounded-sm border-small border-divider p-2 print:w-full print:break-inside-avoid"
 							>
-								<div className="flex flex-wrap gap-2">
+								<div className="flex flex-wrap gap-2 print:block">
 									<CodeBlock content={test.input} />
 								</div>
 							</div>
