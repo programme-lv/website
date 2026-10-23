@@ -252,6 +252,26 @@ strong {
     break-inside: avoid;
   }
 
+  /* Statement figures must keep the image with its caption on one page. */
+  figure {
+    /* Plain block fragmentation is more reliable than splitting a flex figure. */
+    display: block;
+    break-inside: avoid;
+  }
+
+  figure,
+  img {
+    break-inside: avoid;
+  }
+
+  /* Wide statement images shrink to the printable column instead of clipping. */
+  figure img {
+    display: block;
+    margin-inline: auto;
+    max-width: 100%;
+    height: auto;
+  }
+
   /*
    * Browsers skip background colors when "print backgrounds" is off, but keep
    * them exact for users who print with backgrounds (code blocks, dividers).
