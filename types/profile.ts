@@ -111,6 +111,12 @@ export type AxisCalibration = {
   upper_margin: number | null;
 };
 
+export type StartAllProfilesResponse = {
+  started: number;
+  skipped: string[];
+  failed: { fname: string; error: string }[];
+};
+
 export type TaskCalibration = {
   cpu: AxisCalibration;
   mem: AxisCalibration;

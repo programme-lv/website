@@ -4,7 +4,12 @@ import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
 import type { ApiResponse } from "../api-response";
-import type { SolutionProfile, SolutionSummary, TaskCalibration } from "@/types/profile";
+import type {
+  SolutionProfile,
+  SolutionSummary,
+  StartAllProfilesResponse,
+  TaskCalibration,
+} from "@/types/profile";
 import { SERVER_API_HOST } from "../config";
 
 async function adminHeaders(): Promise<HeadersInit> {
@@ -46,6 +51,26 @@ export const startSolutionProfile = async (
   if (data.status === "success") {
     // Drop the cached solutions page so going back shows the running profile
     // and the disabled button instead of the pre-click row.
+    revalidatePath(`/admin/task/${taskId}/solutions`);
+  }
+  return data;
+};
+
+export const startAllSolutionProfiles = async (
+  taskId: string,
+  runs = 3,
+): Promise<ApiResponse<StartAllProfilesResponse>> => {
+  const response = await fetch(
+    `${SERVER_API_HOST}/tasks/${encodeURIComponent(taskId)}/solutions/profile`,
+    {
+      method: "POST",
+      headers: await adminHeaders(),
+      body: JSON.stringify({ runs }),
+      cache: "no-store",
+    },
+  );
+  const data = await response.json();
+  if (data.status === "success") {
     revalidatePath(`/admin/task/${taskId}/solutions`);
   }
   return data;

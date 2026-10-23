@@ -13,6 +13,9 @@ calibration profile for any of them.
   unclassified/missing/stale profiles, and the CPU-origin note.
 - `app/admin/task/[task_id]/solutions/solutions.tsx` starts a profile through
   the `startSolutionProfile` server action and navigates to the profile page.
+  The “Profilēt visus” button calls `startAllSolutionProfiles`, stays on the
+  list, reports started/skipped/failed counts, and refreshes the page. The
+  backend skips solutions that already have a running profile.
 - `app/admin/task/[task_id]/solutions/profile/[profile_id]/page.tsx` renders
   the two charts, the current-limit prediction and the per-run table.
 - `lib/task/profiles.ts` is `"use server"`; it forwards the request cookies to
