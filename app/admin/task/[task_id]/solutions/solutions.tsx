@@ -2,13 +2,15 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { IconPlayerPlay } from "@tabler/icons-react";
 
 import GenericTable, { Column } from "@/components/generic-table";
+import GenericButton from "@/components/generic-button";
 import { TextLink } from "@/components/ui/text-link";
 import TextButton from "@/components/text-button";
 import TaskCalibrationCard from "@/components/task-calibration-card";
 import ProfileAutoRefresh from "@/components/profile-auto-refresh";
-import { startSolutionProfile } from "@/lib/task/profiles";
+import { startAllSolutionProfiles, startSolutionProfile } from "@/lib/task/profiles";
 import type { SolutionCalibration, SolutionSummary, TaskCalibration } from "@/types/profile";
 
 import ViewSolutionModal from "./view-solution-modal";
@@ -27,9 +29,15 @@ export default function SolutionsEditForm({ task_id, solutions, calibration, tes
     );
     const [isPending, startTransition] = useTransition();
     const [startingFname, setStartingFname] = useState<string | null>(null);
+    const [isStartingAll, setIsStartingAll] = useState(false);
+    const [notice, setNotice] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [selectedSolution, setSelectedSolution] = useState<SolutionSummary | null>(null);
     const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+
+    const allRunning =
+        solutions.length > 0 &&
+        solutions.every((solution) => solution.latest_profile?.status === "running");
 
     const handleProfile = (solution: SolutionSummary) => {
         setError(null);
@@ -46,6 +54,35 @@ export default function SolutionsEditForm({ task_id, solutions, calibration, tes
                 setError("Neizdevās palaist profilēšanu. Pārbaudi, vai backend serveris ir pieejams.");
             } finally {
                 setStartingFname(null);
+            }
+        });
+    };
+
+    const handleProfileAll = () => {
+        setError(null);
+        setNotice(null);
+        setIsStartingAll(true);
+        startTransition(async () => {
+            try {
+                const response = await startAllSolutionProfiles(task_id);
+                if (response.status !== "success") {
+                    setError(response.message);
+                    return;
+                }
+                const { started, skipped, failed } = response.data;
+                let message = `Sākti profili: ${started}.`;
+                if (skipped.length > 0) {
+                    message += ` Jau notiek: ${skipped.length}.`;
+                }
+                if (failed.length > 0) {
+                    message += ` Neizdevās: ${failed.length} (${failed.map((item) => item.fname).join(", ")}).`;
+                }
+                setNotice(message);
+                router.refresh();
+            } catch {
+                setError("Neizdevās palaist profilēšanu visiem risinājumiem.");
+            } finally {
+                setIsStartingAll(false);
             }
         });
     };
@@ -191,7 +228,7 @@ export default function SolutionsEditForm({ task_id, solutions, calibration, tes
                             [{" "}
                             <TextButton
                                 onClick={() => handleProfile(item)}
-                                disabled={isPending || startingFname !== null || isRunning}
+                                disabled={isPending || isStartingAll || startingFname !== null || isRunning}
                             >
                                 {isRunning || isStarting
                                     ? "Notiek…"
@@ -229,6 +266,25 @@ export default function SolutionsEditForm({ task_id, solutions, calibration, tes
                     {error}
                 </div>
             )}
+
+            <div className="flex flex-wrap items-center gap-3">
+                <GenericButton
+                    size="sm"
+                    icon={<IconPlayerPlay size={18} />}
+                    onClick={handleProfileAll}
+                    isLoading={isStartingAll}
+                    isDisabled={
+                        isPending ||
+                        isStartingAll ||
+                        startingFname !== null ||
+                        solutions.length === 0 ||
+                        allRunning
+                    }
+                >
+                    {allRunning ? "Visi jau notiek" : "Profilēt visus"}
+                </GenericButton>
+                {notice && <span className="text-sm text-default-700">{notice}</span>}
+            </div>
 
             {solutions.length === 0 ? (
                 <div className="rounded-sm border border-divider bg-white p-4 text-sm text-default-600">
