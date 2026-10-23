@@ -2,6 +2,7 @@ import { cn } from "@heroui/react";
 import { TextLink } from "@/components/ui/text-link";
 import { statusTranslations } from "@/components/submission-table";
 import { formatScore } from "@/lib/format-score";
+import { formatDateTime } from "@/lib/datetime";
 
 
 function Score({ received, possible, receivedTenths, possibleTenths }: { received: number, possible: number, receivedTenths?: number, possibleTenths?: number }) {
@@ -35,7 +36,7 @@ type SubmInfoHeaderProps = {
       { label: "Autors", value: <TextLink href={`/users/${username}`}>{username}</TextLink> },
       { label: "Uzdevums", value: <TextLink href={`/tasks/${task_id}`}>{task_name}</TextLink> },
       { label: "Valoda", value: language },
-      { label: "Iesūtīts", value: new Date(created_at).toLocaleString("lv") },
+      { label: "Iesūtīts", value: formatDateTime(created_at) },
       { label: "Statuss", value: statusTranslations[eval_status] },
       { label: "Rezultāts", value: <Score received={received} possible={possible} receivedTenths={receivedTenths} possibleTenths={possibleTenths} /> },
     ];
