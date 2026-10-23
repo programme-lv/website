@@ -3,7 +3,7 @@
 import { cn } from "./cn";
 import Link from "next/link";
 import React, { useContext, useState } from "react";
-import { IconInbox, IconListDetails, IconMenu2, IconTerminal2 } from "@tabler/icons-react";
+import { IconInbox, IconListCheck, IconMenu2, IconTerminal2 } from "@tabler/icons-react";
 
 import { AuthContext } from "@/app/providers";
 import Button from "@/components/ui/button";
@@ -21,7 +21,7 @@ interface LayoutProps {
 }
 
 const navItems: { key: NavKey; href: string; label: string; icon: React.ElementType; adminOnly?: boolean }[] = [
-  { key: "tasks", href: "/tasks", label: "Uzdevumi", icon: IconListDetails },
+  { key: "tasks", href: "/tasks", label: "Uzdevumi", icon: IconListCheck },
   { key: "submissions", href: "/submissions", label: "Iesūtījumi", icon: IconInbox },
   { key: "admin", href: "/admin", label: "Admin", icon: IconTerminal2, adminOnly: true },
 ];
@@ -101,13 +101,14 @@ function Header({
             <Link
               key={item.key}
               className={cn(
-                "inline-flex items-center border-b-[3px] text-sm",
+                "inline-flex items-center gap-1.5 border-b-[3px] text-sm",
                 active === item.key
                   ? "border-[#0f62fe] font-medium text-default-900"
                   : "border-transparent text-default-600 hover:text-default-900",
               )}
               href={item.href}
             >
+              {React.createElement(item.icon, { size: 18, "aria-hidden": true })}
               {item.label}
             </Link>
           ))}

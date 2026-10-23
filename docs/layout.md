@@ -2,7 +2,7 @@
 
 Platform pages use [components/layout.tsx](../components/layout.tsx). Header and footer backgrounds are full-bleed. Default inner content is capped at `--page-max` (`68rem`) via `max-w-(--page-max)`. Task statement pages use `readingWidth` to align header/footer content with the statement's `75ch` reading width (plus the shell's horizontal padding).
 
-The header is one row and is not sticky. Scroll and it leaves. Tabs are Uzdevumi and Iesūtījumi (Admin if logged in as admin). Current tab uses a 3px `#0f62fe` underline. Par mums lives in the footer only. Below `md`, tabs collapse into the hamburger modal so the bar stays one layer.
+The header is one row and is not sticky. Scroll and it leaves. Tabs are Uzdevumi and Iesūtījumi (Admin if logged in as admin). Each tab shows its Tabler icon (`IconListCheck` for Uzdevumi, `IconInbox` for Iesūtījumi) before the label, and the same icons appear in the hamburger modal. Current tab uses a 3px `#0f62fe` underline. Par mums lives in the footer only. Below `md`, tabs collapse into the hamburger modal so the bar stays one layer.
 
 The footer email is not in the first HTML; it is assembled in the client after 2s. Until then the address shows as `...`.
 

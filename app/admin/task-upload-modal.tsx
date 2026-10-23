@@ -127,7 +127,7 @@ export default function TaskUploadModal({ onTaskUploaded }: TaskUploadModalProps
                   acceptedTypes=".zip"
                   variant="default"
                   size="md"
-                  className="w-full"
+                  fullWidth
                   isLoading={isUploading}
                   isDisabled={isUploading}
                 >
