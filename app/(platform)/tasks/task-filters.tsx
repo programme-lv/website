@@ -204,7 +204,6 @@ export function TaskFilters({
               key={item.id}
               selected={value.ageGroupId === item.id}
               label={item.label}
-              description={item.description}
               count={item.count}
               onSelect={() => selectAgeGroup(item.id)}
             />

@@ -108,16 +108,15 @@ const STAGE_LABELS: Record<string, string> = {
   selection: "Atlases",
 };
 
-const AGE_GROUP_LABELS: Record<string, { label: string; description?: string }> = {
-  junior: { label: "Jaunākā (8.–10. kl.)" },
-  senior: { label: "Vecākā (11.–12. kl.)" },
-  both: { label: "Abas", description: "Jaunākā un vecākā" },
+const AGE_GROUP_LABELS: Record<string, string> = {
+  junior: "Jaunākā (8.–10. kl.)",
+  senior: "Vecākā (11.–12. kl.)",
+  both: "Abas (8.–12. kl.)",
 };
 
 export type AgeGroupNode = {
   id: string;
   label: string;
-  description?: string;
   count: number;
 };
 
@@ -203,8 +202,7 @@ export function decorateOriginTree(olympiads: TaskFilterOlympiad[]): OriginNode[
         ageGroups: stage.divisions.map((division) => ({
           id: division.id,
           count: division.count,
-          label: AGE_GROUP_LABELS[division.id]?.label ?? division.id,
-          description: AGE_GROUP_LABELS[division.id]?.description,
+          label: AGE_GROUP_LABELS[division.id] ?? division.id,
         })),
       })),
     })),

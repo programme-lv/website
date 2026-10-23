@@ -2,6 +2,7 @@ import { isAdmin } from "@/lib/dal";
 import Layout from "@/components/layout";
 import RestrictedPleaseLogin from "@/components/restricted-please-login";
 import { getTaskById } from "@/lib/task/tasks";
+import { listTaskSolutions } from "@/lib/task/profiles";
 import SolutionsEditForm from "./solutions";
 import TaskAdminNav from "@/components/task-admin-nav";
 import { Metadata } from "next";
@@ -29,19 +30,28 @@ export default async function SolutionsPage({
         return <RestrictedPleaseLogin />
     }
 
-    const response = await getTaskById((await params).task_id);
+    const { task_id } = await params;
+    const response = await getTaskById(task_id);
     if (response.status != "success") {
         return <div>Error {response.code}: {response.message}</div>
     }
     const task = response.data;
 
+    const solutionsResponse = await listTaskSolutions(task.short_task_id);
+    if (solutionsResponse.status != "success") {
+        return <div>Error {solutionsResponse.code}: {solutionsResponse.message}</div>
+    }
+
     return (
         <Layout active="admin">
             <div className="flex gap-3 mr-3">
                 <TaskAdminNav taskId={task.short_task_id} activeTab="solutions" />
-                <SolutionsEditForm task_id={task.short_task_id} />
+                <SolutionsEditForm
+                    task_id={task.short_task_id}
+                    solutions={solutionsResponse.data}
+                    testsVersion={task.tests_version ?? 0}
+                />
             </div>
         </Layout>
     )
 }
-
