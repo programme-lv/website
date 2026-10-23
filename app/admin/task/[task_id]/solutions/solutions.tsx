@@ -6,19 +6,25 @@ import { useRouter } from "next/navigation";
 import GenericTable, { Column } from "@/components/generic-table";
 import { TextLink } from "@/components/ui/text-link";
 import TextButton from "@/components/text-button";
+import TaskCalibrationCard from "@/components/task-calibration-card";
+import ProfileAutoRefresh from "@/components/profile-auto-refresh";
 import { startSolutionProfile } from "@/lib/task/profiles";
-import type { SolutionSummary } from "@/types/profile";
+import type { SolutionCalibration, SolutionSummary, TaskCalibration } from "@/types/profile";
 
 import ViewSolutionModal from "./view-solution-modal";
 
 interface SolutionsEditFormProps {
     task_id: string;
     solutions: SolutionSummary[];
+    calibration: TaskCalibration;
     testsVersion: number;
 }
 
-export default function SolutionsEditForm({ task_id, solutions, testsVersion }: SolutionsEditFormProps) {
+export default function SolutionsEditForm({ task_id, solutions, calibration, testsVersion }: SolutionsEditFormProps) {
     const router = useRouter();
+    const calibrationByFname = new Map<string, SolutionCalibration>(
+        calibration.solutions.map((solution) => [solution.fname, solution]),
+    );
     const [isPending, startTransition] = useTransition();
     const [startingFname, setStartingFname] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
@@ -80,36 +86,98 @@ export default function SolutionsEditForm({ task_id, solutions, testsVersion }: 
             width: "190px",
         },
         {
-            key: "profile",
-            header: "Profils",
+            key: "calibration",
+            header: "Kalibrācija",
             render: (item) => {
-                const profile = item.latest_profile;
-                if (!profile) {
-                    return <div className="text-default-600">Nav profilēts</div>;
+                const cal = calibrationByFname.get(item.fname);
+                const latest = item.latest_profile;
+                if (!cal) {
+                    return <div className="text-default-600">Nav datu</div>;
                 }
-                if (profile.status === "running") {
-                    return <div>Notiek profilēšana…</div>;
-                }
-                if (profile.status === "failed") {
+                const profileId = cal.profile_id ?? latest?.id;
+                const link = profileId ? (
+                    <div>
+                        [ <TextLink href={`/admin/task/${task_id}/solutions/profile/${profileId}`}>Skatīt profilu</TextLink> ]
+                    </div>
+                ) : null;
+
+                if (cal.stale) {
                     return (
                         <div className="flex flex-col">
-                            <div className="text-red-700">Neizdevās</div>
-                            <div>
-                                [ <TextLink href={`/admin/task/${task_id}/solutions/profile/${profile.id}`}>Skatīt profilu</TextLink> ]
-                            </div>
+                            <div className="text-amber-800">Profils novecojis</div>
+                            {link}
                         </div>
                     );
                 }
-                return (
-                    <div className="flex flex-col">
-                        <div>Pabeigts</div>
-                        <div>
-                            [ <TextLink href={`/admin/task/${task_id}/solutions/profile/${profile.id}`}>Skatīt profilu</TextLink> ]
+                if (!cal.profile_id) {
+                    if (latest?.status === "running") {
+                        return (
+                            <div className="flex flex-col">
+                                <div className="text-amber-800">Notiek profilēšana…</div>
+                                {link}
+                            </div>
+                        );
+                    }
+                    return <div className="text-default-600">Nav profila</div>;
+                }
+                if (cal.expected_subtasks.length === 0) {
+                    return (
+                        <div className="flex flex-col">
+                            <div className="text-default-600">Nav norādīts sagaidāmais</div>
+                            {link}
                         </div>
+                    );
+                }
+
+                if (!cal.verdict.applicable) {
+                    return (
+                        <div className="flex flex-col">
+                            <div className="text-default-600">Nav datu</div>
+                            {link}
+                        </div>
+                    );
+                }
+
+                const missing = cal.verdict.subtasks
+                    .filter((subtask) => subtask.declared && !subtask.fully_solved_all_runs)
+                    .map((subtask) => subtask.subtask_id);
+                const unintended = cal.verdict.subtasks
+                    .filter((subtask) => !subtask.declared && subtask.fully_solved_any_run)
+                    .map((subtask) => subtask.subtask_id);
+
+                return (
+                    <div className="flex flex-col gap-1">
+                        {latest?.status === "running" && (
+                            <div className="text-amber-800">Notiek jauns profils…</div>
+                        )}
+                        <div
+                            className={
+                                cal.verdict.matches
+                                    ? "font-medium text-green-800"
+                                    : "font-medium text-red-800"
+                            }
+                        >
+                            {cal.verdict.matches ? "Atbilst" : "Neatbilst"}
+                            <span className="ml-2 font-normal text-default-700">
+                                {cal.verdict.score.median} / {cal.verdict.expected_points} p
+                            </span>
+                        </div>
+                        {missing.length > 0 && (
+                            <div className="text-xs text-red-800">Trūkst: {missing.join(", ")}</div>
+                        )}
+                        {unintended.length > 0 && (
+                            <div className="text-xs text-red-800">Lieki: {unintended.join(", ")}</div>
+                        )}
+                        {cal.verdict.matches && cal.verdict.delta > 0 && (
+                            <div className="text-xs text-amber-800">
+                                +{cal.verdict.delta} p no daļējiem liekajiem
+                            </div>
+                        )}
+                        {link}
                     </div>
                 );
             },
-            width: "200px",
+            width: "220px",
         },
         {
             key: "actions",
@@ -123,7 +191,7 @@ export default function SolutionsEditForm({ task_id, solutions, testsVersion }: 
                             [{" "}
                             <TextButton
                                 onClick={() => handleProfile(item)}
-                                disabled={isPending || isRunning || isStarting}
+                                disabled={isPending || startingFname !== null || isRunning}
                             >
                                 {isRunning || isStarting
                                     ? "Notiek…"
@@ -142,6 +210,9 @@ export default function SolutionsEditForm({ task_id, solutions, testsVersion }: 
 
     return (
         <div className="container py-2 mt-2 flex flex-col gap-3 overflow-hidden">
+            <ProfileAutoRefresh
+                active={solutions.some((solution) => solution.latest_profile?.status === "running")}
+            />
             <div>
                 <h2 className="text-lg font-bold">Risinājumi</h2>
                 <p className="text-sm max-w-[55em]">
@@ -150,6 +221,8 @@ export default function SolutionsEditForm({ task_id, solutions, testsVersion }: 
                     un parāda, cik punktus tas iegūtu pie citiem limitiem.
                 </p>
             </div>
+
+            <TaskCalibrationCard calibration={calibration} />
 
             {error && (
                 <div className="rounded-sm border border-red-300 bg-red-50 p-2 text-sm text-red-800">

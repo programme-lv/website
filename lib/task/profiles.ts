@@ -1,9 +1,10 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
 import type { ApiResponse } from "../api-response";
-import type { SolutionProfile, SolutionSummary } from "@/types/profile";
+import type { SolutionProfile, SolutionSummary, TaskCalibration } from "@/types/profile";
 import { SERVER_API_HOST } from "../config";
 
 async function adminHeaders(): Promise<HeadersInit> {
@@ -38,6 +39,26 @@ export const startSolutionProfile = async (
       method: "POST",
       headers: await adminHeaders(),
       body: JSON.stringify({ runs }),
+      cache: "no-store",
+    },
+  );
+  const data = await response.json();
+  if (data.status === "success") {
+    // Drop the cached solutions page so going back shows the running profile
+    // and the disabled button instead of the pre-click row.
+    revalidatePath(`/admin/task/${taskId}/solutions`);
+  }
+  return data;
+};
+
+export const getTaskCalibration = async (
+  taskId: string,
+): Promise<ApiResponse<TaskCalibration>> => {
+  const response = await fetch(
+    `${SERVER_API_HOST}/tasks/${encodeURIComponent(taskId)}/solutions/calibration`,
+    {
+      method: "GET",
+      headers: await adminHeaders(),
       cache: "no-store",
     },
   );

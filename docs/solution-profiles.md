@@ -6,7 +6,11 @@ calibration profile for any of them.
 ## Pages and data
 
 - `app/admin/task/[task_id]/solutions/page.tsx` fetches
-  `listTaskSolutions(taskId)` and passes the rows to the client table.
+  `listTaskSolutions(taskId)` and `getTaskCalibration(taskId)` and passes both
+  to the client table.
+- `components/task-calibration-card.tsx` renders the aggregate CPU and memory
+  intervals, the padded intersection, the current-limit verdicts, warnings for
+  unclassified/missing/stale profiles, and the CPU-origin note.
 - `app/admin/task/[task_id]/solutions/solutions.tsx` starts a profile through
   the `startSolutionProfile` server action and navigates to the profile page.
 - `app/admin/task/[task_id]/solutions/profile/[profile_id]/page.tsx` renders
@@ -18,28 +22,53 @@ calibration profile for any of them.
 
 The backend endpoints and scoring math are documented in
 `backend/docs/solution-profiles.md`. The page expects the backend that exposes
-`GET /tasks/{taskId}/solutions` and `GET /solution-profiles/{profileId}`;
-deploy the backend first.
+`GET /tasks/{taskId}/solutions`, `GET /tasks/{taskId}/solutions/calibration`
+and `GET /solution-profiles/{profileId}`; deploy the backend first.
 
 ## Charts
 
 `components/limit-profile-chart.tsx` is a hand-written SVG step chart. No chart
 library is installed and none is needed for two charts.
 
-- CPU axis is `0–10 s`, memory axis is `0–1024 MiB` rendered in decimal MB
-  (`kib / 976.5625`) so the current-limit marker matches
+- CPU axis is up to `10 s`, memory axis up to `1024 MiB`, rendered in decimal
+  MB (`kib / 976.5625`) so the current-limit marker matches
   `task.memory_limit_megabytes`.
+- The axis shrinks to the interesting region: unless the solution saturates
+  late, the visible maximum is about `1.15 ×` the limit where it reaches full
+  score (or the last scoring breakpoint for a partial solution), always
+  including the current task limit. The chart is measured with a
+  `ResizeObserver` so labels and tooltips use real CSS pixels instead of being
+  scaled down with the viewBox.
 - The dashed line is the solution's expected points. It is omitted when the
   solution declares no subtasks (`expected_points === 0`).
-- The green band is `[lower_bound, upper_bound)`; the blue band is the
-  `min..max` spread across repeated runs.
+- The green band is the viable interval from the subtask rule; the blue band is
+  the `min..max` spread across repeated runs. An open upper bound (`∞`) is not
+  drawn, and an unknown one (`?`) is explained in the summary text.
 - The dotted blue line is the task's current limit.
 - Hover shows the limit, median score and run spread.
 
 The profile page also shows `current_score`, the predicted score at the task's
-**actual** CPU and memory limits. This is separate from the per-chart scores,
-which fix the other dimension at its profiling maximum, and is the value to
-compare with the expected score.
+**actual** CPU and memory limits, plus a per-subtask verdict: declared subtasks
+must be fully solved and undeclared subtasks must not be fully solved. Partial
+points from undeclared group-scored subtasks or interactor percentages are
+shown as allowed overage.
+
+The chart’s green interval is the **viable** interval, not the old score-based
+interval. It is `[lower, upper)` where `upper` may be `∞` (no undeclared
+subtasks) or `?` (not reached within 10 s / 1 GiB). The summary sentence renders
+those symbols instead of a numeric end.
+
+The task-level calibration card uses the padded intersection: `20%` or
+`100 ms` for CPU and `15%` or `16 MB` for memory, whichever is larger. The
+card also notes that the time limit is imported from the Latvian Informatics
+Olympiad, where a different CPU was used; bitset tasks are the most sensitive
+because they depend heavily on CPU cache size.
+
+While a profile is running, the page shows a progress bar from
+`progress.run`, `progress.tests_done` and `progress.tests_total`, and refreshes
+every 3 s. The solutions table disables the row's button while its latest
+profile is running; `startSolutionProfile` calls `revalidatePath` so returning
+to the list does not restore a stale pre-click row.
 
 ## Units
 

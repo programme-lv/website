@@ -26,6 +26,10 @@ The look is the login field: gray fill (`#e8e8e8`), bottom edge, blue inset focu
 
 `GenericButton` re-exports `Button`. Existing admin call sites keep working; new code can import `Button` directly.
 
+## FileUpload
+
+`components/file-upload.tsx` composes the shared `Button` with a hidden file input, so it accepts the same `variant` and `size` values and inherits the design-system colors. Do not style upload triggers with ad-hoc `bg-*` classes: `primary` is not a Tailwind color token in this setup (`--accent` / `#0f62fe` is the real primary). Use `fullWidth` for stretch instead of `className="w-full"`.
+
 ## TextLink
 
 Underlined inline link (`underline-offset-2`, faint decoration that darkens on hover). `color`: `default` (blue-800), `primary` (`#0f62fe`), `accent`, `success`. `disabled` / `isDisabled` render a span. Default for in-prose and footer links.

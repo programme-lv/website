@@ -80,6 +80,36 @@ export default async function SolutionProfilePage({
         task.tests_version !== profile.tests_version;
     const stale = testsStale || profile.solution_stale;
 
+    const runsDone = profile.runs.length;
+    const requestedRuns = Math.max(profile.requested_runs || 1, profile.progress?.runs || 1);
+    const progress = profile.progress;
+    const progressPercent =
+        progress && progress.runs > 0
+            ? Math.min(
+                  100,
+                  (((progress.run - 1) +
+                      (progress.tests_total > 0
+                          ? progress.tests_done / progress.tests_total
+                          : 0)) /
+                      progress.runs) *
+                      100,
+              )
+            : Math.min(100, (runsDone / requestedRuns) * 100);
+
+    const verdict = profile.verdict;
+    const missingSubtasks = verdict.subtasks.filter(
+        (subtask) => subtask.declared && !subtask.fully_solved_all_runs,
+    );
+    const unintendedSubtasks = verdict.subtasks.filter(
+        (subtask) => !subtask.declared && subtask.fully_solved_any_run,
+    );
+    const partialUnintended = verdict.subtasks.filter(
+        (subtask) =>
+            !subtask.declared &&
+            !subtask.fully_solved_any_run &&
+            subtask.earned_max_tenths > 0,
+    );
+
     return (
         <Layout active="admin">
             <ProfileAutoRefresh active={profile.status === "running"} />
@@ -126,8 +156,24 @@ export default async function SolutionProfilePage({
 
                     {profile.status === "running" && (
                         <div className="rounded-sm border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900">
-                            Profilēšana notiek. Lapa atjaunosies automātiski. Ja risinājums ir lēns, tas var aizņemt
-                            vairākas minūtes.
+                            <div className="flex flex-wrap items-center justify-between gap-2">
+                                <span>Profilēšana notiek…</span>
+                                <span className="font-medium">
+                                    {progress
+                                        ? `Mēģinājums ${progress.run}/${progress.runs} · ${progress.tests_done}/${progress.tests_total} testi`
+                                        : `Pabeigti ${runsDone}/${requestedRuns} mēģinājumi`}
+                                </span>
+                            </div>
+                            <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-amber-200">
+                                <div
+                                    className="h-full rounded-full bg-amber-600 transition-[width] duration-500"
+                                    style={{ width: `${progressPercent}%` }}
+                                />
+                            </div>
+                            <p className="mt-2 text-xs">
+                                Lapa atjaunojas ik pēc 3 sekundēm. Ja risinājums ir lēns, tas var aizņemt vairākas
+                                minūtes.
+                            </p>
                         </div>
                     )}
 
@@ -147,6 +193,59 @@ export default async function SolutionProfilePage({
                                 ` — par ${profile.current_score.median - profile.expected_points} vairāk nekā gaidīts.`}
                             {profile.expected_points > 0 && profile.current_score.median === profile.expected_points &&
                                 " — atbilst gaidītajam."}
+                        </div>
+                    )}
+
+                    {verdict.applicable && (
+                        <div
+                            className={`rounded-sm border p-3 text-sm ${
+                                verdict.matches
+                                    ? "border-green-300 bg-green-50 text-green-900"
+                                    : "border-red-300 bg-red-50 text-red-900"
+                            }`}
+                        >
+                            <div className="flex flex-wrap items-center justify-between gap-2">
+                                <span className="font-medium">
+                                    {verdict.matches
+                                        ? "Atbilst sagaidāmajam"
+                                        : "Neatbilst sagaidāmajam"}
+                                </span>
+                                <span>
+                                    {verdict.score.median} / {verdict.expected_points} p
+                                    {partialUnintended.length > 0 && verdict.delta > 0
+                                        ? ` (${verdict.delta > 0 ? "+" : ""}${verdict.delta} p no liekiem apakšuzdevumiem)`
+                                        : ""}
+                                </span>
+                            </div>
+                            {missingSubtasks.length > 0 && (
+                                <div className="mt-1">
+                                    Trūkst: apakšuzdevumi{" "}
+                                    {missingSubtasks.map((s) => s.subtask_id).join(", ")}
+                                </div>
+                            )}
+                            {unintendedSubtasks.length > 0 && (
+                                <div className="mt-1">
+                                    Pilnībā atrisināti liekie: apakšuzdevumi{" "}
+                                    {unintendedSubtasks.map((s) => s.subtask_id).join(", ")}
+                                </div>
+                            )}
+                            {partialUnintended.length > 0 && (
+                                <div className="mt-1">
+                                    Daļēji liekie punkti:{" "}
+                                    {partialUnintended
+                                        .map(
+                                            (s) =>
+                                                `apakšuzdevums ${s.subtask_id} (+${(s.earned_median_tenths / 10).toFixed(1)} p)`,
+                                        )
+                                        .join(", ")}
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    {!verdict.applicable && (
+                        <div className="rounded-sm border border-divider bg-white p-3 text-sm text-default-700">
+                            Kalibrācija nav pieejama: risinājumam nav norādīti sagaidāmie apakšuzdevumi.
                         </div>
                     )}
 
@@ -173,9 +272,19 @@ export default async function SolutionProfilePage({
                         </div>
                         <div className="rounded-sm border border-divider bg-white p-3">
                             <div className="text-xs text-default-600">Mēģinājumi</div>
-                            <div className="text-lg font-semibold">{profile.runs.length}</div>
+                            <div className="text-lg font-semibold">
+                                {profile.status === "running"
+                                    ? `${runsDone} / ${requestedRuns}`
+                                    : runsDone}
+                            </div>
                         </div>
                     </div>
+
+                    <p className="text-xs text-default-600">
+                        Diagrammu robežas ir marginālas: CPU gadījumā atmiņa fiksēta pie 1 GiB,
+                        atmiņas gadījumā laiks fiksēts pie 10 s. Verdicts izmanto abus pašreizējos
+                        limitus.
+                    </p>
 
                     <div className="grid grid-cols-1 gap-3 2xl:grid-cols-2">
                         <LimitProfileChart
@@ -185,6 +294,7 @@ export default async function SolutionProfilePage({
                             expected={profile.expected_points}
                             possible={profile.possible_points}
                             currentLimit={profile.current_cpu_ms}
+                            viable={profile.cpu_viable}
                         />
                         <LimitProfileChart
                             title="Punkti atkarībā no atmiņas limita"
@@ -193,8 +303,62 @@ export default async function SolutionProfilePage({
                             expected={profile.expected_points}
                             possible={profile.possible_points}
                             currentLimit={profile.current_mem_kib}
+                            viable={profile.mem_viable}
                         />
                     </div>
+
+                    {verdict.applicable && (
+                        <div className="flex flex-col gap-2">
+                            <h2 className="text-base font-semibold">Apakšuzdevumu atbilstība</h2>
+                            <div className="overflow-x-auto rounded-sm border border-divider bg-white">
+                                <table className="w-full min-w-[640px] text-sm">
+                                    <thead>
+                                        <tr className="border-b border-gray-300 text-left text-gray-900">
+                                            <th className="p-2 font-medium">Apakšuzdevums</th>
+                                            <th className="p-2 font-medium">Punkti</th>
+                                            <th className="p-2 font-medium">Gaidīts</th>
+                                            <th className="p-2 font-medium">Atrisināts</th>
+                                            <th className="p-2 font-medium">Iegūti</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {verdict.subtasks.map((subtask) => {
+                                            const bad = subtask.declared
+                                                ? !subtask.fully_solved_all_runs
+                                                : subtask.fully_solved_any_run;
+                                            const warning =
+                                                !subtask.declared &&
+                                                !subtask.fully_solved_any_run &&
+                                                subtask.earned_max_tenths > 0;
+                                            return (
+                                                <tr
+                                                    key={subtask.subtask_id}
+                                                    className={`border-b border-divider last:border-b-0 ${
+                                                        bad ? "bg-red-50" : warning ? "bg-amber-50" : ""
+                                                    }`}
+                                                >
+                                                    <td className="p-2">{subtask.subtask_id}</td>
+                                                    <td className="p-2">{subtask.points}</td>
+                                                    <td className="p-2">{subtask.declared ? "Jā" : "Nē"}</td>
+                                                    <td className="p-2">
+                                                        {subtask.fully_solved_all_runs
+                                                            ? "Jā (visos)"
+                                                            : subtask.fully_solved_any_run
+                                                                ? "Dažos"
+                                                                : "Nē"}
+                                                    </td>
+                                                    <td className="p-2">
+                                                        {(subtask.earned_median_tenths / 10).toFixed(1)} /{" "}
+                                                        {subtask.points}
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    )}
 
                     <div className="flex flex-col gap-2">
                         <h2 className="text-base font-semibold">Mēģinājumi</h2>
@@ -206,7 +370,7 @@ export default async function SolutionProfilePage({
                                     <thead>
                                         <tr className="border-b border-gray-300 text-left text-gray-900">
                                             <th className="p-2 font-medium">Izpilde</th>
-                                            <th className="p-2 font-medium">Punkti</th>
+                                            <th className="p-2 font-medium">Punkti (profila limiti)</th>
                                             <th className="p-2 font-medium">Maks. CPU</th>
                                             <th className="p-2 font-medium">Maks. atmiņa</th>
                                             <th className="p-2 font-medium">Testi ar punktiem</th>
