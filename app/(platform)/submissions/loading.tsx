@@ -1,24 +1,37 @@
 import Layout from "@/components/layout";
 import SubmissionTable from "@/components/submission-table";
 
+const toolbarSkeletonBlock =
+  "animate-pulse rounded-sm border border-divider bg-white";
+
 export default function SubmissionsLoadingSkeleton() {
   return (
     <Layout active="submissions">
-      <div className="py-2">
-        {/* Skeleton for pagination/controls above the table */}
-        <div className="flex justify-end xl:justify-between gap-x-4 flex-wrap items-center mt-4 mb-2">
-          {/* Skeleton for the "Rāda iesūtījumus..." text */}
-          <div className="hidden xl:block">
-            <div className="h-6 w-64 bg-gray-200 rounded animate-pulse" />
+      <div className="pb-2">
+        {/* Skeleton for the range text and pagination/search controls. */}
+        <div className="mb-2 mt-4 flex flex-wrap items-center justify-end gap-x-4 gap-y-2 xl:flex-nowrap xl:items-center xl:justify-between">
+          <div className="hidden shrink-0 xl:block">
+            <div className="h-5 w-56 animate-pulse rounded-sm bg-gray-200" />
           </div>
-          
-          {/* Skeleton for the controls (search, pagination) */}
-          <div className="flex flex-row gap-2 flex-wrap justify-end">
-            {/* Skeleton for search input */}
-            <div className="h-11 w-48 bg-gray-200 rounded-sm border border-divider animate-pulse" />
-            
-            {/* Skeleton for pagination */}
-            <div className="h-11 w-[292px] bg-gray-200 rounded-sm border border-divider animate-pulse" />
+
+          <div className="w-full min-w-0 xl:w-auto">
+            {/* Mobile toolbar: page summary, Filtri, previous/next. */}
+            <div className="flex w-full min-w-0 items-center justify-between gap-2 md:hidden">
+              <div className="min-w-0 flex-1 space-y-1 px-1">
+                <div className="h-4 w-14 animate-pulse rounded-sm bg-gray-200" />
+                <div className="h-4 w-16 animate-pulse rounded-sm bg-gray-200" />
+              </div>
+              <div className="flex shrink-0 items-center gap-2">
+                <div className={`h-9 w-[74px] ${toolbarSkeletonBlock}`} />
+                <div className={`h-9 w-[74px] ${toolbarSkeletonBlock}`} />
+              </div>
+            </div>
+
+            {/* Desktop toolbar: search field and full pagination. */}
+            <div className="hidden min-w-0 max-w-full flex-row flex-wrap items-center justify-end gap-2 md:flex xl:flex-nowrap xl:items-center xl:gap-3">
+              <div className={`h-11 w-[240px] ${toolbarSkeletonBlock}`} />
+              <div className={`h-11 w-[292px] ${toolbarSkeletonBlock}`} />
+            </div>
           </div>
         </div>
 

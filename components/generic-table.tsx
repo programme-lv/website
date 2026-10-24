@@ -14,6 +14,12 @@ export type Column<T> = {
   colSpan?: number;
   headerColSpan?: number;
   skipRender?: boolean; // Used for columns that are spanned by others
+  /**
+   * Custom loading placeholder for this column. Defaults to a text-sized bar.
+   * Use it when the real cell differs from plain text (two-line dates, bars,
+   * short numbers) so the skeleton keeps the same visual weight.
+   */
+  renderSkeleton?: () => React.ReactNode;
   align?: "left" | "right" | "center";
   headerAlign?: "left" | "right" | "center";
   verticalAlign?: "top" | "middle" | "bottom";
@@ -118,7 +124,11 @@ export default function GenericTable<T>({
                   className={cn(cellPaddingClass, "animate-pulse", col.columnClassName, { "border-r": j !== columns.length - 1 })}
                   colSpan={col.colSpan}
                 >
-                  <div className="bg-gray-300 rounded-sm w-full h-full text-gray-300">.</div>
+                  {col.renderSkeleton ? (
+                    col.renderSkeleton()
+                  ) : (
+                    <div className="h-4 w-2/3 rounded-sm bg-gray-300" />
+                  )}
                 </td>
               ))}
             </tr>
