@@ -6,6 +6,7 @@ import { getTaskById } from "@/lib/task/tasks";
 import TaskDetailsPage from "./task-page";
 import { Toaster } from 'react-hot-toast';
 import { Metadata } from "next";
+import { permanentRedirect } from "next/navigation";
 
 export async function generateMetadata({
   params,
@@ -32,6 +33,10 @@ export default async function TaskPageServerComponent({
 
   if (!task) {
     return <div>{JSON.stringify(response)}</div>;
+  }
+
+  if (task.short_task_id !== task_id) {
+    permanentRedirect(`/tasks/${task.short_task_id}`);
   }
 
   return (
