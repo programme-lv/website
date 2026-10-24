@@ -4,6 +4,7 @@ import Layout from "@/components/layout";
 import { getTaskById } from "@/lib/task/tasks";
 import { Toaster } from "react-hot-toast";
 import { Metadata } from "next";
+import { permanentRedirect } from "next/navigation";
 
 import TaskEditor from "../task-editor";
 
@@ -32,6 +33,9 @@ export default async function TaskSubmitPage({
 
 	if (!task) {
 		return <div>{JSON.stringify(response)}</div>;
+	}
+	if (task.short_task_id !== task_id) {
+		permanentRedirect(`/tasks/${task.short_task_id}/submit`);
 	}
 
 	return (
