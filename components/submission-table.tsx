@@ -158,15 +158,25 @@ function SubmissionCardsSkeleton({ rowCount }: { rowCount: number }) {
                     key={`card-sk-${i}`}
                     className="animate-pulse rounded-sm border-small border-divider bg-white px-5 py-3"
                 >
-                    <div className="mb-3 flex justify-between gap-2">
-                        <div className="h-4 w-36 rounded-sm bg-gray-300" />
-                        <div className="h-4 w-16 rounded-sm bg-gray-300" />
+                    <div className="flex flex-col gap-2">
+                        {/* Datums + laiks sit next to each other, as in DateTimeCell. */}
+                        <div className="flex gap-2">
+                            <div className="h-4 w-[88px] rounded-sm bg-gray-300" />
+                            <div className="h-4 w-16 rounded-sm bg-gray-300" />
+                        </div>
+                        {/* Autors / Uzdevums / Valoda lines. */}
+                        <div className="flex flex-col gap-1">
+                            <div className="h-4 w-24 rounded-sm bg-gray-300" />
+                            <div className="h-4 w-48 max-w-[80%] rounded-sm bg-gray-300" />
+                            <div className="h-4 w-28 rounded-sm bg-gray-300" />
+                        </div>
+                        {/* Score bar plus its result text. */}
+                        <div className="flex items-center gap-x-3">
+                            <div className="h-1.5 min-w-0 flex-1 basis-[10rem] rounded-sm bg-gray-300" />
+                            <div className="h-4 w-14 shrink-0 rounded-sm bg-gray-300" />
+                        </div>
+                        <div className="h-3 w-48 rounded-sm bg-gray-300" />
                     </div>
-                    <div className="mb-2 h-3 w-3/4 max-w-xs rounded-sm bg-gray-300" />
-                    <div className="mb-2 h-3 w-2/3 max-w-xs rounded-sm bg-gray-300" />
-                    <div className="mb-3 h-3 w-24 rounded-sm bg-gray-300" />
-                    <div className="mb-2 h-5 w-full max-w-md rounded-sm bg-gray-300" />
-                    <div className="h-3 w-48 rounded-sm bg-gray-300" />
                 </div>
             ))}
         </div>
@@ -179,25 +189,35 @@ export default function SubmissionTable({ submissions, skeleton = false }: Submi
             key: "created_at",
             header: "Datums, laiks",
             width: "120px",
-            render: (item) => <DateTimeCell dateTime={item.created_at} showTime={true} />
+            render: (item) => <DateTimeCell dateTime={item.created_at} showTime={true} />,
+            // The real cell wraps date and time onto separate lines.
+            renderSkeleton: () => (
+                <div className="flex flex-col gap-1.5">
+                    <div className="h-4 w-[90px] rounded-sm bg-gray-300" />
+                    <div className="h-4 w-[68px] rounded-sm bg-gray-300" />
+                </div>
+            )
         },
         {
             key: "username",
             header: "Autors",
             width: "140px",
-            render: (item) => <TextLink href={`/users/${item.username}`}>{item.username}</TextLink>
+            render: (item) => <TextLink href={`/users/${item.username}`}>{item.username}</TextLink>,
+            renderSkeleton: () => <div className="h-4 w-14 rounded-sm bg-gray-300" />
         },
         {
             key: "task_name",
             header: "Uzdevums",
             width: "180px",
-            render: (item) => <TextLink href={`/tasks/${item.task_id}`}>{item.task_name}</TextLink>
+            render: (item) => <TextLink href={`/tasks/${item.task_id}`}>{item.task_name}</TextLink>,
+            renderSkeleton: () => <div className="h-4 w-32 rounded-sm bg-gray-300" />
         },
         {
             key: "pr_lang_name",
             header: "Valoda",
             width: "120px",
-            render: (item) => item.pr_lang_name
+            render: (item) => item.pr_lang_name,
+            renderSkeleton: () => <div className="h-4 w-12 rounded-sm bg-gray-300" />
         },
         {
             key: "cpu_time",
@@ -209,7 +229,8 @@ export default function SubmissionTable({ submissions, skeleton = false }: Submi
                 item.score_info.exceeded_cpu ? 
                 <span>&gt; {item.score_info.max_cpu_ms / 1000}</span> : 
                 <span>{(item.score_info.max_cpu_ms / 1000).toFixed(3)}</span>
-            )
+            ),
+            renderSkeleton: () => <div className="h-4 w-11 rounded-sm bg-gray-300" />
         },
         {
             key: "memory",
@@ -221,20 +242,24 @@ export default function SubmissionTable({ submissions, skeleton = false }: Submi
                 item.score_info.exceeded_mem ? 
                 <span>&gt; {item.score_info.max_mem_kib / 1024}</span> : 
                 <span>{(item.score_info.max_mem_kib / 1024).toFixed(2)}</span>
-            )
+            ),
+            renderSkeleton: () => <div className="h-4 w-9 rounded-sm bg-gray-300" />
         },
         {
             key: "result_bar",
             header: "Rezultāts",
             width: "120px",
             headerColSpan: 2,
-            render: (item) => <SubmissionScoreBarLink item={item} />
+            render: (item) => <SubmissionScoreBarLink item={item} />,
+            // The real score bar is a thin full-width line, not a text block.
+            renderSkeleton: () => <div className="h-1.5 w-full rounded-sm bg-gray-300" />
         },
         {
             key: "result",
             header: "",
             width: "100px",
-            render: (item) => <SubmissionResultText item={item} />
+            render: (item) => <SubmissionResultText item={item} />,
+            renderSkeleton: () => <div className="h-4 w-14 rounded-sm bg-gray-300" />
         }
     ];
 
