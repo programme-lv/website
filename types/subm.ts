@@ -30,6 +30,7 @@ export type SubmEval = {
   test_groups: TestGroup[];
   verdicts: string; // one char per test: Q/X/A/W/T/M/R/I/P/U
   test_scores?: number[]; // percentage per test
+  example_test_ids?: number[]; // appended unscored statement examples
   score_info: ScoreInfo;
 };
 

@@ -140,10 +140,11 @@ function TestGroupDetails({ label, groupNumber, tests, points, scoreUnit, scoreU
     );
 }
 
-export default function TestResultTable({ visible_details, subm_eval, test_results, limits }: {
+export default function TestResultTable({ visible_details, subm_eval, test_results, exampleTestIds = [], limits }: {
     visible_details: boolean;
     subm_eval: SubmEval;
     test_results: TestRes[];
+    exampleTestIds?: number[];
     limits?: { cpu_ms: number; mem_kib: number };
 }) {
     const [selectedTest, setSelectedTest] = useState<TestRes | null>(null);
@@ -154,6 +155,10 @@ export default function TestResultTable({ visible_details, subm_eval, test_resul
         setIsOpen(true);
     };
 
+    const exampleIdSet = new Set(exampleTestIds);
+    const exampleTests = test_results.filter(test => exampleIdSet.has(test.id));
+    const scoredTestResults = test_results.filter(test => !exampleIdSet.has(test.id));
+
     // set testgroup ids to be 1-indexed
     const testgroups = subm_eval.test_groups.map((tg, idx) => ({ ...tg, id: idx + 1 }));
 
@@ -163,7 +168,7 @@ export default function TestResultTable({ visible_details, subm_eval, test_resul
     }
 
     const tests_of_group = (tg: { tg_tests: [number, number][] }) =>
-        test_results.filter(test => tg.tg_tests.some(x => x[0] <= test.id && x[1] >= test.id));
+        scoredTestResults.filter(test => tg.tg_tests.some(x => x[0] <= test.id && x[1] >= test.id));
 
     const isIgnored = (test: TestRes) =>
         test.ign || subm_eval.verdicts[test.id - 1] === "I";
@@ -250,6 +255,12 @@ export default function TestResultTable({ visible_details, subm_eval, test_resul
         columns = columns.filter(x => x.key !== "details");
     }
 
+    const exampleColumns = columns
+        .filter(x => x.key !== "test_group")
+        .map(column => column.key === "id"
+            ? { ...column, render: (_test: TestRes, index: number) => index + 1 }
+            : column);
+
     // return a list of indices where the testgroup changes in a list of subtask tests
     // used for visual separation of testgroups in the table
     function indices_where_testgroup_changes(test_results: TestRes[]) {
@@ -263,7 +274,7 @@ export default function TestResultTable({ visible_details, subm_eval, test_resul
     }
 
     const hasGroups = testgroups.length > 0;
-    const uncoveredTests = test_results.filter(test => !testgroups.some(tg => tests_of_group(tg).some(t => t.id === test.id)));
+    const uncoveredTests = scoredTestResults.filter(test => !testgroups.some(tg => tests_of_group(tg).some(t => t.id === test.id)));
 
     const groupColumns = columns.filter(x => x.key !== "test_group");
 
@@ -298,6 +309,20 @@ export default function TestResultTable({ visible_details, subm_eval, test_resul
 
     return (
         <div>
+            {exampleTests.length > 0 && (
+                <div className="mb-4 flex flex-col gap-2">
+                    <p className="text-sm font-semibold text-default-900">
+                        Uzdevuma formulējumā dotie piemēri
+                    </p>
+                    <GenericTable
+                        data={exampleTests}
+                        columns={exampleColumns}
+                        keyExtractor={(test) => `example_${test.id.toString()}`}
+                        className="w-full max-w-[650px]"
+                        rowHeight="compact"
+                    />
+                </div>
+            )}
             {hasGroups ? (
                 subm_eval.subtasks.length > 0 ? (
                     <div className="flex flex-col gap-4">
@@ -327,8 +352,13 @@ export default function TestResultTable({ visible_details, subm_eval, test_resul
                 )
             ) : (
                 <>
+            {subm_eval.subtasks.length == 0 && scoredTestResults.length > 0 && (
+                <p className="mb-2 mt-2 text-sm font-semibold text-default-900">
+                    Testēšanas sistēmas slēptie testi
+                </p>
+            )}
             {subm_eval.subtasks.length == 0 && <GenericTable
-                data={test_results}
+                data={scoredTestResults}
                 columns={columns.filter(x => x.key !== "test_group")}
                 keyExtractor={(test) => test.id.toString()}
                 className="w-full max-w-[650px]"
@@ -345,12 +375,12 @@ export default function TestResultTable({ visible_details, subm_eval, test_resul
                             )}
                         </p>
                         <GenericTable
-                            data={test_results.filter(test => subtask.st_tests.some(x => x[0] <= test.id && x[1] >= test.id))}
+                            data={scoredTestResults.filter(test => subtask.st_tests.some(x => x[0] <= test.id && x[1] >= test.id))}
                             columns={columns}
                             keyExtractor={(test) => subtask.description + "_" + test.id.toString()}
                             className="w-full max-w-[650px]"
                             rowHeight="compact"
-                            delimitedRows={indices_where_testgroup_changes(test_results.filter(test => subtask.st_tests.some(x => x[0] <= test.id && x[1] >= test.id)))}
+                            delimitedRows={indices_where_testgroup_changes(scoredTestResults.filter(test => subtask.st_tests.some(x => x[0] <= test.id && x[1] >= test.id)))}
                         />
                     </div>
                 ))}
