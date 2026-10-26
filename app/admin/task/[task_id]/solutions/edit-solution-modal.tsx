@@ -77,39 +77,49 @@ export default function EditSolutionModal({
                 <div className="border-b border-divider px-6 py-3">
                     <div className="text-lg font-semibold">Rediģēt risinājumu</div>
                     <div className="text-sm text-default-600">
-                        {solution.fname} · sagaidītie punkti tiek aprēķināti no atzīmētajiem apakšuzdevumiem
+                        {solution.fname} ·{" "}
+                        {allSubtasks.length > 0
+                            ? "sagaidītie punkti tiek aprēķināti no atzīmētajiem apakšuzdevumiem"
+                            : "uzdevumam nav apakšuzdevumu; jāatrisina visi testi"}
                     </div>
                 </div>
 
                 <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto p-6">
-                    <div className="flex flex-col gap-2">
-                        <div className="text-sm font-medium">Sagaidāmie apakšuzdevumi</div>
-                        <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
-                            {allSubtasks.map((subtask) => (
-                                <label
-                                    key={subtask.subtask}
-                                    className="flex items-start gap-2 rounded-sm border border-divider p-2 text-sm"
-                                >
-                                    <input
-                                        type="checkbox"
-                                        className="mt-1"
-                                        checked={subtasks.includes(subtask.subtask)}
-                                        onChange={() => toggleSubtask(subtask.subtask)}
-                                    />
-                                    <span>
-                                        <span className="font-medium">
-                                            Apakšuzdevums {subtask.subtask} · {subtask.score} p
-                                        </span>
-                                        {subtask.descriptions?.lv && (
-                                            <span className="block text-default-600">
-                                                {subtask.descriptions.lv}
+                    {allSubtasks.length > 0 ? (
+                        <div className="flex flex-col gap-2">
+                            <div className="text-sm font-medium">Sagaidāmie apakšuzdevumi</div>
+                            <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+                                {allSubtasks.map((subtask) => (
+                                    <label
+                                        key={subtask.subtask}
+                                        className="flex items-start gap-2 rounded-sm border border-divider p-2 text-sm"
+                                    >
+                                        <input
+                                            type="checkbox"
+                                            className="mt-1"
+                                            checked={subtasks.includes(subtask.subtask)}
+                                            onChange={() => toggleSubtask(subtask.subtask)}
+                                        />
+                                        <span>
+                                            <span className="font-medium">
+                                                Apakšuzdevums {subtask.subtask} · {subtask.score} p
                                             </span>
-                                        )}
-                                    </span>
-                                </label>
-                            ))}
+                                            {subtask.descriptions?.lv && (
+                                                <span className="block text-default-600">
+                                                    {subtask.descriptions.lv}
+                                                </span>
+                                            )}
+                                        </span>
+                                    </label>
+                                ))}
+                            </div>
                         </div>
-                    </div>
+                    ) : (
+                        <div className="rounded-sm border border-divider bg-gray-50 p-3 text-sm text-default-700">
+                            Uzdevumam nav apakšuzdevumu. Referencei jāatrisina visi testi, lai
+                            profils atbilstu.
+                        </div>
+                    )}
 
                     <div className="flex flex-col gap-1">
                         <div className="text-sm font-medium">Risinājuma kods</div>
