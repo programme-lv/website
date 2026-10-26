@@ -49,8 +49,10 @@ library is installed and none is needed for two charts.
   including the current task limit. The chart is measured with a
   `ResizeObserver` so labels and tooltips use real CSS pixels instead of being
   scaled down with the viewBox.
-- The dashed line is the solution's expected points. It is omitted when the
-  solution declares no subtasks (`expected_points === 0`).
+- The dashed line is the solution's expected points. It is omitted when a
+  subtask-scored task has a solution with no declared subtasks
+  (`expected_points === 0`). Tasks without subtasks expect full AC, so their
+  expected line is the full test total.
 - The green band is the viable interval from the subtask rule; the blue band is
   the `min..max` spread across repeated runs. An open upper bound (`∞`) is not
   drawn, and an unknown one (`?`) is explained in the summary text.
@@ -61,7 +63,9 @@ The profile page also shows `current_score`, the predicted score at the task's
 **actual** CPU and memory limits, plus a per-subtask verdict: declared subtasks
 must be fully solved and undeclared subtasks must not be fully solved. Partial
 points from undeclared group-scored subtasks or interactor percentages are
-shown as allowed overage.
+shown as allowed overage. For a task without subtasks, the verdict is binary:
+full score matches AC, any lower score is a mismatch. The expected result column
+shows `AC` and "Jāatrisina visi testi" for these solutions.
 
 The chart’s green interval is the **viable** interval, not the old score-based
 interval. It is `[lower, upper)` where `upper` may be `∞` (no undeclared

@@ -119,16 +119,27 @@ export default function SolutionsEditForm({ task_id, solutions, calibration, all
         {
             key: "expected_result",
             header: "Sagaidāmais rezultāts",
-            render: (item) => (
-                <div className="flex flex-col">
-                    <div>{item.subtasks.length > 0 ? `${item.expected_points} p` : "Nav norādīts"}</div>
-                    <div className="text-sm text-default-600">
-                        {item.subtasks.length > 0
-                            ? `Apakšuzdevumi: ${item.subtasks.join(", ")}`
-                            : "Apakšuzdevumi nav norādīti"}
+            render: (item) => {
+                const binaryFullScore = item.subtasks.length === 0 && item.expected_points > 0;
+                return (
+                    <div className="flex flex-col">
+                        <div>
+                            {item.subtasks.length > 0
+                                ? `${item.expected_points} p`
+                                : binaryFullScore
+                                  ? "AC"
+                                  : "Nav norādīts"}
+                        </div>
+                        <div className="text-sm text-default-600">
+                            {item.subtasks.length > 0
+                                ? `Apakšuzdevumi: ${item.subtasks.join(", ")}`
+                                : binaryFullScore
+                                  ? `Jāatrisina visi testi (${item.expected_points} p)`
+                                  : "Apakšuzdevumi nav norādīti"}
+                        </div>
                     </div>
-                </div>
-            ),
+                );
+            },
             width: "190px",
         },
         {
@@ -164,15 +175,17 @@ export default function SolutionsEditForm({ task_id, solutions, calibration, all
                             </div>
                         );
                     }
+                    if (latest?.status === "finished") {
+                        return (
+                            <div className="flex flex-col">
+                                <div className="text-default-600">
+                                    Profils gatavs; sagaidāmais nav norādīts
+                                </div>
+                                {link}
+                            </div>
+                        );
+                    }
                     return <div className="text-default-600">Nav profila</div>;
-                }
-                if (cal.expected_subtasks.length === 0) {
-                    return (
-                        <div className="flex flex-col">
-                            <div className="text-default-600">Nav norādīts sagaidāmais</div>
-                            {link}
-                        </div>
-                    );
                 }
 
                 if (!cal.verdict.applicable) {
