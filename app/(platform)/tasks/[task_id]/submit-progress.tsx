@@ -268,6 +268,7 @@ export default function SubmitProgress({ subm, onRunningChange, onClose }: Submi
 		evalData.verdicts.length > 0 &&
 		evalData.eval_error !== "compilation" &&
 		evalData.eval_error !== "internal";
+	const exampleTestIdSet = new Set(evalData?.example_test_ids ?? []);
 	const statusLabel = evalData
 		? (statusTranslations[evalData.eval_stage] ?? evalData.eval_stage)
 		: "Gaida";
@@ -299,13 +300,15 @@ export default function SubmitProgress({ subm, onRunningChange, onClose }: Submi
 				</div>
 				{evalData && showBoxes && (
 					<div className="flex flex-wrap gap-1">
-						{Array.from(evalData.verdicts).map((verdict, i) => (
-							<div
-								key={i}
-								className={`size-4 rounded-sm ${VERDICT_BOX_CLASS[verdict] ?? "bg-[#a0aec0]"}`}
-								title={`Tests ${i + 1}: ${VERDICT_LABEL[verdict] ?? verdict}`}
-							/>
-						))}
+						{Array.from(evalData.verdicts).map((verdict, i) =>
+							exampleTestIdSet.has(i + 1) ? null : (
+								<div
+									key={i}
+									className={`size-4 rounded-sm ${VERDICT_BOX_CLASS[verdict] ?? "bg-[#a0aec0]"}`}
+									title={`Tests ${i + 1}: ${VERDICT_LABEL[verdict] ?? verdict}`}
+								/>
+							),
+						)}
 					</div>
 				)}
 				{evalData && (

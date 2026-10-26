@@ -92,6 +92,7 @@ export default async function Page({
 									visible_details={admin}
 									subm_eval={submData.curr_eval}
 									test_results={execData.test_res.map((x) => ({ ...x }))}
+									exampleTestIds={submData.curr_eval.example_test_ids ?? []}
 									limits={execData.params}
 								/>
 							</div>
