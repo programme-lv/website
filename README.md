@@ -69,4 +69,4 @@ Pull requests run `yarn build`. Docker image publish on `v*` tags runs it again 
 - `lib/` — backend API clients and shared utilities
 - `types/` — shared TypeScript types
 - `config/` — application metadata and UI configuration
-- `docs/` — implementation constraints and troubleshooting knowledge (see `docs/dead-code.md`, `docs/production-build.md`, `docs/submission-ids.md`)
+- `docs/` — implementation constraints and troubleshooting knowledge (see `docs/dead-code.md`, `docs/production-build.md`, `docs/submission-ids.md`, `docs/datetime-display.md`)
