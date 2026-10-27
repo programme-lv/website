@@ -21,6 +21,8 @@ type AuthFormProps = {
   /** When set (e.g. in AuthModal), login/register footer switches view instead of navigating. */
   onSwitchToLogin?: () => void;
   onSwitchToRegister?: () => void;
+  /** When set (e.g. in AuthModal), the forgot-password link switches view instead of navigating. */
+  onSwitchToForgotPassword?: () => void;
 };
 
 export default function AuthForm({
@@ -28,6 +30,7 @@ export default function AuthForm({
   redirect,
   onSwitchToLogin,
   onSwitchToRegister,
+  onSwitchToForgotPassword,
 }: AuthFormProps) {
   const searchParams = useSearchParams();
   const redirectParam = redirect ?? searchParams.get("redirect");
@@ -203,12 +206,22 @@ export default function AuthForm({
           />
           {type === "login" && (
             <p className="text-xs text-[#6f6f6f]">
-              <Link
-                href="/forgot-password"
-                className="text-[#6f6f6f] underline underline-offset-2 decoration-[#6f6f6f]/35 hover:text-[#525252] hover:decoration-[#525252]/70"
-              >
-                Aizmirsi paroli?
-              </Link>
+              {onSwitchToForgotPassword ? (
+                <button
+                  type="button"
+                  className="cursor-pointer border-0 bg-transparent p-0 text-[#6f6f6f] underline underline-offset-2 decoration-[#6f6f6f]/35 hover:text-[#525252] hover:decoration-[#525252]/70"
+                  onClick={onSwitchToForgotPassword}
+                >
+                  Aizmirsi paroli?
+                </button>
+              ) : (
+                <Link
+                  href="/forgot-password"
+                  className="text-[#6f6f6f] underline underline-offset-2 decoration-[#6f6f6f]/35 hover:text-[#525252] hover:decoration-[#525252]/70"
+                >
+                  Aizmirsi paroli?
+                </Link>
+              )}
             </p>
           )}
         </div>
