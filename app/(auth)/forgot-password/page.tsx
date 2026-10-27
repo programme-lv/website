@@ -7,6 +7,7 @@ import Alert from "@/components/alert";
 import AuthField from "@/components/auth-field";
 import GenericButton from "@/components/generic-button";
 import AuthCardWithBG from "@/components/auth-card-with-bg";
+import { TextLink } from "@/components/ui/text-link";
 import { IconSend } from "@tabler/icons-react";
 
 export default function ForgotPasswordPage() {
@@ -79,6 +80,12 @@ export default function ForgotPasswordPage() {
         {error && (
           <Alert message={error} type="error" onClose={() => setError(null)} />
         )}
+
+        <p className="text-sm">
+          <TextLink color="default" weight="medium" href="/login">
+            Atpakaļ uz pieslēgšanos
+          </TextLink>
+        </p>
       </div>
     </AuthCardWithBG>
   );
