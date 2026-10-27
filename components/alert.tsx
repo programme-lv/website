@@ -31,12 +31,12 @@ const Alert: React.FC<AlertProps> = ({ message, type, onClose }) => {
       <span className="sr-only">Info</span>
       <div className="ms-3 text-sm font-normal">{message}</div>
       <button
-        aria-label="Close"
-        className="ms-auto -mx-1.5 -my-1.5 rounded-lg focus:ring-2 focus:ring-gray-400 p-1.5 hover:bg-gray-200 inline-flex items-center justify-center h-8 w-8 dark:bg-gray-800 dark:text-blue-400 dark:hover:bg-gray-700"
+        aria-label="Aizvērt"
+        className="ms-auto -mx-1.5 -my-1.5 inline-flex h-8 w-8 shrink-0 appearance-none items-center justify-center rounded-lg border-0 bg-transparent p-1.5 text-current hover:bg-black/10 focus:ring-2 focus:ring-gray-400 focus:outline-none dark:hover:bg-white/10"
         type="button"
         onClick={onClose}
       >
-        <span className="sr-only">Close</span>
+        <span className="sr-only">Aizvērt</span>
         <svg
           aria-hidden="true"
           className="w-3 h-3"

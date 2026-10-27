@@ -3,6 +3,7 @@
 import { Modal } from "@heroui/react";
 import { useEffect, useState } from "react";
 import AuthForm from "./auth-form";
+import ForgotPasswordForm from "./forgot-password-form";
 
 interface AuthModalProps {
   type: "login" | "register";
@@ -11,12 +12,14 @@ interface AuthModalProps {
   redirect?: string;
 }
 
+type ModalView = "login" | "register" | "forgot-password";
+
 export default function AuthModal({ type, isOpen, onOpenChange, redirect }: AuthModalProps) {
-  const [formType, setFormType] = useState<"login" | "register">(type);
+  const [view, setView] = useState<ModalView>(type);
 
   useEffect(() => {
     if (isOpen) {
-      setFormType(type);
+      setView(type);
     }
   }, [isOpen, type]);
 
@@ -27,15 +30,20 @@ export default function AuthModal({ type, isOpen, onOpenChange, redirect }: Auth
         onOpenChange={onOpenChange}
         variant="blur"
       >
-        <Modal.Container placement="center" scroll="inside" size={formType === "register" ? "lg" : "md"}>
+        <Modal.Container placement="center" scroll="inside" size={view === "register" ? "lg" : "md"}>
           <Modal.Dialog>
             <Modal.Body className="px-1 sm:px-1.5">
-              <AuthForm
-                type={formType}
-                redirect={redirect}
-                onSwitchToLogin={() => setFormType("login")}
-                onSwitchToRegister={() => setFormType("register")}
-              />
+              {view === "forgot-password" ? (
+                <ForgotPasswordForm onBackToLogin={() => setView("login")} />
+              ) : (
+                <AuthForm
+                  type={view}
+                  redirect={redirect}
+                  onSwitchToLogin={() => setView("login")}
+                  onSwitchToRegister={() => setView("register")}
+                  onSwitchToForgotPassword={() => setView("forgot-password")}
+                />
+              )}
             </Modal.Body>
           </Modal.Dialog>
         </Modal.Container>
@@ -43,5 +51,3 @@ export default function AuthModal({ type, isOpen, onOpenChange, redirect }: Auth
     </Modal>
   );
 }
-
-
