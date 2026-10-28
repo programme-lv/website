@@ -258,7 +258,12 @@ export default function TestResultTable({ visible_details, subm_eval, test_resul
     const exampleColumns = columns
         .filter(x => x.key !== "test_group")
         .map(column => column.key === "id"
-            ? { ...column, render: (_test: TestRes, index: number) => index + 1 }
+            ? {
+                ...column,
+                header: <ResponsiveHeader long="Piemērs #" short="#" />,
+                width: "90px",
+                render: (_test: TestRes, index: number) => index + 1,
+            }
             : column);
 
     // return a list of indices where the testgroup changes in a list of subtask tests
