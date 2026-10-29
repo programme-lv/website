@@ -336,7 +336,7 @@ export default function TestResultTable({ visible_details, subm_eval, test_resul
                                 <p className="text-sm pl-1 mt-2 mb-1">
                                     <span className="text-default-900">{i + 1}.</span>{" "}<span className="text-default-600">apakšuzdevums:</span>{" "}<span className="font-medium text-default-foreground" dangerouslySetInnerHTML={{ __html: renderMdLite(subtask.description).replaceAll("<p>", "").replaceAll("</p>", "") }} />
                                     {subtask.received_tenths != null && (
-                                        <span className="text-default-500"> — {formatPoints(subtask.received_tenths / 10)} / {formatPoints(subtask.points)} p</span>
+                                        <span className="text-default-500"> ({formatPoints(subtask.received_tenths / 10)} / {formatPoints(subtask.points)} p)</span>
                                     )}
                                 </p>
                                 <div className="flex flex-col gap-2">
@@ -376,7 +376,7 @@ export default function TestResultTable({ visible_details, subm_eval, test_resul
                         <p className="text-sm pl-1 mt-2 mb-1">
                             <span className="text-default-900">{i + 1}.</span>{" "}<span className="text-default-600">apakšuzdevums:</span>{" "}<span className="font-medium text-default-foreground" dangerouslySetInnerHTML={{ __html: renderMdLite(subtask.description).replaceAll("<p>", "").replaceAll("</p>", "") }} />
                             {subtask.received_tenths != null && (
-                                <span className="text-default-500"> — {formatPoints(subtask.received_tenths / 10)} / {formatPoints(subtask.points)} p</span>
+                                <span className="text-default-500"> ({formatPoints(subtask.received_tenths / 10)} / {formatPoints(subtask.points)} p)</span>
                             )}
                         </p>
                         <GenericTable
