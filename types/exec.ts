@@ -5,7 +5,8 @@ type Stage =
     | "testing"
     | "finished"
     | "compile_error"
-    | "internal_error";
+    | "internal_error"
+    | "tester_unavailable";
 
 // Runtime Data Interface
 interface RunData {

@@ -66,7 +66,14 @@ export default async function Page({
 					task_name={submData.task_name}
 					task_id={submData.task_id}
 					username={submData.username}
-					eval_status={submData.curr_eval.eval_stage}
+					eval_status={
+						submData.curr_eval.eval_error === "compilation"
+							? "compile_error"
+							: submData.curr_eval.eval_error === "internal"
+								? "internal_error"
+								: submData.curr_eval.eval_error ||
+									submData.curr_eval.eval_stage
+					}
 				/>
 				<div className="bg-white p-3 rounded-sm border-small border-divider overflow-x-auto">
 					{!submData.content && (
