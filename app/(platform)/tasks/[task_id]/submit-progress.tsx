@@ -141,6 +141,9 @@ function finishCopy(ev: SubmEval): string | null {
 	if (ev.eval_error === "internal") {
 		return "Servera kļūda";
 	}
+	if (ev.eval_error === "tester_unavailable") {
+		return "Testētājs nav pieejams";
+	}
 	if (ev.eval_stage !== "finished") {
 		return null;
 	}
@@ -267,7 +270,8 @@ export default function SubmitProgress({ subm, onRunningChange, onClose }: Submi
 		evalData &&
 		evalData.verdicts.length > 0 &&
 		evalData.eval_error !== "compilation" &&
-		evalData.eval_error !== "internal";
+		evalData.eval_error !== "internal" &&
+		evalData.eval_error !== "tester_unavailable";
 	const exampleTestIdSet = new Set(evalData?.example_test_ids ?? []);
 	const statusLabel = evalData
 		? (statusTranslations[evalData.eval_stage] ?? evalData.eval_stage)

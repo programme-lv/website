@@ -18,6 +18,7 @@ export const statusTranslations: Record<string, string> = {
     runtime_error: "Izpildes kļūda",
     checker_error: "Servera kļūda",
     internal_error: "Servera kļūda",
+    tester_unavailable: "Testētājs nav pieejams",
 };
 
 const narrowOnlyColsClass = "hidden xl:table-cell";
@@ -29,6 +30,7 @@ const errorStatuses = new Set([
     "runtime_error",
     "checker_error",
     "internal_error",
+    "tester_unavailable",
 ]);
 
 /**
