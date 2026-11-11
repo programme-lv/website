@@ -3,6 +3,7 @@ import { TextLink } from "@/components/ui/text-link";
 import { statusTranslations } from "@/components/submission-table";
 import { formatScore } from "@/lib/format-score";
 import { formatDateTime } from "@/lib/datetime";
+import { userProfilePath } from "@/lib/username";
 
 
 function Score({ received, possible, receivedTenths, possibleTenths }: { received: number, possible: number, receivedTenths?: number, possibleTenths?: number }) {
@@ -33,7 +34,7 @@ type SubmInfoHeaderProps = {
   
   export default function SubmInfoHeader({ received, possible, receivedTenths, possibleTenths, language, created_at, task_name, task_id, username, eval_status }: SubmInfoHeaderProps) {
     const entries = [
-      { label: "Autors", value: <TextLink href={`/users/${username}`}>{username}</TextLink> },
+      { label: "Autors", value: <TextLink href={userProfilePath(username)}>{username}</TextLink> },
       { label: "Uzdevums", value: <TextLink href={`/tasks/${task_id}`}>{task_name}</TextLink> },
       { label: "Valoda", value: language },
       { label: "Iesūtīts", value: formatDateTime(created_at) },

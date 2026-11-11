@@ -8,13 +8,15 @@ import { use, useContext } from 'react';
 import UserScoresTable from "@/components/user-scores-table";
 import AccountCard from "@/components/account-card";
 import { AuthContext } from "@/app/providers";
+import { decodeUsernamePageParam } from "@/lib/username";
 
 export default function UserPage({
   params,
 }: {
   params: Promise<{ username: string }>;
 }) {
-  const { username } = use(params);
+  const { username: encodedUsername } = use(params);
+  const username = decodeUsernamePageParam(encodedUsername);
   const { user } = useContext(AuthContext);
   const isOwner = user?.username === username;
   const { data: response, isLoading, error } = useQuery({
@@ -44,7 +46,7 @@ export default function UserPage({
         <div className="m-3 flex flex-col gap-3">
           {isOwner && user && <AccountCard user={user} />}
           <div className="bg-white p-3 rounded-small border-small border-divider">
-            <p>Error loading user data</p>
+            <p>Neizdevās ielādēt lietotāja datus.</p>
           </div>
         </div>
       </Layout>
