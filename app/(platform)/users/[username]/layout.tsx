@@ -5,9 +5,11 @@ export async function generateMetadata({
 }: {
   params: Promise<{ username: string }>;
 }): Promise<Metadata> {
+  // Unlike page params, generateMetadata receives the decoded username.
+  // Decoding it again would corrupt legacy names containing `%` sequences.
   const { username } = await params;
   return {
-    title: `${username}`,
+    title: username,
   };
 }
 

@@ -5,6 +5,7 @@ import { cookies } from "next/headers";
 import { SERVER_API_HOST } from "@/lib/config";
 import { MaxScorePerTask } from "@/types/scores";
 import { ListSubmissionsOpts, submListQuery } from "@/lib/subm/query";
+import { encodeUsernameSegment } from "@/lib/username";
 
 export const listSubmissionsServerSide = async (
   offset: number = 0,
@@ -42,7 +43,7 @@ export const listSubmissionsServerSide = async (
 export const getMaxScorePerTaskServerSide = async (
   username: string,
 ): Promise<MaxScorePerTask> => {
-  const response = await fetch(`${SERVER_API_HOST}/subm/scores/${username}`, {
+  const response = await fetch(`${SERVER_API_HOST}/subm/scores/${encodeUsernameSegment(username)}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

@@ -57,6 +57,7 @@ yarn dev      # Start the development server
 yarn build    # Create a production build (includes TypeScript)
 yarn start    # Start the production server
 yarn lint     # Run ESLint
+yarn test     # Run dependency-free node:test checks
 yarn knip     # Find unused files, exports, and dependencies
 ```
 

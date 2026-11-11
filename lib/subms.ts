@@ -1,6 +1,7 @@
 import { API_HOST } from "./config";
 import { DetailedSubmView, SubmListSseUpdate } from "@/types/subm";
 import { MaxScorePerTask } from "@/types/scores";
+import { encodeUsernameSegment } from "./username";
 
 // New function to reevaluate selected submissions
 export const reevaluateSubmissions = async (submUuids: string[]): Promise<void> => {
@@ -96,12 +97,15 @@ export function subscribeToSubmUpdates(
 };
 
 export const getMaxScorePerTask = async (username: string): Promise<MaxScorePerTask> => {
-  const response = await fetch(`${API_HOST}/subm/scores/${username}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
+  const response = await fetch(
+    `${API_HOST}/subm/scores/${encodeUsernameSegment(username)}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
     },
-  });
+  );
 
   const data = await response.json();
 

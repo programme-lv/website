@@ -6,6 +6,7 @@ import GenericTable, { Column } from "./generic-table";
 import { DateTimeCell } from "./datetime-cell";
 import { cn } from "./cn";
 import Link from "next/link";
+import { userProfilePath } from "@/lib/username";
 
 export const statusTranslations: Record<string, string> = {
     waiting: "Gaida",
@@ -128,7 +129,7 @@ function SubmissionEntryCard({ item }: { item: SubmListEntry }) {
             <div className="flex flex-col gap-1 text-default-800">
                 <div>
                     <span className="text-default-500">Autors: </span>
-                    <TextLink href={`/users/${item.username}`}>{item.username}</TextLink>
+                    <TextLink href={userProfilePath(item.username)}>{item.username}</TextLink>
                 </div>
                 <div>
                     <span className="text-default-500">Uzdevums: </span>
@@ -204,7 +205,7 @@ export default function SubmissionTable({ submissions, skeleton = false }: Submi
             key: "username",
             header: "Autors",
             width: "140px",
-            render: (item) => <TextLink href={`/users/${item.username}`}>{item.username}</TextLink>,
+            render: (item) => <TextLink href={userProfilePath(item.username)}>{item.username}</TextLink>,
             renderSkeleton: () => <div className="h-4 w-14 rounded-sm bg-gray-300" />
         },
         {

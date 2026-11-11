@@ -15,6 +15,7 @@ import { AuthContext } from "@/app/providers";
 import Button from "@/components/ui/button";
 import { usePathname, useRouter } from "next/navigation";
 import { logoutUser } from "@/lib/auth";
+import { userProfilePath } from "@/lib/username";
 import AuthModal from "./auth-modal";
 
 export default function User() {
@@ -81,7 +82,7 @@ export default function User() {
                                 textValue="Profils"
                                 className="gap-3 rounded-md"
                                 onAction={() => {
-                                    router.push(`/users/${user.username}`);
+                                    router.push(userProfilePath(user.username));
                                 }}
                             >
                                 <span className="flex w-full items-center justify-between gap-3">

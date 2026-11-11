@@ -9,6 +9,7 @@ import GenericButton from "./generic-button";
 import AuthField from "./auth-field";
 import { IconEye, IconEyeOff, IconLogin2, IconUserPlus } from "@tabler/icons-react";
 import { TextLink } from "@/components/ui/text-link";
+import { validateRegistrationUsername } from "@/lib/username";
 import Link from "next/link";
 
 function FormatError(error: string) {
@@ -99,6 +100,11 @@ export default function AuthForm({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (type === "register") {
+      const usernameError = validateRegistrationUsername(username);
+      if (usernameError) {
+        setError(usernameError);
+        return;
+      }
       if (password !== repPassword) {
         setError("Paroles nesakrīt!");
         return;
@@ -138,7 +144,9 @@ export default function AuthForm({
 
       <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
         <AuthField
-          label="Lietotājvārds"
+          label={
+            type === "register" ? "Lietotājvārds" : "Lietotājvārds vai e-pasts"
+          }
           name="username"
           autoComplete="username"
           required
