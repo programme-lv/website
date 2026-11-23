@@ -372,7 +372,7 @@ function LioLogo() {
 function PpsLogo() {
   return (
     <span className="grid size-[22px] shrink-0 place-items-center">
-      <Image alt="" src="/pps-logo.png" width={20} height={20} className="size-[20px] object-contain" />
+      <Image alt="" src="/pps-logo.png" width={20} height={20} unoptimized className="size-[20px] object-contain" />
     </span>
   );
 }

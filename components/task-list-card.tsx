@@ -242,6 +242,7 @@ function TaskCard(props: TaskCardProps) {
 							src="/pps-logo.png"
 							width={24}
 							height={24}
+							unoptimized
 							className="size-6 shrink-0 object-contain"
 						/>
 					)}
