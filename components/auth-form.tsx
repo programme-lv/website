@@ -4,7 +4,6 @@ import { useSearchParams } from "next/navigation";
 import { AuthContext } from "@/app/providers";
 import { registerUser, loginUser } from "@/lib/auth";
 import Alert from "@/components/alert";
-import { User } from "@/types/proglv";
 import GenericButton from "./generic-button";
 import AuthField from "./auth-field";
 import { IconEye, IconEyeOff, IconLogin2, IconUserPlus } from "@tabler/icons-react";
@@ -78,13 +77,7 @@ export default function AuthForm({
       if (response.status === "success") {
         const user = response.data;
 
-        authContext.setUser({
-          uuid: user.uuid,
-          username: user.username,
-          email: user.email,
-          firstname: user.firstname,
-          lastname: user.lastname,
-        } as User);
+        authContext.setUser(user);
 
         setIsRedirecting(true);
         window.location.href = redirectParam || "/tasks";

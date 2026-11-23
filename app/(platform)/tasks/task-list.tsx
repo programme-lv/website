@@ -33,6 +33,7 @@ import {
   parseTaskListSearchParams,
   taskListSearchHref,
   taskMatchesFilters,
+  sourcesFromFilterTree,
 } from "./origin-filter";
 
 type TaskListProps = {
@@ -156,7 +157,10 @@ function TaskListView({
   const currentFilterTree = hydrated && filterTreeQuery.data?.status === "success"
     ? (filterTreeQuery.data.data ?? filterTree)
     : filterTree;
-  const olympiads = currentFilterTree?.olympiads ?? [];
+  const sources = useMemo(
+    () => sourcesFromFilterTree(currentFilterTree?.sources, currentFilterTree?.olympiads ?? []),
+    [currentFilterTree],
+  );
 
   const tasks = useMemo(() => {
     const list = hydrated && listTasksQuery.data?.status === "success"
@@ -167,8 +171,8 @@ function TaskListView({
     );
   }, [hydrated, listTasksQuery.data, initialTasks]);
   const visibleTasks = useMemo(
-    () => tasks.filter((task) => taskMatchesFilters(task, filters, query)),
-    [tasks, filters, query],
+    () => tasks.filter((task) => taskMatchesFilters(task, filters, query, sources)),
+    [tasks, filters, query, sources],
   );
 
   const handleClear = useCallback(() => {
@@ -205,7 +209,7 @@ function TaskListView({
           {visibleTasks.length === 0 ? (
             <p className="px-1 text-sm text-gray-500">Nav uzdevumu</p>
           ) : (
-            <TaskCardGrid tasks={visibleTasks} userMaxScores={userMaxScores} />
+            <TaskCardGrid tasks={visibleTasks} userMaxScores={userMaxScores} hideTaskTags={authContext.user?.hide_task_tags === true} />
           )}
         </div>
         <aside className="hidden w-[17.5rem] shrink-0 lg:block" aria-label="Filtri">
@@ -214,7 +218,7 @@ function TaskListView({
               visibleCount={visibleTasks.length}
               value={filters}
               onChange={onFiltersChange ?? (() => {})}
-              olympiads={olympiads}
+              sources={sources}
               searchResetKey={searchResetKey}
               initialQuery={query}
               queryActive={query.trim() !== ""}
@@ -246,7 +250,7 @@ function TaskListView({
                   showTitle={false}
                   value={filters}
                   onChange={onFiltersChange ?? (() => {})}
-                  olympiads={olympiads}
+                  sources={sources}
                   searchResetKey={searchResetKey}
                   initialQuery={query}
                   queryActive={query.trim() !== ""}
@@ -265,9 +269,11 @@ function TaskListView({
 const TaskCardGrid = React.memo(function TaskCardGrid({
   tasks,
   userMaxScores,
+  hideTaskTags,
 }: {
   tasks: TaskPreview[];
   userMaxScores?: MaxScorePerTask;
+  hideTaskTags: boolean;
 }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -275,6 +281,7 @@ const TaskCardGrid = React.memo(function TaskCardGrid({
         <TaskCard
           key={task.short_id}
           {...task}
+          hide_task_tags={hideTaskTags}
           href={`/tasks/${task.short_id}`}
           user_max_score={userMaxScores?.[task.short_id]}
         />

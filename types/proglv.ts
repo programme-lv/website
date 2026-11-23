@@ -12,6 +12,7 @@ type User = {
   firstname: string | null;
   lastname: string | null;
   email_verified?: boolean;
+  hide_task_tags?: boolean;
 };
 
 export type { ProgrammingLanguage, User };

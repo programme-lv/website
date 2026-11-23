@@ -17,7 +17,7 @@ import {
   type TaskFilterSelection,
   type YearNode,
 } from "./origin-filter";
-import { TaskFilterOlympiad } from "@/types/task";
+import { TaskFilterSource } from "@/types/task";
 
 export { emptyTaskFilters, taskFiltersAreActive };
 export type { TaskFilterSelection };
@@ -37,7 +37,7 @@ type TaskFiltersProps = {
   visibleCount: number;
   value: TaskFilterSelection;
   onChange: (next: TaskFilterSelection) => void;
-  olympiads: TaskFilterOlympiad[];
+  sources: TaskFilterSource[];
   searchResetKey: number;
   initialQuery: string;
   queryActive: boolean;
@@ -50,7 +50,7 @@ export function TaskFilters({
   visibleCount,
   value,
   onChange,
-  olympiads,
+  sources,
   searchResetKey,
   initialQuery,
   queryActive,
@@ -58,7 +58,7 @@ export function TaskFilters({
   onClear,
   showTitle = true,
 }: TaskFiltersProps) {
-  const origins = decorateOriginTree(olympiads);
+  const origins = decorateOriginTree(sources);
   const [searchActive, setSearchActive] = useState(() => initialQuery.trim() !== "");
   const selectedOrigin = origins.find((item) => item.id === value.originId);
   const selectedYear = selectedOrigin?.years.find((item) => item.id === value.yearId);
@@ -131,7 +131,7 @@ export function TaskFilters({
       </div>
 
       <div className="min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-y-contain">
-        <FilterSection title="Olimpiāde">
+        <FilterSection title="Avots">
         {origins.map((item) => (
           <FilterOption
             key={item.id}
@@ -139,7 +139,7 @@ export function TaskFilters({
             label={item.label}
             description={item.fullName}
             count={item.count}
-            leading={item.logo === "lio" ? <LioLogo /> : <OriginMark label={item.label} />}
+            leading={item.logo === "lio" ? <LioLogo /> : item.logo === "pps" ? <PpsLogo /> : <OriginMark label={item.label} />}
             onSelect={() => selectOrigin(item.id)}
           />
         ))}
@@ -347,7 +347,7 @@ function FilterOption({
           {label}
         </span>
         {description && description !== label && (
-          <span className="block truncate text-xs text-gray-500">{description}</span>
+          <span className={cn("block text-xs text-gray-500", label === "PPS" ? "text-balance" : "truncate")}>{description}</span>
         )}
       </span>
       <span className="shrink-0 tabular-nums text-xs text-gray-500">{count}</span>
@@ -366,6 +366,14 @@ function LioLogo() {
       sizes="22px"
       className="size-[22px] shrink-0"
     />
+  );
+}
+
+function PpsLogo() {
+  return (
+    <span className="grid size-[22px] shrink-0 place-items-center">
+      <Image alt="" src="/pps-logo.png" width={20} height={20} className="size-[20px] object-contain" />
+    </span>
   );
 }
 

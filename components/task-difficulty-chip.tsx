@@ -26,8 +26,7 @@ export default function TaskDifficultyChip({
   return (
     <Chip className={config.className} size={size} variant="soft" title={description}>
       <span id={descriptionId} className="sr-only">{description}</span>
-      <span className="sm:hidden" aria-hidden>{difficulty_rating}</span>
-      <span className="hidden sm:inline font-normal px-0.5" aria-hidden>{config.label}</span>
+      <span className="font-normal sm:px-0.5" aria-hidden>{config.label}</span>
     </Chip>
   );
 }

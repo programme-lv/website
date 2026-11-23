@@ -11,14 +11,17 @@ import TaskDifficultyChip from "./task-difficulty-chip";
 import TaskCommunityStats, { EmptyTaskSolverCount } from "./task-community-stats";
 import { cn } from "./cn";
 import { buildCommunityStats } from "@/lib/task/community-stats";
-import { compactLioOrigin } from "@/lib/task/origin-compact";
+import { compactLioOrigin, PPS_SOURCE_NAME } from "@/lib/task/origin-compact";
+import { highlightPresentation, visibleHighlights } from "@/lib/task/highlight-presentation";
 import { MaxScore } from "@/types/scores";
 import { CommunityStats, HighlightTag, IllustrationImage, illustrationUrl } from "@/types/task";
 
 type TaskCardProps = {
 	highlighted_tags?: HighlightTag[];
+	hide_task_tags?: boolean;
 	href: string;
 	full_name: string;
+	source_id?: string;
 	origin_olympiad?: string;
 	origin_year?: string;
 	olymp_stage?: string;
@@ -85,6 +88,7 @@ function TaskCard(props: TaskCardProps) {
 	const statusId = useId();
 	const countId = useId();
 	const tagsId = useId();
+	const sourceId = useId();
 	const titleBoxRef = useRef<HTMLDivElement>(null);
 	const titleMeasureRef = useRef<HTMLSpanElement>(null);
 	const [titleCompact, setTitleCompact] = useState(false);
@@ -120,17 +124,20 @@ function TaskCard(props: TaskCardProps) {
 
 	const solve_state = getSolveState(props.user_max_score);
 	const communityStats = buildCommunityStats(props.community_stats);
-	const tags = props.highlighted_tags ?? [];
+	const tags = visibleHighlights(props.highlighted_tags, props.hide_task_tags);
+	const isPps = props.source_id === "PPS";
 	const descriptionIds = [
 		props.difficulty_rating > 0 && difficultyId,
 		statusId,
+		isPps && sourceId,
 		tags.length > 0 && tagsId,
 		!communityStats && countId,
 	].filter(Boolean).join(" ");
 	const originNote = insertNonBreakableSpaces(
 		props.origin_note_short || props.origin_note,
 	);
-	const compactOrigin = compactLioOrigin(props);
+	const isLio = !isPps && props.origin_olympiad === "LIO";
+	const compactOrigin = isPps ? null : compactLioOrigin(props);
 	// Two tags are one spacing unit taller than two origin lines. Compensate
 	// for half that difference to keep the count at the origin's bottom edge.
 	const countInset = compactOrigin && tags.length === 2 ? "mb-2.5" : undefined;
@@ -140,8 +147,7 @@ function TaskCard(props: TaskCardProps) {
 	return (
 		<div
 			className={
-				cn("grid grid-cols-[auto_minmax(0,1fr)_auto] grid-rows-[auto_1fr] overflow-hidden",
-					props.illustr_img && "min-h-[4.375rem] sm:min-h-20",
+				cn("grid min-h-[4.375rem] grid-cols-[auto_minmax(0,1fr)_auto] grid-rows-[auto_1fr] overflow-hidden sm:min-h-20",
 					{ "bg-yellow-50": solve_state === "attempted" },
 					{ "bg-white": solve_state === "todo" },
 					{ "bg-green-50": solve_state === "solved" },
@@ -215,7 +221,7 @@ function TaskCard(props: TaskCardProps) {
 					"col-start-2 row-start-2 flex min-w-0 items-center self-end pb-2 pe-2",
 					props.illustr_img ? "ps-2.5" : "ps-3",
 				)}>
-					{props.origin_olympiad === "LIO" && (
+					{isLio && (
 						<div style={{ width: `${lioLogoSize}px`, height: `${lioLogoSize}px`, minWidth: `${lioLogoSize}px` }}>
 							<Image
 								alt="Latvijas informātikas olimpiādes logo"
@@ -227,6 +233,17 @@ function TaskCard(props: TaskCardProps) {
 								loading="eager"
 							/>
 						</div>
+					)}
+					{isPps && (
+						<Image
+							id={sourceId}
+							alt={PPS_SOURCE_NAME}
+							title={PPS_SOURCE_NAME}
+							src="/pps-logo.png"
+							width={24}
+							height={24}
+							className="size-6 shrink-0 object-contain"
+						/>
 					)}
 					{compactOrigin ? (
 						<div
@@ -248,13 +265,16 @@ function TaskCard(props: TaskCardProps) {
 					{tags.length > 0 && (
 						<ul id={tagsId} aria-label="Izceltie temati" className={cn(
 							"flex min-w-0 flex-col items-start gap-1.5",
-							(originNote || props.origin_olympiad === "LIO") && "ms-1.5 sm:ms-2.5",
+							(originNote || isLio || isPps) && "ms-1.5 sm:ms-2.5",
 						)}>
-							{tags.map((tag) => (
-								<li key={tag.id} title={tag.label} className="max-w-full truncate rounded-sm bg-default px-1 text-xs leading-tight text-default-700 sm:px-1.5">
-									{tag.label}
-								</li>
-							))}
+							{tags.map((tag) => {
+								const presentation = highlightPresentation(tag);
+								return (
+									<li key={tag.id} title={presentation.title} aria-label={presentation.title} className="max-w-full truncate rounded-sm bg-default px-1 text-xs leading-tight text-default-700 sm:px-1.5">
+										{presentation.text}
+									</li>
+								);
+							})}
 						</ul>
 					)}
 				</div>

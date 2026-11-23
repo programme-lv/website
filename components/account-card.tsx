@@ -1,9 +1,11 @@
 "use client";
 
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useId, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import Link from "next/link";
+import { saveTaskTagPreference } from "@/lib/user/preferences";
+import { useHydrationReady } from "@/lib/use-hydration-ready";
 
 import { AuthContext } from "@/app/providers";
 import {
@@ -22,6 +24,8 @@ function formatError(error: string) {
 
 export default function AccountCard({ user }: { user: User }) {
   const { setUser } = useContext(AuthContext);
+  const hydrated = useHydrationReady();
+  const taskTagsDescription = useId();
   const [firstname, setFirstname] = useState(user.firstname ?? "");
   const [lastname, setLastname] = useState(user.lastname ?? "");
   const [profileError, setProfileError] = useState<string | null>(null);
@@ -31,6 +35,7 @@ export default function AccountCard({ user }: { user: User }) {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordError, setPasswordError] = useState<string | null>(null);
 
+  const [preferenceError, setPreferenceError] = useState<string | null>(null);
   const [verifyError, setVerifyError] = useState<string | null>(null);
   const [verifyInfo, setVerifyInfo] = useState<string | null>(null);
 
@@ -44,18 +49,35 @@ export default function AccountCard({ user }: { user: User }) {
     onMutate: () => setProfileError(null),
     onSuccess: (response) => {
       if (response.status === "success") {
-        setUser((prev) => ({
+        setUser((prev) => prev?.uuid === user.uuid ? ({
           ...prev,
           ...response.data,
           email_verified:
             response.data.email_verified ?? prev?.email_verified,
-        }));
+          hide_task_tags: prev.hide_task_tags,
+        }) : prev);
         toast.success("Profils saglabāts");
         return;
       }
       setProfileError(formatError(response.message));
     },
     onError: () => setProfileError("Neizdevās saglabāt profilu."),
+  });
+
+  const preferenceMutation = useMutation({
+    mutationFn: saveTaskTagPreference,
+    onMutate: () => setPreferenceError(null),
+    onSuccess: (response) => {
+      if (response.status === "success") {
+        setUser((prev) => prev?.uuid === user.uuid
+          ? { ...prev, hide_task_tags: response.data.hide_task_tags }
+          : prev);
+        toast.success("Iestatījums saglabāts");
+      } else {
+        setPreferenceError(formatError(response.message));
+      }
+    },
+    onError: () => setPreferenceError("Neizdevās saglabāt iestatījumu."),
   });
 
   const passwordMutation = useMutation({
@@ -169,6 +191,25 @@ export default function AccountCard({ user }: { user: User }) {
             </GenericButton>
           </div>
         )}
+
+        <div className="flex flex-col gap-2">
+          <label className="flex min-h-6 w-fit items-center gap-2 text-sm">
+            <input
+              type="checkbox"
+              autoComplete="off"
+              className="size-4 accent-primary"
+              aria-describedby={taskTagsDescription}
+              checked={user.hide_task_tags === true}
+              disabled={!hydrated || preferenceMutation.isPending}
+              onChange={(event) => preferenceMutation.mutate(event.currentTarget.checked)}
+            />
+            Paslēpt izceltos tematus
+          </label>
+          <p id={taskTagsDescription} className="text-xs text-[#6f6f6f]">
+            Uzdevumu sarakstā nerādīt tematus, kas var atklāt risinājuma ideju.
+          </p>
+          {preferenceError && <Alert message={preferenceError} type="error" onClose={() => setPreferenceError(null)} />}
+        </div>
 
         <form
           className="flex flex-col gap-4"

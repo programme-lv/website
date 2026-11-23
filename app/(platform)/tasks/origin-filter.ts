@@ -1,8 +1,9 @@
-import { TaskFilterOlympiad, TaskPreview } from "@/types/task";
+import type { TaskFilterOlympiad, TaskFilterSource, TaskPreview } from "../../../types/task";
 import {
   normalizeOriginYear,
+  PPS_SOURCE_NAME,
   stageLabel,
-} from "@/lib/task/origin-compact";
+} from "../../../lib/task/origin-compact";
 
 export type TaskFilterSelection = {
   originId: string | null;
@@ -98,11 +99,11 @@ export function taskFiltersAreActive(value: TaskFilterSelection): boolean {
   return value.originId != null;
 }
 
-const OLYMPIAD_NAMES: Record<string, string> = {
+const SOURCE_NAMES: Record<string, string> = {
   LIO: "Latvijas informātikas olimpiāde",
   BOI: "Baltijas informātikas olimpiāde",
   IOI: "Starptautiskā informātikas olimpiāde",
-  other: "Uzdevumi bez olimpiādes izcelsmes",
+  PPS: PPS_SOURCE_NAME,
 };
 
 const AGE_GROUP_LABELS: Record<string, string> = {
@@ -136,7 +137,8 @@ export type OriginNode = {
   label: string;
   fullName: string;
   count: number;
-  logo?: "lio";
+  kind: TaskFilterSource["kind"];
+  logo?: "lio" | "pps";
   years: YearNode[];
 };
 
@@ -164,14 +166,19 @@ export function divisionKind(divisions?: string[]): string {
   return "";
 }
 
-export function decorateOriginTree(olympiads: TaskFilterOlympiad[]): OriginNode[] {
-  return olympiads.map((olympiad) => ({
-    id: olympiad.id,
-    label: olympiad.id === "other" ? "Citi" : olympiad.id,
-    fullName: OLYMPIAD_NAMES[olympiad.id] ?? "",
-    count: olympiad.count,
-    logo: olympiad.id === "LIO" ? "lio" : undefined,
-    years: olympiad.years.map((year) => ({
+export function sourcesFromFilterTree(sources: TaskFilterSource[] | undefined, olympiads: TaskFilterOlympiad[]): TaskFilterSource[] {
+  return sources ?? olympiads.map((item) => ({ ...item, kind: item.id === "other" ? "other" : "olympiad" }));
+}
+
+export function decorateOriginTree(sources: TaskFilterSource[]): OriginNode[] {
+  return sources.map((source) => ({
+    id: source.id,
+    label: source.id === "other" ? "Citi" : source.id,
+    fullName: SOURCE_NAMES[source.id] ?? "",
+    count: source.count,
+    kind: source.kind,
+    logo: source.id === "LIO" ? "lio" : source.id === "PPS" ? "pps" : undefined,
+    years: (source.kind === "olympiad" ? source.years : []).map((year) => ({
       id: year.id,
       label: `${year.id}.\u00A0g.`,
       count: year.count,
@@ -193,19 +200,23 @@ export function taskMatchesFilters(
   task: TaskPreview,
   filters: TaskFilterSelection,
   query: string,
+  sources?: TaskFilterSource[],
 ): boolean {
-  const olympiad = normalizeOlympiad(task.origin_olympiad);
-  if (filters.originId != null && olympiad !== filters.originId) {
+  const source = task.source_id?.trim() || normalizeOlympiad(task.origin_olympiad);
+  if (filters.originId != null && source !== filters.originId) {
     return false;
   }
+  const kind = sources?.find((item) => item.id === filters.originId)?.kind
+    ?? (filters.originId === "PPS" || filters.originId === "other" ? "other" : "olympiad");
+  const applyOlympiadFilters = filters.originId != null && kind === "olympiad";
   const year = normalizeYear(task.origin_year);
-  if (filters.yearId != null && year !== filters.yearId) {
+  if (applyOlympiadFilters && filters.yearId != null && year !== filters.yearId) {
     return false;
   }
-  if (filters.stageId != null && (task.olymp_stage ?? "") !== filters.stageId) {
+  if (applyOlympiadFilters && filters.stageId != null && (task.olymp_stage ?? "") !== filters.stageId) {
     return false;
   }
-  if (filters.ageGroupId != null && divisionKind(task.origin_divisions) !== filters.ageGroupId) {
+  if (applyOlympiadFilters && filters.ageGroupId != null && divisionKind(task.origin_divisions) !== filters.ageGroupId) {
     return false;
   }
   const needle = query.trim().toLowerCase();

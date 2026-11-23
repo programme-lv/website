@@ -1,3 +1,5 @@
+export const PPS_SOURCE_NAME = "Pirmā programmēšanas skola";
+
 const STAGE_LABELS: Record<string, string> = {
 	school: "Skolas",
 	municipal: "Novada",

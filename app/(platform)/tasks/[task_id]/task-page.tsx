@@ -16,6 +16,7 @@ import CodeBlock from "@/components/code-block";
 import GenericTable from "@/components/generic-table";
 import MarkdownRenderer from "@/components/markdown-renderer";
 import TaskDifficultyChip from "@/components/task-difficulty-chip";
+import { PPS_SOURCE_NAME } from "@/lib/task/origin-compact";
 import LIO_LOGO from "@/public/lio-logo-transparent.png";
 
 import InteractionTrace from "./interaction-trace";
@@ -52,7 +53,9 @@ export default function TaskDetailsPage({ task }: { task: Task }) {
 }
 
 function TaskHeader({ task }: { task: Task }) {
-	const originNote = task.origin_notes_short?.lv || task.origin_notes?.lv;
+	const isPps = task.source_id === "PPS";
+	const isLio = task.origin_olympiad === "LIO";
+	const originNote = task.origin_notes_short?.lv || task.origin_notes?.lv || (isPps ? PPS_SOURCE_NAME : "");
 
 	return (
 		<header className="flex min-w-0 items-start gap-4">
@@ -74,9 +77,9 @@ function TaskHeader({ task }: { task: Task }) {
 					)}
 				</div>
 				<div className="mt-3 flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
-				{(task.origin_olympiad === "LIO" || originNote) && (
+				{(isLio || isPps || originNote) && (
 					<div className="flex text-sm items-start min-w-0">
-						{task.origin_olympiad === "LIO" && (
+						{isLio && (
 							<Image
 								alt="Latvijas Informātikas olimpiādes logo"
 								className="h-auto shrink-0"
@@ -86,8 +89,17 @@ function TaskHeader({ task }: { task: Task }) {
 								sizes="40px"
 							/>
 						)}
+						{isPps && (
+							<Image
+								alt=""
+								src="/pps-logo.png"
+								width={32}
+								height={32}
+								className="size-8 shrink-0 object-contain"
+							/>
+						)}
 						{originNote && (
-							<p className="ms-2 min-w-0 max-w-[26ch] break-words text-balance leading-5 text-gray-700">
+							<p className={isPps ? "ms-2 min-w-0 self-center leading-5 text-gray-700" : "ms-2 min-w-0 max-w-[26ch] break-words text-balance leading-5 text-gray-700"}>
 								{originNote}
 							</p>
 						)}
