@@ -17,7 +17,7 @@ export function illustrationUrl(img: IllustrationImage, variant: "list" | "view"
     return img.http_url;
 }
 
-type HighlightTag = { id: string; label: string };
+type HighlightTag = { id: string; label: string; abbreviation?: string; english_label?: string };
 
 type Task = {
     highlighted_tags?: HighlightTag[];
@@ -25,6 +25,7 @@ type Task = {
     task_full_name: string;
     memory_limit_megabytes: number;
     cpu_time_limit_seconds: number;
+    source_id?: string;
     origin_olympiad: string;
     illustration_img?: IllustrationImage;
     difficulty_rating: 1 | 2 | 3 | 4 | 5;
@@ -93,6 +94,7 @@ type TaskPreview = {
     full_name: string;
     illustr_img?: IllustrationImage;
     difficulty_rating: 1 | 2 | 3 | 4 | 5;
+    source_id?: string;
     origin_olympiad?: string;
     origin_year?: string;
     olymp_stage?: string;
@@ -125,7 +127,12 @@ type TaskFilterOlympiad = {
     years: TaskFilterYear[];
 };
 
+type TaskFilterSource = TaskFilterOlympiad & {
+    kind: "olympiad" | "institution" | "other";
+};
+
 type TaskFilterTree = {
+    sources?: TaskFilterSource[];
     olympiads: TaskFilterOlympiad[];
 };
 
@@ -142,6 +149,7 @@ export type {
     CommunityStats,
     TaskFilterTree,
     TaskFilterOlympiad,
+    TaskFilterSource,
     TaskFilterYear,
     TaskFilterStage,
     TaskFilterDivision,

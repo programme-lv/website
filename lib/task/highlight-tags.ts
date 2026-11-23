@@ -47,14 +47,14 @@ export async function saveHighlightTags(taskId: string, ids: string[], revision:
   return result;
 }
 
-export async function createHighlightTag(taskId: string, id: string, label: string) {
-  const result = await request<CatalogueTag>("/task-highlight-tags", "POST", { id, label });
+export async function createHighlightTag(taskId: string, id: string, label: string, abbreviation: string, english_label: string) {
+  const result = await request<CatalogueTag>("/task-highlight-tags", "POST", { id, label, abbreviation, english_label });
   if (result.ok) invalidate(taskId);
   return result;
 }
 
-export async function updateHighlightTag(taskId: string, tag: CatalogueTag, label: string, archived: boolean) {
-  const result = await request<CatalogueTag>(`/task-highlight-tags/${encodeURIComponent(tag.id)}`, "PATCH", { label, archived, expected_revision: tag.revision });
+export async function updateHighlightTag(taskId: string, tag: CatalogueTag, label: string, archived: boolean, aliases?: { abbreviation: string; english_label: string }) {
+  const result = await request<CatalogueTag>(`/task-highlight-tags/${encodeURIComponent(tag.id)}`, "PATCH", { label, archived, ...aliases, expected_revision: tag.revision });
   if (result.ok) {
     // A rename can affect any task, not only the one being edited.
     revalidatePath("/tasks", "layout");

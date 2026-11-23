@@ -12,6 +12,7 @@ export default async function whoami(): Promise<ApiResponse<User | null>> {
             "Cookie": (await cookies()).toString()
         },
         credentials: "include",
+        cache: "no-store",
     });
 
     return response.json();

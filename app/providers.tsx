@@ -13,6 +13,7 @@ import {
   useEffect,
   useState,
   useCallback,
+  useRef,
 } from "react";
 
 import { User } from "@/types/proglv";
@@ -37,12 +38,19 @@ export interface ProvidersProps {
 const queryClient = new QueryClient();
 
 export function Providers({ children, themeProps, propsUser }: ProvidersProps) {
-  const [user, setUser] = useState<User | null>(propsUser);
+  const [user, setUserState] = useState<User | null>(propsUser);
+  const revision = useRef(0);
+  const setUser = useCallback<Dispatch<SetStateAction<User | null>>>((next) => {
+    revision.current += 1;
+    setUserState(next);
+  }, []);
 
   const refreshUser = useCallback(async () => {
+    const startedAt = revision.current;
     const res = await whoami();
-    if (res.status === "success") {
-      setUser(res.data);
+    if (res.status === "success" && revision.current === startedAt) {
+      revision.current += 1;
+      setUserState(res.data);
     }
   }, []);
 

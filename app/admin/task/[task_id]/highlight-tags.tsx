@@ -19,8 +19,12 @@ export default function HighlightTagsEditor({ taskId, initial }: { taskId: strin
   const [query, setQuery] = useState("");
   const [newId, setNewId] = useState("");
   const [newLabel, setNewLabel] = useState("");
+  const [newAbbreviation, setNewAbbreviation] = useState("");
+  const [newEnglishLabel, setNewEnglishLabel] = useState("");
   const [editId, setEditId] = useState("");
   const [editLabel, setEditLabel] = useState("");
+  const [editAbbreviation, setEditAbbreviation] = useState("");
+  const [editEnglishLabel, setEditEnglishLabel] = useState("");
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState(initial.catalogue.ok && initial.assignment.ok ? "" : "Neizdevās ielādēt tematus. Mēģiniet atjaunot datus.");
   const [stale, setStale] = useState(false);
@@ -57,15 +61,15 @@ export default function HighlightTagsEditor({ taskId, initial }: { taskId: strin
   }
   async function add() {
     setBusy(true);
-    const result = await createHighlightTag(taskId, newId, newLabel);
+    const result = await createHighlightTag(taskId, newId, newLabel, newAbbreviation, newEnglishLabel);
     setBusy(false);
     if (!result.ok) { setMessage(result.message); return; }
     setCatalogue(items => [...items, result.data]);
-    setNewId(""); setNewLabel(""); setMessage("Temats pievienots sarakstam.");
+    setNewId(""); setNewLabel(""); setNewAbbreviation(""); setNewEnglishLabel(""); setMessage("Temats pievienots sarakstam.");
   }
-  async function edit(tag: CatalogueTag, label: string, archived: boolean) {
+  async function edit(tag: CatalogueTag, label: string, archived: boolean, aliases?: { abbreviation: string; english_label: string }) {
     setBusy(true);
-    const result = await updateHighlightTag(taskId, tag, label, archived);
+    const result = await updateHighlightTag(taskId, tag, label, archived, aliases);
     setBusy(false);
     if (!result.ok) {
       setStale(result.stale);
@@ -108,14 +112,16 @@ export default function HighlightTagsEditor({ taskId, initial }: { taskId: strin
         <div className="space-y-2">
           {catalogue.map(tag => <div key={tag.id} className="border-b py-2 space-y-2">
             <div className="flex flex-wrap items-center gap-2 text-sm"><span>{tag.label} ({tag.id}){tag.archived ? " - pārtraukts" : ""}</span>
-              <Button size="sm" variant="ghost" isDisabled={busy || stale} onClick={() => { setEditId(tag.id); setEditLabel(tag.label); }}>Pārdēvēt</Button>
+              <Button size="sm" variant="ghost" isDisabled={busy || stale} onClick={() => { setEditId(tag.id); setEditLabel(tag.label); setEditAbbreviation(tag.abbreviation ?? ""); setEditEnglishLabel(tag.english_label ?? ""); }}>Rediģēt</Button>
               <Button size="sm" variant="default" isDisabled={busy || stale} onClick={() => edit(tag, tag.label, !tag.archived)}>{tag.archived ? "Atjaunot" : "Pārtraukt"}</Button>
             </div>
-            {editId === tag.id && <div className="flex flex-wrap items-end gap-2"><TextField label="Temata nosaukums" size="sm" value={editLabel} onChange={setEditLabel} fullWidth={false} /><Button size="sm" isDisabled={busy || stale} onClick={() => edit(tag, editLabel, tag.archived)}>Saglabāt</Button><Button size="sm" variant="ghost" onClick={() => setEditId("")}>Atcelt</Button></div>}
+            {editId === tag.id && <div className="flex flex-wrap items-end gap-2"><TextField label="Nosaukums latviski" size="sm" value={editLabel} onChange={setEditLabel} fullWidth={false} /><TextField label="Saīsinājums (neobligāti)" size="sm" value={editAbbreviation} onChange={setEditAbbreviation} fullWidth={false} /><TextField label="Nosaukums angliski (neobligāti)" size="sm" value={editEnglishLabel} onChange={setEditEnglishLabel} fullWidth={false} /><Button size="sm" isDisabled={busy || stale} onClick={() => edit(tag, editLabel, tag.archived, { abbreviation: editAbbreviation, english_label: editEnglishLabel })}>Saglabāt</Button><Button size="sm" variant="ghost" onClick={() => setEditId("")}>Atcelt</Button></div>}
           </div>)}
           <div className="flex flex-wrap items-end gap-2">
             <TextField label="Identifikators (ASCII, piemēram, masivi)" size="sm" value={newId} onChange={setNewId} fullWidth={false} />
             <TextField label="Nosaukums latviski" size="sm" value={newLabel} onChange={setNewLabel} fullWidth={false} />
+            <TextField label="Saīsinājums (neobligāti)" size="sm" value={newAbbreviation} onChange={setNewAbbreviation} fullWidth={false} />
+            <TextField label="Nosaukums angliski (neobligāti)" size="sm" value={newEnglishLabel} onChange={setNewEnglishLabel} fullWidth={false} />
             <Button size="sm" isDisabled={busy || stale} onClick={add}>Pievienot tematu</Button>
           </div>
         </div>
