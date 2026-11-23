@@ -98,7 +98,7 @@ function TaskHeader({ task }: { task: Task }) {
 								width={32}
 								height={32}
 								unoptimized
-								className="size-8 shrink-0 object-contain"
+								className="size-8 shrink-0 self-center object-contain"
 							/>
 						)}
 						{originNote && (
