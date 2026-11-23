@@ -14,7 +14,6 @@ import {
   decorateOriginTree,
   emptyTaskFilters,
   taskFiltersAreActive,
-  type OriginNode,
   type TaskFilterSelection,
   type YearNode,
 } from "./origin-filter";
@@ -24,34 +23,6 @@ export { emptyTaskFilters, taskFiltersAreActive };
 export type { TaskFilterSelection };
 
 const ALL_YEARS_KEY = "all";
-
-function selectedCount(origins: OriginNode[], value: TaskFilterSelection): number {
-  if (!value.originId) {
-    return origins.reduce((sum, item) => sum + item.count, 0);
-  }
-  const originNode = origins.find((item) => item.id === value.originId);
-  if (!originNode) {
-    return 0;
-  }
-  if (!value.yearId) {
-    return originNode.count;
-  }
-  const yearNode = originNode.years.find((item) => item.id === value.yearId);
-  if (!yearNode) {
-    return 0;
-  }
-  if (!value.stageId) {
-    return yearNode.count;
-  }
-  const stageNode = yearNode.stages.find((item) => item.id === value.stageId);
-  if (!stageNode) {
-    return 0;
-  }
-  if (!value.ageGroupId) {
-    return stageNode.count;
-  }
-  return stageNode.ageGroups.find((item) => item.id === value.ageGroupId)?.count ?? 0;
-}
 
 function uzdevumiLabel(count: number): string {
   const mod100 = count % 100;
@@ -63,6 +34,7 @@ function uzdevumiLabel(count: number): string {
 }
 
 type TaskFiltersProps = {
+  visibleCount: number;
   value: TaskFilterSelection;
   onChange: (next: TaskFilterSelection) => void;
   olympiads: TaskFilterOlympiad[];
@@ -75,6 +47,7 @@ type TaskFiltersProps = {
 };
 
 export function TaskFilters({
+  visibleCount,
   value,
   onChange,
   olympiads,
@@ -90,7 +63,6 @@ export function TaskFilters({
   const selectedOrigin = origins.find((item) => item.id === value.originId);
   const selectedYear = selectedOrigin?.years.find((item) => item.id === value.yearId);
   const selectedStage = selectedYear?.stages.find((item) => item.id === value.stageId);
-  const count = selectedCount(origins, value);
   const canClear = searchActive || queryActive || value.originId != null;
 
   const selectOrigin = (originId: string) => {
@@ -134,7 +106,7 @@ export function TaskFilters({
               <h2 className="text-sm font-medium text-default-800">Filtri</h2>
             )}
             <p className={cn("text-xs text-gray-500", showTitle && "mt-0.5")}>
-              {uzdevumiLabel(count)}
+              {uzdevumiLabel(visibleCount)}
             </p>
           </div>
           <Button

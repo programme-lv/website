@@ -9,7 +9,6 @@ import React, {
   useState,
 } from "react";
 import { useQuery } from "@tanstack/react-query";
-import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { Modal, cn } from "@heroui/react";
 import { IconFilter } from "@tabler/icons-react";
@@ -22,6 +21,7 @@ import { TaskFilterTree, TaskPreview } from "@/types/task";
 import { AuthContext } from "@/app/providers";
 import { getMaxScorePerTask } from "@/lib/subms";
 import { MaxScorePerTask } from "@/types/scores";
+import { useHydrationReady } from "@/lib/use-hydration-ready";
 
 import {
   emptyTaskFilters,
@@ -127,6 +127,7 @@ function TaskListView({
   onClearFilters?: () => void;
 }) {
   const authContext = useContext(AuthContext);
+  const hydrated = useHydrationReady();
   const [searchResetKey, setSearchResetKey] = useState(0);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const filtersActive = taskFiltersAreActive(filters) || query.trim() !== "";
@@ -134,32 +135,37 @@ function TaskListView({
   const userMaxScoresQuery = useQuery({
     queryKey: ["userScores", authContext.user?.username],
     queryFn: () => getMaxScorePerTask(authContext.user?.username ?? ""),
-    enabled: !initialUserMaxScores && !!authContext.user?.username,
+    enabled: hydrated && !initialUserMaxScores && !!authContext.user?.username,
   });
   const listTasksQuery = useQuery({
     queryKey: ["tasks"],
     queryFn: listTasks,
+    enabled: hydrated,
   });
   const filterTreeQuery = useQuery({
     queryKey: ["task-filters"],
     queryFn: listTaskFilters,
+    enabled: hydrated,
     initialData: filterTree
       ? { status: "success" as const, data: filterTree }
       : undefined,
   });
 
-  const olympiads = filterTreeQuery.data?.status === "success"
-    ? (filterTreeQuery.data.data?.olympiads ?? [])
-    : [];
+  // Disabled queries can still expose cached results. The first render must
+  // use the same snapshot on the server and in the browser.
+  const currentFilterTree = hydrated && filterTreeQuery.data?.status === "success"
+    ? (filterTreeQuery.data.data ?? filterTree)
+    : filterTree;
+  const olympiads = currentFilterTree?.olympiads ?? [];
 
   const tasks = useMemo(() => {
-    const list = listTasksQuery.data?.status === "success"
-      ? (listTasksQuery.data.data ?? [])
+    const list = hydrated && listTasksQuery.data?.status === "success"
+      ? (listTasksQuery.data.data ?? initialTasks)
       : initialTasks;
     return [...list].sort(
       (a, b) => a.difficulty_rating - b.difficulty_rating,
     );
-  }, [listTasksQuery.data, initialTasks]);
+  }, [hydrated, listTasksQuery.data, initialTasks]);
   const visibleTasks = useMemo(
     () => tasks.filter((task) => taskMatchesFilters(task, filters, query)),
     [tasks, filters, query],
@@ -170,9 +176,11 @@ function TaskListView({
     onClearFilters?.();
   }, [onClearFilters]);
 
-  let userMaxScores = initialUserMaxScores ?? userMaxScoresQuery.data;
+  const userMaxScores = hydrated && userMaxScoresQuery.isSuccess
+    ? (userMaxScoresQuery.data ?? initialUserMaxScores)
+    : initialUserMaxScores;
 
-  if (listTasksQuery.error) {
+  if (hydrated && listTasksQuery.error) {
     return (
       <Alert message="Failed to load tasks" type="error" onClose={() => null} />
     );
@@ -203,6 +211,7 @@ function TaskListView({
         <aside className="hidden w-[17.5rem] shrink-0 lg:block" aria-label="Filtri">
           <div className="sticky top-3 flex max-h-[calc(100dvh-1.5rem)] flex-col overflow-hidden rounded-sm border border-zinc-200 bg-white p-3">
             <TaskFilters
+              visibleCount={visibleTasks.length}
               value={filters}
               onChange={onFiltersChange ?? (() => {})}
               olympiads={olympiads}
@@ -232,6 +241,7 @@ function TaskListView({
               </Modal.Header>
               <Modal.Body className="flex max-h-[min(70vh,32rem)] flex-col overflow-hidden px-3 py-4">
                 <TaskFilters
+                  visibleCount={visibleTasks.length}
                   key={filtersOpen ? `open-${searchResetKey}` : "closed"}
                   showTitle={false}
                   value={filters}
@@ -262,19 +272,12 @@ const TaskCardGrid = React.memo(function TaskCardGrid({
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
       {tasks.map((task) => (
-        <Link
+        <TaskCard
           key={task.short_id}
-          className="contents"
+          {...task}
           href={`/tasks/${task.short_id}`}
-          prefetch={true}
-        >
-          {userMaxScores && (
-            <TaskCard key={task.short_id} {...task} user_max_score={userMaxScores[task.short_id]}/>
-          )}
-          {!userMaxScores && (
-            <TaskCard key={task.short_id} {...task} />
-          )}
-        </Link>
+          user_max_score={userMaxScores?.[task.short_id]}
+        />
       ))}
     </div>
   );
