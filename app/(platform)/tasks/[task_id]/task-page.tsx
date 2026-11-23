@@ -55,7 +55,9 @@ export default function TaskDetailsPage({ task }: { task: Task }) {
 function TaskHeader({ task }: { task: Task }) {
 	const isPps = task.source_id === "PPS";
 	const isLio = task.origin_olympiad === "LIO";
-	const originNote = task.origin_notes_short?.lv || task.origin_notes?.lv || (isPps ? PPS_SOURCE_NAME : "");
+	const originNote = isPps
+		? `Uzdevumu sagatavoja\n${PPS_SOURCE_NAME} (PPS)`
+		: task.origin_notes_short?.lv || task.origin_notes?.lv;
 
 	return (
 		<header className="flex min-w-0 items-start gap-4">
@@ -95,11 +97,12 @@ function TaskHeader({ task }: { task: Task }) {
 								src="/pps-logo.png"
 								width={32}
 								height={32}
+								unoptimized
 								className="size-8 shrink-0 object-contain"
 							/>
 						)}
 						{originNote && (
-							<p className={isPps ? "ms-2 min-w-0 self-center leading-5 text-gray-700" : "ms-2 min-w-0 max-w-[26ch] break-words text-balance leading-5 text-gray-700"}>
+							<p className={isPps ? "ms-2 min-w-0 self-center leading-5 whitespace-pre-line text-gray-700" : "ms-2 min-w-0 max-w-[26ch] break-words text-balance leading-5 text-gray-700"}>
 								{originNote}
 							</p>
 						)}
