@@ -1,4 +1,8 @@
 import { TaskFilterOlympiad, TaskPreview } from "@/types/task";
+import {
+  normalizeOriginYear,
+  stageLabel,
+} from "@/lib/task/origin-compact";
 
 export type TaskFilterSelection = {
   originId: string | null;
@@ -101,13 +105,6 @@ const OLYMPIAD_NAMES: Record<string, string> = {
   other: "Uzdevumi bez olimpiādes izcelsmes",
 };
 
-const STAGE_LABELS: Record<string, string> = {
-  school: "Skolas",
-  municipal: "Novada",
-  national: "Valsts",
-  selection: "Atlases",
-};
-
 const AGE_GROUP_LABELS: Record<string, string> = {
   junior: "Jaunākā (8.–10. kl.)",
   senior: "Vecākā (11.–12. kl.)",
@@ -149,24 +146,7 @@ export function normalizeOlympiad(raw?: string): string {
 }
 
 export function normalizeYear(raw?: string): string {
-  const value = (raw ?? "").trim();
-  if (value === "") {
-    return "";
-  }
-  const parts = value.split("/");
-  const last = Number(parts[parts.length - 1]);
-  if (!Number.isInteger(last)) {
-    return value;
-  }
-  if (parts.length === 2) {
-    const first = Number(parts[0]);
-    if (!Number.isInteger(first) || first + 1 !== last) {
-      return value;
-    }
-  } else if (parts.length !== 1) {
-    return value;
-  }
-  return String(last);
+  return normalizeOriginYear(raw);
 }
 
 export function divisionKind(divisions?: string[]): string {
@@ -197,7 +177,7 @@ export function decorateOriginTree(olympiads: TaskFilterOlympiad[]): OriginNode[
       count: year.count,
       stages: year.stages.map((stage) => ({
         id: stage.id,
-        label: STAGE_LABELS[stage.id] ?? stage.id,
+        label: stageLabel(stage.id),
         count: stage.count,
         ageGroups: stage.divisions.map((division) => ({
           id: division.id,

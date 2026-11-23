@@ -18,7 +18,7 @@ export const getTaskById = async (
       "Access-Control-Allow-Origin": "*",
     },
     next: {
-      tags: [`task-${taskId}`]
+      tags: [`task-${taskId}`, "task-highlights"]
     }
   });
 
@@ -34,6 +34,8 @@ export const getTaskById = async (
 export const listTasks = async (): Promise<ApiResponse<TaskPreview[]>> => {
   const response = await fetch(`${SERVER_API_HOST}/tasks`, {
     method: "GET",
+    // API-key clients do not run the website's cache invalidation action.
+    cache: "no-store",
     headers: {
       "Content-Type": "application/json",
       "Access-Control-Allow-Headers": "*",

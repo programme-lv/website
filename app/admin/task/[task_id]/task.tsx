@@ -9,13 +9,16 @@ import GenericButton from "@/components/generic-button";
 import { uploadTaskIllustration, deleteTaskIllustration } from "@/lib/task/upload-image";
 import { IconExternalLink } from "@tabler/icons-react";
 import Link from "next/link";
+import HighlightTagsEditor from "./highlight-tags";
+import type { loadHighlightTags } from "@/lib/task/highlight-tags";
 import FileUpload from "@/components/file-upload";
 
 interface TaskEditFormProps {
     task: Task;
+    highlights: Awaited<ReturnType<typeof loadHighlightTags>>;
 }
 
-export default function TaskEditForm({ task }: TaskEditFormProps) {
+export default function TaskEditForm({ task, highlights }: TaskEditFormProps) {
     const router = useRouter();
     const [isUploadingIllustration, setIsUploadingIllustration] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -129,6 +132,7 @@ export default function TaskEditForm({ task }: TaskEditFormProps) {
                         title="Difficulty rating editing not yet implemented"
                     />
                 </div>
+                <HighlightTagsEditor taskId={task.short_task_id} initial={highlights} />
             </div>
 
             <h2 className="text-lg font-bold mt-4">Uzdevuma ilustrācija</h2>

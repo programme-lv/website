@@ -17,7 +17,10 @@ export function illustrationUrl(img: IllustrationImage, variant: "list" | "view"
     return img.http_url;
 }
 
+type HighlightTag = { id: string; label: string };
+
 type Task = {
+    highlighted_tags?: HighlightTag[];
     short_task_id: string;
     task_full_name: string;
     memory_limit_megabytes: number;
@@ -78,7 +81,14 @@ type StatementImage = {
     sz_in_bytes: number;
 };
 
+type CommunityStats = {
+    unique_solvers: number;
+    unique_attempted: number;
+    verdicts: Record<string, number>;
+};
+
 type TaskPreview = {
+    highlighted_tags?: HighlightTag[];
     short_id: string;
     full_name: string;
     illustr_img?: IllustrationImage;
@@ -89,6 +99,7 @@ type TaskPreview = {
     origin_divisions?: string[];
     origin_note?: string;
     origin_note_short?: string;
+    community_stats?: CommunityStats;
 };
 
 type TaskFilterDivision = {
@@ -120,6 +131,7 @@ type TaskFilterTree = {
 
 export type {
     Task,
+    HighlightTag,
     IllustrationImage,
     SubtaskOverview,
     VisibleInputSubtask,
@@ -127,6 +139,7 @@ export type {
     MarkdownStatement,
     StatementImage,
     TaskPreview,
+    CommunityStats,
     TaskFilterTree,
     TaskFilterOlympiad,
     TaskFilterYear,

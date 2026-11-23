@@ -6,6 +6,7 @@ import { isAdmin } from "@/lib/dal";
 import RestrictedPleaseLogin from "@/components/restricted-please-login";
 import Layout from "@/components/layout";
 import TaskAdminNav from "@/components/task-admin-nav";
+import { loadHighlightTags } from "@/lib/task/highlight-tags";
 import { Metadata } from "next";
 
 export async function generateMetadata({
@@ -38,6 +39,7 @@ export default async function TaskEditPage({
     return <div>Error {response.code}: {response.message}</div>
   }
   const task = response.data;
+  const highlights = await loadHighlightTags(task.short_task_id);
   const { tab } = await searchParams;
   const currentTab = tab || "task";
 
@@ -49,7 +51,7 @@ export default async function TaskEditPage({
           {currentTab === "statement" ? (
             <StatementEditForm task={task} />
           ) : (
-            <TaskEditForm task={task} />
+            <TaskEditForm task={task} highlights={highlights} />
           )}
         </div>
       </div>

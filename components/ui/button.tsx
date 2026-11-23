@@ -4,6 +4,7 @@ import type { ButtonHTMLAttributes, MouseEvent, ReactNode } from "react";
 
 import LoadingSpinner from "@/components/loading-spinner";
 import { cn } from "@/components/cn";
+import { useHydrationReady } from "@/lib/use-hydration-ready";
 
 export type ButtonVariant =
   | "primary"
@@ -72,9 +73,12 @@ export default function Button({
   disabled: disabledProp,
   ...props
 }: ButtonProps) {
-  const isOff = Boolean(isDisabled || isLoading || disabledProp);
+  const hydrated = useHydrationReady();
+  const blockedByHydration = !hydrated && !isDisabled && !disabledProp;
+  const isOff = Boolean(isDisabled || isLoading || disabledProp || !hydrated);
+  const isBusy = Boolean(isLoading || blockedByHydration);
   const hasLabel = children != null && children !== false && children !== "";
-  const showIcon = Boolean(icon) && !isLoading;
+  const hydrationBlockedIcon = blockedByHydration && Boolean(icon);
   const iconOnly = !hasLabel;
 
   const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
@@ -87,7 +91,17 @@ export default function Button({
 
   const iconNode = isLoading ? (
     <LoadingSpinner className={size === "sm" ? "h-4 w-4" : "h-5 w-5"} />
-  ) : showIcon ? (
+  ) : hydrationBlockedIcon ? (
+    // Keep the icon's own box while it is inert, and overlay the spinner in
+    // exactly that box so hydration cannot change the button's size.
+    <span
+      aria-hidden
+      className="relative inline-flex items-center justify-center"
+    >
+      <span className="invisible">{icon}</span>
+      <LoadingSpinner className="absolute inset-0 h-full w-full" />
+    </span>
+  ) : Boolean(icon) ? (
     icon
   ) : null;
 
@@ -97,7 +111,8 @@ export default function Button({
       type={type}
       // @ts-expect-error React 19 omits autocomplete on <button>; Firefox persists disabled without it.
       autoComplete="off"
-      disabled={isOff}
+      aria-busy={props["aria-busy"] ?? (isBusy || undefined)}
+      disabled={isOff || undefined}
       onClick={handleClick}
       className={cn(
         "relative inline-flex cursor-pointer items-center font-normal transition-colors focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0f62fe] disabled:cursor-not-allowed disabled:opacity-50",
