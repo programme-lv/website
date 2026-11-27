@@ -28,9 +28,17 @@ export const USERNAME_CONTAINS_AT_ERROR =
   "Lietotājvārds nedrīkst saturēt simbolu @.";
 
 /**
- * New usernames cannot contain @. Legacy usernames may, and usernames are
- * not trimmed, matching backend validation.
+ * Validate new usernames without changing their exact value. Legacy usernames
+ * may contain @.
  */
 export function validateRegistrationUsername(username: string): string | null {
-  return username.includes("@") ? USERNAME_CONTAINS_AT_ERROR : null;
+  if (username.includes("@")) return USERNAME_CONTAINS_AT_ERROR;
+  if (username === ".." || username.includes("\0")) {
+    return "Lietotājvārds nav derīgs.";
+  }
+  const bytes = new TextEncoder().encode(username).length;
+  if (bytes < 2 || bytes > 24) {
+    return "Lietotājvārdam jābūt no 2 līdz 24 UTF-8 baitiem.";
+  }
+  return null;
 }

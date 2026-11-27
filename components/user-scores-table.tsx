@@ -48,12 +48,14 @@ export default function UserScoresTable({ scores, skeleton = false }: UserScores
   ];
 
   return (
-    <GenericTable
-      data={data}
-      columns={columns}
-      keyExtractor={(item) => item.taskId}
-      skeleton={skeleton}
-      skeletonRowCount={5}
-    />
+    <div className="overflow-x-auto">
+      <GenericTable
+        data={data}
+        columns={columns}
+        keyExtractor={(item) => item.taskId}
+        skeleton={skeleton}
+        skeletonRowCount={5}
+      />
+    </div>
   );
-} 
+}

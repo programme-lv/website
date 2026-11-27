@@ -1,7 +1,8 @@
 "use client";
 
-import { useContext, useEffect, useId, useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useContext, useEffect, useId, useLayoutEffect, useRef, useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import { saveTaskTagPreference } from "@/lib/user/preferences";
@@ -10,6 +11,7 @@ import { useHydrationReady } from "@/lib/use-hydration-ready";
 import { AuthContext } from "@/app/providers";
 import {
   changePassword,
+  changeUsername,
   requestEmailVerification,
   updateProfile,
 } from "@/lib/auth";
@@ -17,15 +19,30 @@ import { User } from "@/types/proglv";
 import Alert from "@/components/alert";
 import AuthField from "@/components/auth-field";
 import GenericButton from "@/components/generic-button";
+import { userProfilePath, validateRegistrationUsername } from "@/lib/username";
 
 function formatError(error: string) {
   return error.charAt(0).toUpperCase() + error.slice(1) + ".";
 }
 
 export default function AccountCard({ user }: { user: User }) {
-  const { setUser } = useContext(AuthContext);
+  const { user: currentUser, setUser } = useContext(AuthContext);
+  const currentUserRef = useRef(currentUser);
+  useLayoutEffect(() => {
+    currentUserRef.current = currentUser;
+    return () => { currentUserRef.current = null; };
+  }, [currentUser]);
+  const usernameRequest = useRef(false);
+  const router = useRouter();
+  const queryClient = useQueryClient();
   const hydrated = useHydrationReady();
   const taskTagsDescription = useId();
+  const usernameFormId = useId();
+  const usernameTriggerId = useId();
+  const [editingUsername, setEditingUsername] = useState(false);
+  const [newUsername, setNewUsername] = useState(user.username);
+  const [usernamePassword, setUsernamePassword] = useState("");
+  const [usernameError, setUsernameError] = useState<string | null>(null);
   const [firstname, setFirstname] = useState(user.firstname ?? "");
   const [lastname, setLastname] = useState(user.lastname ?? "");
   const [profileError, setProfileError] = useState<string | null>(null);
@@ -51,10 +68,8 @@ export default function AccountCard({ user }: { user: User }) {
       if (response.status === "success") {
         setUser((prev) => prev?.uuid === user.uuid ? ({
           ...prev,
-          ...response.data,
-          email_verified:
-            response.data.email_verified ?? prev?.email_verified,
-          hide_task_tags: prev.hide_task_tags,
+          firstname: response.data.firstname,
+          lastname: response.data.lastname,
         }) : prev);
         toast.success("Profils saglabāts");
         return;
@@ -62,6 +77,38 @@ export default function AccountCard({ user }: { user: User }) {
       setProfileError(formatError(response.message));
     },
     onError: () => setProfileError("Neizdevās saglabāt profilu."),
+  });
+
+  const usernameMutation = useMutation({
+    mutationFn: changeUsername,
+    gcTime: 0,
+    onMutate: () => setUsernameError(null),
+    onSuccess: (response) => {
+      if (response.status === "success") {
+        setUser((prev) => prev?.uuid === user.uuid
+          ? { ...prev, username: response.data.username }
+          : prev);
+        void queryClient.invalidateQueries({ queryKey: ["userScores"] });
+        void queryClient.invalidateQueries({ queryKey: ["submissions"] });
+        if (currentUserRef.current?.uuid === user.uuid) {
+          setUsernamePassword("");
+          setEditingUsername(false);
+          toast.success("Lietotājvārds nomainīts");
+          router.replace(userProfilePath(response.data.username));
+          router.refresh();
+        }
+        return;
+      }
+      if (response.code === "username_or_password_incorrect") {
+        setUsernameError("Parole nav pareiza.");
+      } else if (response.code === "username_exists") {
+        setUsernameError("Šis lietotājvārds jau ir aizņemts.");
+      } else {
+        setUsernameError(formatError(response.message));
+      }
+    },
+    onError: () => setUsernameError("Neizdevās nomainīt lietotājvārdu."),
+    onSettled: () => { usernameRequest.current = false; },
   });
 
   const preferenceMutation = useMutation({
@@ -139,6 +186,104 @@ export default function AccountCard({ user }: { user: User }) {
             value={user.username}
             onChange={() => undefined}
           />
+          {user.username !== "admin" && (
+            <div className="flex flex-col gap-3">
+              <GenericButton
+                id={usernameTriggerId}
+                className="w-fit"
+                rounded="sm"
+                size="sm"
+                variant="secondary"
+                type="button"
+                aria-expanded={editingUsername}
+                aria-controls={editingUsername ? usernameFormId : undefined}
+                onClick={() => {
+                  if (!editingUsername) setNewUsername(user.username);
+                  usernameMutation.reset();
+                  setUsernamePassword("");
+                  setUsernameError(null);
+                  setEditingUsername(!editingUsername);
+                }}
+                disabled={usernameMutation.isPending}
+              >
+                Mainīt lietotājvārdu
+              </GenericButton>
+              {editingUsername && (
+                <form
+                  id={usernameFormId}
+                  aria-labelledby={usernameTriggerId}
+                  className="flex flex-col gap-3"
+                  onSubmit={(event) => {
+                    event.preventDefault();
+                    if (usernameRequest.current || newUsername === user.username) return;
+                    const error = validateRegistrationUsername(newUsername);
+                    if (error) {
+                      setUsernameError(error);
+                      return;
+                    }
+                    usernameRequest.current = true;
+                    usernameMutation.mutate({
+                      username: newUsername,
+                      current_password: usernamePassword,
+                    });
+                  }}
+                >
+                  <p className="text-xs text-default-600">
+                    Pēc lietotājvārda maiņas vecā saite vairs nevedīs uz jūsu profilu.
+                  </p>
+                  <AuthField
+                    label="Jaunais lietotājvārds"
+                    name="newUsername"
+                    autoComplete="off"
+                    required
+                    disabled={usernameMutation.isPending}
+                    value={newUsername}
+                    onChange={setNewUsername}
+                  />
+                  <AuthField
+                    label="Pašreizējā parole"
+                    name="usernameCurrentPassword"
+                    type="password"
+                    autoComplete="current-password"
+                    required
+                    disabled={usernameMutation.isPending}
+                    value={usernamePassword}
+                    onChange={setUsernamePassword}
+                  />
+                  {usernameError && (
+                    <Alert message={usernameError} type="error" onClose={() => setUsernameError(null)} />
+                  )}
+                  <div className="flex flex-wrap gap-2">
+                    <GenericButton
+                      rounded="sm"
+                      size="sm"
+                      type="submit"
+                      disabled={newUsername === user.username}
+                      isLoading={usernameMutation.isPending}
+                    >
+                      Saglabāt lietotājvārdu
+                    </GenericButton>
+                    <GenericButton
+                      rounded="sm"
+                      size="sm"
+                      type="button"
+                      variant="ghost"
+                      disabled={usernameMutation.isPending}
+                      onClick={() => {
+                        usernameMutation.reset();
+                        setUsernamePassword("");
+                        setUsernameError(null);
+                        setEditingUsername(false);
+                        document.getElementById(usernameTriggerId)?.focus();
+                      }}
+                    >
+                      Atcelt
+                    </GenericButton>
+                  </div>
+                </form>
+              )}
+            </div>
+          )}
           <div className="flex flex-col gap-1">
             <AuthField
               label="E-pasts"
