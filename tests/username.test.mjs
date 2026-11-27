@@ -66,3 +66,21 @@ test("registration keeps existing username syntax, including spaces", () => {
     assert.equal(validateRegistrationUsername(username), null);
   }
 });
+
+test("new usernames use UTF-8 byte length, not character count", () => {
+  for (const username of ["", "a", "ā".repeat(13), "a".repeat(25)]) {
+    assert.notEqual(validateRegistrationUsername(username), null);
+  }
+  for (const username of ["  ", "ā", "ā".repeat(12), "a".repeat(24), "😀".repeat(6)]) {
+    assert.equal(validateRegistrationUsername(username), null);
+  }
+});
+
+test("new usernames reject the dot segment and NUL without decoding or trimming", () => {
+  for (const username of ["..", "a\0b"]) {
+    assert.notEqual(validateRegistrationUsername(username), null);
+  }
+  for (const username of [" . ", "a%2E%2Eb", "  ab  ", "a.b", "a..b", "..a"]) {
+    assert.equal(validateRegistrationUsername(username), null);
+  }
+});

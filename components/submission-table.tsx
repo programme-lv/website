@@ -129,7 +129,9 @@ function SubmissionEntryCard({ item }: { item: SubmListEntry }) {
             <div className="flex flex-col gap-1 text-default-800">
                 <div>
                     <span className="text-default-500">Autors: </span>
-                    <TextLink href={userProfilePath(item.username)}>{item.username}</TextLink>
+                    <span className="break-all">
+                        <TextLink href={userProfilePath(item.username)}>{item.username}</TextLink>
+                    </span>
                 </div>
                 <div>
                     <span className="text-default-500">Uzdevums: </span>
@@ -206,6 +208,7 @@ export default function SubmissionTable({ submissions, skeleton = false }: Submi
             header: "Autors",
             width: "140px",
             render: (item) => <TextLink href={userProfilePath(item.username)}>{item.username}</TextLink>,
+            cellClassNames: () => "break-all",
             renderSkeleton: () => <div className="h-4 w-14 rounded-sm bg-gray-300" />
         },
         {

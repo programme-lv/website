@@ -127,6 +127,19 @@ type UpdateProfileInput = {
   lastname: string;
 };
 
+export const changeUsername = async (input: {
+  username: string;
+  current_password: string;
+}): Promise<ApiResponse<{ username: string }>> => {
+  const response = await fetch(`${API_HOST}/users/me/username`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify(input),
+  });
+  return response.json();
+};
+
 export const updateProfile = async (
   input: UpdateProfileInput
 ): Promise<ApiResponse<User>> => {
@@ -182,4 +195,3 @@ async function parseMaybeEmptyResponse<T>(
     };
   }
 }
-

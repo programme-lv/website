@@ -45,11 +45,12 @@ website always sends one encoded segment.
   exact username or a case-insensitive email there.
 - The login field is labelled "Lietotājvārds vai e-pasts" and keeps
   `autoComplete="username"`.
-- Registration rejects `@` in the username before sending a request, using the
-  same Latvian message as the backend:
-  "Lietotājvārds nedrīkst saturēt simbolu @."
-- Do not add client-side syntax restrictions beyond the backend rule, and do
-  not trim the field.
+- Registration and self-service username changes share validation: 2-24 UTF-8
+  bytes, no `@`, literal `..`, or NUL. Do not trim or normalize the field.
+  The server also checks reserved names and conflicts.
+- A successful username change keeps the session, changes the profile URL, and
+  does not create an alias for the old URL. Merge profile edits by name fields
+  only so an in-flight profile save cannot restore the previous username.
 
 ## Verification
 
